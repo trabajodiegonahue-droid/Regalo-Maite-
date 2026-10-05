@@ -442,9 +442,10 @@ button { font: inherit; cursor: pointer; }
           <label class="chip"><input type="radio" name="cabritas" id="c-dulce" value="dulces" checked><span>Dulces</span></label>
           <label class="chip"><input type="radio" name="cabritas" id="c-salado" value="saladas"><span>Saladas</span></label>
           <label class="chip"><input type="radio" name="cabritas" id="c-ambas" value="dulces y saladas"><span>Ambas</span></label>
+          <label class="chip"><input type="radio" name="cabritas" id="c-otra" value="Otra"><span>Otra cosa</span></label>
         </div>
         <div class="field">
-          <label for="cabritasDetail">¿Algún detalle? Escríbelo aquí</label>
+          <label for="cabritasDetail" id="cabritasLabel">¿Algún detalle? Escríbelo aquí</label>
           <input type="text" id="cabritasDetail" maxlength="60" placeholder="Ej: con caramelo, extra mantequilla, tamaño grande" autocomplete="off">
         </div>
       </fieldset>
@@ -469,13 +470,14 @@ button { font: inherit; cursor: pointer; }
           <label class="chip"><input type="checkbox" name="extra" id="e-gomitas" value="Gomitas"><span>Gomitas</span></label>
           <label class="chip"><input type="checkbox" name="extra" id="e-hamburguesa" value="Hamburguesa"><span>Hamburguesa</span></label>
           <label class="chip"><input type="checkbox" name="extra" id="e-besitos" value="Besitos"><span>Besitos</span></label>
+          <label class="chip"><input type="checkbox" name="extra" id="e-otra" value="Otra"><span>Otra cosa</span></label>
         </div>
         <div class="field" id="gomitasField" hidden>
           <label for="gomitasDetail">¿Qué gomitas?</label>
           <input type="text" id="gomitasDetail" maxlength="60" placeholder="Ej: ositos, gusanitos ácidos" autocomplete="off">
         </div>
         <div class="field">
-          <label for="extraDetail">¿Algo más? Escríbelo aquí</label>
+          <label for="extraDetail" id="extraLabel">¿Algo más? Escríbelo aquí</label>
           <input type="text" id="extraDetail" maxlength="80" placeholder="Opcional" autocomplete="off">
         </div>
       </fieldset>
@@ -547,6 +549,7 @@ const PLAN = {
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const day = new Date(PLAN.fecha + "T00:00:00");
 const target = PLAN.hora ? new Date(PLAN.fecha + "T" + PLAN.hora + ":00") : day;
@@ -604,6 +607,10 @@ go("carta");
 $("#openBtn").addEventListener("click", () => {
   const e = $("#entry");
   e.classList.add("open");
+  scrollTo(0, 0);
+  const letter = $(".letter");
+  letter.style.animation = "none"; void letter.offsetWidth;
+  letter.style.animation = "letterOut 1.2s cubic-bezier(.2,.8,.2,1) .6s both";
   setTimeout(() => { e.hidden = true; }, reduced ? 50 : 2600);
 });
 
@@ -719,6 +726,18 @@ $$("input[name=bebida]").forEach(r => r.addEventListener("change", () => {
   $("#drinkLabel").textContent = label; $("#drinkDetail").placeholder = ph;
 }));
 $("#e-gomitas").addEventListener("change", e => { $("#gomitasField").hidden = !e.target.checked; });
+$$("input[name=cabritas]").forEach(r => r.addEventListener("change", () => {
+  const otra = r.value === "Otra";
+  $("#cabritasLabel").textContent = otra ? "Escribe qué quieres en vez de cabritas" : "¿Algún detalle? Escríbelo aquí";
+  $("#cabritasDetail").placeholder = otra ? "Ej: papas fritas, maní, churros" : "Ej: con caramelo, extra mantequilla, tamaño grande";
+  if (otra) $("#cabritasDetail").focus();
+}));
+$("#e-otra").addEventListener("change", e => {
+  $("#extraLabel").textContent = e.target.checked ? "Escribe tu otra cosa" : "¿Algo más? Escríbelo aquí";
+  $("#extraDetail").placeholder = e.target.checked ? "Ej: helado, galletas, un abrazo" : "Opcional";
+  if (e.target.checked) $("#extraDetail").focus();
+});
+$("#b-otra").addEventListener("change", () => $("#drinkDetail").focus());
 
 let pedido = "";
 $("#comboForm").addEventListener("submit", e => {
@@ -728,14 +747,17 @@ $("#comboForm").addEventListener("submit", e => {
   const bebida = tipo === "Jugo" ? (det ? `Jugo de ${det}` : "Jugo (sabor a elección)")
     : tipo === "Bebida" ? (det ? `Bebida: ${det}` : "Bebida (a elección)")
     : (det || "Bebestible a elección");
-  const extras = f.getAll("extra").map(x => {
+  const extras = f.getAll("extra").filter(x => x !== "Otra").map(x => {
     const g = $("#gomitasDetail").value.trim();
     return x === "Gomitas" && g ? `Gomitas (${g})` : x;
   });
   const otro = $("#extraDetail").value.trim();
   if (otro) extras.push(otro);
+  else if ($("#e-otra").checked) extras.push("Otra cosa (a elección)");
   const cabDet = $("#cabritasDetail").value.trim();
-  const cabritas = `Cabritas ${f.get("cabritas")}` + (cabDet ? ` (${cabDet})` : "");
+  const cabritas = f.get("cabritas") === "Otra"
+    ? (cabDet || "Algo para picar (a elección)")
+    : `Cabritas ${f.get("cabritas")}` + (cabDet ? ` (${cabDet})` : "");
   $("#tCombo").textContent = [cabritas, bebida, extras.join(", ") || "Sin extra"].join(" · ");
 
   pedido = `Mi pedido para la cita 🍿\n` +
