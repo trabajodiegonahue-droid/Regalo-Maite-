@@ -288,6 +288,20 @@ button { font: inherit; cursor: pointer; }
   background: radial-gradient(120% 90% at 50% 40%, #f4f7ff, #b8c8f2 55%, #6d80bd);
   font-family: var(--f-display); font-size: 4.4rem; color: #1d1530;
 }
+.screen { overflow: hidden; position: relative; }
+.slides img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%;
+  opacity: 0; animation: slideShow 6s infinite;
+}
+.slides img:nth-child(2) { animation-delay: 2s; }
+.slides img:nth-child(3) { animation-delay: 4s; }
+@keyframes slideShow { 0% { opacity: 0; } 8% { opacity: 1; } 33% { opacity: 1; } 41% { opacity: 0; } 100% { opacity: 0; } }
+.polaroid {
+  margin: 0 auto; width: min(68vw, 15rem); padding: .6rem .6rem 1.7rem; background: #fbf8f2;
+  box-shadow: 0 12px 34px rgba(0,0,0,.65); transform: rotate(var(--r));
+}
+.polaroid img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+.polaroid figcaption { margin-top: .5rem; font-family: var(--f-script); font-size: 1.45rem; line-height: 1.1; color: var(--ink); min-height: 1.1em; }
 .screen-glow { background: radial-gradient(closest-side, rgba(170,195,255,.55), transparent); }
 .seats {
   background:
@@ -461,7 +475,7 @@ button { font: inherit; cursor: pointer; }
 /* ---------- Créditos finales ---------- */
 .credits { position: fixed; inset: 0; z-index: 66; background: #050203; overflow: hidden; }
 .roll { position: absolute; left: 0; right: 0; top: 100%; padding-inline: 16px; text-align: center; display: grid; gap: 2.2rem; }
-.credits.play .roll { animation: roll 36s linear forwards; }
+.credits.play .roll { animation: roll 62s linear forwards; }
 @keyframes roll { to { transform: translateY(calc(-100% - 100vh)); } }
 .roll .role { display: block; font: 600 .72rem/1.4 var(--f-ui); letter-spacing: .28em; text-transform: uppercase; color: var(--gold-soft); }
 .roll .name { display: block; margin-top: .4rem; font-family: var(--f-display); font-size: 1.6rem; color: var(--cream-text); }
@@ -471,7 +485,7 @@ button { font: inherit; cursor: pointer; }
 .credits-end h2 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 3.4rem; color: var(--gold); }
 .credits-end p { margin: 0; color: var(--muted); }
 .credits-end .row a { text-decoration: none; }
-.credits-close { position: absolute; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); transform: translateX(-50%); }
+.credits-close { position: absolute; left: 12px; top: calc(env(safe-area-inset-top, 0px) + 10px); padding: .55rem 1rem; font-size: .72rem; }
 
 .btn {
   border: 0; border-radius: 999px;
@@ -997,6 +1011,7 @@ const PLAN = {
   mensaje:  "Gracias por decir que sí. Eres mi película favorita, y cada función contigo es un estreno. Te amo.",             // tu número con código de país, sin + ni espacios. Ej: "56912345678"
 };
 /* ======================================================= */
+const FOTOS = ["", "", "", "", "", "", "", "", ""];
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -1262,7 +1277,8 @@ function buildLobby(kind) {
     face("counter-front counter--bol", W * .94, H * .24, `translate3d(0,${H / 2 - H * .12}px,${-D + 90}px)`);
   } else if (kind === "sala") {
     face("back back--sala", W, H, `translateZ(${-D}px)`);
-    face("screen", W * .88, H * .42, `translate3d(0,${-H * .12}px,${-D + 2}px)`, `<span>Sala ?</span>`);
+    face("screen", W * .88, H * .42, `translate3d(0,${-H * .12}px,${-D + 2}px)`,
+      FOTOS[0] ? `<div class="slides">${[5, 8, 2].map(n => `<img src="${FOTOS[n - 1]}" alt="">`).join("")}</div>` : `<span>Sala ?</span>`);
     const rows = 12, sw = W * .34, sh = H * .17;
     for (let i = 0; i < rows; i++) {
       const z = -300 - i * (D - 900) / rows;
@@ -1560,16 +1576,25 @@ async function drawSig() {
     ["", "Cine Nosotros presenta", "big"],
     ["Una producción de", PLAN.firma],
     ["Protagonizada por", PLAN.nombre],
+    [null, 1, "El día que dijiste que sí", -3],
     ["Película de la noche", PLAN.pelicula],
+    [null, 2, "", 4],
     ["Con la participación especial de", "Las cabritas"],
+    [null, 4, "", -4],
     ["Dirección de besos", PLAN.firma],
+    [null, 8, "", 3],
     ["Encargada de los abrazos", PLAN.nombre],
+    [null, 6, "", -5],
     ["Banda sonora", `${PLAN.cancion} — ${PLAN.artista}`],
+    [null, 3, "", 4],
     ["Letra chica", "Besos cuando yo quiera"],
+    [null, 9, "", -3],
     ["Fecha del estreno", day.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" })],
   ];
-  $("#roll").innerHTML = items.map(([r, n, c]) =>
-    `<div>${r ? `<span class="role">${r}</span>` : ""}<span class="name ${c || ""}">${n}</span></div>`).join("") +
+  $("#roll").innerHTML = items.filter(([r, n]) => r !== null || FOTOS[n - 1]).map(([r, n, c, rot]) => r === null
+    ? `<figure class="polaroid" style="--r:${rot}deg"><img src="${FOTOS[n - 1]}" alt=""><figcaption>${c}</figcaption></figure>`
+    : `<div>${r ? `<span class="role">${r}</span>` : ""}<span class="name ${c || ""}">${n}</span></div>`).join("") +
+    (FOTOS[4] ? `<figure class="polaroid" style="--r:2deg"><img src="${FOTOS[4]}" alt=""><figcaption>Nosotros</figcaption></figure>` : "") +
     `<p class="msg">${PLAN.mensaje}</p>`;
   const credits = $("#credits");
   $("#roll").addEventListener("animationend", () => { $("#creditsEnd").hidden = false; $("#roll").hidden = true; });
