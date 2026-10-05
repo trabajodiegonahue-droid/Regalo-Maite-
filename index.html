@@ -231,6 +231,7 @@ button { font: inherit; cursor: pointer; }
 @keyframes pulse { 50% { transform: scale(1.06); } }
 .btn--no { background: var(--paper); color: var(--ink); border: 1.5px solid var(--ink-soft); min-width: 8rem; cursor: not-allowed; }
 .btn--no:active { transform: none; }
+.btn--no.loose { position: fixed; z-index: 20; transition: left .25s ease, top .25s ease; }
 .no-msg { margin: -.4rem 0 0; min-height: 1.4em; color: var(--rose); font-size: .95rem; text-align: center; }
 
 .stamp {
@@ -608,6 +609,7 @@ $("#openBtn").addEventListener("click", () => {
 
 // Sí / No
 $("#siBtn").addEventListener("click", () => {
+  resetNo();
   $("#answers").hidden = true; $("#noMsg").hidden = true;
   $("#stamp").classList.add("hit");
   $("#verdict").hidden = false;
@@ -623,12 +625,35 @@ const noMsgs = [
   "El sistema solo acepta un Sí.",
 ];
 let noCount = 0;
-const blockNo = e => { e.preventDefault(); };
-$("#noBtn").addEventListener("pointerdown", blockNo);
-$("#noBtn").addEventListener("click", e => {
+// El No se escapa a otro lugar de la pantalla cada vez que intentan apretarlo
+let lastDodge = 0;
+function dodge(e) {
   e.preventDefault();
+  if (Date.now() - lastDodge < 300) return;
+  lastDodge = Date.now();
+  const no = $("#noBtn"), si = $("#siBtn").getBoundingClientRect();
+  const r = no.getBoundingClientRect(), m = 16;
+  if (!no.classList.contains("loose")) {
+    no.style.left = r.left + "px"; no.style.top = r.top + "px";
+    no.classList.add("loose");
+  }
+  let x, y, tries = 0;
+  do {
+    x = m + Math.random() * (innerWidth - r.width - 2 * m);
+    y = m + Math.random() * (innerHeight - r.height - 2 * m);
+    tries++;
+  } while (tries < 30 && (
+    Math.abs(x - r.left) < r.width && Math.abs(y - r.top) < r.height * 2 ||
+    x < si.right + 10 && x + r.width > si.left - 10 && y < si.bottom + 10 && y + r.height > si.top - 10));
+  no.style.left = x + "px"; no.style.top = y + "px";
   $("#noMsg").textContent = noMsgs[noCount++ % noMsgs.length];
-});
+}
+const noBtn = $("#noBtn");
+noBtn.addEventListener("pointerdown", dodge);
+noBtn.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") dodge(e); });
+noBtn.addEventListener("click", e => e.preventDefault());
+noBtn.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") dodge(e); });
+function resetNo() { noBtn.classList.remove("loose"); noBtn.style.left = noBtn.style.top = ""; }
 
 // Rasca
 let scratchReady = false, revealed = false;
