@@ -198,6 +198,7 @@ button { font: inherit; cursor: pointer; }
 .pick-hint { bottom: 9%; }
 @keyframes knock { 50% { opacity: .45; } }
 .doors.open + .knock { display: none; }
+.sound-hint { pointer-events: auto; cursor: pointer; bottom: 9%; }
 .pickup { position: fixed !important; z-index: 50; margin: 0 !important; animation: none !important; pointer-events: none; }
 .entry.fade { transition: opacity .9s ease; opacity: 0; }
 
@@ -840,6 +841,7 @@ button { font: inherit; cursor: pointer; }
   </button>
   <span class="knock" id="knock">Toca la puerta para entrar</span>
   <span class="pick-hint" id="pickHint" hidden>Toca la carta para tomarla</span>
+  <button class="pick-hint sound-hint" id="soundHint" hidden>Toca para escuchar el video</button>
 </div>
 
 <div class="pov" id="pov" hidden>
@@ -1180,6 +1182,11 @@ const AudioFX = (() => {
       }
       if (!timer) { nextT = ctx.currentTime + .1; timer = setInterval(schedule, 120); music.gain.setTargetAtTime(1, ctx.currentTime, 1.5); }
     },
+    isOn() { return on; },
+    duck(down) {
+      if (ctx && music) music.gain.setTargetAtTime(down ? 0 : 1, ctx.currentTime, down ? .3 : 1);
+      if (song) fade(song, down || !on ? 0 : .85, down ? 500 : 1500);
+    },
     toggle() {
       on = !on;
       if (ctx) master.gain.setTargetAtTime(on ? .9 : 0, ctx.currentTime, .1);
@@ -1212,6 +1219,7 @@ const ICON_OFF = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="t
 $("#muteBtn").addEventListener("click", () => {
   AudioFX.start();
   const on = AudioFX.toggle();
+  $$(".screen-video").forEach(v => { v.muted = !on; });
   $("#muteBtn").innerHTML = on ? ICON_ON : ICON_OFF;
   $("#muteBtn").setAttribute("aria-label", on ? "Silenciar música" : "Activar música");
 });
@@ -1230,6 +1238,11 @@ const WAX_SEAL = `<span class="env-seal wax"><span class="wax-half wax-l">${WAX}
 // Saltar caminatas
 let curWalk = null;
 $("#skipBtn").addEventListener("click", () => { try { curWalk?.finish(); } catch {} });
+$("#soundHint").addEventListener("click", e => {
+  e.stopPropagation();
+  const v = $(".screen-video"); $("#soundHint").hidden = true;
+  if (v) { v.muted = false; v.play().catch(() => {}); AudioFX.duck(true); }
+});
 
 // ---------- Manos (primera persona) ----------
 const HAND_BACK = `
@@ -1383,7 +1396,17 @@ function buildLobby(kind) {
     face("screen", W * .88, H * .42, `translate3d(0,${-H * .12}px,${-D + 2}px)`,
       VIDEO ? `<video class="screen-video" muted playsinline preload="auto" style="background-image:url('${VIDEO_BG}')"><source src="${VIDEO}" type="video/mp4"><source src="${VIDEO_WEBM}" type="video/webm"></video>` : `<span>Sala ?</span>`);
     const vid = $(".screen-video", cam);
-    if (vid) { vid.currentTime = 0; vid.play().catch(() => {}); }
+    if (vid) {
+      vid.currentTime = 0;
+      vid.muted = !AudioFX.isOn();
+      vid.addEventListener("playing", () => { if (!vid.muted) AudioFX.duck(true); });
+      vid.addEventListener("ended", () => AudioFX.duck(false));
+      vid.play().catch(() => {
+        // el navegador no dejó sonar: se ve en silencio y se ofrece activar el sonido
+        vid.muted = true; vid.play().catch(() => {});
+        if (AudioFX.isOn()) $("#soundHint").hidden = false;
+      });
+    }
     // los cuadros cambian de foto escalonados
     wallTimers.forEach(clearTimeout); wallTimers = [];
     $$(".wallpic", cam).forEach((frame, j) => {
@@ -1449,6 +1472,7 @@ async function travel(kind, next) {
     });
     $("#skipBtn").hidden = true;
   }
+  if (vid) { vid.pause(); $("#soundHint").hidden = true; AudioFX.duck(false); }
   await sleep(kind === "sala" ? 900 : 250);
   entry.classList.add("fade");
   await sleep(850);
