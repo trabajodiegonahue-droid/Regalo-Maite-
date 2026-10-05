@@ -1024,7 +1024,7 @@ const PLAN = {
   apodoElla: "mi wawita mosha",
   hablamos:  "2026-09-01",
   conocimos: "2026-09-18",
-  pololeo:   "2026-10-03",
+  pololeo:   "2026-10-03T14:15",   // fecha y hora en que empezaron a pololear
   casamiento: "00/00/00",
   pelicula: "La otra madre",
   fecha:    "2026-10-06",   // año-mes-día de la función
@@ -1085,7 +1085,7 @@ function tick() {
   $("#cdM").textContent = pad(m); $("#cdS").textContent = pad(s);
   $("#cdGrid").hidden = done; $("#cdDone").hidden = !done;
   $("#cdLabel").hidden = done;
-  let t = Math.max(0, new Date() - new Date(PLAN.pololeo + "T00:00:00"));
+  let t = Math.max(0, new Date() - new Date(PLAN.pololeo.length > 10 ? PLAN.pololeo + ":00" : PLAN.pololeo + "T00:00:00"));
   const td = Math.floor(t / 864e5); t -= td * 864e5;
   const th = Math.floor(t / 36e5); t -= th * 36e5;
   const tm = Math.floor(t / 6e4), ts = Math.floor((t - tm * 6e4) / 1e3);
@@ -1745,7 +1745,7 @@ async function drawSig() {
     ["", "Nuestra historia", "big"],
     ["Primera conversación", new Date(PLAN.hablamos + "T00:00:00").toLocaleDateString("es-CL", { day: "numeric", month: "long", year: "numeric" })],
     ["Nos conocimos", new Date(PLAN.conocimos + "T00:00:00").toLocaleDateString("es-CL", { day: "numeric", month: "long", year: "numeric" })],
-    ["Pololos desde", new Date(PLAN.pololeo + "T00:00:00").toLocaleDateString("es-CL", { day: "numeric", month: "long", year: "numeric" })],
+    ["Pololos desde", new Date(PLAN.pololeo.slice(0, 10) + "T00:00:00").toLocaleDateString("es-CL", { day: "numeric", month: "long", year: "numeric" })],
     ["Juntos hace", `<b class="togetherTime">—</b>`],
     ["Casamiento", `${PLAN.casamiento} · Próximamente`],
     ["Fecha del estreno", day.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" })],
