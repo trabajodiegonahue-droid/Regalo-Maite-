@@ -52,10 +52,8 @@ button { font: inherit; cursor: pointer; }
 /* ---------- Puertas del cine ---------- */
 .entry {
   position: fixed; inset: 0; z-index: 30;
-  display: flex; flex-direction: column; align-items: center; gap: 1.2rem;
-  padding-inline: 16px; padding-block: 1.4rem 0;
-  background:
-    linear-gradient(180deg, var(--night), var(--night-2) 70%, var(--night));
+  display: flex;
+  background: var(--night);
   overflow: hidden;
   transition: opacity .9s ease 1s, transform 2s cubic-bezier(.5,0,.2,1) .5s;
 }
@@ -94,31 +92,27 @@ button { font: inherit; cursor: pointer; }
 .mini-count b { color: var(--cream-text); }
 
 .doors {
-  position: relative; flex: 1 1 auto; min-height: 14rem;
-  width: min(100%, 25rem);
-  display: flex;
-  border: 10px solid var(--metal-dark); border-bottom: 0;
-  border-radius: 4px 4px 0 0;
-  overflow: hidden;
-  box-shadow: 0 0 0 2px var(--metal), 0 -10px 50px rgba(0,0,0,.6);
+  position: relative; flex: 1 1 auto;
+  display: flex; padding: 0; margin: 0;
+  border: 12px solid var(--metal-dark);
+  background: transparent; color: inherit;
+  overflow: hidden; cursor: pointer;
 }
+.doors:focus-visible { outline: 3px solid var(--gold); outline-offset: -8px; }
 .inside {
   position: absolute; inset: 0;
   background:
     linear-gradient(180deg, transparent 62%, var(--stamp) 62%, var(--velvet) 100%),
     radial-gradient(70% 55% at 50% 45%, rgba(255,214,140,.95), rgba(179,18,47,.55) 55%, var(--velvet) 85%);
+  opacity: 0; transition: opacity .6s ease .2s;
 }
-.inside::after {
-  content: "SALA ?"; position: absolute; left: 0; right: 0; top: 30%;
-  text-align: center; font-family: var(--f-display); font-size: 1.6rem; color: var(--velvet);
-  letter-spacing: .1em; opacity: .7;
-}
+.entry.open .inside { opacity: 1; }
 .door {
   position: relative; z-index: 1; flex: 1 1 0;
   border: 5px solid var(--metal);
   background:
     linear-gradient(115deg, rgba(190,215,255,.22), rgba(255,255,255,.04) 38%, rgba(255,255,255,.12) 44%, rgba(255,255,255,.03) 52%, rgba(160,190,230,.16)),
-    rgba(18,26,42,.72);
+    rgb(20,26,40);
   transition: transform 1.5s cubic-bezier(.6,0,.2,1);
 }
 .door--l { border-right-width: 3px; }
@@ -135,6 +129,16 @@ button { font: inherit; cursor: pointer; }
 }
 .door--l .decal { right: 4px; }
 .door--r .decal { left: 4px; }
+.knock {
+  position: absolute; left: 50%; bottom: 14%; z-index: 2; transform: translateX(-50%);
+  padding: .8rem 1.3rem; border-radius: 999px; white-space: nowrap;
+  background: rgba(12,14,22,.75); border: 1px solid var(--metal);
+  font-family: var(--f-ui); font-weight: 600; font-size: .8rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--cream-text);
+  animation: knock 2s ease-in-out infinite;
+}
+@keyframes knock { 50% { opacity: .45; } }
+.entry.open .knock { opacity: 0; animation: none; transition: opacity .3s; }
 .entry.open .door--l { transform: translateX(-102%); }
 .entry.open .door--r { transform: translateX(102%); }
 
@@ -243,6 +247,8 @@ button { font: inherit; cursor: pointer; }
 @keyframes stamp { to { transform: rotate(-16deg) scale(1); opacity: .88; } }
 
 .verdict { text-align: center; display: grid; gap: .9rem; justify-items: center; }
+.scold { font-family: var(--f-display); font-size: 1.6rem !important; color: var(--rose); animation: shake .5s ease 2; }
+@keyframes shake { 25% { transform: translateX(-6px) rotate(-2deg); } 75% { transform: translateX(6px) rotate(2deg); } }
 .verdict p { margin: 0; font-size: 1.05rem; max-width: 32ch; line-height: 1.5; }
 
 /* ---------- Rasca ---------- */
@@ -359,18 +365,12 @@ button { font: inherit; cursor: pointer; }
 
 <!-- Entrada: puertas del cine -->
 <div class="entry" id="entry">
-  <div class="marquee">
-    <div class="bulbs" id="bulbs"></div>
-    <div class="eyebrow">Cineplanet · Función privada</div>
-    <h1><span id="when">Mañana</span><span data-name>Maite</span></h1>
-    <div class="mini-count">Sala: <b>secreta</b> · Hora: <b>secreta</b></div>
-    <button class="btn btn--gold" id="openBtn">Entrar al cine</button>
-  </div>
-  <div class="doors">
-    <div class="inside"></div>
-    <div class="door door--l"><span class="decal">BIENVE</span><i class="handle"></i></div>
-    <div class="door door--r"><span class="decal">NIDA</span><i class="handle"></i></div>
-  </div>
+  <button class="doors" id="openBtn" aria-label="Abrir la puerta">
+    <span class="inside"></span>
+    <span class="door door--l"><span class="decal">BIENVE</span><i class="handle"></i></span>
+    <span class="door door--r"><span class="decal">NIDA</span><i class="handle"></i></span>
+    <span class="knock">Toca la puerta para entrar</span>
+  </button>
 </div>
 
 <main class="stage" id="stage">
@@ -389,7 +389,7 @@ button { font: inherit; cursor: pointer; }
         <span class="letter__ref">Ref. N.º 001<br><span id="letterDate"></span></span>
       </div>
       <p class="greet">Distinguida y muy estimada esposa, doña <span data-name>Maite</span>:</p>
-      <p>Por medio de la presente, y tras una exhaustiva deliberación conmigo mismo, tengo el honor de extenderle una invitación formal a una función de cine en mi compañía.</p>
+      <p>Por medio de la presente, y tras una exhaustiva deliberación conmigo mismo, tengo el honor de extenderle una invitación formal a una función de cine en mi compañía, a realizarse <b id="when">mañana</b> en <span data-cine>Cineplanet</span>.</p>
       <p>La presente invitación incluye, sin costo para usted:</p>
       <ul>
         <li>Una butaca a mi lado, debidamente reservada.</li>
@@ -410,6 +410,7 @@ button { font: inherit; cursor: pointer; }
     <p class="no-msg" id="noMsg" aria-live="polite"></p>
 
     <div class="verdict" id="verdict" hidden>
+      <p class="scold" id="scold" hidden>¿Por qué quisiste apretar No???</p>
       <p>Respuesta registrada: <b>Sí</b>. Era la única opción disponible. La cita queda oficialmente confirmada.</p>
       <button class="btn btn--gold" data-go="rasca">Ver qué película vamos a ver</button>
     </div>
@@ -440,6 +441,10 @@ button { font: inherit; cursor: pointer; }
           <label class="chip"><input type="radio" name="cabritas" id="c-dulce" value="dulces" checked><span>Dulces</span></label>
           <label class="chip"><input type="radio" name="cabritas" id="c-salado" value="saladas"><span>Saladas</span></label>
           <label class="chip"><input type="radio" name="cabritas" id="c-ambas" value="dulces y saladas"><span>Ambas</span></label>
+        </div>
+        <div class="field">
+          <label for="cabritasDetail">¿Algún detalle? Escríbelo aquí</label>
+          <input type="text" id="cabritasDetail" maxlength="60" placeholder="Ej: con caramelo, extra mantequilla, tamaño grande" autocomplete="off">
         </div>
       </fieldset>
 
@@ -535,7 +540,7 @@ const PLAN = {
   sala:     "",             // vacío = secreta. Ej: "Sala 5"
   asiento:  "",             // vacío = "?". Ej: "J7"
   cine:     "Cineplanet",
-  whatsapp: "",             // tu número con código de país, sin + ni espacios. Ej: "56912345678"
+  whatsapp: "56941089585",             // tu número con código de país, sin + ni espacios. Ej: "56912345678"
 };
 /* ======================================================= */
 
@@ -557,27 +562,13 @@ secret($("#tHora"), PLAN.hora && PLAN.hora + " hrs", "Secreta");
 secret($("#tSala"), PLAN.sala, "Secreta");
 secret($("#tAsiento"), PLAN.asiento, "?");
 $("#cdLabel").textContent = PLAN.hora ? "Faltan para la función" : "Faltan para el día de la cita";
-$$(".mini-count b")[0].textContent = PLAN.sala || "secreta";
-$$(".mini-count b")[1].textContent = PLAN.hora ? PLAN.hora + " hrs" : "secreta";
 
 // "Mañana", "Hoy" o la fecha, según cuándo lo abra
 (() => {
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const diff = Math.round((day - today) / 864e5);
-  $("#when").textContent = diff <= 0 ? "Hoy" : diff === 1 ? "Mañana"
-    : "El " + day.toLocaleDateString("es-CL", { weekday: "long", day: "numeric" });
-})();
-
-// Ampolletas del letrero
-(() => {
-  const box = $("#bulbs"), n = 12;
-  for (let i = 0; i < n; i++) {
-    const top = document.createElement("i"), bot = document.createElement("i");
-    const x = (i + .5) / n * 100;
-    top.style.cssText = `left:calc(${x}% - 4px);top:0;animation-delay:${(i % 2) * .6}s`;
-    bot.style.cssText = `left:calc(${x}% - 4px);bottom:0;animation-delay:${((i + 1) % 2) * .6}s`;
-    box.append(top, bot);
-  }
+  $("#when").textContent = diff <= 0 ? "hoy" : diff === 1 ? "mañana"
+    : "el " + day.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" });
 })();
 
 // Cuenta regresiva
@@ -620,6 +611,8 @@ $("#siBtn").addEventListener("click", () => {
   $("#answers").hidden = true; $("#noMsg").hidden = true;
   $("#stamp").classList.add("hit");
   $("#verdict").hidden = false;
+  $("#scold").hidden = noCount === 0;
+  if (noCount > 1) $("#scold").textContent = `¿Por qué quisiste apretar No??? (${noCount} veces 🤨)`;
   burst(150);
 });
 const noMsgs = [
@@ -716,7 +709,8 @@ $("#comboForm").addEventListener("submit", e => {
   });
   const otro = $("#extraDetail").value.trim();
   if (otro) extras.push(otro);
-  const cabritas = `Cabritas ${f.get("cabritas")}`;
+  const cabDet = $("#cabritasDetail").value.trim();
+  const cabritas = `Cabritas ${f.get("cabritas")}` + (cabDet ? ` (${cabDet})` : "");
   $("#tCombo").textContent = [cabritas, bebida, extras.join(", ") || "Sin extra"].join(" · ");
 
   pedido = `Mi pedido para la cita 🍿\n` +
@@ -730,7 +724,8 @@ $("#comboForm").addEventListener("submit", e => {
 $("#moreHearts").addEventListener("click", () => burst(120));
 $("#restart").addEventListener("click", () => {
   $("#answers").hidden = false; $("#noMsg").hidden = false; $("#noMsg").textContent = "";
-  $("#verdict").hidden = true;
+  $("#verdict").hidden = true; noCount = 0;
+  $("#scold").textContent = "¿Por qué quisiste apretar No???";
   $("#stamp").classList.remove("hit");
   revealed = false; scratchReady = false;
   $("#scratchCanvas").classList.remove("gone");
