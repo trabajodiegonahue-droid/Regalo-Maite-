@@ -1113,16 +1113,29 @@ const AudioFX = (() => {
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
     o.connect(g); g.connect(dest); o.start(t); o.stop(t + dur + .05);
   }
-  // Piano suave: Fmaj7 – Em7 – Dm7 – Cmaj7, en corcheas a 66 bpm
-  const CH = [[53, 57, 60, 64], [52, 55, 59, 62], [50, 53, 57, 60], [48, 52, 55, 59]];
-  const MEL = [76, 74, 72, 71, 72, 74, 76, 79, 77, 76, 74, 72, 71, 72, 74, 72];
+  // Cumbia romántica original (no es ninguna canción existente): Am – Dm – G – C a 96 bpm
+  const CH = [[57, 60, 64], [62, 65, 69], [55, 59, 62], [60, 64, 67]];
+  const BASS = [45, 50, 43, 48];
+  const MEL = [
+    [76, 0, 74, 72, 0, 74, 76, 0], [77, 0, 76, 74, 0, 72, 74, 0],
+    [74, 0, 72, 71, 0, 72, 74, 0], [72, 0, 0, 71, 72, 0, 76, 0],
+  ];
   function schedule() {
-    const beat = 60 / 66 / 2;
+    const beat = 60 / 96 / 2;
     while (nextT < ctx.currentTime + .4) {
-      const bar = Math.floor(step / 8) % 4, pos = step % 8, ch = CH[bar];
-      if (pos === 0) note(nextT, ch[0] - 12, 3.6, .09, "sine");
-      note(nextT, ch[[0, 1, 2, 3, 2, 1, 2, 3][pos]] + 12, 1.6, .045);
-      if (pos % 4 === 0 && step % 64 >= 32) note(nextT + .01, MEL[Math.floor(step / 4) % MEL.length], 2.2, .05, "sine");
+      const bar = Math.floor(step / 8) % 4, pos = step % 8, ch = CH[bar], b = BASS[bar];
+      // bajo de cumbia: tónica, quinta y pique
+      if (pos === 0) note(nextT, b, .45, .16, "triangle");
+      if (pos === 3) note(nextT, b + 7, .25, .1, "triangle");
+      if (pos === 4) note(nextT, b + 7, .4, .14, "triangle");
+      if (pos === 6) note(nextT, b, .25, .1, "triangle");
+      // acordes a contratiempo
+      if (pos % 2 === 1) ch.forEach(n => note(nextT, n, .22, .028));
+      // güiro: largo-corto-corto
+      noise(nextT, pos % 2 === 0 ? .11 : .05, pos % 2 === 0 ? .05 : .03, 6500, 1.2, "highpass");
+      // melodía (entra después de la primera vuelta)
+      const m = MEL[bar][pos];
+      if (m && step >= 32) note(nextT + .005, m, .6, .055, "sine");
       nextT += beat; step++;
     }
   }
