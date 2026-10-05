@@ -1373,21 +1373,24 @@ const MOVIES = [
   { t: PLAN.pelicula, img: "img/la-otra-madre.jpg", ok: true },
   { t: "Cars", img: "img/cars.jpg" },
 ];
-function showMovie(guessed) {
-  $("#guessMsg").textContent = guessed ? "¡Acertaste! Te ganaste un beso extra." : "¡No! Pero no importa, es esta:";
+let misses = 0;
+const missMsgs = ["¡No! Esa no es. Intenta otra vez.", "¡Tampoco! Te queda una…"];
+function showMovie() {
+  const guessed = misses === 0;
+  $("#guessMsg").textContent = guessed ? "¡Acertaste a la primera! Te ganaste un beso extra." : "¡Esa sí! Por fin 😌";
   setTimeout(() => {
     $("#bol").hidden = true; $("#guessMsg").textContent = "";
-    $("#guessTitle").textContent = guessed ? "¡Acertaste!" : "Vamos a ver…";
+    $("#guessTitle").textContent = guessed ? "¡Acertaste!" : "¡Esa es!";
     $("#guessSub").hidden = true;
     $("#reveal").hidden = false;
     scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
     requestAnimationFrame(() => holdWith($("#posterHeld"), $("#posterCard"), .5, 5));
     burst(140);
-  }, guessed ? 1300 : 1900);
+  }, 1400);
 }
 function buildGuess() {
   const grid = $("#bolGrid");
-  grid.innerHTML = ""; delete grid.dataset.done;
+  grid.innerHTML = ""; delete grid.dataset.done; misses = 0;
   $("#guessMsg").textContent = ""; $("#bol").hidden = false; $("#reveal").hidden = true;
   $("#guessTitle").textContent = "¿Qué película crees que vamos a ver?"; $("#guessSub").hidden = false;
   MOVIES.forEach(m => {
@@ -1395,13 +1398,11 @@ function buildGuess() {
     b.className = "poster-btn";
     b.innerHTML = `<img src="${m.img}" alt="${m.t}"><span>${m.t}</span>`;
     b.addEventListener("click", () => {
-      if (grid.dataset.done) return;
-      grid.dataset.done = "1";
-      if (m.ok) { b.classList.add("right"); showMovie(true); }
+      if (grid.dataset.done || b.classList.contains("wrong")) return;
+      if (m.ok) { grid.dataset.done = "1"; b.classList.add("right"); showMovie(); }
       else {
         b.classList.add("wrong");
-        setTimeout(() => $$(".poster-btn", grid)[MOVIES.findIndex(x => x.ok)].classList.add("right"), 700);
-        showMovie(false);
+        $("#guessMsg").textContent = missMsgs[Math.min(misses++, missMsgs.length - 1)];
       }
     });
     grid.append(b);
