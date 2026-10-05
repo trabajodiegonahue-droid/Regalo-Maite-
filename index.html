@@ -855,7 +855,7 @@ button { font: inherit; cursor: pointer; }
     <article class="letter" id="letter" hidden>
       <span class="pencil" id="pencil" hidden aria-hidden="true"><svg viewBox="0 0 40 40" width="40" height="40"><g transform="rotate(-38 0 20)"><polygon points="0,20 5,18 5,22" fill="#3a3532"/><polygon points="3,18.6 12,15 12,25 3,21.4" fill="#e7c49a"/><rect x="12" y="15" width="22" height="10" fill="#f2b632"/><rect x="12" y="18.5" width="22" height="3" fill="#e0a21f"/><rect x="34" y="15" width="3.5" height="10" fill="#a9adb6"/><rect x="37.5" y="15" width="5" height="10" rx="2" fill="#ef8fa3"/></g></svg></span>
       <div class="monogram" aria-hidden="true"><i></i><span data-inicial>M</span><i></i></div>
-      <p class="greet">Distinguida y muy estimada esposa, doña <span data-name>Maite</span>:</p>
+      <p class="greet">Estimada <span data-name>Maite</span>, <span data-apodo-ella>mi wawita mosha</span>:</p>
       <p>Por medio de la presente, y tras una exhaustiva deliberación conmigo mismo, tengo el honor de extenderle una invitación formal a una función de cine en mi compañía, a realizarse <b id="when">mañana</b> en <span data-cine>Cineplanet</span>.</p>
       <p>La presente invitación incluye, sin costo para usted:</p>
       <ul>
@@ -1054,6 +1054,7 @@ $$("[data-name]").forEach(el => el.textContent = PLAN.nombre);
 $$("[data-firma]").forEach(el => el.textContent = PLAN.firma);
 $$("[data-inicial]").forEach(el => el.textContent = PLAN.inicial);
 $$("[data-apodo]").forEach(el => el.textContent = PLAN.apodo);
+$$("[data-apodo-ella]").forEach(el => el.textContent = PLAN.apodoElla);
 $$("[data-pelicula]").forEach(el => el.textContent = PLAN.pelicula);
 $$("[data-cine]").forEach(el => el.textContent = PLAN.cine);
 $("#tFecha").textContent = day.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" });
