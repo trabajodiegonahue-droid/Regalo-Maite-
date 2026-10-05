@@ -196,17 +196,71 @@ button { font: inherit; cursor: pointer; }
 .pov .pick-hint { z-index: 6; }
 
 /* Manos que sostienen la tarjeta y la entrada */
-.held { position: relative; width: 100%; display: flex; justify-content: center; }
+.held { position: relative; width: 100%; display: flex; justify-content: center; align-items: flex-start; }
+.held .hand { -webkit-mask-image: linear-gradient(180deg, #000 78%, transparent 99%); mask-image: linear-gradient(180deg, #000 78%, transparent 99%); }
 .held .hand { z-index: 1; }
 .held .hand--thumb { z-index: 3; }
 .held > :not(.hand) { position: relative; z-index: 2; }
 .held.enter { animation: heldIn 1.2s cubic-bezier(.2,.8,.2,1); }
 @keyframes heldIn { from { transform: translateY(70vh) rotate(-5deg); } }
-.held--card { margin-bottom: 7rem; }
-.held--ticket { margin-bottom: 8rem; }
+.held--card { padding-bottom: 8rem; }
+.held--card .scratch { max-width: 16.5rem; }
+.held--ticket { padding-bottom: 7rem; }
+.held--ticket .ticket { width: 86%; }
 
+.floor--candy {
+  background: repeating-conic-gradient(#f6efe4 0 25%, #20131c 0 50%) 0 0 / 90px 90px;
+}
+.ceiling--candy {
+  background:
+    repeating-linear-gradient(180deg, transparent 0 220px, #ff7ab0 220px 226px, transparent 226px 232px, #7ad8ff 232px 238px),
+    #1a0c18;
+}
+.wall--candy {
+  background:
+    linear-gradient(180deg, transparent 0 86%, #ff7ab0 86% 87%, #2a0f22 87%),
+    repeating-linear-gradient(90deg, #f7c9d5 0 40px, #fff4f7 40px 80px);
+}
+.wall--candy::after { opacity: .8; }
+.shelf {
+  position: absolute; top: 26%; height: 40%;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 12px;
+  background: rgba(255,255,255,.35); border: 5px solid #ff7ab0; border-radius: 10px;
+  box-shadow: 0 0 30px rgba(255,122,176,.45);
+}
+.shelf i {
+  border-radius: 40% 40% 14px 14px; background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.7) 0 3px, transparent 4px) 0 0 / 12px 12px,
+    var(--c);
+  box-shadow: inset 0 -8px 0 rgba(0,0,0,.15);
+}
+.floor--sala {
+  background:
+    radial-gradient(circle, #ffc46b 0 3px, rgba(255,196,107,.35) 4px, transparent 9px) 26% 0 / 100% 150px repeat-y,
+    radial-gradient(circle, #ffc46b 0 3px, rgba(255,196,107,.35) 4px, transparent 9px) 74% 0 / 100% 150px repeat-y,
+    linear-gradient(90deg, #0d0710 0 30%, #241018 30% 70%, #0d0710 70%);
+}
+.ceiling--sala { background: radial-gradient(circle, rgba(255,255,255,.5) 0 1px, transparent 2px) 0 0 / 70px 90px, #07040a; }
+.wall--sala {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(120,150,255,.25), transparent 6%) 0 0 / 320px 100%,
+    repeating-linear-gradient(90deg, #121428 0 4px, #0b0c1a 4px 90px);
+}
+.back--sala { display: grid; place-items: center; background: #06050c; }
+.screen {
+  display: grid; place-items: center;
+  background: radial-gradient(120% 90% at 50% 40%, #f4f7ff, #b8c8f2 55%, #6d80bd);
+  font-family: var(--f-display); font-size: 4.4rem; color: #1d1530;
+}
+.screen-glow { background: radial-gradient(closest-side, rgba(170,195,255,.55), transparent); }
+.seats {
+  background:
+    radial-gradient(ellipse 15px 26px at 50% 45%, #b3122f 92%, transparent 100%) 0 0 / 38px 100%,
+    linear-gradient(180deg, transparent 62%, #3e0712 62%);
+  filter: brightness(.85);
+}
 .back--candy b { color: #ff7ab0; text-shadow: 0 0 18px rgba(255,90,160,.95), 0 0 60px rgba(255,90,160,.6); }
-.back--candy { background: linear-gradient(180deg, #1a0a14, #2a0f1e); }
+.back--candy { background: linear-gradient(180deg, #1a0a14, #2a0f1e); align-content: start; padding-top: 24%; }
 .counter-front {
   display: grid; place-items: center;
   background: linear-gradient(180deg, #b3122f, #6d0a1d); border-top: 6px solid var(--gold);
@@ -482,6 +536,28 @@ button { font: inherit; cursor: pointer; }
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="hSkin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8dccb"/><stop offset=".55" stop-color="#efc2a6"/><stop offset="1" stop-color="#d99a7c"/>
+    </linearGradient>
+    <linearGradient id="hSkinSide" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e3aa8c"/><stop offset=".5" stop-color="#f3cdb5"/><stop offset="1" stop-color="#dba082"/>
+    </linearGradient>
+    <linearGradient id="hFinger" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6d3bf"/><stop offset="1" stop-color="#dfa385"/>
+    </linearGradient>
+    <linearGradient id="hThumb" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#e7b092"/><stop offset=".45" stop-color="#f7d6c2"/><stop offset="1" stop-color="#efc1a5"/>
+    </linearGradient>
+    <linearGradient id="hNail" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#9e0f3f"/><stop offset=".6" stop-color="#cf1f5c"/><stop offset="1" stop-color="#e8487c"/>
+    </linearGradient>
+    <linearGradient id="hCuff" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e9a3b7"/><stop offset=".5" stop-color="#f7c9d5"/><stop offset="1" stop-color="#e29ab0"/>
+    </linearGradient>
+    <filter id="hBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter>
+  </defs></svg>
 <canvas id="fx" aria-hidden="true"></canvas>
 
 <!-- Entrada: puertas del cine -->
@@ -720,40 +796,60 @@ const steps = ["carta", "rasca", "combo", "entrada"];
 function go(id) {
   steps.forEach(s => $("#" + s).hidden = s !== id);
   scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
-  if (id === "rasca") { initScratch(); requestAnimationFrame(() => holdWith($("#scratchHeld"), $("#scratch"), .62, 14)); }
-  if (id === "entrada") requestAnimationFrame(() => holdWith($("#ticketHeld"), $("#ticket"), .55, 8));
+  if (id === "rasca") { initScratch(); requestAnimationFrame(() => holdWith($("#scratchHeld"), $("#scratch"), .5, 5)); }
+  if (id === "entrada") requestAnimationFrame(() => holdWith($("#ticketHeld"), $("#ticket"), .3, 4));
 }
 $$("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
 go("carta");
 
 // ---------- Manos (primera persona) ----------
-const SKIN = "#f2c6a8", SKIN_D = "#d9997a", NAIL = "#d81b60", CUFF = "#f2b8c6", CUFF_D = "#d48aa0";
 const HAND_BACK = `
-  <path d="M40 900 L58 300 Q64 236 92 214 L140 214 Q152 240 146 300 L150 900 Z" fill="${CUFF}"/>
-  <path d="M60 300 Q100 284 146 300" stroke="${CUFF_D}" stroke-width="9" fill="none"/>
-  <path d="M68 300 L74 236 Q80 212 96 204 L132 206 Q142 222 138 250 L136 300 Z" fill="${SKIN}"/>
-  <path d="M70 262 Q104 252 138 262" stroke="#e9c46f" stroke-width="5" fill="none"/>
-  <g fill="${SKIN}" stroke="${SKIN_D}" stroke-width="1.5">
-    <rect x="118" y="86" width="84" height="25" rx="12.5" transform="rotate(-26 118 98)"/>
-    <rect x="122" y="111" width="88" height="25" rx="12.5" transform="rotate(-22 122 123)"/>
-    <rect x="124" y="136" width="82" height="24" rx="12" transform="rotate(-18 124 148)"/>
-    <rect x="122" y="160" width="70" height="22" rx="11" transform="rotate(-14 122 171)"/>
+  <!-- dedos curvados detrás del objeto -->
+  <g stroke="#c98a6e" stroke-width="1" stroke-opacity=".5">
+    <path d="M150 196 C160 192 178 188 206 190 C214 191 214 205 206 206 C182 208 166 212 156 216 Z" fill="url(#hFinger)"/>
+    <path d="M152 174 C164 168 184 164 214 166 C223 167 223 182 214 183 C188 185 170 190 158 196 Z" fill="url(#hFinger)"/>
+    <path d="M154 150 C166 144 188 140 218 142 C227 143 227 158 218 159 C192 161 174 166 160 172 Z" fill="url(#hFinger)"/>
+    <path d="M152 126 C164 118 184 114 212 116 C221 117 221 132 212 133 C188 135 172 140 160 148 Z" fill="url(#hFinger)"/>
   </g>
-  <ellipse cx="110" cy="164" rx="48" ry="58" transform="rotate(-18 110 164)" fill="${SKIN}"/>
-  <path d="M84 132 Q100 150 96 196" stroke="${SKIN_D}" stroke-width="2" fill="none" opacity=".45"/>`;
+  <path d="M168 210 C170 205 171 200 170 195" stroke="#e9c46f" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- dorso / canto de la mano -->
+  <path d="M88 236 C80 200 92 160 118 136 C132 123 148 118 160 124 C170 140 172 176 166 204 C160 224 150 240 140 250 Z" fill="url(#hSkinSide)" stroke="#c98a6e" stroke-opacity=".45"/>
+  <path d="M150 132 C158 150 160 176 156 200" stroke="#d39478" stroke-width="2" fill="none" opacity=".45"/>
+  <ellipse cx="156" cy="128" rx="7" ry="5" fill="#fbe3d4" opacity=".7"/>
+  <!-- muñeca -->
+  <path d="M84 300 C84 268 86 246 92 230 L142 244 C146 262 146 282 146 300 Z" fill="url(#hSkin)"/>
+  <path d="M90 262 C106 268 126 270 144 266" stroke="#e9c46f" stroke-width="3.5" fill="none"/>
+  <circle cx="118" cy="270" r="3.2" fill="#f3d48a"/>
+  <!-- manga de suéter -->
+  <path d="M58 700 L66 300 C68 288 78 282 92 282 L146 284 C160 286 166 294 166 306 L176 700 Z" fill="url(#hCuff)"/>
+  <g stroke="#d887a0" stroke-width="2.2" opacity=".55">
+    ${Array.from({ length: 11 }, (_, i) => `<path d="M${74 + i * 8.6} 292 L${73 + i * 8.9} 340"/>`).join("")}
+  </g>
+  <path d="M66 300 C90 290 140 290 166 304" stroke="#fbe2e8" stroke-width="3" fill="none" opacity=".8"/>
+  <path d="M68 342 C96 334 140 334 168 344" stroke="#d887a0" stroke-width="2" fill="none" opacity=".6"/>`;
 const HAND_THUMB = `
-  <path d="M108 188 Q126 142 154 108" stroke="${SKIN_D}" stroke-width="31" stroke-linecap="round" fill="none"/>
-  <path d="M108 188 Q126 142 154 108" stroke="${SKIN}" stroke-width="27.5" stroke-linecap="round" fill="none"/>
-  <path d="M128 150 Q138 148 142 140" stroke="${SKIN_D}" stroke-width="1.6" fill="none" opacity=".6"/>
-  <ellipse cx="156" cy="106" rx="8.5" ry="11.5" transform="rotate(32 156 106)" fill="${NAIL}"/>
-  <ellipse cx="153.5" cy="102.5" rx="2.4" ry="5" transform="rotate(32 153.5 102.5)" fill="rgba(255,255,255,.6)"/>`;
-const GX = 158 / 220, GY = 104 / 340;
+  <!-- sombra del pulgar sobre el objeto -->
+  <ellipse cx="170" cy="134" rx="26" ry="9" transform="rotate(-48 170 134)" fill="#2b1208" opacity=".28" filter="url(#hBlur)"/>
+  <!-- pulgar -->
+  <path d="M100 232 C104 200 120 172 140 150 C150 139 160 128 170 117 C176 110 184 104 191 106
+           C197 109 196 118 191 124 C182 136 172 147 163 158 C150 174 140 194 136 222 Z"
+        fill="url(#hThumb)" stroke="#c98a6e" stroke-opacity=".55" stroke-width="1.2"/>
+  <path d="M146 162 C152 160 157 155 160 149" stroke="#c98a6e" stroke-width="1.6" fill="none" opacity=".6"/>
+  <path d="M150 166 C155 164 160 160 162 155" stroke="#c98a6e" stroke-width="1.1" fill="none" opacity=".45"/>
+  <path d="M112 214 C120 190 132 170 146 154" stroke="#fbe6da" stroke-width="5" fill="none" opacity=".55" stroke-linecap="round"/>
+  <!-- uña almendrada -->
+  <path d="M176 120 C175 112 180 104 187 102 C193 101 196 107 194 113 C192 120 186 126 181 127 C178 127 176 124 176 120 Z"
+        fill="url(#hNail)" stroke="#8a0d36" stroke-width=".8"/>
+  <path d="M176.5 121 C177 125 179 127 181.5 127.5" stroke="#e5a68a" stroke-width="1.6" fill="none"/>
+  <path d="M182 108 C184 105 187 104 189 104.5" stroke="#fff" stroke-width="1.8" fill="none" opacity=".75" stroke-linecap="round"/>
+  <path d="M180 114 C181 112 182 111 183 110.5" stroke="#fff" stroke-width="1.2" fill="none" opacity=".45" stroke-linecap="round"/>`;
+const GX = 188 / 240, GY = 110 / 400, VBW = 240, VBH = 400;
 function makeHand(parent, side) {
   const mk = (cls, inner) => {
     const el = document.createElement("div");
     el.className = "hand " + cls;
-    const flip = side === "r" ? `<g transform="translate(220,0) scale(-1,1)">${inner}</g>` : inner;
-    el.innerHTML = `<svg viewBox="0 0 220 340" aria-hidden="true">${flip}</svg>`;
+    const flip = side === "r" ? `<g transform="translate(${VBW},0) scale(-1,1)">${inner}</g>` : inner;
+    el.innerHTML = `<svg viewBox="0 0 ${VBW} ${VBH}" aria-hidden="true">${flip}</svg>`;
     parent.append(el);
     return el;
   };
@@ -761,10 +857,10 @@ function makeHand(parent, side) {
 }
 function sizeHand(h, w) {
   h.w = w;
-  const gx = (h.side === "l" ? GX : 1 - GX) * w, gy = GY * w * 340 / 220;
+  const gx = (h.side === "l" ? GX : 1 - GX) * w, gy = GY * w * VBH / VBW;
   h.gx = gx; h.gy = gy;
   for (const el of [h.back, h.thumb]) {
-    el.style.width = w + "px"; el.style.height = w * 340 / 220 + "px";
+    el.style.width = w + "px"; el.style.height = w * VBH / VBW + "px";
     el.style.transformOrigin = `${gx}px ${gy}px`;
   }
 }
@@ -795,9 +891,9 @@ function buildLobby(kind) {
   const W = innerWidth, H = innerHeight, D = Math.round(Math.max(2400, H * 2.8));
   const zt = -(D - 560), th = Math.round(H * .36), tw = Math.min(W * .7, 360), tdp = tw * .62;
   dims = { W, H, D, zt, th, tw, kind };
-  const floor = face("floor", W, D, `translate3d(0,${H / 2}px,${-D / 2}px) rotateX(90deg)`);
+  const floor = face("floor floor--" + kind, W, D, `translate3d(0,${H / 2}px,${-D / 2}px) rotateX(90deg)`);
   floor.style.backgroundImage = `radial-gradient(${tw * 1.3}px ${tw * 1.1}px at 50% ${zt + D / 2}px, rgba(255,220,150,.42), transparent), ` + getComputedStyle(floor).backgroundImage;
-  face("ceiling", W, D, `translate3d(0,${-H / 2}px,${-D / 2}px) rotateX(-90deg)`);
+  face("ceiling ceiling--" + kind, W, D, `translate3d(0,${-H / 2}px,${-D / 2}px) rotateX(-90deg)`);
   const posters = [
     ["Estreno", "linear-gradient(160deg,#ffb36b,#c2185b 60%,#3a0b2a)"],
     ["Próximamente", "linear-gradient(160deg,#6be0ff,#3949ab 60%,#120b3a)"],
@@ -809,8 +905,14 @@ function buildLobby(kind) {
     return `<div class="lightbox" style="left:${x}px;width:${H * .3}px;background:${bg}">${t}</div>` +
       `<i class="sconce" style="left:${side === "l" ? at - 120 : D - at + 120}px"></i>`;
   }).join("");
-  face("wall wall--l", D, H, `translate3d(${-W / 2}px,0,${-D / 2}px) rotateY(90deg)`, wallHtml("l"));
-  face("wall wall--r", D, H, `translate3d(${W / 2}px,0,${-D / 2}px) rotateY(-90deg)`, wallHtml("r"));
+  const shelves = side => Array.from({ length: 5 }, (_, i) => {
+    const at = (i + .5) / 5.4 * D, x = side === "l" ? at : D - at - H * .34;
+    const jars = ["#ff5fa2", "#ffd23f", "#3ec1ff", "#7cff8a", "#ff8a3d", "#c77dff"].map((c, k) => `<i style="--c:${[c][0]};--d:${(i + k) % 6}"></i>`).join("");
+    return `<div class="shelf" style="left:${x}px;width:${H * .34}px">${jars}</div>`;
+  }).join("");
+  const sideHtml = side => kind === "candy" ? shelves(side) : kind === "sala" ? "" : wallHtml(side);
+  face("wall wall--l wall--" + kind, D, H, `translate3d(${-W / 2}px,0,${-D / 2}px) rotateY(90deg)`, sideHtml("l"));
+  face("wall wall--r wall--" + kind, D, H, `translate3d(${W / 2}px,0,${-D / 2}px) rotateY(-90deg)`, sideHtml("r"));
   if (kind === "candy") {
     face("back back--candy", W, H, `translateZ(${-D}px)`, `<b>Dulcería</b>`);
     const ch = H * .3, cd = 150, cw = W * .86;
@@ -818,6 +920,15 @@ function buildLobby(kind) {
     face("counter-top", cw, cd, `translate3d(0,${H / 2 - ch}px,${zt}px) rotateX(90deg)`);
     face("popcorn", cw * .34, H * .22, `translate3d(${-cw * .22}px,${H / 2 - ch - H * .11}px,${zt - 20}px)`, `<i></i>`);
     face("cups", cw * .3, H * .12, `translate3d(${cw * .24}px,${H / 2 - ch - H * .06}px,${zt}px)`);
+  } else if (kind === "sala") {
+    face("back back--sala", W, H, `translateZ(${-D}px)`);
+    face("screen", W * .88, H * .42, `translate3d(0,${-H * .12}px,${-D + 2}px)`, `<span>Sala ?</span>`);
+    const rows = 12, sw = W * .34, sh = H * .17;
+    for (let i = 0; i < rows; i++) {
+      const z = -300 - i * (D - 900) / rows;
+      face("seats", sw, sh, `translate3d(${-(W / 2 - sw / 2)}px,${H / 2 - sh / 2}px,${z}px)`);
+      face("seats", sw, sh, `translate3d(${W / 2 - sw / 2}px,${H / 2 - sh / 2}px,${z}px)`);
+    }
   } else {
     face("back", W, H, `translateZ(${-D}px)`, `<b>Sala ?</b>`);
   }
@@ -836,7 +947,7 @@ addEventListener("resize", () => { if (phase === "doors") buildLobby("table"); }
 
 function walk(duration = 4600) {
   const { D, zt, kind } = dims, frames = [], n = 60;
-  const T = kind === "table" ? -zt - 330 : kind === "candy" ? -zt - 420 : D - 520;
+  const T = kind === "table" ? -zt - 330 : kind === "candy" ? -zt - 420 : D - 700;
   const maxLook = kind === "table" ? 14 : kind === "candy" ? 8 : 0;
   for (let i = 0; i <= n; i++) {
     const t = i / n, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
@@ -881,7 +992,7 @@ let P = null; // geometría de la escena del sobre
 function buildPov() {
   $$(".hand, .pov-env, .fold", pov).forEach(e => e.remove());
   const vw = innerWidth, vh = innerHeight;
-  const W = Math.min(vw * .84, 360), H = W * 2 / 3;
+  const W = Math.min(vw * .7, 330), H = W * 2 / 3;
   const L = (vw - W) / 2, T = vh * .4 - H / 2;
   const env = document.createElement("div");
   env.className = "pov-env";
@@ -896,11 +1007,11 @@ function buildPov() {
   env.prepend(fold);
   pov.append(env);
   const l = makeHand(pov, "l"), r = makeHand(pov, "r");
-  sizeHand(l, W * .74); sizeHand(r, W * .74);
+  sizeHand(l, W * .83); sizeHand(r, W * .83);
   P = { vw, vh, W, H, L, T, env, fold, fw, ph, l, r,
-    gripL: [L + W * .06, T + H * .66, 12], gripR: [L + W * .94, T + H * .66, -12] };
-  setHand(l, P.gripL[0], P.gripL[1] + vh * .7, 12);
-  setHand(r, P.gripR[0], P.gripR[1] + vh * .7, -12);
+    gripL: [L + W * .053, T + H * .45, 5], gripR: [L + W * .947, T + H * .45, -5] };
+  setHand(l, P.gripL[0], P.gripL[1] + vh * .7, 5);
+  setHand(r, P.gripR[0], P.gripR[1] + vh * .7, -5);
 }
 
 // Tomar la carta de la mesa: vuela a sus manos
@@ -939,18 +1050,18 @@ async function openEnvelope() {
   await tapOnce(pov);
   $("#povHint").hidden = true;
   // 1) el pulgar derecho rompe el sello
-  await handTo(r, L + W * .54, T + H * .53, -32, 650);
+  await handTo(r, L + W * .53, T + H * .54, -28, 650);
   env.classList.add("open");
   await sleep(250);
   await handTo(r, ...P.gripR, 500);
   await sleep(500);
   // 2) toma la carta desde arriba y la saca
   const fx = L + W * .07, fy = T + H * .1;
-  await handTo(r, fx + fw * .8, fy + 6, -24, 700);
+  await handTo(r, fx + fw * .82, fy + 8, -12, 700);
   const lift = ph + H * .18;
   await Promise.all([
     animTo(fold, `translateY(${-lift}px)`, 1100, "cubic-bezier(.45,0,.25,1)"),
-    handTo(r, fx + fw * .8, fy + 6 - lift, -24, 1100, "cubic-bezier(.45,0,.25,1)"),
+    handTo(r, fx + fw * .82, fy + 8 - lift, -12, 1100, "cubic-bezier(.45,0,.25,1)"),
   ]);
   // la carta queda fuera del sobre, al frente
   const fr = fold.getBoundingClientRect();
@@ -964,8 +1075,8 @@ async function openEnvelope() {
   const cx = (vw - fw) / 2, cy = vh * .46 - ph / 2;
   await Promise.all([
     animTo(fold, `translate(${cx - fr.left}px, ${cy - fr.top}px)`, 800),
-    handTo(r, cx + fw - 6, cy + ph * .62, -10, 800),
-    handTo(l, cx + 6, cy + ph * .62, 10, 900, "cubic-bezier(.2,.8,.2,1)"),
+    handTo(r, cx + fw - 8, cy + ph * .42, -5, 800),
+    handTo(l, cx + 8, cy + ph * .42, 5, 900, "cubic-bezier(.2,.8,.2,1)"),
   ]);
   await sleep(350);
   // 5) se desdobla
@@ -1057,10 +1168,10 @@ function holdWith(wrap, target, gy, rot) {
   $$(".hand", wrap).forEach(e => e.remove());
   const l = makeHand(wrap, "l"), r = makeHand(wrap, "r");
   const w = target.offsetWidth, h = target.offsetHeight, x0 = target.offsetLeft, y0 = target.offsetTop;
-  const hw = Math.min(w * .62, 230);
+  const hw = Math.min(w * .78, 240);
   sizeHand(l, hw); sizeHand(r, hw);
-  setHand(l, x0 + hw * .05, y0 + h * gy, rot);
-  setHand(r, x0 + w - hw * .05, y0 + h * gy, -rot);
+  setHand(l, x0 + hw * .06, y0 + h * gy, rot);
+  setHand(r, x0 + w - hw * .06, y0 + h * gy, -rot);
   if (!reduced) { wrap.classList.remove("enter"); void wrap.offsetWidth; wrap.classList.add("enter"); }
 }
 
