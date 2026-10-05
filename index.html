@@ -215,6 +215,17 @@ button { font: inherit; cursor: pointer; }
   animation: knock 2s ease-in-out infinite;
 }
 .knock { bottom: 12%; }
+.sound-tip {
+  position: absolute; left: 50%; bottom: calc(12% + 4.2rem); z-index: 3; transform: translateX(-50%);
+  width: min(calc(100% - 32px), 21rem); display: flex; align-items: center; gap: .8rem;
+  padding: .8rem 1rem; border-radius: 14px; pointer-events: none;
+  background: rgba(12,6,10,.78); border: 1px solid var(--gold-soft); color: var(--gold);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.45);
+}
+.sound-tip svg { flex: 0 0 auto; animation: knock 2s ease-in-out infinite; }
+.sound-tip b { display: block; font: 700 .8rem/1.2 var(--f-ui); letter-spacing: .18em; text-transform: uppercase; }
+.sound-tip span { display: block; margin-top: .2rem; font: 400 .85rem/1.35 var(--f-ui); color: var(--cream-text); }
 .pick-hint { bottom: 9%; }
 @keyframes knock { 50% { opacity: .45; } }
 .doors.open + .knock { display: none; }
@@ -863,6 +874,10 @@ body { touch-action: pan-y pinch-zoom; }
       <span class="post post--r"><i class="rope"></i><svg viewBox="0 0 34 200" preserveAspectRatio="none"><defs><linearGradient id="brass" x1="0" x2="1"><stop offset="0" stop-color="#7a5d2e"/><stop offset=".45" stop-color="#f1d58f"/><stop offset="1" stop-color="#8f6d35"/></linearGradient></defs><rect x="13" y="20" width="8" height="168" fill="url(#brass)"/><ellipse cx="17" cy="192" rx="16" ry="7" fill="url(#brass)"/><circle cx="17" cy="16" r="10" fill="url(#brass)"/></svg></span>
     </span>
   </button>
+  <div class="sound-tip" id="soundTip">
+    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+    <div><b>Sube el volumen</b><span>Esta función es con sonido. Si puedes, usa audífonos.</span></div>
+  </div>
   <span class="knock" id="knock">Toca la puerta para entrar</span>
   <span class="pick-hint" id="pickHint" hidden>Toca la carta para tomarla</span>
   <button class="pick-hint sound-hint" id="soundHint" hidden>Toca para escuchar el video</button>
@@ -1500,7 +1515,7 @@ function walk(duration = 4600) {
 // Caminar a otra parte del cine (dulcería, sala) y volver a la página
 async function travel(kind, next) {
   if (reduced) { go(next); return; }
-  $("#openBtn").hidden = true; $("#knock").hidden = true; $("#pickHint").hidden = true;
+  $("#openBtn").hidden = true; $("#knock").hidden = true; $("#soundTip").hidden = true; $("#pickHint").hidden = true;
   entry.classList.remove("fade"); entry.hidden = false;
   buildLobby(kind);
   await sleep(60);
@@ -1529,7 +1544,7 @@ $("#openBtn").addEventListener("click", () => {
   scrollTo(0, 0);
   if (reduced) { entry.hidden = true; showLetterNow(); return; }
   AudioFX.start(); AudioFX.door(); buzz(20);
-  $("#openBtn").classList.add("open"); $("#knock").hidden = true;
+  $("#openBtn").classList.add("open"); $("#knock").hidden = true; $("#soundTip").hidden = true;
   setTimeout(() => {
     $("#openBtn").hidden = true;
     floatHearts(9000);
@@ -1975,7 +1990,7 @@ $("#moreHearts").addEventListener("click", () => burst(120));
 $("#restart").addEventListener("click", () => {
   resetLetter(); phase = "doors"; pov.hidden = true; buildGuess();
   buildLobby("table"); entry.classList.remove("fade"); entry.hidden = false;
-  $("#openBtn").hidden = false; $("#openBtn").classList.remove("open"); $("#knock").hidden = false; $("#noMsg").textContent = "";
+  $("#openBtn").hidden = false; $("#openBtn").classList.remove("open"); $("#knock").hidden = false; $("#soundTip").hidden = false; $("#noMsg").textContent = "";
   $("#verdict").hidden = true; noCount = 0;
   $("#scold").textContent = "¿Por qué quisiste apretar No???";
   $("#stamp").classList.remove("hit");
