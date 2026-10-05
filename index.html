@@ -298,7 +298,10 @@ button { font: inherit; cursor: pointer; }
   position: absolute; top: 20%; height: 40%; border: 9px solid #c9a35a; background: #000;
   box-shadow: 0 0 0 2px #7a5d2e, 0 0 50px rgba(255,210,140,.35);
 }
-.wallpic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.wallpic { overflow: hidden; }
+.wallpic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .9s ease; }
+.wallpic img.on { opacity: 1; }
+.screen-video { width: 100%; height: 100%; object-fit: contain; background: #000 center / cover no-repeat; display: block; }
 .polaroid {
   margin: 0 auto; width: min(68vw, 15rem); padding: .6rem .6rem 1.7rem; background: #fbf8f2;
   box-shadow: 0 12px 34px rgba(0,0,0,.65); transform: rotate(var(--r));
@@ -1034,7 +1037,8 @@ const PLAN = {
   mensaje:  "Gracias por decir que sí. Eres mi película favorita, y cada función contigo es un estreno. Te amo.",             // tu número con código de país, sin + ni espacios. Ej: "56912345678"
 };
 /* ======================================================= */
-const FOTOS = ["", "", "", "", "", "", "", "", ""];
+const FOTOS = ["", "", "", "", "", "", "", "", "", "", "", ""];
+const VIDEO = "", VIDEO_WEBM = "", VIDEO_BG = "";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -1312,7 +1316,7 @@ function face(cls, w, h, tf, html = "") {
   return el;
 }
 const camAt = (z, y, look) => `rotateX(${-look}deg) translate3d(0,${y}px,${z}px)`;
-let slideTimer = null;
+let slideTimer = null, wallTimers = [];
 function buildLobby(kind) {
   cam.innerHTML = "";
   const W = innerWidth, H = innerHeight, D = Math.round(Math.max(2400, H * 2.8));
@@ -1342,10 +1346,12 @@ function buildLobby(kind) {
     return `<div class="shelf" style="left:${x}px;width:${H * .34}px">${jars}</div>`;
   }).join("");
   // 9 fotos sin repetir: 3 por pared y 3 en la pantalla (termina en la del "sí")
-  const wallPics = side => FOTOS[0] ? [1, 2, 3].map(i => {
-    const n = side === "l" ? [2, 4, 6][i - 1] : [8, 3, 9][i - 1];
-    const at = (i - .2) / 3.6 * D, w = H * .3, x = side === "l" ? at : D - at - w;
-    return `<div class="wallpic" style="left:${x}px;width:${w}px"><img src="${FOTOS[n - 1]}" alt=""></div>`;
+  // 6 cuadros × 2 fotos propias = 12 fotos distintas; ninguna aparece en dos cuadros a la vez
+  const PAIRS = { l: [[2, 10], [4, 11], [6, 12]], r: [[8, 5], [3, 7], [9, 1]] };
+  const wallPics = side => FOTOS[0] ? PAIRS[side].map((pair, j) => {
+    const i = j + 1, at = (i - .2) / 3.6 * D, w = H * .3, x = side === "l" ? at : D - at - w;
+    const imgs = pair.filter(n => FOTOS[n - 1]).map((n, k) => `<img src="${FOTOS[n - 1]}" alt=""${k ? "" : ' class="on"'}>`).join("");
+    return `<div class="wallpic" style="left:${x}px;width:${w}px">${imgs}</div>`;
   }).join("") : "";
   const bolPosters = side => ["img/la-odisea.jpg", "img/la-otra-madre.jpg", "img/cars.jpg", "img/la-odisea.jpg"].slice(side === "l" ? 0 : 1, side === "l" ? 3 : 4).map((img, i) => {
     const at = (i + .45) / 3.4 * D, w = H * .3, x = side === "l" ? at : D - at - w;
@@ -1375,15 +1381,18 @@ function buildLobby(kind) {
   } else if (kind === "sala") {
     face("back back--sala", W, H, `translateZ(${-D}px)`);
     face("screen", W * .88, H * .42, `translate3d(0,${-H * .12}px,${-D + 2}px)`,
-      FOTOS[0] ? `<div class="slides">${[5, 7, 1].map((n, i) => `<img src="${FOTOS[n - 1]}" alt=""${i ? "" : ' class="on"'}>`).join("")}</div>` : `<span>Sala ?</span>`);
-    clearInterval(slideTimer);
-    let k = 0;
-    slideTimer = setInterval(() => {
-      const imgs = $$(".slides img", cam);
-      if (!imgs.length) return clearInterval(slideTimer);
-      if (k >= imgs.length - 1) return clearInterval(slideTimer);
-      imgs[k].classList.remove("on"); k++; imgs[k].classList.add("on");
-    }, 3300);
+      VIDEO ? `<video class="screen-video" muted playsinline preload="auto" style="background-image:url('${VIDEO_BG}')"><source src="${VIDEO}" type="video/mp4"><source src="${VIDEO_WEBM}" type="video/webm"></video>` : `<span>Sala ?</span>`);
+    const vid = $(".screen-video", cam);
+    if (vid) { vid.currentTime = 0; vid.play().catch(() => {}); }
+    // los cuadros cambian de foto escalonados
+    wallTimers.forEach(clearTimeout); wallTimers = [];
+    $$(".wallpic", cam).forEach((frame, j) => {
+      const imgs = $$("img", frame);
+      if (imgs.length < 2) return;
+      let k = 0;
+      const flip = () => { imgs[k].classList.remove("on"); k = 1 - k; imgs[k].classList.add("on"); wallTimers.push(setTimeout(flip, 3600)); };
+      wallTimers.push(setTimeout(flip, 2200 + j * 450));
+    });
     const rows = 12, sw = W * .34, sh = H * .17;
     for (let i = 0; i < rows; i++) {
       const z = -300 - i * (D - 900) / rows;
@@ -1430,7 +1439,17 @@ async function travel(kind, next) {
   await sleep(60);
   go(next);
   await walk(kind === "sala" ? 10500 : kind === "boleteria" ? 6000 : 3600).finished;
-  await sleep(kind === "sala" ? 1500 : 250);
+  const vid = kind === "sala" && $(".screen-video", cam);
+  if (vid && !vid.ended && !vid.error) {
+    $("#skipBtn").hidden = false;
+    await new Promise(res => {
+      const done = () => { vid.removeEventListener("ended", done); $("#skipBtn").removeEventListener("click", done); res(); };
+      vid.addEventListener("ended", done); $("#skipBtn").addEventListener("click", done);
+      setTimeout(done, Math.max(0, ((vid.duration || 26) - vid.currentTime) * 1000) + 800);
+    });
+    $("#skipBtn").hidden = true;
+  }
+  await sleep(kind === "sala" ? 900 : 250);
   entry.classList.add("fade");
   await sleep(850);
   entry.hidden = true; entry.classList.remove("fade");
@@ -1694,6 +1713,9 @@ async function drawSig() {
     [null, 3, "", 4],
     ["Letra chica", "Besos cuando yo quiera"],
     [null, 9, "", -3],
+    [null, 10, "", 3],
+    [null, 11, "", -4],
+    [null, 12, "", 4],
     ["", "Nuestra historia", "big"],
     ["Primera conversación", new Date(PLAN.hablamos + "T00:00:00").toLocaleDateString("es-CL", { day: "numeric", month: "long", year: "numeric" })],
     ["Nos conocimos", new Date(PLAN.conocimos + "T00:00:00").toLocaleDateString("es-CL", { day: "numeric", month: "long", year: "numeric" })],
