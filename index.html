@@ -52,98 +52,118 @@ body {
 button { font: inherit; cursor: pointer; }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
-/* ---------- Puertas del cine ---------- */
-.entry {
-  position: fixed; inset: 0; z-index: 30;
-  display: flex;
-  background: var(--night);
-  overflow: hidden;
-  transition: opacity .9s ease 1s, transform 2s cubic-bezier(.5,0,.2,1) .5s;
+/* ---------- Lobby en primera persona ---------- */
+.entry { position: fixed; inset: 0; z-index: 30; background: #050205; overflow: hidden; }
+.world {
+  position: absolute; inset: 0; overflow: hidden;
+  perspective: 700px; perspective-origin: 50% 46%;
 }
-.entry.open { opacity: 0; transform: scale(1.5); pointer-events: none; }
+.cam { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.face { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; backface-visibility: hidden; }
+.floor {
+  background:
+    repeating-linear-gradient(180deg, rgba(0,0,0,.22) 0 3px, transparent 3px 140px),
+    linear-gradient(90deg, #120609 0 22%, var(--gold-soft) 22% 23%, #8e0f2a 23% 77%, var(--gold-soft) 77% 78%, #120609 78%);
+}
+.ceiling {
+  background:
+    radial-gradient(circle at 50% 50%, #fff3d6 0 5px, rgba(255,214,140,.35) 6px, transparent 46px) 0 0 / 100% 260px,
+    linear-gradient(90deg, #0c0507, #1a0a10 50%, #0c0507);
+}
+.wall {
+  background:
+    linear-gradient(180deg, transparent 0 86%, var(--gold-soft) 86% 86.6%, #0b0406 86.6%),
+    repeating-linear-gradient(90deg, #2a1119 0 3px, #1c0a10 3px 210px);
+}
+.wall::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
+.wall--l::after { background: linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,.55)); }
+.wall--r::after { background: linear-gradient(270deg, rgba(0,0,0,0), rgba(0,0,0,.55)); }
+.lightbox {
+  position: absolute; top: 20%; height: 46%; border-radius: 4px;
+  border: 6px solid #3b2a20; display: grid; place-items: end center; padding-bottom: 8%;
+  font-family: var(--f-display); color: rgba(255,255,255,.9); font-size: 1.5rem; letter-spacing: .08em;
+  box-shadow: 0 0 40px rgba(255,200,140,.35), inset 0 0 30px rgba(0,0,0,.4);
+}
+.sconce {
+  position: absolute; top: 9%; width: 14px; height: 14px; border-radius: 50%;
+  background: #fff1cf; box-shadow: 0 0 18px 8px rgba(255,205,130,.55), 0 30px 60px 20px rgba(255,190,110,.18);
+}
+.back {
+  display: grid; place-items: center; align-content: center; gap: 1rem;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.45), transparent 30%),
+    repeating-linear-gradient(90deg, #4e0718 0 10px, #8c1430 30px 46px, #4e0718 66px 72px);
+}
+.back b {
+  font-family: var(--f-display); font-weight: 400; font-size: 4.2rem; color: var(--gold);
+  text-shadow: 0 0 22px rgba(233,196,111,.9), 0 0 60px rgba(233,196,111,.5);
+}
+.table-top {
+  border-radius: 14px;
+  background:
+    radial-gradient(80% 70% at 50% 45%, #fbf4e6, #e9dcc2 70%, #d2c09c);
+  box-shadow: 0 0 0 6px #5a2f1c;
+}
+.table-skirt { background: linear-gradient(180deg, #5a2f1c, #2e160c); border-radius: 0 0 6px 6px; }
+.table-leg { background: linear-gradient(90deg, #2e160c, #6d3b24 45%, #2e160c); }
+.spot { border-radius: 50%; background: radial-gradient(closest-side, rgba(255,220,150,.45), transparent); }
+.beam {
+  background: linear-gradient(180deg, rgba(255,232,180,.0), rgba(255,226,170,.22) 30%, rgba(255,226,170,.06));
+  clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
+}
+.env3d { pointer-events: none; }
+.env3d .env-seal { width: 22%; height: auto; aspect-ratio: 1; margin: 0; transform: translate(-50%, -50%); font-size: .9rem; }
+.env3d .env-to { font-size: .9rem; bottom: 10%; }
+.env3d.glow { animation: envGlow 1.4s ease-in-out infinite; }
+@keyframes envGlow { 50% { filter: brightness(1.18) drop-shadow(0 0 10px rgba(255,220,150,.9)); } }
 
-.marquee {
-  position: relative; z-index: 3;
-  width: min(100%, 25rem);
-  padding: 1.4rem 1.3rem 1.3rem;
-  background: var(--velvet);
-  border: 2px solid var(--gold);
-  border-radius: 12px;
-  text-align: center;
-  display: grid; gap: .8rem;
-  box-shadow: 0 0 0 6px var(--velvet), 0 0 0 8px var(--gold-soft), 0 0 60px rgba(233,196,111,.18);
-}
-.bulbs { position: absolute; inset: -14px; pointer-events: none; }
-.bulbs i {
-  position: absolute; width: 8px; height: 8px; border-radius: 50%;
-  background: var(--gold); box-shadow: 0 0 8px var(--gold);
-  animation: blink 1.2s infinite;
-}
-@keyframes blink { 50% { opacity: .25; box-shadow: none; } }
-.eyebrow {
-  font-family: var(--f-ui); font-weight: 600; font-size: .72rem;
-  letter-spacing: .28em; text-transform: uppercase; color: var(--gold);
-}
-.marquee h1 {
-  margin: 0; font-family: var(--f-display); font-weight: 400;
-  font-size: clamp(2rem, 9vw, 2.7rem); line-height: 1.02;
-  color: var(--cream-text); text-wrap: balance;
-  text-shadow: 0 0 18px rgba(233,196,111,.35);
-}
-.marquee h1 span { color: var(--gold); display: block; }
-.mini-count { font-family: var(--f-ticket); font-size: .85rem; color: var(--muted); }
-.mini-count b { color: var(--cream-text); }
-
+/* Puertas de vidrio (capa 2D sobre el lobby) */
 .doors {
-  position: relative; flex: 1 1 auto;
-  display: flex; padding: 0; margin: 0;
-  border: 12px solid var(--metal-dark);
-  background: transparent; color: inherit;
-  overflow: hidden; cursor: pointer;
+  position: absolute; inset: 0; z-index: 2; display: flex; padding: 0; margin: 0;
+  border: 0; background: none; cursor: pointer; color: inherit;
 }
-.doors:focus-visible { outline: 3px solid var(--gold); outline-offset: -8px; }
-.inside {
-  position: absolute; inset: 0;
-  background:
-    linear-gradient(180deg, transparent 62%, var(--stamp) 62%, var(--velvet) 100%),
-    radial-gradient(70% 55% at 50% 45%, rgba(255,214,140,.95), rgba(179,18,47,.55) 55%, var(--velvet) 85%);
-  opacity: 0; transition: opacity .6s ease .2s;
-}
-.entry.open .inside { opacity: 1; }
+.doors:focus-visible { outline: 3px solid var(--gold); outline-offset: -10px; }
 .door {
-  position: relative; z-index: 1; flex: 1 1 0;
-  border: 5px solid var(--metal);
+  position: relative; flex: 1 1 0;
+  border: 14px solid #2b2f38; border-top-width: 22px;
   background:
-    linear-gradient(115deg, rgba(190,215,255,.22), rgba(255,255,255,.04) 38%, rgba(255,255,255,.12) 44%, rgba(255,255,255,.03) 52%, rgba(160,190,230,.16)),
-    rgb(20,26,40);
-  transition: transform 1.5s cubic-bezier(.6,0,.2,1);
+    linear-gradient(115deg, rgba(255,255,255,.16), rgba(255,255,255,0) 30%, rgba(255,255,255,.1) 36%, rgba(255,255,255,0) 44%),
+    rgba(14,10,16,.55);
+  -webkit-backdrop-filter: blur(9px) saturate(1.2); backdrop-filter: blur(9px) saturate(1.2);
+  box-shadow: inset 0 0 0 2px #59606d;
+  transition: transform 1.2s cubic-bezier(.6,0,.2,1);
 }
-.door--l { border-right-width: 3px; }
-.door--r { border-left-width: 3px; }
-.handle {
-  position: absolute; top: 36%; height: 30%; width: 7px; border-radius: 4px;
-  background: linear-gradient(90deg, #e3e6ec, var(--metal-dark));
+.door--l { border-right-width: 5px; }
+.door--r { border-left-width: 5px; }
+.door .bar {
+  position: absolute; top: 52%; height: 12px; width: 62%; border-radius: 6px;
+  background: linear-gradient(180deg, #f1f3f7, #8c929e);
+  box-shadow: 0 3px 8px rgba(0,0,0,.5);
 }
-.door--l .handle { right: 12px; }
-.door--r .handle { left: 12px; }
-.decal {
-  position: absolute; top: 24%; font-family: var(--f-ui); font-weight: 700; font-size: .8rem;
-  letter-spacing: .3em; color: rgba(246,233,210,.75);
+.door--l .bar { right: 8%; }
+.door--r .bar { left: 8%; }
+.door .heart {
+  position: absolute; top: 26%; font-size: 1.6rem; color: rgba(255,122,149,.85);
+  text-shadow: 0 0 14px rgba(255,122,149,.8);
 }
-.door--l .decal { right: 4px; }
-.door--r .decal { left: 4px; }
-.knock {
-  position: absolute; left: 50%; bottom: 14%; z-index: 2; transform: translateX(-50%);
-  padding: .8rem 1.3rem; border-radius: 999px; white-space: nowrap;
-  background: rgba(12,14,22,.75); border: 1px solid var(--metal);
+.door--l .heart { right: -0.55em; }
+.door--r .heart { display: none; }
+.doors.open .door--l { transform: translateX(-104%); }
+.doors.open .door--r { transform: translateX(104%); }
+.knock, .pick-hint {
+  position: absolute; left: 50%; z-index: 3; transform: translateX(-50%);
+  padding: .8rem 1.3rem; border-radius: 999px; white-space: nowrap; pointer-events: none;
+  background: rgba(12,6,10,.72); border: 1px solid var(--gold-soft);
   font-family: var(--f-ui); font-weight: 600; font-size: .8rem; letter-spacing: .2em; text-transform: uppercase;
   color: var(--cream-text);
   animation: knock 2s ease-in-out infinite;
 }
+.knock { bottom: 12%; }
+.pick-hint { bottom: 9%; }
 @keyframes knock { 50% { opacity: .45; } }
-.entry.open .knock { opacity: 0; animation: none; transition: opacity .3s; }
-.entry.open .door--l { transform: translateX(-102%); }
-.entry.open .door--r { transform: translateX(102%); }
+.doors.open + .knock { display: none; }
+.pickup { position: fixed !important; z-index: 50; margin: 0 !important; animation: none !important; pointer-events: none; }
+.entry.fade { transition: opacity .9s ease; opacity: 0; }
 
 .btn {
   border: 0; border-radius: 999px;
@@ -411,12 +431,15 @@ button { font: inherit; cursor: pointer; }
 
 <!-- Entrada: puertas del cine -->
 <div class="entry" id="entry">
+  <div class="world" id="world">
+    <div class="cam" id="cam"></div>
+  </div>
   <button class="doors" id="openBtn" aria-label="Abrir la puerta">
-    <span class="inside"></span>
-    <span class="door door--l"><span class="decal">BIENVE</span><i class="handle"></i></span>
-    <span class="door door--r"><span class="decal">NIDA</span><i class="handle"></i></span>
-    <span class="knock">Toca la puerta para entrar</span>
+    <span class="door door--l"><span class="heart">♥</span><i class="bar"></i></span>
+    <span class="door door--r"><span class="heart">♥</span><i class="bar"></i></span>
   </button>
+  <span class="knock">Toca la puerta para entrar</span>
+  <span class="pick-hint" id="pickHint" hidden>Toca la carta para tomarla</span>
 </div>
 
 <main class="stage" id="stage">
@@ -648,12 +671,101 @@ function go(id) {
 $$("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
 go("carta");
 
-// Puertas
+// Lobby en primera persona: puertas, caminata y la carta sobre la mesa
+const cam = $("#cam"), entry = $("#entry");
+let dims = null, phase = "doors", env3d = null;
+function face(cls, w, h, tf, html = "") {
+  const el = document.createElement("div");
+  el.className = "face " + cls;
+  Object.assign(el.style, { width: w + "px", height: h + "px", marginLeft: -w / 2 + "px", marginTop: -h / 2 + "px", transform: tf });
+  el.innerHTML = html;
+  cam.append(el);
+  return el;
+}
+function buildLobby() {
+  cam.innerHTML = "";
+  const W = innerWidth, H = innerHeight, D = Math.round(Math.max(2400, H * 2.8));
+  const zt = -(D - 560), th = Math.round(H * .36), tw = Math.min(W * .7, 360), tdp = tw * .62;
+  dims = { W, H, D, zt, th, tw };
+  const floor = face("floor", W, D, `translate3d(0,${H / 2}px,${-D / 2}px) rotateX(90deg)`);
+  floor.style.backgroundImage = `radial-gradient(${tw * 1.3}px ${tw * 1.1}px at 50% ${zt + D / 2}px, rgba(255,220,150,.42), transparent), ` + getComputedStyle(floor).backgroundImage;
+  face("ceiling", W, D, `translate3d(0,${-H / 2}px,${-D / 2}px) rotateX(-90deg)`);
+  const posters = [
+    ["Estreno", "linear-gradient(160deg,#ffb36b,#c2185b 60%,#3a0b2a)"],
+    ["Próximamente", "linear-gradient(160deg,#6be0ff,#3949ab 60%,#120b3a)"],
+    ["Función privada", "linear-gradient(160deg,#ffe08a,#e65100 60%,#2a0b05)"],
+  ];
+  const wallHtml = side => posters.map(([t, bg], i) => {
+    const at = (i + .6) / (posters.length + .4) * D;
+    const x = side === "l" ? at : D - at - H * .3;
+    return `<div class="lightbox" style="left:${x}px;width:${H * .3}px;background:${bg}">${t}</div>` +
+      `<i class="sconce" style="left:${side === "l" ? at - 120 : D - at + 120}px"></i>`;
+  }).join("");
+  face("wall wall--l", D, H, `translate3d(${-W / 2}px,0,${-D / 2}px) rotateY(90deg)`, wallHtml("l"));
+  face("wall wall--r", D, H, `translate3d(${W / 2}px,0,${-D / 2}px) rotateY(-90deg)`, wallHtml("r"));
+  face("back", W, H, `translateZ(${-D}px)`, `<b>Sala ?</b>`);
+  // Mesa con la carta
+  face("beam", tw * 1.5, H / 2 + (H / 2 - th), `translate3d(0,${(-H / 2 + (H / 2 - th)) / 2}px,${zt - 2}px)`);
+  face("table-leg", 22, th, `translate3d(0,${H / 2 - th / 2}px,${zt}px)`);
+  face("table-skirt", tw, 30, `translate3d(0,${H / 2 - th + 15}px,${zt + tdp / 2}px)`);
+  face("table-top", tw, tdp, `translate3d(0,${H / 2 - th}px,${zt}px) rotateX(90deg)`);
+  env3d = face("env3d", tw * .62, tw * .62 * 2 / 3, `translate3d(0,${H / 2 - th - 2}px,${zt + 8}px) rotateX(90deg) rotateZ(-7deg)`,
+    `<span class="env-back"></span><span class="env-front"></span><span class="env-flap"></span><span class="env-seal">♥</span>`);
+  cam.style.transform = camAt(0, 0, 0);
+}
+const camAt = (z, y, look) => `rotateX(${-look}deg) translate3d(0,${y}px,${z}px)`;
+buildLobby();
+addEventListener("resize", () => { if (phase === "doors") buildLobby(); });
+
+function walk() {
+  const { D, zt } = dims, T = -zt - 330, frames = [], n = 60;
+  for (let i = 0; i <= n; i++) {
+    const t = i / n, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    const bob = Math.sin(t * Math.PI * 9) * 7 * Math.sin(t * Math.PI);
+    const look = 14 * Math.max(0, (t - .55) / .45) ** 2;
+    frames.push({ transform: camAt(e * T, bob, look), offset: t });
+  }
+  return cam.animate(frames, { duration: 4600, easing: "linear", fill: "forwards" });
+}
+
 $("#openBtn").addEventListener("click", () => {
-  const e = $("#entry");
-  e.classList.add("open");
+  if (phase !== "doors") return;
+  phase = "walking";
   scrollTo(0, 0);
-  setTimeout(() => { e.hidden = true; }, reduced ? 50 : 2600);
+  if (reduced) { entry.hidden = true; return; }
+  $("#openBtn").classList.add("open");
+  setTimeout(() => {
+    $("#openBtn").hidden = true;
+    walk().onfinish = () => {
+      phase = "table";
+      env3d.classList.add("glow");
+      $("#pickHint").hidden = false;
+    };
+  }, 1000);
+});
+
+entry.addEventListener("click", e => {
+  if (phase !== "table") return;
+  phase = "pickup";
+  $("#pickHint").hidden = true;
+  env3d.classList.remove("glow");
+  const from = env3d.getBoundingClientRect();
+  const target = $("#envelope").getBoundingClientRect();
+  const card = $("#envelope").cloneNode(true);
+  card.removeAttribute("id"); card.classList.add("pickup");
+  Object.assign(card.style, { left: target.left + "px", top: target.top + "px", width: target.width + "px", transformOrigin: "50% 50%" });
+  document.body.append(card);
+  env3d.style.visibility = "hidden";
+  const sx = from.width / target.width;
+  const dx = from.left + from.width / 2 - (target.left + target.width / 2);
+  const dy = from.top + from.height / 2 - (target.top + target.height / 2);
+  const lift = card.animate([
+    { transform: `translate(${dx}px,${dy}px) scale(${sx}) perspective(600px) rotateX(72deg) rotate(-7deg)` },
+    { transform: `translate(${dx * .5}px,${dy * .4 - 60}px) scale(${(sx + 1) / 2}) perspective(600px) rotateX(30deg) rotate(4deg)`, offset: .45 },
+    { transform: "none" },
+  ], { duration: 1300, easing: "cubic-bezier(.3,.6,.2,1)", fill: "forwards" });
+  entry.classList.add("fade");
+  lift.onfinish = () => { card.remove(); entry.hidden = true; };
 });
 
 // Sobre y carta escrita a lápiz
