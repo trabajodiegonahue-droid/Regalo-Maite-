@@ -84,6 +84,26 @@ button { font: inherit; cursor: pointer; }
   font-family: var(--f-display); color: rgba(255,255,255,.9); font-size: 1.5rem; letter-spacing: .08em;
   box-shadow: 0 0 40px rgba(255,200,140,.35), inset 0 0 30px rgba(0,0,0,.4);
 }
+.lightbox span { display: grid; gap: .3rem; text-align: center; line-height: 1.05; text-shadow: 0 2px 10px rgba(0,0,0,.5); }
+.lightbox small { font: 600 .55rem/1.2 var(--f-ui); letter-spacing: .25em; text-transform: uppercase; opacity: .9; }
+.neonheart { position: absolute; top: 10%; display: block; filter: drop-shadow(0 0 6px #ff5c8a) drop-shadow(0 0 16px #ff2f6d); animation: neon 2.6s ease-in-out infinite; }
+.neonheart svg { width: 100%; height: 100%; display: block; }
+.premiere { display: grid; justify-items: center; gap: .4rem; text-align: center; }
+.premiere small { font: 600 .9rem/1 var(--f-ui); letter-spacing: .3em; text-transform: uppercase; color: #ffe9a8; text-shadow: 0 0 10px rgba(255,220,150,.8); }
+.premiere b { font-family: var(--f-display); font-weight: 400; font-size: 4rem; color: var(--gold); text-shadow: 0 0 22px rgba(233,196,111,.9), 0 0 60px rgba(233,196,111,.5); }
+.premiere i { width: 5rem; height: 5rem; filter: drop-shadow(0 0 8px #ff5c8a) drop-shadow(0 0 20px #ff2f6d); animation: neon 2.4s ease-in-out infinite; }
+.premiere i svg { width: 100%; height: 100%; }
+.candle { background: linear-gradient(90deg, #e9dcc0, #fff8e8 45%, #d9c9a6); border-radius: 3px 3px 2px 2px; overflow: visible; }
+.flame {
+  position: absolute; left: 50%; top: -20px; width: 12px; height: 20px; margin-left: -6px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: radial-gradient(circle at 50% 70%, #fff6c8 0 25%, #ffc24a 45%, rgba(255,120,30,.6) 70%, transparent 72%);
+  box-shadow: 0 0 18px 8px rgba(255,190,90,.45), 0 0 50px 20px rgba(255,170,80,.18);
+  animation: flicker 1.3s ease-in-out infinite alternate;
+}
+@keyframes flicker { 0% { transform: scale(1) translateX(0); opacity: 1; } 50% { transform: scale(.88, 1.08) translateX(1px); opacity: .9; } 100% { transform: scale(1.05, .95) translateX(-1px); opacity: 1; } }
+.petal { border-radius: 60% 40% 60% 40%; backface-visibility: visible; opacity: .92; }
+.rose svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
 .sconce {
   position: absolute; top: 9%; width: 14px; height: 14px; border-radius: 50%;
   background: #fff1cf; box-shadow: 0 0 18px 8px rgba(255,205,130,.55), 0 30px 60px 20px rgba(255,190,110,.18);
@@ -1348,11 +1368,18 @@ function buildLobby(kind) {
     ["Próximamente", "linear-gradient(160deg,#6be0ff,#3949ab 60%,#120b3a)"],
     ["Función privada", "linear-gradient(160deg,#ffe08a,#e65100 60%,#2a0b05)"],
   ];
-  const wallHtml = side => posters.map(([t, bg], i) => {
+  const romance = [
+    [`<span><small>Una historia de amor</small>${PLAN.nombre} &amp; ${PLAN.firma}</span>`, "linear-gradient(160deg,#ffb3c7,#d81b60 55%,#3a0b2a)"],
+    [`<span><small>Estreno mundial</small>Nosotros</span>`, "linear-gradient(160deg,#ffd9a8,#b3122f 55%,#2a0710)"],
+    [`<span><small>Próximamente</small>Para siempre</span>`, "linear-gradient(160deg,#f7c9d5,#8e24aa 55%,#1d0a2a)"],
+  ];
+  const set = kind === "table" ? romance : posters;
+  const wallHtml = side => set.map(([t, bg], i) => {
     const at = (i + .6) / (posters.length + .4) * D;
     const x = side === "l" ? at : D - at - H * .3;
     return `<div class="lightbox" style="left:${x}px;width:${H * .3}px;background:${bg}">${t}</div>` +
-      `<i class="sconce" style="left:${side === "l" ? at - 120 : D - at + 120}px"></i>`;
+      (kind === "table" ? `<i class="neonheart" style="left:${side === "l" ? at - 170 : D - at + 90}px;width:${H * .1}px;height:${H * .1}px"><svg viewBox="0 0 100 100"><path d="M50 84 C20 62 8 46 8 32 C8 18 19 9 31 9 C40 9 46 14 50 21 C54 14 60 9 69 9 C81 9 92 18 92 32 C92 46 80 62 50 84 Z" fill="none" stroke="#ff7aa0" stroke-width="7" stroke-linejoin="round"/></svg></i>`
+        : `<i class="sconce" style="left:${side === "l" ? at - 120 : D - at + 120}px"></i>`);
   }).join("");
   const shelves = side => Array.from({ length: 5 }, (_, i) => {
     const at = (i + .5) / 5.4 * D, x = side === "l" ? at : D - at - H * .34;
@@ -1425,13 +1452,24 @@ function buildLobby(kind) {
       face("seats", sw, sh, `translate3d(${W / 2 - sw / 2}px,${H / 2 - sh / 2}px,${z}px)`);
     }
   } else {
-    face("back", W, H, `translateZ(${-D}px)`, `<b>Sala ?</b>`);
+    face("back", W, H, `translateZ(${-D}px)`, kind === "table"
+      ? `<div class="premiere"><small>Función de estreno</small><b>Tú y yo</b><i><svg viewBox="0 0 100 100"><path d="M50 84 C20 62 8 46 8 32 C8 18 19 9 31 9 C40 9 46 14 50 21 C54 14 60 9 69 9 C81 9 92 18 92 32 C92 46 80 62 50 84 Z" fill="none" stroke="#ff7aa0" stroke-width="7" stroke-linejoin="round"/></svg></i></div>` : `<b>Sala ?</b>`);
   }
   if (kind === "table") {
     face("beam", tw * 1.5, H / 2 + (H / 2 - th), `translate3d(0,${(-H / 2 + (H / 2 - th)) / 2}px,${zt - 2}px)`);
     face("table-leg", 22, th, `translate3d(0,${H / 2 - th / 2}px,${zt}px)`);
     face("table-skirt", tw, 30, `translate3d(0,${H / 2 - th + 15}px,${zt + tdp / 2}px)`);
     face("table-top", tw, tdp, `translate3d(0,${H / 2 - th}px,${zt}px) rotateX(90deg)`);
+    for (let z = -260; z > zt + 260; z -= 330) {
+      for (const sx of [-1, 1]) face("candle", 14, 46, `translate3d(${sx * W * .31}px,${H / 2 - 23}px,${z}px)`, `<i class="flame" style="animation-delay:${(Math.random() * 1.5).toFixed(2)}s"></i>`);
+    }
+    const petalC = ["#b3122f", "#d81b60", "#ff5c8a", "#9b0f2c"];
+    for (let i = 0; i < 70; i++) {
+      const x = (Math.random() - .5) * W * .44, z = -120 - Math.random() * (-zt - 80);
+      face("petal", 13 + Math.random() * 7, 9 + Math.random() * 5,
+        `translate3d(${x}px,${H / 2 - 2}px,${z}px) rotateX(90deg) rotateZ(${Math.random() * 360}deg)`).style.background = petalC[i % 4];
+    }
+    face("rose", tw * .7, tw * .35, `translate3d(${tw * .05}px,${H / 2 - th - 3}px,${zt + tw * .16}px) rotateX(90deg) rotateZ(-12deg)`, `<svg viewBox="0 0 200 100"><path d="M20 62 C70 58 110 54 150 50" stroke="#2f6b2a" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M70 58 C76 40 96 36 104 44 C92 46 82 52 70 58 Z" fill="#3f8a35"/><path d="M110 54 C112 70 128 78 136 70 C126 66 118 60 110 54 Z" fill="#357a2e"/><circle cx="162" cy="48" r="28" fill="#9b0f2c"/><path d="M162 48 m-18 0 a18 18 0 1 1 36 0 a14 14 0 1 1 -28 2 a10 10 0 1 1 20 -2 a6 6 0 1 1 -12 1" fill="none" stroke="#e0435f" stroke-width="4" stroke-linecap="round"/><path d="M140 34 C150 22 172 20 184 34" stroke="#c2213f" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`);
     env3d = face("env3d", tw * .62, tw * .62 * 2 / 3, `translate3d(0,${H / 2 - th - 2}px,${zt + 8}px) rotateX(90deg) rotateZ(-7deg)`,
       `<span class="env-back"></span><span class="env-front"></span><span class="env-flap"></span><span class="env-seal wax">${WAX}</span>`);
   }
@@ -1490,6 +1528,7 @@ $("#openBtn").addEventListener("click", () => {
   $("#openBtn").classList.add("open"); $("#knock").hidden = true;
   setTimeout(() => {
     $("#openBtn").hidden = true;
+    floatHearts(9000);
     walk().onfinish = () => {
       phase = "table";
       env3d.classList.add("glow");
@@ -1964,6 +2003,21 @@ function burst(n) {
     s: 12 + Math.random() * 16, c: colors[i % colors.length], life: 0,
   });
 }
+let floatTimer = null;
+function floatHearts(ms) {
+  if (reduced) return;
+  clearInterval(floatTimer);
+  const end = Date.now() + ms;
+  floatTimer = setInterval(() => {
+    if (Date.now() > end) { clearInterval(floatTimer); return; }
+    add({
+      x: Math.random() * innerWidth, y: innerHeight + 20,
+      vx: 0, vy: -(.7 + Math.random() * 1.1), g: 0, a: .25 + Math.random() * .35,
+      r: (Math.random() - .5) * .4, vr: (Math.random() - .5) * .01, sway: Math.random() * 6,
+      s: 10 + Math.random() * 16, c: colors[Math.floor(Math.random() * colors.length)], life: 0,
+    });
+  }, 180);
+}
 let rainTimer = null;
 function rain(ms) {
   if (reduced) return;
@@ -1981,13 +2035,13 @@ function rain(ms) {
 }
 function loop() {
   fctx.clearRect(0, 0, innerWidth, innerHeight);
-  parts = parts.filter(p => p.y < innerHeight + 40 && p.life < 900);
+  parts = parts.filter(p => p.y < innerHeight + 40 && p.y > -60 && p.life < 900);
   for (const p of parts) {
     p.vy += p.g; p.vx *= .99; p.life++;
     p.x += p.vx + Math.sin(p.life / 20 + p.sway) * (p.sway ? .8 : 0);
     p.y += p.vy; p.r += p.vr;
     fctx.save(); fctx.translate(p.x, p.y); fctx.rotate(p.r); fctx.translate(0, -p.s / 2);
-    fctx.fillStyle = p.c; heart(p.s);
+    fctx.globalAlpha = p.a ?? 1; fctx.fillStyle = p.c; heart(p.s); fctx.globalAlpha = 1;
     fctx.restore();
   }
   if (parts.length) requestAnimationFrame(loop); else { running = false; fctx.clearRect(0, 0, innerWidth, innerHeight); }
