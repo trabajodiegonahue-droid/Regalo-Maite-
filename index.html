@@ -301,7 +301,7 @@ button { font: inherit; cursor: pointer; }
 .wallpic { overflow: hidden; }
 .wallpic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .9s ease; }
 .wallpic img.on { opacity: 1; }
-.screen-video { width: 100%; height: 100%; object-fit: contain; background: #000 center / cover no-repeat; display: block; }
+.screen-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 50% 50%; background: #000 center / cover no-repeat; display: block; }
 .polaroid {
   margin: 0 auto; width: min(68vw, 15rem); padding: .6rem .6rem 1.7rem; background: #fbf8f2;
   box-shadow: 0 12px 34px rgba(0,0,0,.65); transform: rotate(var(--r));
