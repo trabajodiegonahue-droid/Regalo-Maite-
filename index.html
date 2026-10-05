@@ -1301,9 +1301,10 @@ function buildLobby(kind) {
     const jars = ["#ff5fa2", "#ffd23f", "#3ec1ff", "#7cff8a", "#ff8a3d", "#c77dff"].map((c, k) => `<i style="--c:${[c][0]};--d:${(i + k) % 6}"></i>`).join("");
     return `<div class="shelf" style="left:${x}px;width:${H * .34}px">${jars}</div>`;
   }).join("");
-  const wallPics = side => FOTOS[0] ? [1, 2, 3, 4].map(i => {
-    const n = side === "l" ? [1, 4, 6, 3][i - 1] : [2, 8, 9, 5][i - 1];
-    const at = (i - .3) / 4.6 * D, w = H * .3, x = side === "l" ? at : D - at - w;
+  // 9 fotos sin repetir: 3 por pared y 3 en la pantalla (termina en la del "sí")
+  const wallPics = side => FOTOS[0] ? [1, 2, 3].map(i => {
+    const n = side === "l" ? [2, 4, 6][i - 1] : [8, 3, 9][i - 1];
+    const at = (i - .2) / 3.6 * D, w = H * .3, x = side === "l" ? at : D - at - w;
     return `<div class="wallpic" style="left:${x}px;width:${w}px"><img src="${FOTOS[n - 1]}" alt=""></div>`;
   }).join("") : "";
   const sideHtml = side => kind === "candy" ? shelves(side) : kind === "sala" ? wallPics(side) : wallHtml(side);
@@ -1322,14 +1323,15 @@ function buildLobby(kind) {
   } else if (kind === "sala") {
     face("back back--sala", W, H, `translateZ(${-D}px)`);
     face("screen", W * .88, H * .42, `translate3d(0,${-H * .12}px,${-D + 2}px)`,
-      FOTOS[0] ? `<div class="slides">${[5, 8, 2, 1, 9, 3, 4, 6, 7].map((n, i) => `<img src="${FOTOS[n - 1]}" alt=""${i ? "" : ' class="on"'}>`).join("")}</div>` : `<span>Sala ?</span>`);
+      FOTOS[0] ? `<div class="slides">${[5, 7, 1].map((n, i) => `<img src="${FOTOS[n - 1]}" alt=""${i ? "" : ' class="on"'}>`).join("")}</div>` : `<span>Sala ?</span>`);
     clearInterval(slideTimer);
     let k = 0;
     slideTimer = setInterval(() => {
       const imgs = $$(".slides img", cam);
       if (!imgs.length) return clearInterval(slideTimer);
-      imgs[k % imgs.length].classList.remove("on"); k++; imgs[k % imgs.length].classList.add("on");
-    }, 1150);
+      if (k >= imgs.length - 1) return clearInterval(slideTimer);
+      imgs[k].classList.remove("on"); k++; imgs[k].classList.add("on");
+    }, 3300);
     const rows = 12, sw = W * .34, sh = H * .17;
     for (let i = 0; i < rows; i++) {
       const z = -300 - i * (D - 900) / rows;
