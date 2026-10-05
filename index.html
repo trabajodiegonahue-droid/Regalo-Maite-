@@ -37,7 +37,7 @@
 
   color-scheme: dark;
 }
-html, body { height: 100%; }
+html, body { height: 100%; overflow-x: hidden; max-width: 100%; overscroll-behavior-x: none; }
 body {
   background:
     radial-gradient(120% 70% at 50% 0%, var(--velvet-2), var(--velvet) 70%) fixed,
@@ -320,8 +320,9 @@ button { font: inherit; cursor: pointer; }
   box-shadow: 0 0 0 2px #7a5d2e, 0 0 50px rgba(255,210,140,.35);
 }
 .wallpic { overflow: hidden; }
-.wallpic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .9s ease; }
-.wallpic img.on { opacity: 1; }
+.wallpic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.wallpic img + img { opacity: 0; transition: opacity .9s ease; }
+.wallpic img + img.on { opacity: 1; }
 .screen-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 50% 50%; background: #000 center / cover no-repeat; display: block; }
 .polaroid {
   margin: 0 auto; width: min(68vw, 15rem); padding: .6rem .6rem 1.7rem; background: #fbf8f2;
@@ -541,6 +542,9 @@ button { font: inherit; cursor: pointer; }
 }
 
 /* ---------- Escenario ---------- */
+/* nada se sale por los lados (las manos se recortan en el borde) */
+.stage { overflow-x: hidden; overflow-x: clip; }
+body { touch-action: pan-y pinch-zoom; }
 .stage {
   min-height: 100%;
   display: flex; flex-direction: column; align-items: center;
@@ -1391,7 +1395,7 @@ function buildLobby(kind) {
   const PAIRS = { l: [[2, 10], [4, 11], [6, 12]], r: [[8, 5], [3, 7], [9, 1]] };
   const wallPics = side => FOTOS[0] ? PAIRS[side].map((pair, j) => {
     const i = j + 1, at = (i - .2) / 3.6 * D, w = H * .3, x = side === "l" ? at : D - at - w;
-    const imgs = pair.filter(n => FOTOS[n - 1]).map((n, k) => `<img src="${FOTOS[n - 1]}" alt=""${k ? "" : ' class="on"'}>`).join("");
+    const imgs = pair.filter(n => FOTOS[n - 1]).map(n => `<img src="${FOTOS[n - 1]}" alt="" decoding="sync">`).join("");
     return `<div class="wallpic" style="left:${x}px;width:${w}px">${imgs}</div>`;
   }).join("") : "";
   const bolPosters = side => ["img/la-odisea.jpg", "img/la-otra-madre.jpg", "img/cars.jpg", "img/la-odisea.jpg"].slice(side === "l" ? 0 : 1, side === "l" ? 3 : 4).map((img, i) => {
@@ -1441,8 +1445,8 @@ function buildLobby(kind) {
     $$(".wallpic", cam).forEach((frame, j) => {
       const imgs = $$("img", frame);
       if (imgs.length < 2) return;
-      let k = 0;
-      const flip = () => { imgs[k].classList.remove("on"); k = 1 - k; imgs[k].classList.add("on"); wallTimers.push(setTimeout(flip, 3600)); };
+      imgs.forEach(im => im.decode?.().catch(() => {}));
+      const flip = () => { imgs[1].classList.toggle("on"); wallTimers.push(setTimeout(flip, 3600)); };
       wallTimers.push(setTimeout(flip, 2200 + j * 450));
     });
     const rows = 12, sw = W * .34, sh = H * .17;
