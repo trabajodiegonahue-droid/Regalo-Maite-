@@ -389,15 +389,22 @@ button { font: inherit; cursor: pointer; }
 /* Boletería 3D */
 .floor--boleteria {
   background:
+    linear-gradient(90deg, transparent 29%, #c9a35a 29% 30%, #8e0f2a 30% 70%, #c9a35a 70% 71%, transparent 71%),
     linear-gradient(90deg, rgba(255,255,255,.06) 2px, transparent 2px) 0 0 / 130px 130px,
     linear-gradient(180deg, rgba(255,255,255,.06) 2px, transparent 2px) 0 0 / 130px 130px,
     linear-gradient(90deg, #121317, #1e2026 50%, #121317);
 }
 .ceiling--boleteria {
   background:
-    linear-gradient(90deg, #0e0f13 32%, transparent 32% 68%, #0e0f13 68%),
-    repeating-linear-gradient(180deg, #0e0f13 0 170px, #e9efff 170px 200px);
+    radial-gradient(circle at 50% 50%, #fff4d6 0 7px, rgba(255,214,150,.5) 8px, rgba(255,200,120,.15) 30px, transparent 80px) 0 0 / 100% 320px,
+    #121016;
 }
+.wall--boleteria::after { opacity: .7; }
+.lightbox--poster { padding: 0; overflow: hidden; border-color: #c9a35a; }
+.lightbox--poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.post3d { background: linear-gradient(90deg, #7a5d2e, #f1d58f 45%, #8f6d35); border-radius: 4px; }
+.post3d i { position: absolute; left: 50%; top: -12px; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff3c4, #c9a35a 60%, #7a5d2e); }
+.rope3d { border-bottom: 9px solid #9b1230; border-radius: 0 0 50% 50%; backface-visibility: visible; }
 .wall--boleteria { background: repeating-linear-gradient(90deg, #262830 0 4px, #1b1d23 4px 170px); }
 .back--bol { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4%; background: #1c1d22; }
 .back--bol .scr { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; width: 94%; height: 17%; }
@@ -407,7 +414,8 @@ button { font: inherit; cursor: pointer; }
     linear-gradient(#102366, #0a1440);
   box-shadow: 0 0 14px rgba(80,120,255,.7);
 }
-.back--bol b { font: 700 3.4rem/1 var(--f-ui); color: #fff; letter-spacing: .05em; text-shadow: 0 0 16px rgba(255,255,255,.7); }
+.back--bol b { font: 700 2.6rem/1 var(--f-ui); color: #fff; letter-spacing: .05em; text-shadow: 0 0 16px rgba(255,255,255,.7);
+  padding: .35em .55em; border: 7px dotted #ffe9a8; border-radius: 10px; box-shadow: 0 0 30px rgba(255,220,150,.45); }
 .counter--bol { background: linear-gradient(180deg, #2e3038, #1a1b20); border-top: 5px solid #8a8f9c; }
 
 /* ---------- Controles: música y saltar ---------- */
@@ -443,7 +451,7 @@ button { font: inherit; cursor: pointer; }
 .monogram i:last-child { background: linear-gradient(270deg, transparent, var(--gold-soft)); }
 .sig { width: min(100%, 15rem); height: auto; overflow: visible; display: block; }
 .sig text { font-family: var(--f-script); font-size: 54px; fill: transparent; stroke: var(--ink); stroke-width: .9; stroke-dasharray: 900; stroke-dashoffset: 900; }
-.sig.draw text { animation: sigDraw 2.4s ease forwards; }
+.sig.draw text { animation: sigDraw 3.2s ease forwards; }
 .sig.done text { animation: none; stroke-dashoffset: 0; fill: var(--ink); }
 @keyframes sigDraw { 78% { stroke-dashoffset: 0; fill: transparent; } 100% { stroke-dashoffset: 0; fill: var(--ink); } }
 
@@ -888,7 +896,7 @@ button { font: inherit; cursor: pointer; }
       <div class="held held--card" id="posterHeld">
         <div class="poster-card" id="posterCard"><img src="img/la-otra-madre.jpg" alt="Póster de La otra madre, con Jessica Chastain"></div>
       </div>
-      <p class="reveal-note"><b data-pelicula>La otra madre</b>Es de terror. Recuerda la cláusula de los besos.</p>
+      <p class="reveal-note"><b data-pelicula>La otra madre</b>Es de terror… recuerda la letra pequeña 😏</p>
       <button class="btn btn--gold" id="toCombo">Ir a la dulcería</button>
     </div>
   </section>
@@ -1113,29 +1121,32 @@ const AudioFX = (() => {
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
     o.connect(g); g.connect(dest); o.start(t); o.stop(t + dur + .05);
   }
-  // Cumbia romántica original (no es ninguna canción existente): Am – Dm – G – C a 96 bpm
-  const CH = [[57, 60, 64], [62, 65, 69], [55, 59, 62], [60, 64, 67]];
-  const BASS = [45, 50, 43, 48];
+  // Balada romántica original: C – Am – F – G a 72 bpm, con cuerdas suaves
+  const CH = [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62]];
+  const BASS = [48, 45, 41, 43];
   const MEL = [
-    [76, 0, 74, 72, 0, 74, 76, 0], [77, 0, 76, 74, 0, 72, 74, 0],
-    [74, 0, 72, 71, 0, 72, 74, 0], [72, 0, 0, 71, 72, 0, 76, 0],
+    [76, 0, 0, 74, 76, 0, 79, 0], [76, 0, 0, 72, 0, 0, 0, 0],
+    [72, 0, 74, 76, 0, 74, 72, 0], [74, 0, 0, 0, 71, 0, 0, 0],
   ];
+  function pad(t, ch, dur) {
+    ch.forEach(n => [0, 5].forEach(cents => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = "sine"; o.frequency.value = N(n) * Math.pow(2, cents / 1200);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.022, t + .9);
+      g.gain.setValueAtTime(.022, t + dur - .4); g.gain.linearRampToValueAtTime(0, t + dur + .3);
+      o.connect(g); g.connect(music); o.start(t); o.stop(t + dur + .4);
+    }));
+  }
   function schedule() {
-    const beat = 60 / 96 / 2;
+    const beat = 60 / 72 / 2;
     while (nextT < ctx.currentTime + .4) {
       const bar = Math.floor(step / 8) % 4, pos = step % 8, ch = CH[bar], b = BASS[bar];
-      // bajo de cumbia: tónica, quinta y pique
-      if (pos === 0) note(nextT, b, .45, .16, "triangle");
-      if (pos === 3) note(nextT, b + 7, .25, .1, "triangle");
-      if (pos === 4) note(nextT, b + 7, .4, .14, "triangle");
-      if (pos === 6) note(nextT, b, .25, .1, "triangle");
-      // acordes a contratiempo
-      if (pos % 2 === 1) ch.forEach(n => note(nextT, n, .22, .028));
-      // güiro: largo-corto-corto
-      noise(nextT, pos % 2 === 0 ? .11 : .05, pos % 2 === 0 ? .05 : .03, 6500, 1.2, "highpass");
-      // melodía (entra después de la primera vuelta)
+      if (pos === 0) { note(nextT, b, 1.2, .11, "triangle"); pad(nextT, ch, beat * 8); }
+      if (pos === 4) note(nextT, b + 7, .8, .08, "triangle");
+      if (pos % 2 === 1) note(nextT, ch[(pos >> 1) % 3] + 12, .7, .026);
+      if (pos === 2 || pos === 6) noise(nextT, .06, .012, 6500, 1.2, "highpass");
       const m = MEL[bar][pos];
-      if (m && step >= 32) note(nextT + .005, m, .6, .055, "sine");
+      if (m && step >= 32) note(nextT + .005, m, 1.3, .05, "sine");
       nextT += beat; step++;
     }
   }
@@ -1176,6 +1187,18 @@ const AudioFX = (() => {
     paper() { if (!ok()) return; noise(ctx.currentTime, .45, .35, 3200, .7, "highpass"); },
     pencil() { if (!ok()) return; noise(ctx.currentTime, .035, .1, 5200, 3); },
     chime() { if (!ok()) return; const t = ctx.currentTime; [88, 91, 95, 100].forEach((n, i) => note(t + i * .09, n, 1.8, .06, "sine", sfx)); },
+    kiss() {
+      if (!ok()) return;
+      const t = ctx.currentTime;
+      [0, .16].forEach((d, i) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = "sine"; o.frequency.setValueAtTime(1500 - i * 300, t + d); o.frequency.exponentialRampToValueAtTime(280, t + d + .07);
+        g.gain.setValueAtTime(0, t + d); g.gain.linearRampToValueAtTime(i ? .14 : .26, t + d + .004); g.gain.exponentialRampToValueAtTime(.0001, t + d + .1);
+        o.connect(g); g.connect(sfx); o.start(t + d); o.stop(t + d + .12);
+        noise(t + d + .004, .07, i ? .12 : .22, 1900, 1.4);
+      });
+      noise(t + .05, .18, .05, 900, .8);
+    },
     wrong() { if (!ok()) return; const t = ctx.currentTime; note(t, 45, .3, .1, "square", sfx); note(t + .16, 41, .4, .08, "square", sfx); },
   };
 })();
@@ -1296,7 +1319,11 @@ function buildLobby(kind) {
   const zt = -(D - 560), th = Math.round(H * .36), tw = Math.min(W * .7, 360), tdp = tw * .62;
   dims = { W, H, D, zt, th, tw, kind };
   const floor = face("floor floor--" + kind, W, D, `translate3d(0,${H / 2}px,${-D / 2}px) rotateX(90deg)`);
-  floor.style.backgroundImage = `radial-gradient(${tw * 1.3}px ${tw * 1.1}px at 50% ${zt + D / 2}px, rgba(255,220,150,.42), transparent), ` + getComputedStyle(floor).backgroundImage;
+  const fcs = getComputedStyle(floor);
+  floor.style.backgroundImage = `radial-gradient(${tw * 1.3}px ${tw * 1.1}px at 50% ${zt + D / 2}px, rgba(255,220,150,.42), transparent), ` + fcs.backgroundImage;
+  floor.style.backgroundSize = "100% 100%, " + fcs.backgroundSize;
+  floor.style.backgroundPosition = "0 0, " + fcs.backgroundPosition;
+  floor.style.backgroundRepeat = "no-repeat, " + fcs.backgroundRepeat;
   face("ceiling ceiling--" + kind, W, D, `translate3d(0,${-H / 2}px,${-D / 2}px) rotateX(-90deg)`);
   const posters = [
     ["Estreno", "linear-gradient(160deg,#ffb36b,#c2185b 60%,#3a0b2a)"],
@@ -1320,7 +1347,11 @@ function buildLobby(kind) {
     const at = (i - .2) / 3.6 * D, w = H * .3, x = side === "l" ? at : D - at - w;
     return `<div class="wallpic" style="left:${x}px;width:${w}px"><img src="${FOTOS[n - 1]}" alt=""></div>`;
   }).join("") : "";
-  const sideHtml = side => kind === "candy" ? shelves(side) : kind === "sala" ? wallPics(side) : wallHtml(side);
+  const bolPosters = side => ["img/la-odisea.jpg", "img/la-otra-madre.jpg", "img/cars.jpg", "img/la-odisea.jpg"].slice(side === "l" ? 0 : 1, side === "l" ? 3 : 4).map((img, i) => {
+    const at = (i + .45) / 3.4 * D, w = H * .3, x = side === "l" ? at : D - at - w;
+    return `<div class="lightbox lightbox--poster" style="left:${x}px;width:${w}px"><img src="${img}" alt=""></div><i class="sconce" style="left:${side === "l" ? at - 110 : D - at + 110}px"></i>`;
+  }).join("");
+  const sideHtml = side => kind === "candy" ? shelves(side) : kind === "sala" ? wallPics(side) : kind === "boleteria" ? bolPosters(side) : wallHtml(side);
   face("wall wall--l wall--" + kind, D, H, `translate3d(${-W / 2}px,0,${-D / 2}px) rotateY(90deg)`, sideHtml("l"));
   face("wall wall--r wall--" + kind, D, H, `translate3d(${W / 2}px,0,${-D / 2}px) rotateY(-90deg)`, sideHtml("r"));
   if (kind === "candy") {
@@ -1333,6 +1364,14 @@ function buildLobby(kind) {
   } else if (kind === "boleteria") {
     face("back back--bol", W, H, `translateZ(${-D}px)`, `<div class="scr">${"<i></i>".repeat(6)}</div><b>BOLETERÍA</b>`);
     face("counter-front counter--bol", W * .94, H * .24, `translate3d(0,${H / 2 - H * .12}px,${-D + 90}px)`);
+    // postes dorados con cordón de terciopelo a lo largo de la alfombra
+    const ph = H * .2, gap = 320, x = W * .3;
+    for (let z = -260; z > -(D - 700); z -= gap) {
+      for (const sx of [-1, 1]) {
+        face("post3d", 12, ph, `translate3d(${sx * x}px,${H / 2 - ph / 2}px,${z}px)`, "<i></i>");
+        if (z - gap > -(D - 700)) face("rope3d", gap, 40, `translate3d(${sx * x}px,${H / 2 - ph + 14}px,${z - gap / 2}px) rotateY(90deg)`);
+      }
+    }
   } else if (kind === "sala") {
     face("back back--sala", W, H, `translateZ(${-D}px)`);
     face("screen", W * .88, H * .42, `translate3d(0,${-H * .12}px,${-D + 2}px)`,
@@ -1390,7 +1429,7 @@ async function travel(kind, next) {
   buildLobby(kind);
   await sleep(60);
   go(next);
-  await walk(kind === "sala" ? 10500 : 3600).finished;
+  await walk(kind === "sala" ? 10500 : kind === "boleteria" ? 6000 : 3600).finished;
   await sleep(kind === "sala" ? 1500 : 250);
   entry.classList.add("fade");
   await sleep(850);
@@ -1583,7 +1622,7 @@ async function writeLetter() {
       s.node.data = s.text.slice(0, i + 2);
       placePencil(s.node);
       if (i % 6 === 0) AudioFX.pencil();
-      await sleep(/[.,:;?]/.test(s.text.slice(i, i + 2)) ? 160 : 26);
+      await sleep(/[.,:;?]/.test(s.text.slice(i, i + 2)) ? 300 : 48);
     }
     if (s.node.parentElement.closest(".sign small")) { await drawSig(); if (skipWrite) return finishLetter(); }
     await sleep(90);
@@ -1604,7 +1643,7 @@ async function drawSig() {
   sig.classList.remove("done"); void sig.getBoundingClientRect(); sig.classList.add("draw");
   const l = letterEl.getBoundingClientRect(), b = sig.getBoundingClientRect();
   const x0 = b.left - l.left + b.width * .2, x1 = b.right - l.left, y = b.top - l.top + b.height * .6;
-  const t0 = performance.now(), D = 2000;
+  const t0 = performance.now(), D = 2800;
   while (performance.now() - t0 < D) {
     if (skipWrite) return;
     const k = (performance.now() - t0) / D;
@@ -1696,6 +1735,7 @@ $("#siBtn").addEventListener("click", () => {
   resetNo();
   $("#answers").hidden = true; $("#noMsg").hidden = true;
   $("#stamp").classList.add("hit");
+  setTimeout(() => { AudioFX.kiss(); buzz([20, 40, 20]); }, 280);
   $("#verdict").hidden = false;
   $("#scold").hidden = noCount === 0;
   if (noCount > 1) $("#scold").textContent = `¿Por qué quisiste apretar No??? (${noCount} veces 🤨)`;
