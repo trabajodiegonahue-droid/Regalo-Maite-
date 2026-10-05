@@ -1399,6 +1399,7 @@ function buildLobby(kind) {
     if (vid) {
       vid.currentTime = 0;
       vid.muted = !AudioFX.isOn();
+      vid.volume = .5;
       vid.addEventListener("playing", () => { if (!vid.muted) AudioFX.duck(true); });
       vid.addEventListener("ended", () => AudioFX.duck(false));
       vid.play().catch(() => {
