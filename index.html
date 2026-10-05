@@ -165,6 +165,61 @@ button { font: inherit; cursor: pointer; }
 .pickup { position: fixed !important; z-index: 50; margin: 0 !important; animation: none !important; pointer-events: none; }
 .entry.fade { transition: opacity .9s ease; opacity: 0; }
 
+/* ---------- Primera persona: manos, sobre y carta doblada ---------- */
+.pov { position: fixed; inset: 0; z-index: 35; overflow: hidden; }
+.pov-bg { position: absolute; inset: 0; background: radial-gradient(90% 65% at 50% 38%, #4a1a2c, #12050a 72%); }
+.hand { position: absolute; left: 0; top: 0; pointer-events: none; will-change: transform; }
+.hand svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.hand--back { z-index: 1; }
+.hand--thumb { z-index: 4; }
+.pov-env { position: absolute; z-index: 2; filter: drop-shadow(0 18px 30px rgba(0,0,0,.5)); }
+.pov-env .env-flap { transition: transform .8s ease, z-index 0s linear .4s; }
+.pov-env .env-seal { transition: transform .3s ease, opacity .3s ease; }
+.pov-env.open .env-seal { transform: scale(1.6); opacity: 0; }
+.pov-env.open .env-flap { transform: rotateX(180deg); z-index: 0; }
+.fold { position: absolute; z-index: 1; perspective: 1100px; transform-style: preserve-3d; }
+.fold.out { z-index: 3; }
+.panel {
+  position: absolute; left: 0; right: 0; height: 100%;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 13px, rgba(160,140,110,.28) 13px 14px) 12% 18% / 76% 70% no-repeat,
+    var(--paper);
+  box-shadow: inset 0 0 0 1px #e2d3b4;
+  transform-style: preserve-3d;
+}
+.panel--mid { top: 0; }
+.panel--top { bottom: 100%; transform-origin: 50% 100%; transform: rotateX(-178deg); background-color: #efe4cc; }
+.panel--bot { top: 100%; transform-origin: 50% 0; transform: rotateX(178deg); background-color: #efe4cc; }
+.panel--top::after, .panel--bot::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
+.panel--top::after { background: linear-gradient(180deg, transparent 70%, rgba(0,0,0,.08)); }
+.panel--bot::after { background: linear-gradient(0deg, transparent 70%, rgba(0,0,0,.08)); }
+.pov .pick-hint { z-index: 6; }
+
+/* Manos que sostienen la tarjeta y la entrada */
+.held { position: relative; width: 100%; display: flex; justify-content: center; }
+.held .hand { z-index: 1; }
+.held .hand--thumb { z-index: 3; }
+.held > :not(.hand) { position: relative; z-index: 2; }
+.held.enter { animation: heldIn 1.2s cubic-bezier(.2,.8,.2,1); }
+@keyframes heldIn { from { transform: translateY(70vh) rotate(-5deg); } }
+.held--card { margin-bottom: 7rem; }
+.held--ticket { margin-bottom: 8rem; }
+
+.back--candy b { color: #ff7ab0; text-shadow: 0 0 18px rgba(255,90,160,.95), 0 0 60px rgba(255,90,160,.6); }
+.back--candy { background: linear-gradient(180deg, #1a0a14, #2a0f1e); }
+.counter-front {
+  display: grid; place-items: center;
+  background: linear-gradient(180deg, #b3122f, #6d0a1d); border-top: 6px solid var(--gold);
+  font-family: var(--f-ui); font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--paper); font-size: .9rem;
+}
+.counter-top { background: linear-gradient(180deg, #2a1810, #5a3424); }
+.popcorn {
+  border: 6px solid #b3122f; border-top-width: 18px; border-radius: 6px;
+  background: radial-gradient(circle, #ffe9a8 0 4px, transparent 5px) 0 0 / 14px 12px, linear-gradient(180deg, rgba(255,240,200,.3), #f5c84c);
+  box-shadow: 0 0 40px rgba(255,210,120,.5);
+}
+.cups { background: repeating-linear-gradient(90deg, #fff 0 22px, #b3122f 22px 26px, transparent 26px 34px); border-radius: 4px; }
+
 .btn {
   border: 0; border-radius: 999px;
   padding: .95rem 1.6rem;
@@ -438,23 +493,18 @@ button { font: inherit; cursor: pointer; }
     <span class="door door--l"><span class="heart">♥</span><i class="bar"></i></span>
     <span class="door door--r"><span class="heart">♥</span><i class="bar"></i></span>
   </button>
-  <span class="knock">Toca la puerta para entrar</span>
+  <span class="knock" id="knock">Toca la puerta para entrar</span>
   <span class="pick-hint" id="pickHint" hidden>Toca la carta para tomarla</span>
+</div>
+
+<div class="pov" id="pov" hidden>
+  <div class="pov-bg"></div>
+  <span class="pick-hint" id="povHint" hidden></span>
 </div>
 
 <main class="stage" id="stage">
   <!-- 1. Carta formal -->
   <section class="scene" id="carta">
-    <button class="envelope" id="envelope" aria-label="Abrir el sobre">
-      <span class="env-back"></span>
-      <span class="env-paper"></span>
-      <span class="env-front"></span>
-      <span class="env-flap"></span>
-      <span class="env-seal" aria-hidden="true">♥</span>
-      <span class="env-to">Para: <span data-name>Maite</span></span>
-    </button>
-    <p class="env-hint" id="envHint">Toca el sobre para abrirlo</p>
-
     <article class="letter" id="letter" hidden>
       <span class="pencil" id="pencil" hidden aria-hidden="true"><svg viewBox="0 0 40 40" width="40" height="40"><g transform="rotate(-38 0 20)"><polygon points="0,20 5,18 5,22" fill="#3a3532"/><polygon points="3,18.6 12,15 12,25 3,21.4" fill="#e7c49a"/><rect x="12" y="15" width="22" height="10" fill="#f2b632"/><rect x="12" y="18.5" width="22" height="3" fill="#e0a21f"/><rect x="34" y="15" width="3.5" height="10" fill="#a9adb6"/><rect x="37.5" y="15" width="5" height="10" rx="2" fill="#ef8fa3"/></g></svg></span>
       <p class="greet">Distinguida y muy estimada esposa, doña <span data-name>Maite</span>:</p>
@@ -468,7 +518,7 @@ button { font: inherit; cursor: pointer; }
       <p>La sala y la hora de la función se mantendrán en estricta reserva hasta nuevo aviso.</p>
       <p>Sin otro particular, quedo atento a su respuesta.</p>
       <div class="sign"><small>Atentamente,</small><span data-firma>Tu esposo</span></div>
-      <p class="fine">* Letra chica: si aceptas, puedo darte los besos que quieras.</p>
+      <p class="fine">* Letra chica: si aceptas, puedo darte los besitos que quieras.</p>
       <p class="ask">¿Aceptas?</p>
       <div class="stamp" id="stamp" aria-hidden="true"><div>RESPUESTA<b>Aceptada</b>CON AMOR</div></div>
     </article>
@@ -492,13 +542,15 @@ button { font: inherit; cursor: pointer; }
   <section class="scene" id="rasca" hidden>
     <h2 class="scene-title">Rasca y descubre la película</h2>
     <p class="scene-sub">Pasa el dedo (o el mouse) sobre la tarjeta dorada.</p>
+    <div class="held held--card" id="scratchHeld">
     <div class="scratch" id="scratch">
       <img src="img/la-otra-madre.jpg" alt="Póster de La otra madre, con Jessica Chastain">
       <canvas id="scratchCanvas" aria-label="Tarjeta para raspar"></canvas>
     </div>
+    </div>
     <button class="link-btn" id="revealBtn">Revelar sin rascar</button>
     <p class="reveal-note" id="revealNote" hidden><b data-pelicula>La otra madre</b>Es de terror. Recuerda la cláusula de los besos.</p>
-    <button class="btn btn--gold" data-go="combo" id="toCombo" hidden>Elegir mi combo</button>
+    <button class="btn btn--gold" id="toCombo" hidden>Ir a la dulcería</button>
   </section>
 
   <!-- 3. Combo -->
@@ -560,7 +612,8 @@ button { font: inherit; cursor: pointer; }
   <!-- 4. Entrada -->
   <section class="scene" id="entrada" hidden>
     <h2 class="scene-title">Tu entrada está lista</h2>
-    <div class="ticket">
+    <div class="held held--ticket" id="ticketHeld">
+    <div class="ticket" id="ticket">
       <div class="ticket__main">
         <div class="ticket__brand"><strong>Cine Nosotros</strong><small>FUNCIÓN PRIVADA</small></div>
         <p class="ticket__movie" data-pelicula>La otra madre</p>
@@ -579,6 +632,7 @@ button { font: inherit; cursor: pointer; }
         <div><div class="seat" id="tAsiento">?</div><div class="seat-label">asiento</div></div>
         <div class="barcode" aria-hidden="true"></div>
       </div>
+    </div>
     </div>
 
     <div class="countdown" aria-live="polite">
@@ -666,12 +720,65 @@ const steps = ["carta", "rasca", "combo", "entrada"];
 function go(id) {
   steps.forEach(s => $("#" + s).hidden = s !== id);
   scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
-  if (id === "rasca") initScratch();
+  if (id === "rasca") { initScratch(); requestAnimationFrame(() => holdWith($("#scratchHeld"), $("#scratch"), .62, 14)); }
+  if (id === "entrada") requestAnimationFrame(() => holdWith($("#ticketHeld"), $("#ticket"), .55, 8));
 }
 $$("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
 go("carta");
 
-// Lobby en primera persona: puertas, caminata y la carta sobre la mesa
+// ---------- Manos (primera persona) ----------
+const SKIN = "#f2c6a8", SKIN_D = "#d9997a", NAIL = "#d81b60", CUFF = "#f2b8c6", CUFF_D = "#d48aa0";
+const HAND_BACK = `
+  <path d="M40 900 L58 300 Q64 236 92 214 L140 214 Q152 240 146 300 L150 900 Z" fill="${CUFF}"/>
+  <path d="M60 300 Q100 284 146 300" stroke="${CUFF_D}" stroke-width="9" fill="none"/>
+  <path d="M68 300 L74 236 Q80 212 96 204 L132 206 Q142 222 138 250 L136 300 Z" fill="${SKIN}"/>
+  <path d="M70 262 Q104 252 138 262" stroke="#e9c46f" stroke-width="5" fill="none"/>
+  <g fill="${SKIN}" stroke="${SKIN_D}" stroke-width="1.5">
+    <rect x="118" y="86" width="84" height="25" rx="12.5" transform="rotate(-26 118 98)"/>
+    <rect x="122" y="111" width="88" height="25" rx="12.5" transform="rotate(-22 122 123)"/>
+    <rect x="124" y="136" width="82" height="24" rx="12" transform="rotate(-18 124 148)"/>
+    <rect x="122" y="160" width="70" height="22" rx="11" transform="rotate(-14 122 171)"/>
+  </g>
+  <ellipse cx="110" cy="164" rx="48" ry="58" transform="rotate(-18 110 164)" fill="${SKIN}"/>
+  <path d="M84 132 Q100 150 96 196" stroke="${SKIN_D}" stroke-width="2" fill="none" opacity=".45"/>`;
+const HAND_THUMB = `
+  <path d="M108 188 Q126 142 154 108" stroke="${SKIN_D}" stroke-width="31" stroke-linecap="round" fill="none"/>
+  <path d="M108 188 Q126 142 154 108" stroke="${SKIN}" stroke-width="27.5" stroke-linecap="round" fill="none"/>
+  <path d="M128 150 Q138 148 142 140" stroke="${SKIN_D}" stroke-width="1.6" fill="none" opacity=".6"/>
+  <ellipse cx="156" cy="106" rx="8.5" ry="11.5" transform="rotate(32 156 106)" fill="${NAIL}"/>
+  <ellipse cx="153.5" cy="102.5" rx="2.4" ry="5" transform="rotate(32 153.5 102.5)" fill="rgba(255,255,255,.6)"/>`;
+const GX = 158 / 220, GY = 104 / 340;
+function makeHand(parent, side) {
+  const mk = (cls, inner) => {
+    const el = document.createElement("div");
+    el.className = "hand " + cls;
+    const flip = side === "r" ? `<g transform="translate(220,0) scale(-1,1)">${inner}</g>` : inner;
+    el.innerHTML = `<svg viewBox="0 0 220 340" aria-hidden="true">${flip}</svg>`;
+    parent.append(el);
+    return el;
+  };
+  return { side, back: mk("hand--back", HAND_BACK), thumb: mk("hand--thumb", HAND_THUMB), w: 0 };
+}
+function sizeHand(h, w) {
+  h.w = w;
+  const gx = (h.side === "l" ? GX : 1 - GX) * w, gy = GY * w * 340 / 220;
+  h.gx = gx; h.gy = gy;
+  for (const el of [h.back, h.thumb]) {
+    el.style.width = w + "px"; el.style.height = w * 340 / 220 + "px";
+    el.style.transformOrigin = `${gx}px ${gy}px`;
+  }
+}
+const handTf = (h, x, y, rot) => `translate(${x - h.gx}px, ${y - h.gy}px) rotate(${rot}deg)`;
+function setHand(h, x, y, rot) { h.back.style.transform = h.thumb.style.transform = handTf(h, x, y, rot); }
+function animTo(el, transform, duration, easing = "cubic-bezier(.4,0,.2,1)") {
+  const a = el.animate([{ transform }], { duration, easing, fill: "forwards" });
+  return a.finished.then(() => { el.style.transform = transform; a.cancel(); });
+}
+const handTo = (h, x, y, rot, d, e) => Promise.all([animTo(h.back, handTf(h, x, y, rot), d, e), animTo(h.thumb, handTf(h, x, y, rot), d, e)]);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const tapOnce = el => new Promise(r => el.addEventListener("click", r, { once: true }));
+
+// ---------- Lobby 3D: puertas, mesa, dulcería y sala ----------
 const cam = $("#cam"), entry = $("#entry");
 let dims = null, phase = "doors", env3d = null;
 function face(cls, w, h, tf, html = "") {
@@ -682,11 +789,12 @@ function face(cls, w, h, tf, html = "") {
   cam.append(el);
   return el;
 }
-function buildLobby() {
+const camAt = (z, y, look) => `rotateX(${-look}deg) translate3d(0,${y}px,${z}px)`;
+function buildLobby(kind) {
   cam.innerHTML = "";
   const W = innerWidth, H = innerHeight, D = Math.round(Math.max(2400, H * 2.8));
   const zt = -(D - 560), th = Math.round(H * .36), tw = Math.min(W * .7, 360), tdp = tw * .62;
-  dims = { W, H, D, zt, th, tw };
+  dims = { W, H, D, zt, th, tw, kind };
   const floor = face("floor", W, D, `translate3d(0,${H / 2}px,${-D / 2}px) rotateX(90deg)`);
   floor.style.backgroundImage = `radial-gradient(${tw * 1.3}px ${tw * 1.1}px at 50% ${zt + D / 2}px, rgba(255,220,150,.42), transparent), ` + getComputedStyle(floor).backgroundImage;
   face("ceiling", W, D, `translate3d(0,${-H / 2}px,${-D / 2}px) rotateX(-90deg)`);
@@ -703,37 +811,60 @@ function buildLobby() {
   }).join("");
   face("wall wall--l", D, H, `translate3d(${-W / 2}px,0,${-D / 2}px) rotateY(90deg)`, wallHtml("l"));
   face("wall wall--r", D, H, `translate3d(${W / 2}px,0,${-D / 2}px) rotateY(-90deg)`, wallHtml("r"));
-  face("back", W, H, `translateZ(${-D}px)`, `<b>Sala ?</b>`);
-  // Mesa con la carta
-  face("beam", tw * 1.5, H / 2 + (H / 2 - th), `translate3d(0,${(-H / 2 + (H / 2 - th)) / 2}px,${zt - 2}px)`);
-  face("table-leg", 22, th, `translate3d(0,${H / 2 - th / 2}px,${zt}px)`);
-  face("table-skirt", tw, 30, `translate3d(0,${H / 2 - th + 15}px,${zt + tdp / 2}px)`);
-  face("table-top", tw, tdp, `translate3d(0,${H / 2 - th}px,${zt}px) rotateX(90deg)`);
-  env3d = face("env3d", tw * .62, tw * .62 * 2 / 3, `translate3d(0,${H / 2 - th - 2}px,${zt + 8}px) rotateX(90deg) rotateZ(-7deg)`,
-    `<span class="env-back"></span><span class="env-front"></span><span class="env-flap"></span><span class="env-seal">♥</span>`);
+  if (kind === "candy") {
+    face("back back--candy", W, H, `translateZ(${-D}px)`, `<b>Dulcería</b>`);
+    const ch = H * .3, cd = 150, cw = W * .86;
+    face("counter-front", cw, ch, `translate3d(0,${H / 2 - ch / 2}px,${zt + cd / 2}px)`, `<span>Cabritas · Bebidas · Dulces</span>`);
+    face("counter-top", cw, cd, `translate3d(0,${H / 2 - ch}px,${zt}px) rotateX(90deg)`);
+    face("popcorn", cw * .34, H * .22, `translate3d(${-cw * .22}px,${H / 2 - ch - H * .11}px,${zt - 20}px)`, `<i></i>`);
+    face("cups", cw * .3, H * .12, `translate3d(${cw * .24}px,${H / 2 - ch - H * .06}px,${zt}px)`);
+  } else {
+    face("back", W, H, `translateZ(${-D}px)`, `<b>Sala ?</b>`);
+  }
+  if (kind === "table") {
+    face("beam", tw * 1.5, H / 2 + (H / 2 - th), `translate3d(0,${(-H / 2 + (H / 2 - th)) / 2}px,${zt - 2}px)`);
+    face("table-leg", 22, th, `translate3d(0,${H / 2 - th / 2}px,${zt}px)`);
+    face("table-skirt", tw, 30, `translate3d(0,${H / 2 - th + 15}px,${zt + tdp / 2}px)`);
+    face("table-top", tw, tdp, `translate3d(0,${H / 2 - th}px,${zt}px) rotateX(90deg)`);
+    env3d = face("env3d", tw * .62, tw * .62 * 2 / 3, `translate3d(0,${H / 2 - th - 2}px,${zt + 8}px) rotateX(90deg) rotateZ(-7deg)`,
+      `<span class="env-back"></span><span class="env-front"></span><span class="env-flap"></span><span class="env-seal">♥</span>`);
+  }
   cam.style.transform = camAt(0, 0, 0);
 }
-const camAt = (z, y, look) => `rotateX(${-look}deg) translate3d(0,${y}px,${z}px)`;
-buildLobby();
-addEventListener("resize", () => { if (phase === "doors") buildLobby(); });
+buildLobby("table");
+addEventListener("resize", () => { if (phase === "doors") buildLobby("table"); });
 
-function walk() {
-  const { D, zt } = dims, T = -zt - 330, frames = [], n = 60;
+function walk(duration = 4600) {
+  const { D, zt, kind } = dims, frames = [], n = 60;
+  const T = kind === "table" ? -zt - 330 : kind === "candy" ? -zt - 420 : D - 520;
+  const maxLook = kind === "table" ? 14 : kind === "candy" ? 8 : 0;
   for (let i = 0; i <= n; i++) {
     const t = i / n, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
     const bob = Math.sin(t * Math.PI * 9) * 7 * Math.sin(t * Math.PI);
-    const look = 14 * Math.max(0, (t - .55) / .45) ** 2;
+    const look = maxLook * Math.max(0, (t - .55) / .45) ** 2;
     frames.push({ transform: camAt(e * T, bob, look), offset: t });
   }
-  return cam.animate(frames, { duration: 4600, easing: "linear", fill: "forwards" });
+  return cam.animate(frames, { duration, easing: "linear", fill: "forwards" });
+}
+// Caminar a otra parte del cine (dulcería, sala) y volver a la página
+async function travel(kind) {
+  if (reduced) return;
+  $("#openBtn").hidden = true; $("#knock").hidden = true; $("#pickHint").hidden = true;
+  entry.classList.remove("fade"); entry.hidden = false;
+  buildLobby(kind);
+  await walk(3600).finished;
+  await sleep(250);
+  entry.classList.add("fade");
+  await sleep(850);
+  entry.hidden = true; entry.classList.remove("fade");
 }
 
 $("#openBtn").addEventListener("click", () => {
   if (phase !== "doors") return;
   phase = "walking";
   scrollTo(0, 0);
-  if (reduced) { entry.hidden = true; return; }
-  $("#openBtn").classList.add("open");
+  if (reduced) { entry.hidden = true; showLetterNow(); return; }
+  $("#openBtn").classList.add("open"); $("#knock").hidden = true;
   setTimeout(() => {
     $("#openBtn").hidden = true;
     walk().onfinish = () => {
@@ -744,31 +875,127 @@ $("#openBtn").addEventListener("click", () => {
   }, 1000);
 });
 
-entry.addEventListener("click", e => {
+// ---------- El sobre en sus manos ----------
+const pov = $("#pov");
+let P = null; // geometría de la escena del sobre
+function buildPov() {
+  $$(".hand, .pov-env, .fold", pov).forEach(e => e.remove());
+  const vw = innerWidth, vh = innerHeight;
+  const W = Math.min(vw * .84, 360), H = W * 2 / 3;
+  const L = (vw - W) / 2, T = vh * .4 - H / 2;
+  const env = document.createElement("div");
+  env.className = "pov-env";
+  Object.assign(env.style, { left: L + "px", top: T + "px", width: W + "px", height: H + "px" });
+  env.innerHTML = `<span class="env-back"></span><span class="env-front"></span><span class="env-flap"></span>
+    <span class="env-seal">♥</span><span class="env-to">Para: ${PLAN.nombre}</span>`;
+  const fw = W * .86, ph = fw * .42;
+  const fold = document.createElement("div");
+  fold.className = "fold";
+  Object.assign(fold.style, { left: W * .07 + "px", top: H * .1 + "px", width: fw + "px", height: ph + "px" });
+  fold.innerHTML = `<div class="panel panel--bot"></div><div class="panel panel--mid"></div><div class="panel panel--top"></div>`;
+  env.prepend(fold);
+  pov.append(env);
+  const l = makeHand(pov, "l"), r = makeHand(pov, "r");
+  sizeHand(l, W * .74); sizeHand(r, W * .74);
+  P = { vw, vh, W, H, L, T, env, fold, fw, ph, l, r,
+    gripL: [L + W * .06, T + H * .66, 12], gripR: [L + W * .94, T + H * .66, -12] };
+  setHand(l, P.gripL[0], P.gripL[1] + vh * .7, 12);
+  setHand(r, P.gripR[0], P.gripR[1] + vh * .7, -12);
+}
+
+// Tomar la carta de la mesa: vuela a sus manos
+entry.addEventListener("click", async () => {
   if (phase !== "table") return;
   phase = "pickup";
   $("#pickHint").hidden = true;
   env3d.classList.remove("glow");
+  buildPov();
+  pov.hidden = false; pov.style.opacity = "0";
   const from = env3d.getBoundingClientRect();
-  const target = $("#envelope").getBoundingClientRect();
-  const card = $("#envelope").cloneNode(true);
-  card.removeAttribute("id"); card.classList.add("pickup");
-  Object.assign(card.style, { left: target.left + "px", top: target.top + "px", width: target.width + "px", transformOrigin: "50% 50%" });
+  const card = P.env.cloneNode(true);
+  card.style.position = "fixed"; card.style.zIndex = 50; card.style.transformOrigin = "50% 50%";
+  $(".fold", card)?.remove();
   document.body.append(card);
   env3d.style.visibility = "hidden";
-  const sx = from.width / target.width;
-  const dx = from.left + from.width / 2 - (target.left + target.width / 2);
-  const dy = from.top + from.height / 2 - (target.top + target.height / 2);
-  const lift = card.animate([
+  const sx = from.width / P.W;
+  const dx = from.left + from.width / 2 - (P.L + P.W / 2), dy = from.top + from.height / 2 - (P.T + P.H / 2);
+  pov.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, delay: 300, fill: "forwards" }).finished.then(() => pov.style.opacity = "");
+  entry.classList.add("fade");
+  // las manos suben a recibirla
+  handTo(P.l, ...P.gripL, 1100, "cubic-bezier(.2,.8,.2,1)");
+  handTo(P.r, ...P.gripR, 1100, "cubic-bezier(.2,.8,.2,1)");
+  await card.animate([
     { transform: `translate(${dx}px,${dy}px) scale(${sx}) perspective(600px) rotateX(72deg) rotate(-7deg)` },
     { transform: `translate(${dx * .5}px,${dy * .4 - 60}px) scale(${(sx + 1) / 2}) perspective(600px) rotateX(30deg) rotate(4deg)`, offset: .45 },
     { transform: "none" },
-  ], { duration: 1300, easing: "cubic-bezier(.3,.6,.2,1)", fill: "forwards" });
-  entry.classList.add("fade");
-  lift.onfinish = () => { card.remove(); entry.hidden = true; };
+  ], { duration: 1300, easing: "cubic-bezier(.3,.6,.2,1)", fill: "forwards" }).finished;
+  card.remove(); entry.hidden = true;
+  openEnvelope();
 });
 
-// Sobre y carta escrita a lápiz
+async function openEnvelope() {
+  const { l, r, env, fold, W, H, L, T, fw, ph, vw, vh } = P;
+  $("#povHint").textContent = "Toca el sello para abrirlo"; $("#povHint").hidden = false;
+  await tapOnce(pov);
+  $("#povHint").hidden = true;
+  // 1) el pulgar derecho rompe el sello
+  await handTo(r, L + W * .54, T + H * .53, -32, 650);
+  env.classList.add("open");
+  await sleep(250);
+  await handTo(r, ...P.gripR, 500);
+  await sleep(500);
+  // 2) toma la carta desde arriba y la saca
+  const fx = L + W * .07, fy = T + H * .1;
+  await handTo(r, fx + fw * .8, fy + 6, -24, 700);
+  const lift = ph + H * .18;
+  await Promise.all([
+    animTo(fold, `translateY(${-lift}px)`, 1100, "cubic-bezier(.45,0,.25,1)"),
+    handTo(r, fx + fw * .8, fy + 6 - lift, -24, 1100, "cubic-bezier(.45,0,.25,1)"),
+  ]);
+  // la carta queda fuera del sobre, al frente
+  const fr = fold.getBoundingClientRect();
+  pov.append(fold); fold.classList.add("out");
+  fold.style.transform = ""; Object.assign(fold.style, { left: fr.left + "px", top: fr.top + "px" });
+  // 3) el sobre se cae con la mano izquierda
+  env.animate([{ transform: "none" }, { transform: `translateY(${vh}px) rotate(14deg)` }],
+    { duration: 900, easing: "cubic-bezier(.5,0,.9,.5)", fill: "forwards" });
+  await handTo(l, P.gripL[0] - 20, P.gripL[1] + vh, 20, 800, "cubic-bezier(.5,0,.9,.5)");
+  // 4) la carta doblada al centro, sostenida con las dos manos
+  const cx = (vw - fw) / 2, cy = vh * .46 - ph / 2;
+  await Promise.all([
+    animTo(fold, `translate(${cx - fr.left}px, ${cy - fr.top}px)`, 800),
+    handTo(r, cx + fw - 6, cy + ph * .62, -10, 800),
+    handTo(l, cx + 6, cy + ph * .62, 10, 900, "cubic-bezier(.2,.8,.2,1)"),
+  ]);
+  await sleep(350);
+  // 5) se desdobla
+  handTo(l, cx - 30, cy + vh, 18, 900, "cubic-bezier(.5,0,.9,.5)");
+  handTo(r, cx + fw + 30, cy + vh, -18, 900, "cubic-bezier(.5,0,.9,.5)");
+  await animTo($(".panel--top", fold), "rotateX(0deg)", 750, "cubic-bezier(.3,.7,.3,1)");
+  await animTo($(".panel--bot", fold), "rotateX(0deg)", 750, "cubic-bezier(.3,.7,.3,1)");
+  await sleep(300);
+  // 6) la carta abierta se acomoda y empieza a escribirse
+  const open = { left: cx, top: cy - ph, width: fw, height: ph * 3 };
+  letterEl.hidden = false; letterEl.style.visibility = "hidden";
+  scrollTo(0, 0);
+  const lr = letterEl.getBoundingClientRect();
+  letterEl.style.minHeight = lr.height + "px";
+  prepareLetter();
+  const h = Math.min(lr.height, innerHeight - lr.top - 12);
+  const paper = document.createElement("div");
+  paper.className = "fly";
+  document.body.append(paper);
+  fold.remove();
+  pov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 700, fill: "forwards" }).finished.then(() => { pov.hidden = true; });
+  const box = (x, y, w, hh) => ({ left: x + "px", top: y + "px", width: w + "px", height: hh + "px" });
+  await paper.animate([box(open.left, open.top, open.width, open.height), box(lr.left, lr.top, lr.width, h)],
+    { duration: 900, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" }).finished;
+  letterEl.style.visibility = "";
+  paper.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: "forwards" }).finished.then(() => paper.remove());
+  setTimeout(writeLetter, 300);
+}
+
+// ---------- Carta escrita a lápiz ----------
 const letterEl = $("#letter"), pencil = $("#pencil");
 const blocks = () => $$("p, li, .sign", letterEl);
 let strokes = null, writing = false, skipWrite = false;
@@ -791,6 +1018,7 @@ function finishLetter() {
   letterEl.style.minHeight = "";
   $("#answers").hidden = false; $("#noMsg").hidden = false;
 }
+function showLetterNow() { pov.hidden = true; letterEl.hidden = false; prepareLetter(); finishLetter(); }
 function placePencil(node) {
   const r = document.createRange();
   r.setStart(node, node.data.length); r.collapse(true);
@@ -804,73 +1032,37 @@ function placePencil(node) {
 async function writeLetter() {
   writing = true; skipWrite = false;
   pencil.hidden = false; $("#writeHint").hidden = false;
-  const wait = ms => new Promise(r => setTimeout(r, ms));
-  await wait(500);
+  await sleep(500);
   for (const s of strokes) {
     s.node.parentElement.closest("p, li, .sign")?.classList.remove("pend");
     for (let i = 0; i < s.text.length; i += 2) {
       if (skipWrite) return finishLetter();
       s.node.data = s.text.slice(0, i + 2);
       placePencil(s.node);
-      await wait(/[.,:;?]/.test(s.text.slice(i, i + 2)) ? 160 : 26);
+      await sleep(/[.,:;?]/.test(s.text.slice(i, i + 2)) ? 160 : 26);
     }
-    await wait(90);
+    await sleep(90);
   }
   finishLetter();
 }
 letterEl.addEventListener("click", () => { if (writing) skipWrite = true; });
-function resetEnvelope() {
-  $("#envelope").className = "envelope"; $("#envelope").hidden = false; $("#envHint").hidden = false;
+function resetLetter() {
   letterEl.hidden = true; $("#answers").hidden = true; $("#noMsg").hidden = true; $("#writeHint").hidden = true;
   pencil.hidden = true; letterEl.style.minHeight = ""; letterEl.style.visibility = "";
 }
-$("#envelope").addEventListener("click", () => {
-  const env = $("#envelope");
-  if (env.classList.contains("open")) return;
-  env.classList.add("open"); $("#envHint").hidden = true;
-  if (reduced) { env.hidden = true; prepareLetter(); letterEl.hidden = false; finishLetter(); return; }
-  // 1) se rompe el sello, se abre la solapa y la carta asoma (CSS, ~2 s)
-  setTimeout(() => {
-    // 2) copias fijas del sobre y del papel para animarlas encima de todo
-    const er = env.getBoundingClientRect(), pr = $(".env-paper", env).getBoundingClientRect();
-    const envClone = env.cloneNode(true);
-    envClone.removeAttribute("id");
-    Object.assign(envClone.style, { position: "fixed", left: er.left + "px", top: er.top + "px",
-      width: er.width + "px", margin: "0", zIndex: 25, animation: "none" });
-    $(".env-paper", envClone).style.visibility = "hidden";
-    const paper = document.createElement("div");
-    paper.className = "fly";
-    document.body.append(envClone, paper);
+resetLetter();
 
-    // 3) la carta real ocupa su lugar (invisible) para saber a dónde volar
-    env.hidden = true;
-    letterEl.hidden = false; letterEl.style.visibility = "hidden";
-    scrollTo(0, 0);
-    const lr = letterEl.getBoundingClientRect();
-    letterEl.style.minHeight = lr.height + "px";
-    prepareLetter();
-    const h = Math.min(lr.height, innerHeight - lr.top - 12);
-    const box = (x, y, w, hh, rot) => ({ left: x + "px", top: y + "px", width: w + "px", height: hh + "px", transform: `rotate(${rot}deg)` });
-
-    envClone.animate(
-      [{ transform: "none", opacity: 1 }, { transform: "translateY(70vh) rotate(10deg)", opacity: 0 }],
-      { duration: 900, easing: "cubic-bezier(.5,0,.8,.4)", fill: "forwards" });
-    const fly = paper.animate([
-      box(pr.left, pr.top, pr.width, pr.height, 0),
-      { ...box(pr.left - 6, pr.top - 90, pr.width + 12, pr.height + 20, -4), offset: .35 },
-      box(lr.left, lr.top, lr.width, h, 0),
-    ], { duration: 1300, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" });
-
-    // 4) aterriza: aparece la carta real y empieza el lápiz
-    fly.onfinish = () => {
-      letterEl.style.visibility = "";
-      envClone.remove();
-      paper.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: "forwards" }).onfinish = () => paper.remove();
-      setTimeout(writeLetter, 300);
-    };
-  }, 2050);
-});
-resetEnvelope();
+// ---------- Manos que sostienen la tarjeta y la entrada ----------
+function holdWith(wrap, target, gy, rot) {
+  $$(".hand", wrap).forEach(e => e.remove());
+  const l = makeHand(wrap, "l"), r = makeHand(wrap, "r");
+  const w = target.offsetWidth, h = target.offsetHeight, x0 = target.offsetLeft, y0 = target.offsetTop;
+  const hw = Math.min(w * .62, 230);
+  sizeHand(l, hw); sizeHand(r, hw);
+  setHand(l, x0 + hw * .05, y0 + h * gy, rot);
+  setHand(r, x0 + w - hw * .05, y0 + h * gy, -rot);
+  if (!reduced) { wrap.classList.remove("enter"); void wrap.offsetWidth; wrap.classList.add("enter"); }
+}
 
 // Sí / No
 $("#siBtn").addEventListener("click", () => {
@@ -972,6 +1164,7 @@ function reveal() {
   burst(90);
 }
 $("#revealBtn").addEventListener("click", reveal);
+$("#toCombo").addEventListener("click", async () => { await travel("candy"); go("combo"); });
 
 // Combo
 const drinkHints = {
@@ -998,7 +1191,7 @@ $("#e-otra").addEventListener("change", e => {
 $("#b-otra").addEventListener("change", () => $("#drinkDetail").focus());
 
 let pedido = "";
-$("#comboForm").addEventListener("submit", e => {
+$("#comboForm").addEventListener("submit", async e => {
   e.preventDefault();
   const f = new FormData(e.target);
   const tipo = f.get("bebida"), det = $("#drinkDetail").value.trim();
@@ -1022,13 +1215,16 @@ $("#comboForm").addEventListener("submit", e => {
     `• ${cabritas}\n• ${bebida}\n• Extra: ${extras.join(", ") || "nada"}\n` +
     `Respuesta a la invitación: SÍ ❤️`;
   $("#waBtn").href = `https://wa.me/${PLAN.whatsapp}?text=${encodeURIComponent(pedido)}`;
+  await travel("sala");
   go("entrada");
-  rain(10000);
+  setTimeout(() => rain(10000), reduced ? 0 : 900);
 });
 
 $("#moreHearts").addEventListener("click", () => burst(120));
 $("#restart").addEventListener("click", () => {
-  resetEnvelope(); $("#noMsg").textContent = "";
+  resetLetter(); phase = "doors"; pov.hidden = true;
+  buildLobby("table"); entry.classList.remove("fade"); entry.hidden = false;
+  $("#openBtn").hidden = false; $("#openBtn").classList.remove("open"); $("#knock").hidden = false; $("#noMsg").textContent = "";
   $("#verdict").hidden = true; noCount = 0;
   $("#scold").textContent = "¿Por qué quisiste apretar No???";
   $("#stamp").classList.remove("hit");
