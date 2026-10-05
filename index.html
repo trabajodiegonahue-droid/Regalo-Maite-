@@ -274,6 +274,65 @@ button { font: inherit; cursor: pointer; }
 }
 .cups { background: repeating-linear-gradient(90deg, #fff 0 22px, #b3122f 22px 26px, transparent 26px 34px); border-radius: 4px; }
 
+.bol {
+  width: 100%; display: grid; gap: 1rem; padding: 1rem .8rem 1.1rem; border-radius: 10px;
+  background: linear-gradient(180deg, #23252c, #17181d); box-shadow: 0 20px 50px rgba(0,0,0,.5);
+}
+.bol-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+.screen-btn {
+  position: relative; text-align: left; min-height: 5.4rem; padding: .65rem .65rem .55rem;
+  border: 3px solid #050608; border-radius: 3px; color: #e3eaff;
+  background:
+    repeating-linear-gradient(180deg, rgba(140,170,255,.07) 0 2px, transparent 2px 5px),
+    linear-gradient(180deg, #102366, #0a1440);
+  box-shadow: 0 0 16px rgba(80,120,255,.45);
+  display: grid; align-content: space-between; gap: .4rem; overflow: hidden;
+  transition: transform .15s ease, box-shadow .3s ease;
+}
+.screen-btn:active { transform: scale(.97); }
+.screen-btn b { font-family: var(--f-ui); font-weight: 700; font-size: .92rem; line-height: 1.15; text-transform: uppercase; letter-spacing: .03em; }
+.screen-btn small { font-family: var(--f-ticket); font-size: .72rem; color: #93a9ff; }
+.screen-btn.wrong { animation: shake .4s ease; pointer-events: none; }
+.screen-btn.wrong::after {
+  content: "✕"; position: absolute; inset: 0; display: grid; place-items: center;
+  font: 700 3.6rem/1 var(--f-ui); color: #ff3b5c; background: rgba(8,0,4,.6);
+  animation: xIn .3s cubic-bezier(.3,1.6,.5,1);
+}
+@keyframes xIn { from { transform: scale(2.2); opacity: 0; } }
+.screen-btn.right { box-shadow: 0 0 0 3px #7cff9a, 0 0 34px rgba(124,255,154,.75); }
+.bol-sign {
+  text-align: center; font: 700 2.3rem/1 var(--f-ui); letter-spacing: .06em; color: #fff;
+  text-shadow: 0 0 14px rgba(255,255,255,.55);
+}
+.bol-windows { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; }
+.bol-windows span {
+  height: 2.4rem; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, #3a3d47, #2a2c33);
+  color: #c9cdd8; font: 600 .8rem/2.4rem var(--f-ui); text-align: center;
+}
+/* Boletería 3D */
+.floor--boleteria {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.06) 2px, transparent 2px) 0 0 / 130px 130px,
+    linear-gradient(180deg, rgba(255,255,255,.06) 2px, transparent 2px) 0 0 / 130px 130px,
+    linear-gradient(90deg, #121317, #1e2026 50%, #121317);
+}
+.ceiling--boleteria {
+  background:
+    linear-gradient(90deg, #0e0f13 32%, transparent 32% 68%, #0e0f13 68%),
+    repeating-linear-gradient(180deg, #0e0f13 0 170px, #e9efff 170px 200px);
+}
+.wall--boleteria { background: repeating-linear-gradient(90deg, #262830 0 4px, #1b1d23 4px 170px); }
+.back--bol { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4%; background: #1c1d22; }
+.back--bol .scr { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; width: 94%; height: 17%; }
+.back--bol .scr i {
+  border: 3px solid #000; background:
+    repeating-linear-gradient(180deg, rgba(150,180,255,.55) 0 2px, transparent 2px 10px) 10% 20% / 80% 60% no-repeat,
+    linear-gradient(#102366, #0a1440);
+  box-shadow: 0 0 14px rgba(80,120,255,.7);
+}
+.back--bol b { font: 700 3.4rem/1 var(--f-ui); color: #fff; letter-spacing: .05em; text-shadow: 0 0 16px rgba(255,255,255,.7); }
+.counter--bol { background: linear-gradient(180deg, #2e3038, #1a1b20); border-top: 5px solid #8a8f9c; }
+
 .btn {
   border: 0; border-radius: 999px;
   padding: .95rem 1.6rem;
@@ -539,19 +598,19 @@ button { font: inherit; cursor: pointer; }
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <linearGradient id="hSkin" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f8dccb"/><stop offset=".55" stop-color="#efc2a6"/><stop offset="1" stop-color="#d99a7c"/>
+      <stop offset="0" stop-color="#fce8de"/><stop offset=".55" stop-color="#f4d0c0"/><stop offset="1" stop-color="#e2b09d"/>
     </linearGradient>
     <linearGradient id="hSkinSide" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#e3aa8c"/><stop offset=".5" stop-color="#f3cdb5"/><stop offset="1" stop-color="#dba082"/>
+      <stop offset="0" stop-color="#e8bba8"/><stop offset=".5" stop-color="#f8dcd0"/><stop offset="1" stop-color="#e3b3a0"/>
     </linearGradient>
     <linearGradient id="hFinger" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f6d3bf"/><stop offset="1" stop-color="#dfa385"/>
+      <stop offset="0" stop-color="#fae0d5"/><stop offset="1" stop-color="#e6b6a3"/>
     </linearGradient>
     <linearGradient id="hThumb" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#e7b092"/><stop offset=".45" stop-color="#f7d6c2"/><stop offset="1" stop-color="#efc1a5"/>
+      <stop offset="0" stop-color="#eabfad"/><stop offset=".45" stop-color="#fde9e0"/><stop offset="1" stop-color="#f3cfc0"/>
     </linearGradient>
     <linearGradient id="hNail" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#9e0f3f"/><stop offset=".6" stop-color="#cf1f5c"/><stop offset="1" stop-color="#e8487c"/>
+      <stop offset="0" stop-color="#c48893"/><stop offset=".6" stop-color="#dea8b1"/><stop offset="1" stop-color="#f3cdd3"/>
     </linearGradient>
     <linearGradient id="hCuff" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#e9a3b7"/><stop offset=".5" stop-color="#f7c9d5"/><stop offset="1" stop-color="#e29ab0"/>
@@ -594,7 +653,7 @@ button { font: inherit; cursor: pointer; }
       <p>La sala y la hora de la función se mantendrán en estricta reserva hasta nuevo aviso.</p>
       <p>Sin otro particular, quedo atento a su respuesta.</p>
       <div class="sign"><small>Atentamente,</small><span data-firma>Tu esposo</span></div>
-      <p class="fine">* Letra chica: si aceptas, puedo darte los besitos que quieras.</p>
+      <p class="fine">* Letra chica: si aceptas puedo darte los besos que yo quiera y cuando quiera</p>
       <p class="ask">¿Aceptas?</p>
       <div class="stamp" id="stamp" aria-hidden="true"><div>RESPUESTA<b>Aceptada</b>CON AMOR</div></div>
     </article>
@@ -610,8 +669,20 @@ button { font: inherit; cursor: pointer; }
     <div class="verdict" id="verdict" hidden>
       <p class="scold" id="scold" hidden>¿Por qué quisiste apretar No???</p>
       <p>Respuesta registrada: <b>Sí</b>. Era la única opción disponible. La cita queda oficialmente confirmada.</p>
-      <button class="btn btn--gold" data-go="rasca">Ver qué película vamos a ver</button>
+      <button class="btn btn--gold" id="goBol">Ir a la boletería</button>
     </div>
+  </section>
+
+  <!-- Boletería: adivina la película -->
+  <section class="scene" id="adivina" hidden>
+    <h2 class="scene-title">¿Qué película crees que vamos a ver?</h2>
+    <p class="scene-sub">Toca una pantalla. Si aciertas, te la muestro.</p>
+    <div class="bol">
+      <div class="bol-grid" id="bolGrid"></div>
+      <div class="bol-sign">BOLETERÍA</div>
+      <div class="bol-windows"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+    </div>
+    <p class="no-msg" id="guessMsg" aria-live="polite"></p>
   </section>
 
   <!-- 2. Rasca y descubre -->
@@ -792,7 +863,7 @@ function tick() {
 tick(); setInterval(tick, 1000);
 
 // Navegación entre escenas
-const steps = ["carta", "rasca", "combo", "entrada"];
+const steps = ["carta", "adivina", "rasca", "combo", "entrada"];
 function go(id) {
   steps.forEach(s => $("#" + s).hidden = s !== id);
   scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
@@ -805,21 +876,18 @@ go("carta");
 // ---------- Manos (primera persona) ----------
 const HAND_BACK = `
   <!-- dedos curvados detrás del objeto -->
-  <g stroke="#c98a6e" stroke-width="1" stroke-opacity=".5">
+  <g stroke="#d09c88" stroke-width="1" stroke-opacity=".5">
     <path d="M150 196 C160 192 178 188 206 190 C214 191 214 205 206 206 C182 208 166 212 156 216 Z" fill="url(#hFinger)"/>
     <path d="M152 174 C164 168 184 164 214 166 C223 167 223 182 214 183 C188 185 170 190 158 196 Z" fill="url(#hFinger)"/>
     <path d="M154 150 C166 144 188 140 218 142 C227 143 227 158 218 159 C192 161 174 166 160 172 Z" fill="url(#hFinger)"/>
     <path d="M152 126 C164 118 184 114 212 116 C221 117 221 132 212 133 C188 135 172 140 160 148 Z" fill="url(#hFinger)"/>
   </g>
-  <path d="M168 210 C170 205 171 200 170 195" stroke="#e9c46f" stroke-width="4" fill="none" stroke-linecap="round"/>
   <!-- dorso / canto de la mano -->
-  <path d="M88 236 C80 200 92 160 118 136 C132 123 148 118 160 124 C170 140 172 176 166 204 C160 224 150 240 140 250 Z" fill="url(#hSkinSide)" stroke="#c98a6e" stroke-opacity=".45"/>
-  <path d="M150 132 C158 150 160 176 156 200" stroke="#d39478" stroke-width="2" fill="none" opacity=".45"/>
+  <path d="M88 236 C80 200 92 160 118 136 C132 123 148 118 160 124 C170 140 172 176 166 204 C160 224 150 240 140 250 Z" fill="url(#hSkinSide)" stroke="#d09c88" stroke-opacity=".45"/>
+  <path d="M150 132 C158 150 160 176 156 200" stroke="#dcaa96" stroke-width="2" fill="none" opacity=".45"/>
   <ellipse cx="156" cy="128" rx="7" ry="5" fill="#fbe3d4" opacity=".7"/>
   <!-- muñeca -->
   <path d="M84 300 C84 268 86 246 92 230 L142 244 C146 262 146 282 146 300 Z" fill="url(#hSkin)"/>
-  <path d="M90 262 C106 268 126 270 144 266" stroke="#e9c46f" stroke-width="3.5" fill="none"/>
-  <circle cx="118" cy="270" r="3.2" fill="#f3d48a"/>
   <!-- manga de suéter -->
   <path d="M58 700 L66 300 C68 288 78 282 92 282 L146 284 C160 286 166 294 166 306 L176 700 Z" fill="url(#hCuff)"/>
   <g stroke="#d887a0" stroke-width="2.2" opacity=".55">
@@ -833,16 +901,17 @@ const HAND_THUMB = `
   <!-- pulgar -->
   <path d="M100 232 C104 200 120 172 140 150 C150 139 160 128 170 117 C176 110 184 104 191 106
            C197 109 196 118 191 124 C182 136 172 147 163 158 C150 174 140 194 136 222 Z"
-        fill="url(#hThumb)" stroke="#c98a6e" stroke-opacity=".55" stroke-width="1.2"/>
-  <path d="M146 162 C152 160 157 155 160 149" stroke="#c98a6e" stroke-width="1.6" fill="none" opacity=".6"/>
-  <path d="M150 166 C155 164 160 160 162 155" stroke="#c98a6e" stroke-width="1.1" fill="none" opacity=".45"/>
+        fill="url(#hThumb)" stroke="#d09c88" stroke-opacity=".55" stroke-width="1.2"/>
+  <path d="M146 162 C152 160 157 155 160 149" stroke="#d09c88" stroke-width="1.6" fill="none" opacity=".6"/>
+  <path d="M150 166 C155 164 160 160 162 155" stroke="#d09c88" stroke-width="1.1" fill="none" opacity=".45"/>
   <path d="M112 214 C120 190 132 170 146 154" stroke="#fbe6da" stroke-width="5" fill="none" opacity=".55" stroke-linecap="round"/>
-  <!-- uña almendrada -->
-  <path d="M176 120 C175 112 180 104 187 102 C193 101 196 107 194 113 C192 120 186 126 181 127 C178 127 176 124 176 120 Z"
-        fill="url(#hNail)" stroke="#8a0d36" stroke-width=".8"/>
-  <path d="M176.5 121 C177 125 179 127 181.5 127.5" stroke="#e5a68a" stroke-width="1.6" fill="none"/>
-  <path d="M182 108 C184 105 187 104 189 104.5" stroke="#fff" stroke-width="1.8" fill="none" opacity=".75" stroke-linecap="round"/>
-  <path d="M180 114 C181 112 182 111 183 110.5" stroke="#fff" stroke-width="1.2" fill="none" opacity=".45" stroke-linecap="round"/>`;
+  <!-- uña larga almendrada, rosado nude -->
+  <path d="M176 123 C174 113 180 105 188 100 C195 95 203 89 210 82 C209 90 205 99 200 106 C194 114 187 122 181 127 C178 128 176 126 176 123 Z"
+        fill="url(#hNail)" stroke="#b07a85" stroke-width=".7"/>
+  <path d="M176.6 123.5 C177.5 126 179.5 127.6 182 127.6" stroke="#eab9a8" stroke-width="1.8" fill="none"/>
+  <path d="M184 109 C189 104 196 98 203 90" stroke="#fff" stroke-width="2" fill="none" opacity=".8" stroke-linecap="round"/>
+  <path d="M181 116 C183 114 185 112.5 187 111" stroke="#fff" stroke-width="1.3" fill="none" opacity=".5" stroke-linecap="round"/>
+  `;
 const GX = 188 / 240, GY = 110 / 400, VBW = 240, VBH = 400;
 function makeHand(parent, side) {
   const mk = (cls, inner) => {
@@ -920,6 +989,9 @@ function buildLobby(kind) {
     face("counter-top", cw, cd, `translate3d(0,${H / 2 - ch}px,${zt}px) rotateX(90deg)`);
     face("popcorn", cw * .34, H * .22, `translate3d(${-cw * .22}px,${H / 2 - ch - H * .11}px,${zt - 20}px)`, `<i></i>`);
     face("cups", cw * .3, H * .12, `translate3d(${cw * .24}px,${H / 2 - ch - H * .06}px,${zt}px)`);
+  } else if (kind === "boleteria") {
+    face("back back--bol", W, H, `translateZ(${-D}px)`, `<div class="scr">${"<i></i>".repeat(6)}</div><b>BOLETERÍA</b>`);
+    face("counter-front counter--bol", W * .94, H * .24, `translate3d(0,${H / 2 - H * .12}px,${-D + 90}px)`);
   } else if (kind === "sala") {
     face("back back--sala", W, H, `translateZ(${-D}px)`);
     face("screen", W * .88, H * .42, `translate3d(0,${-H * .12}px,${-D + 2}px)`, `<span>Sala ?</span>`);
@@ -947,8 +1019,8 @@ addEventListener("resize", () => { if (phase === "doors") buildLobby("table"); }
 
 function walk(duration = 4600) {
   const { D, zt, kind } = dims, frames = [], n = 60;
-  const T = kind === "table" ? -zt - 330 : kind === "candy" ? -zt - 420 : D - 700;
-  const maxLook = kind === "table" ? 14 : kind === "candy" ? 8 : 0;
+  const T = kind === "table" ? -zt - 330 : kind === "candy" ? -zt - 420 : kind === "boleteria" ? D - 760 : D - 700;
+  const maxLook = kind === "table" ? 14 : kind === "candy" ? 8 : kind === "boleteria" ? -4 : 0;
   for (let i = 0; i <= n; i++) {
     const t = i / n, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
     const bob = Math.sin(t * Math.PI * 9) * 7 * Math.sin(t * Math.PI);
@@ -958,11 +1030,13 @@ function walk(duration = 4600) {
   return cam.animate(frames, { duration, easing: "linear", fill: "forwards" });
 }
 // Caminar a otra parte del cine (dulcería, sala) y volver a la página
-async function travel(kind) {
-  if (reduced) return;
+async function travel(kind, next) {
+  if (reduced) { go(next); return; }
   $("#openBtn").hidden = true; $("#knock").hidden = true; $("#pickHint").hidden = true;
   entry.classList.remove("fade"); entry.hidden = false;
   buildLobby(kind);
+  await sleep(60);
+  go(next);
   await walk(3600).finished;
   await sleep(250);
   entry.classList.add("fade");
@@ -1275,7 +1349,46 @@ function reveal() {
   burst(90);
 }
 $("#revealBtn").addEventListener("click", reveal);
-$("#toCombo").addEventListener("click", async () => { await travel("candy"); go("combo"); });
+$("#toCombo").addEventListener("click", () => travel("candy", "combo"));
+$("#goBol").addEventListener("click", () => travel("boleteria", "adivina"));
+
+// Boletería: adivinar la película
+const MOVIES = [
+  { t: "Toy Story 5", h: "15:20 · 17:40" },
+  { t: "Cabritas asesinas", h: "18:10 · 22:30" },
+  { t: PLAN.pelicula, h: "19:00 · 21:50", ok: true },
+  { t: "Rápidos y románticos 12", h: "16:00 · 20:15" },
+  { t: "El pololo perfecto", h: "17:30 · 19:45" },
+  { t: "Mi esposa y yo: la película", h: "18:40 · 21:10" },
+];
+const wrongMsgs = ["¡No! Esa no es.", "Frío, frío…", "Nop. Intenta otra vez.", "Casi… pero no.", "Esa la vemos otro día."];
+let wrongCount = 0;
+function buildGuess() {
+  const grid = $("#bolGrid");
+  grid.innerHTML = "";
+  $("#guessMsg").textContent = "";
+  MOVIES.forEach(m => {
+    const b = document.createElement("button");
+    b.className = "screen-btn";
+    b.innerHTML = `<b>${m.t}</b><small>${m.h}</small>`;
+    b.addEventListener("click", () => {
+      if (grid.dataset.done) return;
+      if (m.ok) {
+        grid.dataset.done = "1";
+        b.classList.add("right");
+        $("#guessMsg").textContent = "¡Acertaste! Ahora descúbrela.";
+        burst(120);
+        setTimeout(() => go("rasca"), 1400);
+      } else {
+        b.classList.add("wrong");
+        $("#guessMsg").textContent = wrongMsgs[wrongCount++ % wrongMsgs.length];
+      }
+    });
+    grid.append(b);
+  });
+  delete grid.dataset.done;
+}
+buildGuess();
 
 // Combo
 const drinkHints = {
@@ -1326,14 +1439,14 @@ $("#comboForm").addEventListener("submit", async e => {
     `• ${cabritas}\n• ${bebida}\n• Extra: ${extras.join(", ") || "nada"}\n` +
     `Respuesta a la invitación: SÍ ❤️`;
   $("#waBtn").href = `https://wa.me/${PLAN.whatsapp}?text=${encodeURIComponent(pedido)}`;
-  await travel("sala");
-  go("entrada");
-  setTimeout(() => rain(10000), reduced ? 0 : 900);
+  await travel("sala", "entrada");
+  holdWith($("#ticketHeld"), $("#ticket"), .3, 4);
+  rain(10000);
 });
 
 $("#moreHearts").addEventListener("click", () => burst(120));
 $("#restart").addEventListener("click", () => {
-  resetLetter(); phase = "doors"; pov.hidden = true;
+  resetLetter(); phase = "doors"; pov.hidden = true; buildGuess();
   buildLobby("table"); entry.classList.remove("fade"); entry.hidden = false;
   $("#openBtn").hidden = false; $("#openBtn").classList.remove("open"); $("#knock").hidden = false; $("#noMsg").textContent = "";
   $("#verdict").hidden = true; noCount = 0;
