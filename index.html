@@ -1454,7 +1454,7 @@ body { touch-action: pan-y pinch-zoom; }
     <div class="row"><button class="btn btn--gold" id="planBtn">¿Y después del cine…?</button></div>
     <p class="note">Guarda una captura y mándame tu pedido.</p>
     <div class="row">
-      <a class="btn btn--gold" id="waBtn" href="https://wa.me/" target="_blank" rel="noopener">Enviarle mi pedido por WhatsApp</a>
+      <a class="btn btn--gold" id="waBtn" href="https://api.whatsapp.com/send" target="_blank" rel="noopener">Enviarle mi pedido por WhatsApp</a>
     </div>
     <div class="row">
       <button class="btn btn--gold" id="creditsBtn" hidden>Ver los créditos</button><!-- créditos: se activan más adelante -->
@@ -2889,7 +2889,8 @@ function pedidoMsg() {
   L.push("━━━━━━━━━━━━━━━", "Total: $0 + 1 beso 💋");
   return L.join("\n");
 }
-function waHref() { return `https://wa.me/${PLAN.whatsapp}?text=${encodeURIComponent(pedidoMsg())}`; }
+// api.whatsapp.com y no wa.me: el redireccionamiento de wa.me rompe los emojis (llegan como �)
+function waHref() { return `https://api.whatsapp.com/send?phone=${PLAN.whatsapp}&text=${encodeURIComponent(pedidoMsg())}`; }
 function updateWa() {
   $("#waBtn").href = waHref();
 }
