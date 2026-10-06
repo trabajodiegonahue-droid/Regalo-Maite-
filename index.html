@@ -1203,6 +1203,33 @@ body { touch-action: pan-y pinch-zoom; }
 .orderfx.print .of-actions { animation: fadeIn .5s ease 2.7s backwards; }
 .of-actions .link-btn { font-size: .9rem; }
 
+/* Mensaje de voz de Diego: un cassette que gira mientras suena */
+.voice { display: grid; justify-items: center; gap: .55rem; margin: .4rem auto .2rem; width: min(330px, 100%); animation: fadeIn .8s ease; }
+.voice-btn { all: unset; cursor: pointer; display: grid; justify-items: center; gap: .55rem; width: 100%; padding: .9rem .9rem .8rem; border-radius: 18px; box-sizing: border-box;
+  background: linear-gradient(160deg, rgba(255,122,149,.16), rgba(233,196,111,.08)); border: 1.5px solid var(--gold-soft); box-shadow: 0 8px 26px rgba(0,0,0,.35); -webkit-tap-highlight-color: transparent; }
+.voice-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.voice-btn:active { transform: scale(.98); }
+.voice:not(.playing):not(.done) .voice-btn { animation: voicePulse 2.2s ease-in-out infinite; }
+@keyframes voicePulse { 50% { box-shadow: 0 0 0 7px rgba(255,122,149,.14), 0 8px 30px rgba(255,122,149,.35); } }
+.cassette { position: relative; width: 200px; height: 122px; border-radius: 10px; background: linear-gradient(180deg, #3a1f2a, #22121a); border: 2px solid #5a3442; box-shadow: inset 0 2px 0 rgba(255,255,255,.08); }
+.cassette::before { content: ""; position: absolute; left: 14px; right: 14px; top: 10px; height: 64px; border-radius: 6px; background: linear-gradient(180deg, var(--paper), #ecdcc0); }
+.cassette::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 120px; height: 26px; transform: translateX(-50%); clip-path: polygon(10% 0, 90% 0, 100% 100%, 0 100%); background: #1a0d13; }
+.cs-label { position: absolute; left: 0; right: 0; top: 13px; z-index: 1; text-align: center; font-family: var(--f-script); font-size: 1.25rem; line-height: 1; color: var(--stamp); }
+.cs-win { position: absolute; left: 42px; right: 42px; top: 36px; z-index: 1; height: 30px; border-radius: 15px; background: #2a1820; display: flex; justify-content: space-between; align-items: center; padding: 0 6px; }
+.cs-reel { width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle, #2a1820 0 3px, #f7eedc 3.5px 5px, transparent 5.5px), repeating-conic-gradient(#f7eedc 0 20deg, #8a6b5c 20deg 60deg); border: 2px solid #f7eedc; }
+.voice.playing .cs-reel { animation: reel 1.4s linear infinite; }
+@keyframes reel { to { transform: rotate(360deg); } }
+.cs-tape { flex: 1; height: 14px; margin: 0 4px; border-radius: 3px; background: #4a2a1e; }
+.voice-txt b { display: block; font-family: var(--f-display); font-weight: 400; font-size: 1.35rem; line-height: 1.1; color: var(--gold); }
+.voice-txt small { display: block; margin-top: .2rem; font-size: .8rem; letter-spacing: .08em; color: var(--muted); }
+.voice-wave { display: flex; gap: 3px; align-items: center; height: 22px; }
+.voice-wave i { width: 3px; height: 30%; border-radius: 2px; background: var(--rose); opacity: .5; }
+.voice.playing .voice-wave i { opacity: 1; animation: wave .9s ease-in-out infinite; }
+@keyframes wave { 50% { height: 100%; } }
+.voice-bar { width: 100%; height: 4px; border-radius: 4px; background: rgba(255,255,255,.12); overflow: hidden; }
+.voice-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--rose), var(--gold)); }
+.voice-msg { margin: 0; text-align: center; font-family: var(--f-letter); font-style: italic; font-size: 1.1rem; color: var(--cream-text); }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
 }
@@ -1456,6 +1483,15 @@ body { touch-action: pan-y pinch-zoom; }
     <div class="row">
       <a class="btn btn--gold" id="waBtn" href="https://api.whatsapp.com/send" target="_blank" rel="noopener">Enviarle mi pedido por WhatsApp</a>
     </div>
+    <div class="voice" id="voice" hidden>
+      <button class="voice-btn" id="voiceBtn" aria-label="Escuchar el mensaje de Diego">
+        <div class="cassette" aria-hidden="true"><span class="cs-label">Para <span data-name>Maite</span> ♥</span><div class="cs-win"><i class="cs-reel"></i><i class="cs-tape"></i><i class="cs-reel"></i></div></div>
+        <span class="voice-txt"><b>Un mensaje de <span data-firma>Diego</span> para ti</b><small id="voiceHint">Dale play con volumen 🎧</small></span>
+        <span class="voice-wave" aria-hidden="true"><i style="animation-delay:0.00s"></i><i style="animation-delay:0.07s"></i><i style="animation-delay:0.14s"></i><i style="animation-delay:0.21s"></i><i style="animation-delay:0.28s"></i><i style="animation-delay:0.35s"></i><i style="animation-delay:0.42s"></i><i style="animation-delay:0.49s"></i><i style="animation-delay:0.56s"></i><i style="animation-delay:0.63s"></i><i style="animation-delay:0.70s"></i><i style="animation-delay:0.77s"></i><i style="animation-delay:0.84s"></i><i style="animation-delay:0.01s"></i><i style="animation-delay:0.08s"></i><i style="animation-delay:0.15s"></i><i style="animation-delay:0.22s"></i><i style="animation-delay:0.29s"></i><i style="animation-delay:0.36s"></i><i style="animation-delay:0.43s"></i><i style="animation-delay:0.50s"></i><i style="animation-delay:0.57s"></i></span>
+      </button>
+      <div class="voice-bar" aria-hidden="true"><i id="voiceProg"></i></div>
+      <p class="voice-msg" id="voiceMsg" hidden></p>
+    </div>
     <div class="row">
       <button class="btn btn--gold" id="creditsBtn" hidden>Ver los créditos</button><!-- créditos: se activan más adelante -->
       <button class="btn btn--gold" id="finaleBtn" hidden>Cerrar el telón 🎬</button>
@@ -1567,6 +1603,7 @@ const PLAN = {
   whatsapp: "56941089585",
   inicial:  "M",            // letra del sello y del monograma
   cancion:  "Me Gusta Todo de Ti", artista: "Noche de Brujas",
+  voz:      "",        // el audio de Diego para el final (si está vacío, el cassette avisa que viene pronto)
   musica:   "",     // archivo de la canción; si está vacío suena el piano
   mensaje:  "Gracias por decir que sí. Eres mi película favorita, y cada función contigo es un estreno. Te amo.",             // tu número con código de país, sin + ni espacios. Ej: "56912345678"
 };
@@ -2695,6 +2732,7 @@ buildSeats();
 
 // ---------- Cierre final ----------
 function openFinale() {
+  stopVoice();
   const f = $("#finale");
   $("#finWa").href = $("#waBtn").href;
   f.classList.remove("closed"); f.hidden = false;
@@ -2822,8 +2860,38 @@ $("#pfYes").addEventListener("click", () => {
   $("#planFx").hidden = true;
   updateWa();
   go("entrada");
-  $("#finaleBtn").hidden = false;
+  $("#finaleBtn").hidden = false; $("#voice").hidden = false;
   showOrder();
+});
+
+// ---------- Mensaje de voz de Diego (al final) ----------
+const voz = PLAN.voz && !PLAN.voz.startsWith("__") ? Object.assign(new Audio(PLAN.voz), { preload: "auto" }) : null;
+function stopVoice() {
+  if (voz && !voz.paused) { voz.pause(); AudioFX.duck(false); }
+  $("#voice").classList.remove("playing");
+}
+if (voz) {
+  voz.addEventListener("timeupdate", () => { $("#voiceProg").style.width = (voz.currentTime / (voz.duration || 1) * 100).toFixed(1) + "%"; });
+  voz.addEventListener("ended", () => {
+    $("#voice").classList.remove("playing"); $("#voice").classList.add("done"); AudioFX.duck(false);
+    $("#voiceHint").textContent = "Tócalo para escucharlo otra vez";
+    AudioFX.kiss(); burst(90); rain(4000);
+  });
+}
+$("#voiceBtn").addEventListener("click", () => {
+  const box = $("#voice");
+  if (!voz) {
+    // todavía no está el audio: el cassette gira un ratito y avisa
+    box.classList.add("playing"); AudioFX.chime();
+    $("#voiceMsg").textContent = `Muy pronto aquí va a sonar un mensaje de ${PLAN.firma} 💌`; $("#voiceMsg").hidden = false;
+    setTimeout(() => box.classList.remove("playing"), 2200);
+    return;
+  }
+  if (!voz.paused) { stopVoice(); $("#voiceHint").textContent = "En pausa · tócalo para seguir"; return; }
+  if (voz.ended || voz.currentTime >= (voz.duration || Infinity) - .1) voz.currentTime = 0;
+  AudioFX.duck(true);
+  voz.play().then(() => { box.classList.add("playing"); box.classList.remove("done"); $("#voiceHint").textContent = "Sonando… 🎧"; })
+    .catch(() => { AudioFX.duck(false); $("#voiceHint").textContent = "Toca de nuevo para escuchar"; });
 });
 
 // ---------- El pedido: sale impreso como boleta y se le manda a Diego ----------
@@ -2899,6 +2967,7 @@ $("#moreHearts").addEventListener("click", () => burst(120));
 $("#restart").addEventListener("click", () => {
   resetLetter(); phase = "doors"; pov.hidden = true; buildGuess(); buildSeats();
   $("#finale").hidden = true; $("#finaleBtn").hidden = true; $("#orderFx").hidden = true;
+  stopVoice(); $("#voice").hidden = true; $("#voiceMsg").hidden = true;
   planElegido = ""; planPropio = false; $("#tPlanRow").hidden = true; $("#planBtn").textContent = "¿Y después del cine…?";
   buildLobby("table"); entry.classList.remove("fade"); entry.hidden = false;
   $("#openBtn").hidden = false; $("#openBtn").classList.remove("open"); $("#knock").hidden = false; $("#soundTip").hidden = false; $("#noMsg").textContent = "";
