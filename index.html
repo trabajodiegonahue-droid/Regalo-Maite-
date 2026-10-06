@@ -570,6 +570,60 @@ button { font: inherit; cursor: pointer; }
 .pf-food { position: absolute; left: 50%; top: 42%; font-size: 3.4rem; transform: translate(-50%, -50%); opacity: 0;
   animation: foodDrop .7s cubic-bezier(.3,1.5,.5,1) forwards; }
 @keyframes foodDrop { from { opacity: 1; transform: translate(calc(-50% + var(--x)), -110vh) rotate(-30deg); } to { opacity: 1; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r)); } }
+/* comunes */
+.pf-rise { position: absolute; opacity: 0; font-style: normal; text-shadow: 0 0 10px currentColor; animation: rise 3.2s ease-out infinite; }
+@keyframes rise { 0% { opacity: 0; transform: translateY(0) scale(.6); } 15% { opacity: 1; } 100% { opacity: 0; transform: translateY(-38vh) translateX(20px) scale(1.1); } }
+/* comer: vapor y cubiertos */
+.pf-steam { position: absolute; top: calc(42% - 120px); width: 14px; height: 70px; border-radius: 50%; background: linear-gradient(180deg, transparent, rgba(255,255,255,.75), transparent);
+  filter: blur(4px); opacity: 0; animation: steam 2.2s ease-in-out infinite; }
+@keyframes steam { 0% { opacity: 0; transform: translateY(20px) scaleX(.8); } 40% { opacity: .9; } 100% { opacity: 0; transform: translateY(-50px) scaleX(1.4) skewX(12deg); } }
+.pf-cutlery { position: absolute; top: calc(42% - 30px); font-size: 2.6rem; opacity: 0; animation: showIn .6s ease .2s forwards; }
+/* manejar: faroles que pasan */
+.pf-pass { position: absolute; bottom: 56%; width: 5px; height: 70px; background: #2b2540; opacity: 0; transform-origin: bottom center; }
+.pf-pass::before { content: ""; position: absolute; top: -8px; left: -8px; width: 20px; height: 12px; border-radius: 5px; background: #ffe7a8; box-shadow: 0 0 24px 10px rgba(255,220,140,.4); }
+.pf-pass--l { left: 46%; animation: passL 2.1s ease-in infinite; }
+.pf-pass--r { left: 54%; animation: passR 2.1s ease-in infinite; }
+@keyframes passL { 0% { opacity: 0; transform: translate(0, 0) scale(.2); } 15% { opacity: 1; } 100% { opacity: 1; transform: translate(-60vw, 40vh) scale(2.6); } }
+@keyframes passR { 0% { opacity: 0; transform: translate(0, 0) scale(.2); } 15% { opacity: 1; } 100% { opacity: 1; transform: translate(60vw, 40vh) scale(2.6); } }
+.pf-carhearts { position: absolute; left: 50%; bottom: calc(38% + 110px); width: 120px; height: 10px; margin-left: -60px; }
+.pf-car { animation: carBob .35s ease-in-out infinite alternate, carSway 3s ease-in-out infinite; }
+@keyframes carSway { 50% { margin-left: -85px; } }
+/* regalonear: cabezas que se acercan */
+.pf-head--l { animation: leanR 1s ease 2.4s forwards; }
+.pf-head--r { animation: leanL 1s ease 2.4s forwards; }
+@keyframes leanR { to { transform: translateX(10px) rotate(12deg); } }
+@keyframes leanL { to { transform: translateX(-10px) rotate(-12deg); } }
+.pf-couch-heart { position: absolute; left: 50%; bottom: calc(34% + 180px); margin-left: -18px; font-size: 2.2rem; opacity: 0; animation: popHeart .6s ease 3.2s forwards, floatUp 1.6s ease-in-out 3.8s infinite alternate; }
+/* sorpresa: rayo de luz */
+.pf-giftbeam { position: absolute; left: 50%; top: 50%; width: 260px; height: 60vh; margin-left: -130px; transform: translateY(-100%);
+  background: linear-gradient(0deg, rgba(255,230,160,.6), transparent); clip-path: polygon(35% 100%, 65% 100%, 100% 0, 0 0); opacity: 0; animation: showIn .8s ease 2.3s forwards; }
+/* escribe tu plan: marquesina de estreno */
+.pf-premiere { background: radial-gradient(120% 70% at 50% 40%, #2a1030, #0b0508 70%); }
+.pf-beam { position: absolute; bottom: -10%; width: 160px; height: 120vh; background: linear-gradient(0deg, rgba(255,240,200,.35), transparent 80%);
+  clip-path: polygon(40% 100%, 60% 100%, 100% 0, 0 0); transform-origin: 50% 100%; }
+.pf-beam--l { left: 4%; animation: sweepL 3.4s ease-in-out infinite alternate; }
+.pf-beam--r { right: 4%; animation: sweepR 3.4s ease-in-out infinite alternate; }
+@keyframes sweepL { from { transform: rotate(-28deg); } to { transform: rotate(14deg); } }
+@keyframes sweepR { from { transform: rotate(28deg); } to { transform: rotate(-14deg); } }
+.pf-marquee {
+  position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); width: min(calc(100% - 32px), 22rem);
+  padding: 1.2rem 1rem 1.1rem; border-radius: 12px; text-align: center; display: grid; gap: .7rem;
+  background: #150811; border: 3px solid var(--gold);
+  box-shadow: 0 0 0 6px #150811, 0 0 0 9px var(--gold-soft), 0 0 60px rgba(233,196,111,.35);
+  outline: 6px dotted #fff3c4; outline-offset: 10px; animation: chaseLights 1s steps(2) infinite;
+}
+@keyframes chaseLights { 50% { outline-color: #b8924a; } }
+.mq-top { font: 600 .72rem/1 var(--f-ui); letter-spacing: .32em; text-transform: uppercase; color: var(--gold); }
+.mq-board { display: flex; flex-wrap: wrap; justify-content: center; gap: .3em .45em; line-height: 1; }
+.mq-word { display: inline-flex; gap: .08em; }
+.mq-tile {
+  display: inline-grid; place-items: center; min-width: .78em; padding: .14em .08em; border-radius: 3px;
+  background: linear-gradient(180deg, #fffaf0, #e9dfcc); color: #1d0811; font-family: var(--f-display); text-transform: uppercase;
+  box-shadow: 0 2px 0 rgba(0,0,0,.35); transform: rotateX(90deg); animation: flipIn .45s cubic-bezier(.3,1.5,.5,1) forwards;
+}
+@keyframes flipIn { to { transform: rotateX(0); } }
+.mq-cast { font: 400 .85rem/1.3 var(--f-ui); color: var(--cream-text); opacity: 0; animation: showIn .8s ease 2.2s forwards; }
+.mq-stars { color: var(--gold); letter-spacing: .3em; opacity: 0; animation: showIn .8s ease 2.6s forwards; }
 /* manejar */
 .pf-drive { background: linear-gradient(180deg, #0b0a26, #2a1440 55%, #4a1838); }
 .pf-city { position: absolute; left: 0; right: 0; bottom: 56%; height: 22%;
@@ -647,7 +701,7 @@ button { font: inherit; cursor: pointer; }
 @keyframes tvFlicker { 0% { background: #7fb7ff; } 25% { background: #ffb3c7; } 50% { background: #c3a7ff; } 75% { background: #9fe0ff; } }
 .pf-couch { position: absolute; left: 50%; bottom: 34%; width: 84vw; max-width: 340px; height: 120px; transform: translateX(-50%);
   border-radius: 26px 26px 14px 14px; background: linear-gradient(180deg, #7a2f4f, #4e1830); }
-.pf-head { position: absolute; bottom: calc(34% + 112px); width: 54px; height: 54px; border-radius: 50%; background: #2a1d20; }
+.pf-head { position: absolute; bottom: calc(34% + 104px); width: 56px; height: 60px; border-radius: 50% 50% 46% 46%; background: radial-gradient(circle at 40% 70%, #f2c6a8 0 30%, transparent 31%), linear-gradient(180deg, #6b3f2a, #3e2418); box-shadow: 0 0 18px rgba(255,180,200,.35); }
 .pf-blanket { position: absolute; left: 50%; bottom: 34%; width: 76vw; max-width: 310px; height: 120px; transform: translateX(-50%);
   border-radius: 40px 40px 14px 14px; background: repeating-linear-gradient(45deg, #f2b8c6 0 16px, #fff1f5 16px 32px);
   animation: blanketDrop .9s cubic-bezier(.3,1.3,.5,1) 1.2s both; }
@@ -2153,6 +2207,7 @@ const PLANES = [
   { id: "comer", icon: "🍔", t: "Comer algo rico", msg: "Comida rica y besitos" },
   { id: "casa", icon: "🛋️", t: "Regalonear en casita", msg: "Regalones en casita" },
   { id: "sorpresa", icon: "🎁", t: "Lo que tú quieras", msg: `Sorpresa… ${PLAN.firma} elige 😏` },
+  { id: "otra", icon: "✍️", t: "Escribe tu plan" },
 ];
 let planElegido = "", planActual = null;
 (() => {
@@ -2169,6 +2224,19 @@ let planElegido = "", planActual = null;
     playPlan({ id: "otra", t: txt, msg: txt });
   });
 })();
+function rising(n, bottom = 30, chars = ["♥", "♥", "✦"]) {
+  return Array.from({ length: n }, (_, i) => `<i class="pf-rise" style="left:${10 + Math.random() * 80}%;bottom:${bottom}%;animation-delay:${(1.2 + Math.random() * 3).toFixed(2)}s;font-size:${(.9 + Math.random() * 1.2).toFixed(2)}rem;color:${["#ff7aa0", "#ffb3c7", "#e9c46f", "#fff"][i % 4]}">${chars[i % chars.length]}</i>`).join("");
+}
+function marquee(text) {
+  const clean = text.replace(/[<>&"]/g, "").trim();
+  const len = clean.length, fs = len <= 10 ? 2.2 : len <= 20 ? 1.7 : len <= 34 ? 1.3 : len <= 50 ? 1.05 : .9;
+  let k = 0;
+  const words = clean.split(/\s+/).map(w => `<span class="mq-word">${[...w].map(ch => `<span class="mq-tile" style="animation-delay:${(.5 + (k++) * .06).toFixed(2)}s">${ch}</span>`).join("")}</span>`).join(" ");
+  return `<div class="pf-beam pf-beam--l"></div><div class="pf-beam pf-beam--r"></div>
+    <div class="pf-marquee"><div class="mq-top">Próximamente</div>
+    <div class="mq-board" style="font-size:${fs}rem">${words}</div>
+    <div class="mq-cast">Protagonizada por ${PLAN.nombre} &amp; ${PLAN.firma}</div><div class="mq-stars">★★★★★</div></div>`;
+}
 function stars(n) {
   return Array.from({ length: n }, () => `<i class="pf-star" style="left:${Math.random() * 100}%;top:${Math.random() * 62}%;animation-delay:${(Math.random() * 2).toFixed(2)}s"></i>`).join("");
 }
@@ -2178,10 +2246,13 @@ const COUPLE = `<svg viewBox="0 0 120 120" aria-hidden="true"><g fill="#ffd6e2">
   <path d="M50 52 q10 8 22 0" stroke="#ffd6e2" stroke-width="6" fill="none" stroke-linecap="round"/></g></svg><span class="pf-heart">❤️</span>`;
 function planScene(p) {
   switch (p.id) {
-    case "manejar": return ["pf-drive", stars(30) + `<div class="pf-city"></div><div class="pf-road"><i></i></div>` +
+    case "manejar": return ["pf-drive", stars(30) + `<div class="pf-moon" style="right:10%;top:21%;width:50px;height:50px"></div><div class="pf-city"></div><div class="pf-road"><i></i></div>` +
+      [0, 1, 2].map(i => `<i class="pf-pass pf-pass--l" style="animation-delay:${i * .7}s"></i><i class="pf-pass pf-pass--r" style="animation-delay:${.35 + i * .7}s"></i>`).join("") +
+      `<div class="pf-carhearts">${rising(10, 0, ["♥"])}</div>` +
       `<div class="pf-car"><div class="pf-car-win"><i></i><i></i></div><div class="pf-car-body"><b></b><b></b><span class="pf-plate-car">TE AMO</span></div><i class="pf-wheel"></i><i class="pf-wheel"></i><span class="pf-heart">❤️</span></div>`];
-    case "sorpresa": return ["pf-gift", stars(25) + `<div class="pf-box"><div class="pf-lid"></div><div class="pf-base"></div></div>`];
-    case "comer": return ["pf-eat", `<div class="pf-plate"></div>` + [["🍔", -30, -20, -12], ["🍟", 40, -10, 14], ["🍕", -10, 40, 8], ["🌮", 50, 45, -10], ["🥤", -60, 30, 0]]
+    case "sorpresa": return ["pf-gift", stars(25) + `<div class="pf-giftbeam"></div><div class="pf-box"><div class="pf-lid"></div><div class="pf-base"></div></div>` + rising(18, 44, ["♥", "✦", "♥", "?"])];
+    case "comer": return ["pf-eat", `<div class="pf-plate"></div><span class="pf-cutlery" style="left:2%;top:calc(42% + 90px)">🍴</span>` +
+      [0, 1, 2].map(i => `<i class="pf-steam" style="left:calc(50% + ${(i - 1) * 34}px);animation-delay:${2 + i * .35}s"></i>`).join("") + rising(12, 46) + [["🍔", -30, -20, -12], ["🍟", 40, -10, 14], ["🍕", -10, 40, 8], ["🌮", 50, 45, -10], ["🥤", -60, 30, 0]]
       .map(([e, x, y, r], i) => `<span class="pf-food" style="--x:${x}px;--y:${y}px;--r:${r}deg;animation-delay:${.3 + i * .35}s">${e}</span>`).join("")];
     case "helado": return ["pf-ice", `<div class="pf-cone"></div>` + [["#ffb3c7", 0], ["#fff4e0", 1], ["#7b4a2e", 2]]
       .map(([c, i]) => `<div class="pf-scoop" style="background:${c};top:calc(48% - ${70 + i * 78}px);animation-delay:${.4 + i * .55}s"></div>`).join("") +
@@ -2194,9 +2265,10 @@ function planScene(p) {
         `<svg class="pf-constel" viewBox="0 0 100 100" aria-hidden="true"><polyline points="${pts.map(p => p.join(",")).join(" ")}"/>${pts.slice(0, -1).map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="1.6" style="animation-delay:${.2 + i * .07}s"/>`).join("")}</svg>`];
     }
     case "casa": return ["pf-home", `<div class="pf-tv"></div><div class="pf-couch"></div>` +
-      `<i class="pf-head" style="left:calc(50% - 60px)"></i><i class="pf-head" style="left:calc(50% + 6px)"></i><div class="pf-blanket"></div>` +
+      `<i class="pf-head pf-head--l" style="left:calc(50% - 60px)"></i><i class="pf-head pf-head--r" style="left:calc(50% + 6px)"></i><div class="pf-blanket"></div>` +
+      `<span class="pf-food" style="--x:70px;--y:58px;--r:-8deg;top:auto;bottom:calc(34% + 40px);font-size:2.6rem;animation-delay:2s">🍿</span><span class="pf-couch-heart">❤️</span>` + rising(10, 50) +
       `<span class="pf-zz" style="left:58%;bottom:58%">z</span><span class="pf-zz" style="left:64%;bottom:62%;animation-delay:2.9s">Z</span>`];
-    default: return ["pf-night", stars(50) + `<div class="pf-neon">${p.t.replace(/[<>&]/g, "")}</div>`];
+    default: return ["pf-night pf-premiere", stars(60) + marquee(p.t) + rising(14, 8)];
   }
 }
 function playPlan(p) {
