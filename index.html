@@ -2889,7 +2889,7 @@ function pedidoMsg() {
   L.push("━━━━━━━━━━━━━━━", "Total: $0 + 1 beso 💋");
   return L.join("\n");
 }
-// api.whatsapp.com y no wa.me: el redireccionamiento de wa.me rompe los emojis (llegan como �)
+// api.whatsapp.com y no wa.me: el redireccionamiento de wa.me rompe los emojis (llegan como rombos con ?)
 function waHref() { return `https://api.whatsapp.com/send?phone=${PLAN.whatsapp}&text=${encodeURIComponent(pedidoMsg())}`; }
 function updateWa() {
   $("#waBtn").href = waHref();
