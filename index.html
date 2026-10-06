@@ -534,6 +534,88 @@ button { font: inherit; cursor: pointer; }
 .credits-end .row a { text-decoration: none; }
 .credits-close { position: absolute; left: 12px; top: calc(env(safe-area-inset-top, 0px) + 10px); padding: .55rem 1rem; font-size: .72rem; }
 
+/* ---------- Después del cine ---------- */
+.plans { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.plan-card {
+  display: grid; justify-items: center; gap: .45rem; padding: 1.1rem .7rem 1rem; border-radius: 14px;
+  background: linear-gradient(180deg, var(--velvet-2), #1a0710); border: 1.5px solid #4a1a2c; color: var(--cream-text);
+  text-align: center; font: 600 .92rem/1.25 var(--f-ui); transition: transform .15s ease, border-color .2s;
+}
+.plan-card:hover { border-color: var(--gold-soft); }
+.plan-card:active { transform: scale(.97); }
+.plan-card span { font-size: 2.2rem; line-height: 1; }
+.plan-other { width: 100%; display: grid; gap: .6rem; }
+.planfx { position: fixed; inset: 0; z-index: 60; overflow: hidden; background: #0b0508; }
+.pf-stage { position: absolute; inset: 0; overflow: hidden; }
+.pf-card {
+  position: absolute; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 6%); transform: translateX(-50%);
+  width: min(calc(100% - 32px), 22rem); padding: 1.2rem 1.1rem; border-radius: 16px; text-align: center;
+  background: rgba(12,6,10,.82); border: 1px solid var(--gold-soft); display: grid; gap: .8rem; justify-items: center;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: fadeIn .6s ease;
+}
+.pf-card h3 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 1.7rem; color: var(--gold); line-height: 1.15; }
+.pf-msg { position: absolute; left: 0; right: 0; top: 9%; text-align: center; padding-inline: 16px;
+  font-family: var(--f-display); font-size: clamp(1.7rem, 8vw, 2.4rem); color: var(--cream-text); text-shadow: 0 2px 16px rgba(0,0,0,.5);
+  opacity: 0; animation: showIn .8s ease 2.6s forwards; }
+@keyframes showIn { to { opacity: 1; } }
+/* comer */
+.pf-eat { background: repeating-conic-gradient(#b3122f 0 25%, #f7eedc 0 50%) 0 0 / 46px 46px; }
+.pf-eat::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 55%, transparent 30%, rgba(0,0,0,.55) 80%); }
+.pf-plate { position: absolute; left: 50%; top: 42%; width: 64vw; max-width: 280px; aspect-ratio: 1; transform: translate(-50%, -50%);
+  border-radius: 50%; background: radial-gradient(circle, #fff 0 55%, #e9e4dc 56% 62%, #fff 63%); box-shadow: 0 18px 40px rgba(0,0,0,.4); }
+.pf-food { position: absolute; left: 50%; top: 42%; font-size: 3.4rem; transform: translate(-50%, -50%); opacity: 0;
+  animation: foodDrop .7s cubic-bezier(.3,1.5,.5,1) forwards; }
+@keyframes foodDrop { from { opacity: 1; transform: translate(calc(-50% + var(--x)), -110vh) rotate(-30deg); } to { opacity: 1; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r)); } }
+/* helado */
+.pf-ice { background: linear-gradient(180deg, #ffd6e2, #ffeef3); }
+.pf-ice .pf-msg { color: #8e0f2a; text-shadow: none; }
+.pf-cone { position: absolute; left: 50%; top: 48%; width: 120px; height: 190px; transform: translateX(-50%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: repeating-linear-gradient(45deg, #d99a4e 0 10px, #c4823a 10px 12px), repeating-linear-gradient(-45deg, transparent 0 10px, #b3742f 10px 12px), #d99a4e; }
+.pf-scoop { position: absolute; left: 50%; width: 130px; height: 110px; margin-left: -65px; border-radius: 50% 50% 44% 44%;
+  box-shadow: inset -10px -12px 0 rgba(0,0,0,.08); opacity: 0; animation: scoopDrop .6s cubic-bezier(.3,1.6,.5,1) forwards; }
+@keyframes scoopDrop { from { opacity: 1; transform: translateY(-100vh); } to { opacity: 1; transform: none; } }
+/* noche: caminar y estrellas */
+.pf-night { background: linear-gradient(180deg, #050a24, #1a1446 60%, #2a1838); }
+.pf-moon { position: absolute; right: 14%; top: 12%; width: 74px; height: 74px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fffbe8, #f2e6b8); box-shadow: 0 0 40px 12px rgba(255,245,200,.35); }
+.pf-star { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 6px #fff; animation: twinkle 2s ease-in-out infinite; }
+@keyframes twinkle { 50% { opacity: .2; } }
+.pf-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 35%; background: linear-gradient(180deg, #120c22, #07050e); }
+.pf-lamp { position: absolute; bottom: 35%; width: 6px; height: 34%; background: #2b2540; }
+.pf-lamp::before { content: ""; position: absolute; top: -10px; left: -9px; width: 24px; height: 14px; border-radius: 6px 6px 2px 2px; background: #ffe7a8; box-shadow: 0 0 30px 14px rgba(255,220,140,.35); }
+.pf-couple { position: absolute; bottom: 34%; left: -40%; width: 150px; filter: drop-shadow(0 0 10px rgba(255,150,190,.6)); animation: walkAcross 5s linear forwards; }
+.pf-couple svg { width: 100%; display: block; animation: bob .5s ease-in-out infinite alternate; }
+@keyframes walkAcross { to { left: calc(50% - 75px); } }
+@keyframes bob { to { transform: translateY(-4px); } }
+.pf-couple .pf-heart { position: absolute; left: 50%; top: -42px; margin-left: -16px; font-size: 2rem; opacity: 0; animation: popHeart .6s ease 3.6s forwards; }
+@keyframes popHeart { from { opacity: 0; transform: scale(.2); } to { opacity: 1; transform: scale(1); } }
+.pf-shoot { position: absolute; width: 120px; height: 2px; background: linear-gradient(90deg, #fff, transparent); transform: rotate(-20deg); opacity: 0; animation: shoot 1.2s ease-out forwards; }
+@keyframes shoot { 0% { opacity: 1; translate: 0 0; } 100% { opacity: 0; translate: -60vw 26vh; } }
+.pf-constel { position: absolute; left: 50%; top: 38%; width: 74vw; max-width: 320px; transform: translate(-50%, -50%); overflow: visible; }
+.pf-constel polyline { fill: none; stroke: rgba(255,200,230,.85); stroke-width: 1.4; stroke-dasharray: 600; stroke-dashoffset: 600; animation: draw 2.4s ease 1.2s forwards; filter: drop-shadow(0 0 4px #ff9ac0); }
+.pf-constel circle { fill: #fff; opacity: 0; animation: showIn .4s ease forwards; filter: drop-shadow(0 0 4px #fff); }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+/* casa */
+.pf-home { background: radial-gradient(120% 80% at 50% 30%, #2a1a38, #0d0912 70%); }
+.pf-tv { position: absolute; left: 50%; top: 20%; width: 62vw; max-width: 260px; aspect-ratio: 16 / 10; transform: translateX(-50%);
+  border: 8px solid #111; border-radius: 6px; background: #7fb7ff; box-shadow: 0 0 60px 20px rgba(120,170,255,.3); animation: tvFlicker 1.6s steps(4) infinite; }
+@keyframes tvFlicker { 0% { background: #7fb7ff; } 25% { background: #ffb3c7; } 50% { background: #c3a7ff; } 75% { background: #9fe0ff; } }
+.pf-couch { position: absolute; left: 50%; bottom: 34%; width: 84vw; max-width: 340px; height: 120px; transform: translateX(-50%);
+  border-radius: 26px 26px 14px 14px; background: linear-gradient(180deg, #7a2f4f, #4e1830); }
+.pf-head { position: absolute; bottom: calc(34% + 112px); width: 54px; height: 54px; border-radius: 50%; background: #2a1d20; }
+.pf-blanket { position: absolute; left: 50%; bottom: 34%; width: 76vw; max-width: 310px; height: 120px; transform: translateX(-50%);
+  border-radius: 40px 40px 14px 14px; background: repeating-linear-gradient(45deg, #f2b8c6 0 16px, #fff1f5 16px 32px);
+  animation: blanketDrop .9s cubic-bezier(.3,1.3,.5,1) 1.2s both; }
+@keyframes blanketDrop { from { transform: translate(-50%, -80vh) rotate(-8deg); } to { transform: translateX(-50%); } }
+.pf-zz { position: absolute; font: 700 1.6rem var(--f-ui); color: #ffd6e2; opacity: 0; animation: zz 2.4s ease 2.4s infinite; }
+@keyframes zz { 0% { opacity: 0; transform: translateY(0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-60px); } }
+/* otra cosa */
+.pf-neon { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); width: calc(100% - 32px); text-align: center;
+  font-family: var(--f-display); font-size: clamp(2rem, 10vw, 3.2rem); color: #ffd6e2; line-height: 1.1;
+  text-shadow: 0 0 8px #ff5c8a, 0 0 22px #ff2f6d, 0 0 50px #ff2f6d; animation: neonOn 1.6s steps(1) forwards; overflow-wrap: anywhere; }
+@keyframes neonOn { 0% { opacity: 0; } 10% { opacity: 1; } 15% { opacity: .2; } 25% { opacity: 1; } 30% { opacity: .4; } 40%, 100% { opacity: 1; } }
+
 .btn {
   border: 0; border-radius: 999px;
   padding: .95rem 1.6rem;
@@ -1016,6 +1098,7 @@ body { touch-action: pan-y pinch-zoom; }
           <div><dt>Cine</dt><dd data-cine>Cineplanet</dd></div>
           <div><dt>Sala</dt><dd id="tSala">—</dd></div>
           <div class="wide"><dt>Combo</dt><dd id="tCombo">—</dd></div>
+          <div class="wide" id="tPlanRow" hidden><dt>Después del cine</dt><dd id="tPlan">—</dd></div>
           <div><dt>Invitada</dt><dd data-name>Maite</dd></div>
           <div><dt>Acompañante</dt><dd data-firma>Tu esposo</dd></div>
         </dl>
@@ -1041,6 +1124,7 @@ body { touch-action: pan-y pinch-zoom; }
       <p class="together">Pololeando hace <b class="togetherTime">—</b></p>
     </div>
 
+    <div class="row"><button class="btn btn--gold" id="planBtn">¿Y después del cine…?</button></div>
     <p class="note">Guarda una captura de pantalla de esta entrada y mándame tu pedido.</p>
     <div class="row">
       <a class="btn btn--gold" id="waBtn" href="https://wa.me/" target="_blank" rel="noopener">Enviarle mi pedido por WhatsApp</a>
@@ -1051,7 +1135,32 @@ body { touch-action: pan-y pinch-zoom; }
       <button class="btn btn--ghost" id="restart">Ver desde el inicio</button>
     </div>
   </section>
+
+  <!-- 5. Después del cine -->
+  <section class="scene" id="despues" hidden>
+    <h2 class="scene-title">¿Y después del cine…?</h2>
+    <p class="scene-sub">Elige el plan. Yo me encargo del resto.</p>
+    <div class="plans" id="plans"></div>
+    <div class="plan-other field" id="planOther" hidden>
+      <label for="planOtherText">Escribe tu plan</label>
+      <input type="text" id="planOtherText" maxlength="60" placeholder="Ej: ir a la playa, karaoke, comer sushi" autocomplete="off">
+      <div class="row"><button class="btn btn--gold" id="planOtherGo">Ver mi plan</button></div>
+    </div>
+    <button class="link-btn" id="planBack">Volver a mi entrada</button>
+  </section>
 </main>
+
+<div class="planfx" id="planFx" hidden>
+  <div class="pf-stage" id="pfStage"></div>
+  <div class="pf-card" id="pfCard" hidden>
+    <span class="eyebrow">¿Este es el plan?</span>
+    <h3 id="pfTitle"></h3>
+    <div class="row">
+      <button class="btn btn--gold" id="pfYes">¡Sí, ese!</button>
+      <button class="btn btn--ghost" id="pfNo">Elegir otro</button>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script>
@@ -1134,7 +1243,7 @@ function tick() {
 tick(); setInterval(tick, 1000);
 
 // Navegación entre escenas
-const steps = ["carta", "adivina", "combo", "entrada"];
+const steps = ["carta", "adivina", "combo", "entrada", "despues"];
 function go(id) {
   steps.forEach(s => $("#" + s).hidden = s !== id);
   scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
@@ -1979,12 +2088,93 @@ $("#comboForm").addEventListener("submit", async e => {
   pedido = `Mi pedido para la cita 🍿\n` +
     `• ${cabritas}\n• ${bebida}\n• Extra: ${extras.join(", ") || "nada"}\n` +
     `Respuesta a la invitación: SÍ ❤️`;
-  $("#waBtn").href = `https://wa.me/${PLAN.whatsapp}?text=${encodeURIComponent(pedido)}`;
+  updateWa();
   await travel("sala", "entrada");
   holdWith($("#ticketHeld"), $("#ticket"), .3, 4);
   AudioFX.chime();
   rain(10000);
 });
+
+// ---------- Después del cine: planes con animación ----------
+const PLANES = [
+  { id: "comer", icon: "🍔", t: "Ir a comer algo rico", msg: "Comida rica y besitos" },
+  { id: "helado", icon: "🍦", t: "Tomar un helado", msg: "Un helado para dos" },
+  { id: "caminar", icon: "🌙", t: "Caminar de la mano", msg: "Tú, yo y la luna" },
+  { id: "casa", icon: "🛋️", t: "Otra peli en casa con mantita", msg: "Segunda función: en casa" },
+  { id: "estrellas", icon: "✨", t: "Mirar las estrellas", msg: "Todas las estrellas, para ti" },
+  { id: "otra", icon: "✍️", t: "Otra cosa" },
+];
+let planElegido = "", planActual = null;
+(() => {
+  const grid = $("#plans");
+  grid.innerHTML = PLANES.map(p => `<button class="plan-card" data-plan="${p.id}"><span aria-hidden="true">${p.icon}</span>${p.t}</button>`).join("");
+  $$(".plan-card", grid).forEach(b => b.addEventListener("click", () => {
+    const p = PLANES.find(x => x.id === b.dataset.plan);
+    if (p.id === "otra") { $("#planOther").hidden = false; $("#planOtherText").focus(); return; }
+    playPlan(p);
+  }));
+  $("#planOtherGo").addEventListener("click", () => {
+    const txt = $("#planOtherText").value.trim();
+    if (!txt) { $("#planOtherText").focus(); return; }
+    playPlan({ id: "otra", t: txt, msg: txt });
+  });
+})();
+function stars(n) {
+  return Array.from({ length: n }, () => `<i class="pf-star" style="left:${Math.random() * 100}%;top:${Math.random() * 62}%;animation-delay:${(Math.random() * 2).toFixed(2)}s"></i>`).join("");
+}
+const COUPLE = `<svg viewBox="0 0 120 120" aria-hidden="true"><g fill="#ffd6e2">
+  <circle cx="38" cy="22" r="11"/><path d="M26 36 h24 l4 40 h-8 l-2 40 h-8 l-2-36 -2 36 h-8 l-2-40 h-8z"/>
+  <circle cx="82" cy="26" r="10"/><path d="M76 20 q6-10 16 0 q2 16 -4 26 z"/><path d="M70 38 h24 l12 44 h-14 l-2 34 h-7 l-2-30 -2 30 h-7 l-2-34 h-12z"/>
+  <path d="M50 52 q10 8 22 0" stroke="#ffd6e2" stroke-width="6" fill="none" stroke-linecap="round"/></g></svg><span class="pf-heart">❤️</span>`;
+function planScene(p) {
+  switch (p.id) {
+    case "comer": return ["pf-eat", `<div class="pf-plate"></div>` + [["🍔", -30, -20, -12], ["🍟", 40, -10, 14], ["🍕", -10, 40, 8], ["🌮", 50, 45, -10], ["🥤", -60, 30, 0]]
+      .map(([e, x, y, r], i) => `<span class="pf-food" style="--x:${x}px;--y:${y}px;--r:${r}deg;animation-delay:${.3 + i * .35}s">${e}</span>`).join("")];
+    case "helado": return ["pf-ice", `<div class="pf-cone"></div>` + [["#ffb3c7", 0], ["#fff4e0", 1], ["#7b4a2e", 2]]
+      .map(([c, i]) => `<div class="pf-scoop" style="background:${c};top:calc(48% - ${70 + i * 78}px);animation-delay:${.4 + i * .55}s"></div>`).join("") +
+      `<span class="pf-food" style="--x:6px;--y:-238px;--r:0deg;top:48%;font-size:2.4rem;animation-delay:2.2s">🍒</span>`];
+    case "caminar": return ["pf-night", stars(40) + `<div class="pf-moon"></div><div class="pf-ground"></div>` +
+      [12, 48, 84].map(x => `<i class="pf-lamp" style="left:${x}%"></i>`).join("") + `<div class="pf-couple">${COUPLE}</div>`];
+    case "estrellas": {
+      const pts = [[50, 30], [38, 12], [22, 8], [8, 18], [6, 36], [18, 56], [34, 72], [50, 88], [66, 72], [82, 56], [94, 36], [92, 18], [78, 8], [62, 12], [50, 30]];
+      return ["pf-night", stars(90) + [0, 1, 2].map(i => `<i class="pf-shoot" style="right:${-10 + i * 12}%;top:${8 + i * 9}%;animation-delay:${.3 + i * .9}s"></i>`).join("") +
+        `<svg class="pf-constel" viewBox="0 0 100 100" aria-hidden="true"><polyline points="${pts.map(p => p.join(",")).join(" ")}"/>${pts.slice(0, -1).map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="1.6" style="animation-delay:${.2 + i * .07}s"/>`).join("")}</svg>`];
+    }
+    case "casa": return ["pf-home", `<div class="pf-tv"></div><div class="pf-couch"></div>` +
+      `<i class="pf-head" style="left:calc(50% - 60px)"></i><i class="pf-head" style="left:calc(50% + 6px)"></i><div class="pf-blanket"></div>` +
+      `<span class="pf-zz" style="left:58%;bottom:58%">z</span><span class="pf-zz" style="left:64%;bottom:62%;animation-delay:2.9s">Z</span>`];
+    default: return ["pf-night", stars(50) + `<div class="pf-neon">${p.t.replace(/[<>&]/g, "")}</div>`];
+  }
+}
+function playPlan(p) {
+  planActual = p;
+  const fx = $("#planFx"), stage = $("#pfStage");
+  const [cls, html] = planScene(p);
+  stage.className = "pf-stage " + cls;
+  stage.innerHTML = html + (p.id === "otra" ? "" : `<div class="pf-msg">${p.msg}</div>`);
+  $("#pfTitle").textContent = p.t;
+  $("#pfCard").hidden = true;
+  fx.hidden = false;
+  AudioFX.chime();
+  setTimeout(() => { burst(70); AudioFX.kiss(); }, reduced ? 0 : 2600);
+  setTimeout(() => { $("#pfCard").hidden = false; }, reduced ? 0 : 4200);
+}
+$("#pfYes").addEventListener("click", () => {
+  planElegido = planActual.t;
+  $("#tPlan").textContent = planElegido; $("#tPlanRow").hidden = false;
+  $("#planBtn").textContent = "Cambiar el plan de después";
+  $("#planFx").hidden = true;
+  updateWa();
+  go("entrada");
+  rain(4000);
+});
+$("#pfNo").addEventListener("click", () => { $("#planFx").hidden = true; });
+$("#planBtn").addEventListener("click", () => { $("#planOther").hidden = true; go("despues"); });
+$("#planBack").addEventListener("click", () => go("entrada"));
+function updateWa() {
+  const extra = planElegido ? `\n• Después del cine: ${planElegido}` : "";
+  $("#waBtn").href = `https://wa.me/${PLAN.whatsapp}?text=${encodeURIComponent(pedido + extra)}`;
+}
 
 $("#moreHearts").addEventListener("click", () => burst(120));
 $("#restart").addEventListener("click", () => {
