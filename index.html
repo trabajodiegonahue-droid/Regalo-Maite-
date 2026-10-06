@@ -537,6 +537,28 @@ button { font: inherit; cursor: pointer; }
 .credits-end .row a { text-decoration: none; }
 .credits-close { position: absolute; left: 12px; top: calc(env(safe-area-inset-top, 0px) + 10px); padding: .55rem 1rem; font-size: .72rem; }
 
+/* ---------- Público en la sala ---------- */
+.crowd { position: absolute; left: 0; right: 0; bottom: -4%; height: 34%; z-index: 2; pointer-events: none;
+  display: flex; align-items: flex-end; justify-content: space-around; padding-inline: 2%;
+  transform: translateY(100%); transition: transform 1s cubic-bezier(.2,.8,.2,1); }
+.crowd.up { transform: none; }
+.crowd::before { content: ""; position: absolute; inset: 55% 0 0; background: linear-gradient(180deg, transparent, #050203 80%); z-index: 2; }
+.fan { position: relative; z-index: 1; flex: 0 0 auto; width: var(--w); height: calc(var(--w) * 1.9); margin-inline: -6px; }
+.fan .hd { position: absolute; left: 50%; top: 0; width: 56%; aspect-ratio: 1; margin-left: -28%; border-radius: 50%; background: radial-gradient(circle at 50% 18%, #4a4f72 0 18%, #1b1626 55%); box-shadow: 0 -3px 10px rgba(170,190,255,.45); }
+.fan .bd { position: absolute; left: 0; right: 0; top: 46%; bottom: 0; border-radius: 45% 45% 8px 8px; background: linear-gradient(180deg, #2a2438, #120d18 60%); box-shadow: 0 -3px 12px rgba(170,190,255,.35); }
+.fan .hn { position: absolute; top: 18%; width: 28%; aspect-ratio: .75; border-radius: 50%; background: #6c6688; box-shadow: 0 0 8px rgba(190,205,255,.5); opacity: 0; transition: top .3s, opacity .3s; }
+.fan .hn.l { left: 22%; } .fan .hn.r { right: 22%; }
+.crowd.clap .fan .hn { opacity: 1; top: -20%; }
+.crowd.clap .fan .hn.l { animation: clapL .22s ease-in-out infinite alternate; animation-delay: var(--d); }
+.crowd.clap .fan .hn.r { animation: clapR .22s ease-in-out infinite alternate; animation-delay: var(--d); }
+@keyframes clapL { to { transform: translateX(55%); } }
+@keyframes clapR { to { transform: translateX(-55%); } }
+.crowd.clap .fan { animation: cheer .5s ease-in-out infinite alternate; animation-delay: var(--d); }
+@keyframes cheer { to { transform: translateY(-5%); } }
+.crowd .bravo { position: absolute; left: 50%; bottom: 105%; transform: translateX(-50%); font-family: var(--f-display); font-size: 1.6rem; color: var(--gold);
+  text-shadow: 0 0 14px rgba(233,196,111,.8); white-space: nowrap; opacity: 0; visibility: hidden; transition: opacity .5s, visibility .5s; z-index: 3; }
+.crowd.clap .bravo { opacity: 1; visibility: visible; }
+
 /* ---------- Elegir butaca ---------- */
 .seatmap { width: 100%; display: grid; gap: .8rem; justify-items: center; padding: 1rem .7rem; border-radius: 14px; background: #0d0408; border: 1px solid #3d1426; }
 .seat-screen { width: 82%; padding: .35rem 0 .8rem; text-align: center; font: 600 .62rem/1 var(--f-ui); letter-spacing: .4em; color: #cfe0ff;
@@ -736,8 +758,42 @@ button { font: inherit; cursor: pointer; }
   box-shadow: 0 2px 0 rgba(0,0,0,.35); transform: rotateX(90deg); animation: flipIn .45s cubic-bezier(.3,1.5,.5,1) forwards;
 }
 @keyframes flipIn { to { transform: rotateX(0); } }
-.mq-cast { font: 400 .85rem/1.3 var(--f-ui); color: var(--cream-text); opacity: 0; animation: showIn .8s ease 2.2s forwards; }
-.mq-stars { color: var(--gold); letter-spacing: .3em; opacity: 0; animation: showIn .8s ease 2.6s forwards; }
+.mq-cast { font: 400 .85rem/1.3 var(--f-ui); color: var(--cream-text); opacity: 0; animation: showIn .8s ease 4.4s forwards; }
+.mq-stars { color: var(--gold); letter-spacing: .3em; opacity: 0; animation: showIn .8s ease 4.7s forwards; }
+.pf-marquee { position: absolute; }
+.mq-stamp { position: absolute; right: -10px; bottom: -18px; padding: .3rem .7rem; border: 3px double #ff5c8a; border-radius: 8px; background: rgba(21,8,17,.85);
+  font: 700 .72rem/1.2 var(--f-ui); letter-spacing: .2em; text-transform: uppercase; color: #ff7aa0;
+  transform: rotate(-12deg) scale(3); opacity: 0; animation: stampIn .4s cubic-bezier(.3,1.6,.5,1) 5.3s forwards; }
+@keyframes stampIn { to { transform: rotate(-12deg) scale(1); opacity: 1; } }
+/* cuenta regresiva de película */
+.pf-leader { position: absolute; inset: 0; z-index: 6; display: grid; place-items: center;
+  background: repeating-radial-gradient(circle at 30% 40%, rgba(255,255,255,.03) 0 1px, transparent 1px 3px), #b8ad98;
+  animation: leaderOut .4s ease 2.5s forwards; }
+.pf-leader::before, .pf-leader::after { content: ""; position: absolute; background: rgba(30,20,10,.6); }
+.pf-leader::before { left: 0; right: 0; top: 50%; height: 2px; } .pf-leader::after { top: 0; bottom: 0; left: 50%; width: 2px; }
+.ld-ring { position: absolute; width: 62vw; max-width: 260px; aspect-ratio: 1; border-radius: 50%; border: 6px solid #2a1f14;
+  background: conic-gradient(rgba(30,20,10,.45) 0deg, transparent 0deg); animation: sweep .8s linear 3; box-shadow: 0 0 0 14px rgba(42,31,20,.25); }
+@keyframes sweep { from { background: conic-gradient(rgba(30,20,10,.45) 0deg, transparent 0deg); } to { background: conic-gradient(rgba(30,20,10,.45) 360deg, transparent 360deg); } }
+@property --a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.ld-ring { --a: 0deg; background: conic-gradient(rgba(30,20,10,.45) var(--a), transparent var(--a)); animation: sweepA .8s linear 3; }
+@keyframes sweepA { to { --a: 360deg; } }
+.pf-leader span { position: absolute; font: 700 7rem/1 var(--f-ui); color: #1e150c; opacity: 0; }
+.pf-leader span:nth-of-type(1) { animation: ldNum .8s steps(1) 0s; }
+.pf-leader span:nth-of-type(2) { animation: ldNum .8s steps(1) .8s; }
+.pf-leader span:nth-of-type(3) { animation: ldNum .8s steps(1) 1.6s; }
+@keyframes ldNum { 0%, 99% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes leaderOut { to { opacity: 0; visibility: hidden; } }
+/* telón que se abre y alfombra */
+.pf-curt { position: absolute; top: 0; bottom: 0; width: 51%; z-index: 5;
+  background: linear-gradient(180deg, rgba(0,0,0,.35), transparent 18%, transparent 80%, rgba(0,0,0,.45)), repeating-linear-gradient(90deg, #4e0718 0 6px, #8c1430 22px 34px, #4e0718 52px 58px);
+  animation: curtOpen 1.4s cubic-bezier(.6,0,.2,1) 2.6s forwards; }
+.pf-curt--l { left: 0; --x: -102%; } .pf-curt--r { right: 0; --x: 102%; }
+@keyframes curtOpen { to { transform: translateX(var(--x)); } }
+.pf-carpet { position: absolute; left: 50%; bottom: 0; width: 70%; height: 34%; transform: translateX(-50%);
+  background: linear-gradient(90deg, #c9a35a 0 3%, #8e0f2a 3% 97%, #c9a35a 97%); clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%); opacity: .9; }
+.pf-flash { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #fff; opacity: 0; box-shadow: 0 0 40px 22px rgba(255,255,255,.9);
+  animation: flash .25s ease-out 2; }
+@keyframes flash { 0% { opacity: 1; } 100% { opacity: 0; } }
 /* manejar */
 .pf-drive { background: linear-gradient(180deg, #0b0a26, #2a1440 55%, #4a1838); }
 .pf-city { position: absolute; left: 0; right: 0; bottom: 56%; height: 22%;
@@ -1177,6 +1233,7 @@ body { touch-action: pan-y pinch-zoom; }
   </div>
   <span class="knock" id="knock">Toca la puerta para entrar</span>
   <span class="pick-hint" id="pickHint" hidden>Toca la carta para tomarla</span>
+  <div class="crowd" id="crowd" hidden></div>
   <button class="pick-hint sound-hint" id="soundHint" hidden>Toca para escuchar el video</button>
 </div>
 
@@ -1616,6 +1673,29 @@ const AudioFX = (() => {
     paper() { if (!ok()) return; noise(ctx.currentTime, .45, .35, 3200, .7, "highpass"); },
     pencil() { if (!ok()) return; noise(ctx.currentTime, .035, .1, 5200, 3); },
     chime() { if (!ok()) return; const t = ctx.currentTime; [88, 91, 95, 100].forEach((n, i) => note(t + i * .09, n, 1.8, .06, "sine", sfx)); },
+    applause(dur = 3.5, vol = .5) {
+      if (!ok()) return;
+      const t = ctx.currentTime, n = Math.floor(dur * 90);
+      for (let i = 0; i < n; i++) {
+        const at = t + Math.random() * dur, fade = Math.min(1, (t + dur - at) / .9) * Math.min(1, (at - t) / .25 + .3);
+        noise(at, .03 + Math.random() * .03, vol * (.25 + Math.random() * .75) * fade, 900 + Math.random() * 2600, .9 + Math.random());
+      }
+      // gritos de alegría y un silbido
+      [0.4, 1.1].forEach(d => {
+        const o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine";
+        o.frequency.setValueAtTime(1800, t + d); o.frequency.exponentialRampToValueAtTime(2900, t + d + .25); o.frequency.exponentialRampToValueAtTime(2100, t + d + .5);
+        g.gain.setValueAtTime(0, t + d); g.gain.linearRampToValueAtTime(.05 * vol * 2, t + d + .05); g.gain.exponentialRampToValueAtTime(.0001, t + d + .55);
+        o.connect(g); g.connect(sfx); o.start(t + d); o.stop(t + d + .6);
+      });
+    },
+    beep(f = 1000) { if (!ok()) return; note(ctx.currentTime, 12 * Math.log2(f / 440) + 69, .18, .08, "sine", sfx); },
+    drumroll(dur = 1.4) {
+      if (!ok()) return;
+      const t = ctx.currentTime;
+      for (let i = 0; i < dur * 28; i++) noise(t + i / 28, .05, .12 * (.5 + i / (dur * 56)), 220, .8, "lowpass");
+      noise(t + dur, .5, .5, 160, .7, "lowpass"); note(t + dur, 43, .5, .25, "sine", sfx);
+    },
+    tada() { if (!ok()) return; const t = ctx.currentTime; [[72, 0], [76, 0], [79, 0], [84, .18], [88, .18], [91, .18]].forEach(([n, d]) => note(t + d, n, 1.4, .05, "triangle", sfx)); },
     kiss() {
       if (!ok()) return;
       const t = ctx.currentTime;
@@ -1900,6 +1980,17 @@ async function travel(kind, next) {
   go(next);
   await walk(kind === "sala" ? 10500 : kind === "boleteria" ? 6000 : 3600).finished;
   const vid = kind === "sala" && $(".screen-video", cam);
+  const crowd = $("#crowd");
+  if (kind === "sala") {
+    crowd.innerHTML = Array.from({ length: 7 }, (_, i) => {
+      const w = [58, 70, 62, 76, 66, 74, 60, 70, 58][i];
+      return `<div class="fan" style="--w:${w}px;--d:${(Math.random() * .3).toFixed(2)}s"><i class="hn l"></i><i class="hn r"></i><i class="hd"></i><i class="bd"></i></div>`;
+    }).join("") + `<span class="bravo">¡Bravo! 👏</span>`;
+    crowd.className = "crowd"; crowd.hidden = false; void crowd.offsetWidth; crowd.classList.add("up");
+    // aplausos cortos al empezar el baile
+    setTimeout(() => { crowd.classList.add("clap"); AudioFX.applause(1.6, .3); }, 700);
+    setTimeout(() => crowd.classList.remove("clap"), 2400);
+  }
   if (vid && !vid.ended && !vid.error) {
     $("#skipBtn").hidden = false;
     await new Promise(res => {
@@ -1909,8 +2000,16 @@ async function travel(kind, next) {
     });
     $("#skipBtn").hidden = true;
   }
-  if (vid) { vid.pause(); $("#soundHint").hidden = true; AudioFX.duck(false); }
-  await sleep(kind === "sala" ? 900 : 250);
+  if (vid) { vid.pause(); $("#soundHint").hidden = true; }
+  if (kind === "sala") {
+    // ovación final
+    crowd.classList.add("clap"); AudioFX.applause(3.6, .6); burst(80);
+    await sleep(3200);
+    crowd.classList.remove("clap", "up");
+    AudioFX.duck(false);
+    setTimeout(() => { crowd.hidden = true; }, 900);
+  }
+  await sleep(kind === "sala" ? 600 : 250);
   entry.classList.add("fade");
   await sleep(850);
   entry.hidden = true; entry.classList.remove("fade");
@@ -2508,11 +2607,15 @@ function marquee(text) {
   const clean = text.replace(/[<>&"]/g, "").trim();
   const len = clean.length, fs = len <= 10 ? 2.2 : len <= 20 ? 1.7 : len <= 34 ? 1.3 : len <= 50 ? 1.05 : .9;
   let k = 0;
-  const words = clean.split(/\s+/).map(w => `<span class="mq-word">${[...w].map(ch => `<span class="mq-tile" style="animation-delay:${(.5 + (k++) * .06).toFixed(2)}s">${ch}</span>`).join("")}</span>`).join(" ");
-  return `<div class="pf-beam pf-beam--l"></div><div class="pf-beam pf-beam--r"></div>
+  const words = clean.split(/\s+/).map(w => `<span class="mq-word">${[...w].map(ch => `<span class="mq-tile" style="animation-delay:${(3.1 + (k++) * .06).toFixed(2)}s">${ch}</span>`).join("")}</span>`).join(" ");
+  return `<div class="pf-carpet"></div><div class="pf-beam pf-beam--l"></div><div class="pf-beam pf-beam--r"></div>
+    ${[12, 30, 70, 88].map((x, i) => `<i class="pf-flash" style="left:${x}%;top:${55 + (i % 2) * 14}%;animation-delay:${(4.2 + i * .45).toFixed(2)}s"></i>`).join("")}
     <div class="pf-marquee"><div class="mq-top">Próximamente</div>
     <div class="mq-board" style="font-size:${fs}rem">${words}</div>
-    <div class="mq-cast">Protagonizada por ${PLAN.nombre} &amp; ${PLAN.firma}</div><div class="mq-stars">★★★★★</div></div>`;
+    <div class="mq-cast">Protagonizada por ${PLAN.nombre} &amp; ${PLAN.firma}</div><div class="mq-stars">★★★★★</div>
+    <div class="mq-stamp">Plan aprobado</div></div>
+    <div class="pf-curt pf-curt--l"></div><div class="pf-curt pf-curt--r"></div>
+    <div class="pf-leader"><div class="ld-ring"></div><span>3</span><span>2</span><span>1</span></div>`;
 }
 function stars(n) {
   return Array.from({ length: n }, () => `<i class="pf-star" style="left:${Math.random() * 100}%;top:${Math.random() * 62}%;animation-delay:${(Math.random() * 2).toFixed(2)}s"></i>`).join("");
@@ -2564,9 +2667,20 @@ function playPlan(p) {
   $("#pfTitle").textContent = p.t;
   $("#pfCard").hidden = true;
   fx.hidden = false;
+  clearTimeout(window._pp1); clearTimeout(window._pp2); (window._ppx || []).forEach(clearTimeout);
+  if (p.id === "otra" && !reduced) {
+    // 3, 2, 1… telón… ¡estreno!
+    window._ppx = [0, 800, 1600].map((d, i) => setTimeout(() => AudioFX.beep(i === 2 ? 1400 : 1000), d));
+    window._ppx.push(setTimeout(() => AudioFX.drumroll(1.2), 2400));
+    window._ppx.push(setTimeout(() => { AudioFX.tada(); burst(90); }, 3700));
+    window._ppx.push(setTimeout(() => { AudioFX.applause(2.8, .45); burst(120); }, 4600));
+    window._ppx.push(setTimeout(() => AudioFX.kiss(), 5400));
+    window._pp2 = setTimeout(() => { $("#pfCard").hidden = false; }, 6400);
+    return;
+  }
   AudioFX.chime();
-  setTimeout(() => { burst(70); AudioFX.kiss(); }, reduced ? 0 : 2600);
-  setTimeout(() => { $("#pfCard").hidden = false; }, reduced ? 0 : 4200);
+  window._pp1 = setTimeout(() => { burst(70); AudioFX.kiss(); }, reduced ? 0 : 2600);
+  window._pp2 = setTimeout(() => { $("#pfCard").hidden = false; }, reduced ? 0 : 4200);
 }
 $("#pfYes").addEventListener("click", () => {
   planElegido = planActual.t;
