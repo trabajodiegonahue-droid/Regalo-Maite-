@@ -1152,6 +1152,57 @@ body { touch-action: pan-y pinch-zoom; }
 
 #fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40; }
 
+/* Pedido: boleta que sale impresa y se le manda a Diego */
+.orderfx { position: fixed; inset: 0; z-index: 65; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .9rem;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px calc(env(safe-area-inset-bottom, 0px) + 12px);
+  background: radial-gradient(90% 60% at 50% 35%, rgba(179,18,47,.28), transparent 70%), rgba(8,3,6,.94); animation: fadeIn .4s ease; overflow: hidden; }
+.of-printer { position: relative; width: min(330px, 100%); }
+.of-slot { position: relative; z-index: 2; height: 26px; margin-inline: -10px; border-radius: 12px 12px 6px 6px;
+  background: linear-gradient(180deg, #3a2a2f, #1b1013 60%, #000); border: 1px solid var(--gold-soft); box-shadow: 0 8px 22px rgba(0,0,0,.6); }
+.of-slot::before { content: ""; position: absolute; left: 14px; right: 14px; bottom: 5px; height: 4px; border-radius: 4px; background: #000; box-shadow: inset 0 1px 2px rgba(255,255,255,.12); }
+.of-slot::after { content: "● PEDIDOS"; position: absolute; left: 16px; top: 3px; font: 700 .55rem/1 var(--f-ui); letter-spacing: .2em; color: var(--gold-soft); }
+.of-slot.busy::after { color: #7dff9a; animation: blink .35s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .3; } }
+.of-feed { overflow: hidden; margin-top: -8px; padding: 0 6px 10px; }
+.of-paper { position: relative; padding: 1.4rem 1.1rem 1rem; background: linear-gradient(180deg, #e9e1d2, #fbf7ee 14px); color: #2b211d;
+  font-family: var(--f-ticket); font-size: .86rem; line-height: 1.35; box-shadow: 0 10px 26px rgba(0,0,0,.45); }
+.of-paper::after { content: ""; position: absolute; left: 0; right: 0; bottom: -7px; height: 7px;
+  background: conic-gradient(from -45deg at bottom, #fbf7ee 90deg, #0000 0) 0 0 / 12px 100%; }
+.of-box { display: grid; gap: .9rem; justify-items: center; width: 100%; }
+.orderfx.print .of-feed { animation: ofUnroll 2.3s linear .25s backwards; }
+.orderfx.print .of-paper { animation: ofPull 2.3s linear .25s backwards; }
+@keyframes ofUnroll { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes ofPull { from { transform: translateY(-26px); } }
+.orderfx.ready .of-main { animation: ofGlow 1.8s ease-in-out infinite; }
+@keyframes ofGlow { 50% { background: rgba(255,122,149,.2); box-shadow: 0 0 0 4px rgba(255,122,149,.12); } }
+.of-head { text-align: center; border-bottom: 1.5px dashed #b9ab95; padding-bottom: .6rem; margin-bottom: .55rem; }
+.of-head b { display: block; font-family: var(--f-display); font-weight: 400; font-size: 1.7rem; letter-spacing: .06em; color: var(--stamp); line-height: 1; }
+.of-head small { display: block; margin-top: .25rem; font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: #7a6a5c; }
+.of-lines { margin: 0; display: grid; gap: .22rem; }
+.of-lines div { display: flex; gap: .6rem; justify-content: space-between; align-items: baseline; }
+.of-lines dt { color: #7a6a5c; white-space: nowrap; }
+.of-lines dt::after { content: ""; }
+.of-lines dd { margin: 0; text-align: right; font-weight: 700; overflow-wrap: anywhere; }
+.of-main { margin: .65rem 0 .5rem; padding: .7rem .6rem .75rem; border: 1.5px dashed var(--stamp); border-radius: 10px; text-align: center; background: rgba(255,122,149,.08); }
+.of-main small { display: block; font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--stamp); }
+.of-main b { display: block; margin-top: .3rem; font-family: var(--f-letter); font-style: italic; font-weight: 600; font-size: 1.45rem; line-height: 1.15; color: #1d0811; overflow-wrap: anywhere; }
+.of-main em { display: block; margin-top: .25rem; font-style: normal; font-size: .7rem; color: #7a6a5c; }
+.of-total { display: flex; justify-content: space-between; border-top: 1.5px dashed #b9ab95; padding-top: .45rem; font-weight: 700; }
+.of-foot { margin-top: .45rem; text-align: center; font-size: .68rem; letter-spacing: .1em; color: #7a6a5c; }
+.of-bar { height: 26px; margin: .45rem auto 0; width: 78%; background: repeating-linear-gradient(90deg, #2b211d 0 2px, transparent 2px 4px, #2b211d 4px 7px, transparent 7px 9px, #2b211d 9px 10px, transparent 10px 13px); opacity: .8; }
+.of-stamp { position: absolute; right: 7%; bottom: 9%; padding: .35rem .7rem; border: 3px double var(--stamp); border-radius: 8px; color: var(--stamp);
+  font: 700 1.05rem/1.1 var(--f-ui); letter-spacing: .14em; text-transform: uppercase; text-align: center;
+  transform: rotate(-14deg) scale(3); opacity: 0; pointer-events: none; mix-blend-mode: multiply; }
+.of-stamp small { display: block; font-size: .62rem; letter-spacing: .1em; }
+.of-stamp.hit { animation: ofStamp .45s cubic-bezier(.3,1.6,.5,1) forwards; }
+@keyframes ofStamp { to { transform: rotate(-14deg) scale(1); opacity: .9; } }
+.of-actions { display: grid; gap: .35rem; justify-items: center; width: min(330px, 100%); }
+.of-actions .btn { width: 100%; letter-spacing: .08em; }
+.orderfx.ready #ofSend { animation: ofPulse 1.6s ease-in-out infinite; }
+@keyframes ofPulse { 50% { box-shadow: 0 0 0 8px rgba(233,196,111,.18), 0 6px 30px rgba(233,196,111,.6); } }
+.orderfx.print .of-actions { animation: fadeIn .5s ease 2.7s backwards; }
+.of-actions .link-btn { font-size: .9rem; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
 }
@@ -1470,6 +1521,29 @@ body { touch-action: pan-y pinch-zoom; }
       <button class="btn btn--ghost" id="pfNo">Elegir otro</button>
     </div>
   </div>
+</div>
+
+<div class="orderfx" id="orderFx" hidden role="dialog" aria-label="Tu pedido">
+ <div class="of-box" id="ofBox">
+  <div class="of-printer">
+    <div class="of-slot" id="ofSlot" aria-hidden="true"></div>
+    <div class="of-feed">
+      <div class="of-paper" id="ofPaper">
+        <div class="of-head"><b>Pedido</b><small>Función de trasnoche · <span data-cine>Cineplanet</span></small></div>
+        <dl class="of-lines" id="ofLines"></dl>
+        <div class="of-main" id="ofMain"><small>Después del cine quiero</small><b id="ofPlan"></b><em id="ofMine" hidden>(lo escribí yo ✍️)</em></div>
+        <div class="of-total"><span>Total</span><span>$0 + 1 beso 💋</span></div>
+        <div class="of-foot">Paga: <span data-firma>Diego</span> · Cliente favorita: <span data-name>Maite</span></div>
+        <div class="of-bar" aria-hidden="true"></div>
+        <div class="of-stamp" id="ofStamp">Enviado<small>a <span data-firma>Diego</span> ❤</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="of-actions">
+    <a class="btn btn--gold" id="ofSend" target="_blank" rel="noopener">Mandárselo a Diego 💌</a>
+    <button class="link-btn" id="ofBack">Listo, volver a mi entrada</button>
+  </div>
+ </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
@@ -2543,7 +2617,7 @@ $("#e-otra").addEventListener("change", e => {
 });
 $("#b-otra").addEventListener("change", () => $("#drinkDetail").focus());
 
-let pedido = "";
+let combo = null;
 $("#comboForm").addEventListener("submit", async e => {
   e.preventDefault();
   const f = new FormData(e.target);
@@ -2564,9 +2638,7 @@ $("#comboForm").addEventListener("submit", async e => {
     : `Cabritas ${f.get("cabritas")}` + (cabDet ? ` (${cabDet})` : "");
   $("#tCombo").textContent = [cabritas, bebida, extras.join(", ") || "Sin extra"].join(" · ");
 
-  pedido = `Mi pedido para la cita 🍿\n` +
-    `• ${cabritas}\n• ${bebida}\n• Extra: ${extras.join(", ") || "nada"}\n` +
-    `Respuesta a la invitación: SÍ ❤️`;
+  combo = { cabritas, bebida, extras: extras.join(", ") || "nada" };
   updateWa();
   buildSeats();
   go("asiento");
@@ -2641,7 +2713,7 @@ const PLANES = [
   { id: "casa", icon: "🛋️", t: "Regalonear en casita", sub: "Mantita, cabritas y regaloneo", msg: "Regaloneo en casita" },
   { id: "otra", icon: "✍️", t: "Lo que tú quieras", sub: "Tú decides, yo me apunto" },
 ];
-let planElegido = "", planActual = null;
+let planElegido = "", planActual = null, planPropio = false;
 (() => {
   const grid = $("#plans");
   grid.innerHTML = PLANES.map((p, i) => `<button class="plan-card" data-plan="${p.id}" style="animation-delay:${.1 + i * .12}s">
@@ -2744,13 +2816,59 @@ function playPlan(p) {
   window._pp2 = setTimeout(() => { $("#pfCard").hidden = false; }, reduced ? 0 : 4200);
 }
 $("#pfYes").addEventListener("click", () => {
-  planElegido = planActual.t;
+  planElegido = planActual.t; planPropio = planActual.id === "otra";
   $("#tPlan").textContent = planElegido; $("#tPlanRow").hidden = false;
   $("#planBtn").textContent = "Cambiar el plan de después";
   $("#planFx").hidden = true;
   updateWa();
   go("entrada");
   $("#finaleBtn").hidden = false;
+  showOrder();
+});
+
+// ---------- El pedido: sale impreso como boleta y se le manda a Diego ----------
+function showOrder() {
+  const fx = $("#orderFx"), rows = [["De", PLAN.nombre], ["Para", `${PLAN.firma} (${PLAN.apodo})`], ["Película", PLAN.pelicula],
+    ...(miButaca ? [["Butaca", `${miButaca}, al lado tuyo`]] : []),
+    ...(combo ? [["Cabritas", combo.cabritas.replace(/^Cabritas /, "")], ["Para tomar", combo.bebida], ["Extra", combo.extras]] : [])];
+  $("#ofLines").innerHTML = "";
+  rows.forEach(([k, v]) => {
+    const d = document.createElement("div");
+    d.append(Object.assign(document.createElement("dt"), { textContent: k }), Object.assign(document.createElement("dd"), { textContent: v }));
+    $("#ofLines").append(d);
+  });
+  $("#ofPlan").textContent = planElegido; $("#ofMine").hidden = !planPropio;
+  $("#ofSend").href = waHref(); $("#ofSend").textContent = `Mandárselo a ${PLAN.firma} 💌`;
+  $("#ofStamp").classList.remove("hit");
+  fx.classList.remove("print", "ready"); fx.hidden = false; fitOrder(); void fx.offsetWidth; fx.classList.add("print");
+  const slot = $("#ofSlot"); slot.classList.add("busy");
+  (window._ofx || []).forEach(clearTimeout);
+  // la impresora: tic-tic-tic mientras sale el papel
+  window._ofx = reduced ? [] : Array.from({ length: 22 }, (_, i) => setTimeout(() => AudioFX.pencil(), 250 + i * 100));
+  window._ofx.push(setTimeout(() => { slot.classList.remove("busy"); fx.classList.add("ready"); AudioFX.chime(); }, reduced ? 0 : 2700));
+}
+$("#ofSend").addEventListener("click", () => {
+  // WhatsApp se abre con el pedido escrito; aquí queda timbrado como enviado
+  $("#ofSend").href = waHref();
+  setTimeout(() => {
+    $("#ofStamp").classList.add("hit"); AudioFX.seal(); buzz(40);
+    setTimeout(() => { AudioFX.kiss(); burst(70); }, 300);
+    $("#orderFx").classList.remove("ready");
+    $("#ofSend").textContent = "Mandar de nuevo 💌";
+  }, 150);
+});
+// en pantallas chicas la boleta se achica para que no haya que mover la página
+function fitOrder() {
+  const box = $("#ofBox"), fx = $("#orderFx");
+  if (fx.hidden) return;
+  box.style.zoom = 1;
+  const cs = getComputedStyle(fx), room = fx.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  box.style.zoom = Math.min(1, room / box.scrollHeight).toFixed(3);
+}
+addEventListener("resize", fitOrder);
+$("#ofBack").addEventListener("click", () => {
+  (window._ofx || []).forEach(clearTimeout);
+  $("#orderFx").hidden = true; $("#ofSlot").classList.remove("busy");
   rain(4000);
 });
 $("#pfNo").addEventListener("click", () => { $("#planFx").hidden = true; $$(".plan-card").forEach(c => c.classList.remove("picked")); });
@@ -2760,15 +2878,27 @@ $("#planBtn").addEventListener("click", () => {
   go("despues");
 });
 $("#planBack").addEventListener("click", () => go("entrada"));
+// El mensaje que le llega a Diego por WhatsApp, armado como un pedido
+function pedidoMsg() {
+  const limpio = t => String(t).replace(/[*_~`]/g, "").trim();
+  const L = [`🎟️ *PEDIDO DE ${PLAN.nombre.toUpperCase()}* 🎟️`, "━━━━━━━━━━━━━━━", `Para: ${PLAN.firma}, mi ${PLAN.apodo} 💌`, "Respuesta a la invitación: *SÍ* ❤️", ""];
+  L.push(`🎬 Película: ${PLAN.pelicula} · ${PLAN.cine}`);
+  if (miButaca) L.push(`💺 Mi butaca: ${miButaca} (al lado tuyo)`);
+  if (combo) L.push("🍿 Mi combo:", `   • ${combo.cabritas}`, `   • ${combo.bebida}`, `   • Extra: ${combo.extras}`);
+  if (planElegido) L.push("", "🌙 *DESPUÉS DEL CINE QUIERO:*", `👉 *${limpio(planElegido)}* 👈` + (planPropio ? "\n(lo escribí yo ✍️)" : ""));
+  L.push("━━━━━━━━━━━━━━━", "Total: $0 + 1 beso 💋");
+  return L.join("\n");
+}
+function waHref() { return `https://wa.me/${PLAN.whatsapp}?text=${encodeURIComponent(pedidoMsg())}`; }
 function updateWa() {
-  const extra = (miButaca ? `\n• Mi butaca: ${miButaca} (al lado de ${PLAN.firma})` : "") + (planElegido ? `\n• Después del cine: ${planElegido}` : "");
-  $("#waBtn").href = `https://wa.me/${PLAN.whatsapp}?text=${encodeURIComponent(pedido + extra)}`;
+  $("#waBtn").href = waHref();
 }
 
 $("#moreHearts").addEventListener("click", () => burst(120));
 $("#restart").addEventListener("click", () => {
   resetLetter(); phase = "doors"; pov.hidden = true; buildGuess(); buildSeats();
-  $("#finale").hidden = true; $("#finaleBtn").hidden = true;
+  $("#finale").hidden = true; $("#finaleBtn").hidden = true; $("#orderFx").hidden = true;
+  planElegido = ""; planPropio = false; $("#tPlanRow").hidden = true; $("#planBtn").textContent = "¿Y después del cine…?";
   buildLobby("table"); entry.classList.remove("fade"); entry.hidden = false;
   $("#openBtn").hidden = false; $("#openBtn").classList.remove("open"); $("#knock").hidden = false; $("#soundTip").hidden = false; $("#noMsg").textContent = "";
   $("#verdict").hidden = true; noCount = 0;
