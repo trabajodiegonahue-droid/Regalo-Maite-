@@ -491,9 +491,7 @@ button { font: inherit; cursor: pointer; }
 .monogram i { flex: 1; max-width: 5.5rem; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-soft)); }
 .monogram i:last-child { background: linear-gradient(270deg, transparent, var(--gold-soft)); }
 .sig { width: min(100%, 15rem); height: auto; overflow: visible; display: block; }
-.sig text { font-family: var(--f-script); font-size: 54px; fill: transparent; stroke: var(--ink); stroke-width: .9; stroke-dasharray: 900; stroke-dashoffset: 900; }
-.sig.draw text { animation: sigDraw 3.2s ease forwards; }
-.sig.done text { animation: none; stroke-dashoffset: 0; fill: var(--ink); }
+.sig text { font-family: var(--f-script); font-size: 54px; fill: var(--ink); }
 @keyframes sigDraw { 78% { stroke-dashoffset: 0; fill: transparent; } 100% { stroke-dashoffset: 0; fill: var(--ink); } }
 
 /* ---------- Entrada: sello dorado y código QR ---------- */
@@ -889,10 +887,12 @@ body { touch-action: pan-y pinch-zoom; }
 .pencil {
   position: absolute; left: 0; top: 0; width: 40px; height: 40px; z-index: 5;
   pointer-events: none; overflow: visible;
-  transition: left .06s linear, top .06s linear;
+  transition: left .09s cubic-bezier(.3,.7,.4,1), top .09s cubic-bezier(.3,.7,.4,1);
+  filter: drop-shadow(3px 5px 3px rgba(60,30,10,.28));
 }
-.pencil svg { overflow: visible; animation: scribble .18s ease-in-out infinite alternate; transform-origin: 0 20px; }
-@keyframes scribble { to { transform: translate(1px, -2px) rotate(3deg); } }
+.pencil svg { overflow: visible; transform-origin: 0 20px; transition: transform .12s ease; transform: translate(var(--px, 0), var(--py, 0)) rotate(var(--pr, 0deg)); }
+.pencil.lift { transition: left .32s cubic-bezier(.5,0,.3,1), top .32s cubic-bezier(.5,0,.3,1); }
+.pencil.lift svg { transform: translate(4px, -9px) rotate(-6deg); }
 .write-hint { margin: -.5rem 0 0; font-size: .85rem; color: var(--muted); text-align: center; }
 
 .envelope {
@@ -1191,8 +1191,8 @@ body { touch-action: pan-y pinch-zoom; }
     <article class="letter" id="letter" hidden>
       <span class="pencil" id="pencil" hidden aria-hidden="true"><svg viewBox="0 0 40 40" width="40" height="40"><g transform="rotate(-38 0 20)"><polygon points="0,20 5,18 5,22" fill="#3a3532"/><polygon points="3,18.6 12,15 12,25 3,21.4" fill="#e7c49a"/><rect x="12" y="15" width="22" height="10" fill="#f2b632"/><rect x="12" y="18.5" width="22" height="3" fill="#e0a21f"/><rect x="34" y="15" width="3.5" height="10" fill="#a9adb6"/><rect x="37.5" y="15" width="5" height="10" rx="2" fill="#ef8fa3"/></g></svg></span>
       <div class="monogram" aria-hidden="true"><i></i><span data-inicial>M</span><i></i></div>
-      <p class="greet">Hola <span data-name>Maite</span>, <span data-apodo-ella>mi wawita mosha</span>, o sea, ¿cómo estái?:</p>
-      <p>O sea, ya erís mi polola y yo feliz, cachai, pero quiero seguir sumando momentos lindos contigo, así como full. Así que te quiero invitar oficialmente al cine conmigo, <b id="when">mañana</b> en <span data-cine>Cineplanet</span>. Terrible plan, o sea, demasiado, cachai.</p>
+      <p class="greet">Hola <span data-name>Maite</span>, <span data-apodo-ella>mi wawita mosha</span>, ¿cómo estái?:</p>
+      <p>Ya erís mi polola y yo feliz, cachai, pero quiero seguir sumando momentos lindos contigo, así como full. Así que te quiero invitar oficialmente al cine conmigo, <b id="when">mañana</b> en <span data-cine>Cineplanet</span>. Terrible plan, demasiado, cachai.</p>
       <p>Y obvio que incluye todo, cero costo pa' ti, cachai:</p>
       <ul>
         <li>Una butaca al lado mío, súper reservada, nada que ver con andar buscando puesto, cachai.</li>
@@ -1200,8 +1200,8 @@ body { touch-action: pan-y pinch-zoom; }
         <li>Y la posibilidad, así como full real, de darte un beso cada vez que nos asustemos, po. Y si no nos asustamos igual, cachai.</li>
       </ul>
       <p>La sala y la hora son secretas, o sea, misterio total, cachai.</p>
-      <p>Bueno, eso. O sea, erís lo más lindo que me ha pasado y quiero que tengamos muchos recuerdos juntos, cachai. Quedo atento a tu respuesta, porfa no me dejes en visto.</p>
-      <div class="sign"><small>Besitos, o sea, atentamente,</small><svg class="sig" viewBox="0 0 320 76" role="img" aria-label="Firma"><text x="316" y="56" text-anchor="end" data-firma>Diego</text></svg></div>
+      <p>Bueno, eso. Erís lo más lindo que me ha pasado y quiero que tengamos muchos recuerdos juntos, cachai. Quedo atento a tu respuesta, porfa no me dejes en visto.</p>
+      <div class="sign"><small>Besitos y atentamente,</small><svg class="sig" viewBox="0 0 320 76" role="img" aria-label="Firma"><defs><clipPath id="sigClip"><rect id="sigRect" x="0" y="-20" width="0" height="120"/></clipPath></defs><text x="316" y="56" text-anchor="end" clip-path="url(#sigClip)" data-firma>Diego</text></svg></div>
       <p class="alias">tu <span data-apodo>wawita</span></p>
       <p class="fine">* Letra chica: si aceptas puedo darte los besos que yo quiera y cuando quiera</p>
       <p class="ask">¿Aceptas?</p>
@@ -2083,7 +2083,7 @@ function finishLetter() {
   strokes.forEach(s => s.node.data = s.text);
   blocks().forEach(b => b.classList.remove("pend"));
   writing = false; pencil.hidden = true; $("#writeHint").hidden = true;
-  $(".sig", letterEl).classList.remove("draw"); $(".sig", letterEl).classList.add("done");
+  $("#sigRect").setAttribute("width", 400);
   letterEl.style.minHeight = "";
   $("#answers").hidden = false; $("#answers").style.visibility = ""; $("#noMsg").hidden = false;
   freezeFit = false; requestAnimationFrame(fitScene);
@@ -2099,21 +2099,36 @@ function placePencil(node) {
   pencil.style.top = (box.bottom - l.top) / z - 24 + "px";
 
 }
+function wiggle() {
+  pencil.style.setProperty("--px", (Math.random() * 2 - 1).toFixed(1) + "px");
+  pencil.style.setProperty("--py", (-Math.random() * 3).toFixed(1) + "px");
+  pencil.style.setProperty("--pr", (Math.random() * 6 - 3).toFixed(1) + "deg");
+}
+async function liftTo(node) {
+  pencil.classList.add("lift");
+  placePencil(node);
+  await sleep(330);
+  pencil.classList.remove("lift");
+}
 async function writeLetter() {
   writing = true; skipWrite = false;
   pencil.hidden = false; $("#writeHint").hidden = false;
   await sleep(500);
   for (const s of strokes) {
     s.node.parentElement.closest("p, li, .sign")?.classList.remove("pend");
-    for (let i = 0; i < s.text.length; i += 2) {
+    const slow = !!s.node.parentElement.closest(".sign, .alias");
+    s.node.data = "";
+    await liftTo(s.node);
+    for (let i = 0; i < s.text.length; i++) {
       if (skipWrite) return finishLetter();
-      s.node.data = s.text.slice(0, i + 2);
-      placePencil(s.node);
-      if (i % 6 === 0) AudioFX.pencil();
-      await sleep(/[.,:;?]/.test(s.text.slice(i, i + 2)) ? 300 : 48);
+      s.node.data = s.text.slice(0, i + 1);
+      placePencil(s.node); wiggle();
+      const ch = s.text[i];
+      if (ch !== " " && i % 3 === 0) AudioFX.pencil();
+      await sleep(/[.,:;?!]/.test(ch) ? (slow ? 380 : 260) : ch === " " ? (slow ? 90 : 40) : (slow ? 85 : 26));
     }
     if (s.node.parentElement.closest(".sign small")) { await drawSig(); if (skipWrite) return finishLetter(); }
-    await sleep(90);
+    await sleep(slow ? 250 : 90);
   }
   finishLetter();
 }
@@ -2121,26 +2136,45 @@ letterEl.addEventListener("click", () => { if (writing) skipWrite = true; });
 function resetLetter() {
   letterEl.hidden = true; $("#answers").hidden = true; $("#noMsg").hidden = true; $("#writeHint").hidden = true;
   pencil.hidden = true; letterEl.style.minHeight = ""; letterEl.style.visibility = "";
-  $(".sig", letterEl).classList.remove("draw", "done");
+  $("#sigRect").setAttribute("width", 0);
 }
 resetLetter();
 
 // ---------- Firma dibujada a mano ----------
 async function drawSig() {
-  const sig = $(".sig", letterEl);
-  sig.classList.remove("done"); void sig.getBoundingClientRect(); sig.classList.add("draw");
+  const sig = $(".sig", letterEl), text = $("text", sig), rect = $("#sigRect");
+  const bb = text.getBBox();
+  rect.setAttribute("x", bb.x - 4); rect.setAttribute("width", 0);
   const l = letterEl.getBoundingClientRect(), b = sig.getBoundingClientRect(), z = curZoom(letterEl);
-  const x0 = (b.left - l.left + b.width * .2) / z, x1 = (b.right - l.left) / z, y = (b.top - l.top + b.height * .6) / z;
-  const t0 = performance.now(), D = 2800;
-  while (performance.now() - t0 < D) {
-    if (skipWrite) return;
-    const k = (performance.now() - t0) / D;
-    pencil.style.left = (x0 + (x1 - x0) * k) + "px";
-    pencil.style.top = (y - 24 + Math.sin(k * 28) * 9) + "px";
-    if (Math.random() < .35) AudioFX.pencil();
-    await sleep(40);
-  }
-  await sleep(450);
+  const sc = b.width / 320;                     // unidades del SVG -> px en pantalla
+  const toX = u => (b.left - l.left + u * sc) / z, toY = u => (b.top - l.top + u * sc) / z;
+  // el lápiz baja al inicio de la firma
+  pencil.classList.add("lift");
+  pencil.style.left = toX(bb.x) + "px"; pencil.style.top = toY(bb.y + bb.height * .75) - 24 + "px";
+  await sleep(360); pencil.classList.remove("lift");
+  pencil.style.transition = "none";
+  const t0 = performance.now(), D = 2600;
+  await new Promise(res => {
+    const step = now => {
+      if (skipWrite) return res();
+      const k = Math.min(1, (now - t0) / D), e = k < .5 ? 2 * k * k : 1 - (-2 * k + 2) ** 2 / 2;
+      const x = bb.x + bb.width * e;
+      rect.setAttribute("width", Math.max(0, x - bb.x + 6));
+      // movimiento de escritura: sube y baja siguiendo las letras, con un pequeño rulo
+      const y = bb.y + bb.height * (.62 - .3 * Math.sin(e * Math.PI * 9) * (1 - .4 * e));
+      pencil.style.left = toX(x + Math.cos(e * Math.PI * 9) * 3) + "px";
+      pencil.style.top = toY(y) - 24 + "px";
+      pencil.style.setProperty("--pr", (Math.sin(e * Math.PI * 18) * 4).toFixed(1) + "deg");
+      if (Math.random() < .25) AudioFX.pencil();
+      if (k < 1) requestAnimationFrame(step); else res();
+    };
+    requestAnimationFrame(step);
+  });
+  pencil.style.transition = "";
+  // rúbrica final: un trazo rápido bajo el nombre
+  pencil.classList.add("lift");
+  pencil.style.left = toX(bb.x + bb.width + 8) + "px"; pencil.style.top = toY(bb.y + bb.height * .95) - 24 + "px";
+  await sleep(420); pencil.classList.remove("lift");
 }
 
 // ---------- Código QR y mensaje secreto ----------
