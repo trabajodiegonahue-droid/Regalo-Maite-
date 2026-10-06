@@ -539,16 +539,54 @@ button { font: inherit; cursor: pointer; }
 .credits-close { position: absolute; left: 12px; top: calc(env(safe-area-inset-top, 0px) + 10px); padding: .55rem 1rem; font-size: .72rem; }
 
 /* ---------- Después del cine ---------- */
-.plans { width: 100%; display: grid; grid-template-columns: 1fr; gap: .7rem; }
-.plan-card {
-  display: flex; align-items: center; justify-content: flex-start; gap: 1rem; padding: 1.1rem 1.2rem; font-size: 1.05rem !important; border-radius: 14px;
-  background: linear-gradient(180deg, var(--velvet-2), #1a0710); border: 1.5px solid #4a1a2c; color: var(--cream-text);
-  text-align: center; font: 600 .92rem/1.25 var(--f-ui); transition: transform .15s ease, border-color .2s;
+.after-marquee {
+  display: grid; justify-items: center; gap: .35rem; padding: 1rem 1.4rem .9rem; border-radius: 12px; text-align: center;
+  background: #150811; border: 2px solid var(--gold);
+  box-shadow: 0 0 0 5px #150811, 0 0 0 7px var(--gold-soft), 0 0 40px rgba(233,196,111,.25);
+  outline: 5px dotted #fff3c4; outline-offset: 9px; animation: chaseLights 1s steps(2) infinite;
 }
-.plan-card:hover { border-color: var(--gold-soft); }
+.after-marquee .scene-title { font-size: clamp(1.6rem, 7vw, 2.1rem); }
+.after-marquee + .scene-sub { margin-top: .6rem; }
+#despues { padding-top: .8rem; }
+.plans { width: 100%; display: grid; grid-template-columns: 1fr; gap: .9rem; }
+.plan-card {
+  position: relative; display: grid; grid-template-columns: 4.6rem 1fr; align-items: stretch; padding: 0; border: 0; text-align: left;
+  min-height: 5.2rem; border-radius: 10px; overflow: hidden; color: var(--ink);
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .34  0 0 0 0 .22  0 0 0 .09 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"), var(--paper);
+  -webkit-mask: radial-gradient(circle at 4.6rem 0, transparent 9px, #000 10px) top / 100% 51% no-repeat, radial-gradient(circle at 4.6rem 100%, transparent 9px, #000 10px) bottom / 100% 51% no-repeat;
+  mask: radial-gradient(circle at 4.6rem 0, transparent 9px, #000 10px) top / 100% 51% no-repeat, radial-gradient(circle at 4.6rem 100%, transparent 9px, #000 10px) bottom / 100% 51% no-repeat;
+  box-shadow: 0 10px 24px rgba(0,0,0,.35);
+  transition: transform .2s ease;
+}
+.plans.in .plan-card { animation: ticketIn .6s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ticketIn { from { opacity: 0; transform: translateX(40px) rotate(2deg); } }
+.plan-card:nth-child(odd) { transform: rotate(-.6deg); } .plan-card:nth-child(even) { transform: rotate(.6deg); }
 .plan-card:active { transform: scale(.97); }
-.plan-card span { font-size: 2.2rem; line-height: 1; }
-.plan-other { width: 100%; display: grid; gap: .6rem; }
+.pc-stub { display: grid; place-items: center; font-size: 2.1rem; border-right: 2px dashed #cdb894; background: linear-gradient(180deg, rgba(179,18,47,.08), rgba(179,18,47,.16)); }
+.pc-txt { display: grid; align-content: center; gap: .25rem; padding: .8rem 1rem; }
+.pc-txt b { font-family: var(--f-display); font-weight: 400; font-size: 1.3rem; color: var(--stamp); line-height: 1.1; }
+.pc-txt small { font: 600 .66rem/1.3 var(--f-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+.pc-stamp {
+  position: absolute; right: .8rem; top: 50%; padding: .2rem .6rem; border: 3px double var(--stamp); border-radius: 6px;
+  font: 700 .72rem/1.2 var(--f-ui); letter-spacing: .2em; text-transform: uppercase; color: var(--stamp);
+  transform: translateY(-50%) rotate(-14deg) scale(2.4); opacity: 0; pointer-events: none; mix-blend-mode: multiply;
+}
+.plan-card.picked .pc-stamp { animation: stamp .35s cubic-bezier(.3,1.6,.5,1) forwards; }
+.plan-card.picked { box-shadow: 0 0 0 3px var(--gold), 0 14px 30px rgba(0,0,0,.45); }
+.plan-other {
+  width: 100%; display: grid; gap: .7rem; justify-items: center; padding: 1.4rem 1.2rem 1.3rem; border-radius: 6px; text-align: center;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .34  0 0 0 0 .22  0 0 0 .09 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"), var(--paper); color: var(--ink);
+  box-shadow: 0 18px 40px rgba(0,0,0,.45), inset 0 0 0 7px var(--paper), inset 0 0 0 9px var(--gold-soft);
+  animation: letterOut .6s cubic-bezier(.2,.8,.2,1);
+}
+.po-title { font-family: var(--f-script); font-size: 2.2rem; line-height: 1; color: var(--stamp); }
+.plan-other label { font-family: var(--f-letter); font-size: 1.1rem; font-style: italic; color: var(--ink-soft); }
+.plan-other input {
+  width: 100%; padding: .5rem .2rem; border: 0; border-bottom: 2px dashed var(--gold-soft); background: transparent;
+  font: 500 1.3rem var(--f-letter); color: var(--ink); text-align: center;
+}
+.plan-other input::placeholder { color: #b9a68a; font-style: italic; }
+.plan-other input:focus { outline: none; border-bottom-color: var(--stamp); }
 .planfx { position: fixed; inset: 0; z-index: 60; overflow: hidden; background: #0b0508; }
 .pf-stage { position: absolute; inset: 0; overflow: hidden; }
 .pf-card {
@@ -570,6 +608,37 @@ button { font: inherit; cursor: pointer; }
 .pf-food { position: absolute; left: 50%; top: 42%; font-size: 3.4rem; transform: translate(-50%, -50%); opacity: 0;
   animation: foodDrop .7s cubic-bezier(.3,1.5,.5,1) forwards; }
 @keyframes foodDrop { from { opacity: 1; transform: translate(calc(-50% + var(--x)), -110vh) rotate(-30deg); } to { opacity: 1; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r)); } }
+/* cena romántica */
+.pf-dinner { background: radial-gradient(120% 70% at 50% 30%, #4a1e22, #1a0a0c 70%); }
+.pf-bokeh { position: absolute; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(255,200,120,.45), transparent 70%); animation: twinkle 3s ease-in-out infinite; }
+.pf-string { position: absolute; left: -4%; right: -4%; top: 6%; height: 40px; display: flex; justify-content: space-between; border-top: 2px solid rgba(255,230,180,.25); border-radius: 0 0 50% 50%; }
+.pf-string i { width: 10px; height: 14px; border-radius: 50%; margin-top: 6px; background: #ffe7a8; box-shadow: 0 0 14px 6px rgba(255,210,130,.45); animation: twinkle 1.8s ease-in-out infinite; }
+.pf-string i:nth-child(odd) { margin-top: 16px; animation-delay: .9s; }
+.pf-table { position: absolute; left: 50%; top: 52%; width: 120vw; max-width: 520px; height: 46%; transform: translateX(-50%);
+  border-radius: 50% 50% 0 0 / 22% 22% 0 0; background: linear-gradient(180deg, #fbf4e6, #e6d8bf 40%, #c9b48f);
+  box-shadow: inset 0 14px 0 #b3122f, 0 -10px 40px rgba(255,200,140,.25); }
+.pf-dish { position: absolute; top: calc(52% + 18px); width: 120px; height: 46px; border-radius: 50%;
+  background: radial-gradient(ellipse, #fff 0 52%, #e4ded2 54% 64%, #fff 66%); box-shadow: 0 8px 14px rgba(0,0,0,.25); }
+.pf-dish--l { left: calc(50% - 150px); } .pf-dish--r { left: calc(50% + 30px); }
+.pf-meal { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%) scale(.4); font-size: 2.8rem; opacity: 0; animation: mealIn .5s cubic-bezier(.3,1.6,.5,1) forwards; }
+@keyframes mealIn { to { opacity: 1; transform: translateX(-50%) scale(1); } }
+.pf-cloche { position: absolute; left: 50%; bottom: 14px; width: 96px; height: 62px; margin-left: -48px; border-radius: 50% 50% 6px 6px / 90% 90% 6px 6px;
+  background: radial-gradient(circle at 35% 30%, #ffffff, #c9ced8 45%, #8a909c); box-shadow: 0 4px 10px rgba(0,0,0,.3); animation: clocheUp .9s ease forwards; }
+.pf-cloche::before { content: ""; position: absolute; left: 50%; top: -8px; width: 14px; height: 10px; margin-left: -7px; border-radius: 50%; background: #aeb4bf; }
+@keyframes clocheUp { 0% { transform: none; } 100% { transform: translate(30px, -130px) rotate(24deg); opacity: 0; } }
+.pf-dish--l .pf-cloche { animation-name: clocheUpL; }
+@keyframes clocheUpL { 0% { transform: none; } 100% { transform: translate(-30px, -130px) rotate(-24deg); opacity: 0; } }
+.pf-dish .pf-steam { top: auto; bottom: 40px; }
+.pf-vase { position: absolute; left: 50%; top: calc(52% + 70px); margin-left: -18px; font-size: 2.4rem; }
+.pf-tpetal { position: absolute; width: 16px; height: 11px; border-radius: 60% 40% 60% 40%; background: #c2213f; opacity: .85; }
+.pf-candle { position: absolute; left: 50%; top: calc(52% - 18px); width: 16px; height: 54px; margin-left: -8px; border-radius: 3px; background: linear-gradient(90deg, #e9dcc0, #fff8e8 45%, #d9c9a6); }
+.pf-candle .flame { top: -22px; }
+.pf-glass { position: absolute; top: calc(52% - 46px); font-size: 2.4rem; animation: none; }
+.pf-glass--l { left: calc(50% - 90px); animation: clinkL .5s ease-in-out 2.6s 2 alternate; }
+.pf-glass--r { left: calc(50% + 46px); animation: clinkR .5s ease-in-out 2.6s 2 alternate; }
+@keyframes clinkL { to { transform: translateX(22px) rotate(14deg); } }
+@keyframes clinkR { to { transform: translateX(-22px) rotate(-14deg); } }
+.pf-clink { position: absolute; left: 50%; top: calc(52% - 70px); margin-left: -14px; font-size: 1.8rem; opacity: 0; animation: popHeart .4s ease 3.05s forwards; }
 /* comunes */
 .pf-rise { position: absolute; opacity: 0; font-style: normal; text-shadow: 0 0 10px currentColor; animation: rise 3.2s ease-out infinite; }
 @keyframes rise { 0% { opacity: 0; transform: translateY(0) scale(.6); } 15% { opacity: 1; } 100% { opacity: 0; transform: translateY(-38vh) translateX(20px) scale(1.1); } }
@@ -1236,13 +1305,17 @@ body { touch-action: pan-y pinch-zoom; }
 
   <!-- 5. Después del cine -->
   <section class="scene" id="despues" hidden>
-    <h2 class="scene-title">¿Y después del cine…?</h2>
-    <p class="scene-sub">Elige el plan. Yo me encargo del resto.</p>
+    <div class="after-marquee">
+      <span class="eyebrow">Función de trasnoche</span>
+      <h2 class="scene-title">¿Y después del cine…?</h2>
+    </div>
+    <p class="scene-sub">Elige tu entrada para el siguiente plan.</p>
     <div class="plans" id="plans"></div>
-    <div class="plan-other field" id="planOther" hidden>
-      <label for="planOtherText">Escribe tu plan</label>
-      <input type="text" id="planOtherText" maxlength="60" placeholder="Ej: ir a la playa, karaoke, comer sushi" autocomplete="off">
-      <div class="row"><button class="btn btn--gold" id="planOtherGo">Ver mi plan</button></div>
+    <div class="plan-other" id="planOther" hidden>
+      <span class="po-title">Lo que tú quieras</span>
+      <label for="planOtherText"><span data-firma>Diego</span> se apunta a lo que sea. Escríbelo aquí:</label>
+      <input type="text" id="planOtherText" maxlength="60" placeholder="ir a la playa, karaoke, comer sushi…" autocomplete="off">
+      <button class="btn btn--gold" id="planOtherGo">Ver mi plan</button>
     </div>
     <button class="link-btn" id="planBack">Volver a mi entrada</button>
   </section>
@@ -2203,20 +2276,24 @@ $("#comboForm").addEventListener("submit", async e => {
 
 // ---------- Después del cine: planes con animación ----------
 const PLANES = [
-  { id: "manejar", icon: "🚗", t: "Manejar", msg: "Tú, yo y la ciudad" },
-  { id: "comer", icon: "🍔", t: "Comer algo rico", msg: "Comida rica y besitos" },
-  { id: "casa", icon: "🛋️", t: "Regalonear en casita", msg: "Regalones en casita" },
-  { id: "sorpresa", icon: "🎁", t: "Lo que tú quieras", msg: `Sorpresa… ${PLAN.firma} elige 😏` },
-  { id: "otra", icon: "✍️", t: "Escribe tu plan" },
+  { id: "manejar", icon: "🚗", t: "Manejar", sub: "Copiloto con playlist incluida", msg: "Tú, yo y la ciudad" },
+  { id: "comer", icon: "🍝", t: "Comer algo rico", sub: "Mesa para dos, yo invito", msg: "Una cena rica para dos" },
+  { id: "casa", icon: "🛋️", t: "Regalonear en casita", sub: "Mantita, cabritas y regaloneo", msg: "Regalones en casita" },
+  { id: "otra", icon: "✍️", t: "Lo que tú quieras", sub: "Tú decides, yo me apunto" },
 ];
 let planElegido = "", planActual = null;
 (() => {
   const grid = $("#plans");
-  grid.innerHTML = PLANES.map(p => `<button class="plan-card" data-plan="${p.id}"><span aria-hidden="true">${p.icon}</span>${p.t}</button>`).join("");
+  grid.innerHTML = PLANES.map((p, i) => `<button class="plan-card" data-plan="${p.id}" style="animation-delay:${.1 + i * .12}s">
+      <span class="pc-stub" aria-hidden="true">${p.icon}</span>
+      <span class="pc-txt"><b>${p.t}</b><small>${p.sub}</small></span>
+      <span class="pc-stamp" aria-hidden="true">Elegido</span></button>`).join("");
   $$(".plan-card", grid).forEach(b => b.addEventListener("click", () => {
     const p = PLANES.find(x => x.id === b.dataset.plan);
-    if (p.id === "otra") { $("#planOther").hidden = false; $("#planOtherText").focus(); return; }
-    playPlan(p);
+    $$(".plan-card", grid).forEach(c => c.classList.remove("picked"));
+    b.classList.add("picked"); AudioFX.paper();
+    if (p.id === "otra") { $("#planOther").hidden = false; setTimeout(() => { $("#planOther").scrollIntoView({ behavior: "smooth", block: "center" }); $("#planOtherText").focus(); }, 250); return; }
+    setTimeout(() => playPlan(p), reduced ? 0 : 450);
   }));
   $("#planOtherGo").addEventListener("click", () => {
     const txt = $("#planOtherText").value.trim();
@@ -2251,9 +2328,16 @@ function planScene(p) {
       `<div class="pf-carhearts">${rising(10, 0, ["♥"])}</div>` +
       `<div class="pf-car"><div class="pf-car-win"><i></i><i></i></div><div class="pf-car-body"><b></b><b></b><span class="pf-plate-car">TE AMO</span></div><i class="pf-wheel"></i><i class="pf-wheel"></i><span class="pf-heart">❤️</span></div>`];
     case "sorpresa": return ["pf-gift", stars(25) + `<div class="pf-giftbeam"></div><div class="pf-box"><div class="pf-lid"></div><div class="pf-base"></div></div>` + rising(18, 44, ["♥", "✦", "♥", "?"])];
-    case "comer": return ["pf-eat", `<div class="pf-plate"></div><span class="pf-cutlery" style="left:2%;top:calc(42% + 90px)">🍴</span>` +
-      [0, 1, 2].map(i => `<i class="pf-steam" style="left:calc(50% + ${(i - 1) * 34}px);animation-delay:${2 + i * .35}s"></i>`).join("") + rising(12, 46) + [["🍔", -30, -20, -12], ["🍟", 40, -10, 14], ["🍕", -10, 40, 8], ["🌮", 50, 45, -10], ["🥤", -60, 30, 0]]
-      .map(([e, x, y, r], i) => `<span class="pf-food" style="--x:${x}px;--y:${y}px;--r:${r}deg;animation-delay:${.3 + i * .35}s">${e}</span>`).join("")];
+    case "comer": return ["pf-dinner",
+      Array.from({ length: 14 }, (_, i) => `<i class="pf-bokeh" style="left:${Math.random() * 100}%;top:${Math.random() * 45}%;width:${20 + Math.random() * 50}px;animation-delay:${(Math.random() * 3).toFixed(1)}s"></i>`).join("") +
+      `<div class="pf-string">${"<i></i>".repeat(11)}</div>` +
+      `<div class="pf-table"></div>` +
+      [["l", "🍝", .9], ["r", "🍔", 1.4]].map(([side, food, d]) =>
+        `<div class="pf-dish pf-dish--${side}"><span class="pf-meal" style="animation-delay:${d + .25}s">${food}</span><i class="pf-cloche" style="animation-delay:${d}s"></i>` +
+        `<i class="pf-steam" style="left:40%;top:-60px;animation-delay:${d + .6}s"></i><i class="pf-steam" style="left:60%;top:-64px;animation-delay:${d + .9}s"></i></div>`).join("") +
+      `<div class="pf-candle"><i class="flame"></i></div><span class="pf-vase">🌹</span>` +
+      Array.from({ length: 14 }, (_, i) => `<i class="pf-tpetal" style="left:${8 + Math.random() * 84}%;top:${64 + Math.random() * 28}%;transform:rotate(${Math.random() * 360}deg)"></i>`).join("") +
+      `<span class="pf-glass pf-glass--l">🥤</span><span class="pf-glass pf-glass--r">🥤</span><span class="pf-clink">✨</span>` + rising(12, 40)];
     case "helado": return ["pf-ice", `<div class="pf-cone"></div>` + [["#ffb3c7", 0], ["#fff4e0", 1], ["#7b4a2e", 2]]
       .map(([c, i]) => `<div class="pf-scoop" style="background:${c};top:calc(48% - ${70 + i * 78}px);animation-delay:${.4 + i * .55}s"></div>`).join("") +
       `<span class="pf-food" style="--x:6px;--y:-238px;--r:0deg;top:48%;font-size:2.4rem;animation-delay:2.2s">🍒</span>`];
@@ -2293,8 +2377,12 @@ $("#pfYes").addEventListener("click", () => {
   go("entrada");
   rain(4000);
 });
-$("#pfNo").addEventListener("click", () => { $("#planFx").hidden = true; });
-$("#planBtn").addEventListener("click", () => { $("#planOther").hidden = true; go("despues"); });
+$("#pfNo").addEventListener("click", () => { $("#planFx").hidden = true; $$(".plan-card").forEach(c => c.classList.remove("picked")); });
+$("#planBtn").addEventListener("click", () => {
+  $("#planOther").hidden = true; $$(".plan-card").forEach(c => c.classList.remove("picked"));
+  const g = $("#plans"); g.classList.remove("in"); void g.offsetWidth; g.classList.add("in");
+  go("despues");
+});
 $("#planBack").addEventListener("click", () => go("entrada"));
 function updateWa() {
   const extra = planElegido ? `\n• Después del cine: ${planElegido}` : "";
