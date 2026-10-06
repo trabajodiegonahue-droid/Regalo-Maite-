@@ -417,11 +417,15 @@ button { font: inherit; cursor: pointer; }
   text-align: center; font: 700 2.3rem/1 var(--f-ui); letter-spacing: .06em; color: #fff;
   text-shadow: 0 0 14px rgba(255,255,255,.55);
 }
-.bol-windows { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; }
-.bol-windows span {
-  height: 2.4rem; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, #3a3d47, #2a2c33);
-  color: #c9cdd8; font: 600 .8rem/2.4rem var(--f-ui); text-align: center;
+.bol-windows { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; }
+.bol-windows button {
+  height: 2.4rem; border: 0; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, #3a3d47, #2a2c33);
+  color: #c9cdd8; font: 600 .8rem/2.4rem var(--f-ui); letter-spacing: .08em; text-align: center; cursor: pointer;
+  transition: background .2s, color .2s;
 }
+.bol-windows button:hover, .bol-windows button:focus-visible { background: linear-gradient(180deg, #4a4e5c, #34363f); color: #fff; }
+.bol-windows button.lit { background: linear-gradient(180deg, #2f7a45, #1f5230); color: #eaffef; }
+.bol-windows button.off { background: linear-gradient(180deg, #5a1a26, #3a0f18); color: #ffb3c1; }
 /* Boletería 3D */
 .floor--boleteria {
   background:
@@ -535,9 +539,9 @@ button { font: inherit; cursor: pointer; }
 .credits-close { position: absolute; left: 12px; top: calc(env(safe-area-inset-top, 0px) + 10px); padding: .55rem 1rem; font-size: .72rem; }
 
 /* ---------- Después del cine ---------- */
-.plans { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.plans { width: 100%; display: grid; grid-template-columns: 1fr; gap: .7rem; }
 .plan-card {
-  display: grid; justify-items: center; gap: .45rem; padding: 1.1rem .7rem 1rem; border-radius: 14px;
+  display: flex; align-items: center; justify-content: flex-start; gap: 1rem; padding: 1.1rem 1.2rem; font-size: 1.05rem !important; border-radius: 14px;
   background: linear-gradient(180deg, var(--velvet-2), #1a0710); border: 1.5px solid #4a1a2c; color: var(--cream-text);
   text-align: center; font: 600 .92rem/1.25 var(--f-ui); transition: transform .15s ease, border-color .2s;
 }
@@ -566,6 +570,46 @@ button { font: inherit; cursor: pointer; }
 .pf-food { position: absolute; left: 50%; top: 42%; font-size: 3.4rem; transform: translate(-50%, -50%); opacity: 0;
   animation: foodDrop .7s cubic-bezier(.3,1.5,.5,1) forwards; }
 @keyframes foodDrop { from { opacity: 1; transform: translate(calc(-50% + var(--x)), -110vh) rotate(-30deg); } to { opacity: 1; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r)); } }
+/* manejar */
+.pf-drive { background: linear-gradient(180deg, #0b0a26, #2a1440 55%, #4a1838); }
+.pf-city { position: absolute; left: 0; right: 0; bottom: 56%; height: 22%;
+  background:
+    radial-gradient(circle, #ffd98a 0 1.5px, transparent 2px) 0 0 / 14px 16px,
+    linear-gradient(transparent 0 0);
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 40px, transparent 40px 46px, #000 46px 70px, transparent 70px 78px);
+  mask: repeating-linear-gradient(90deg, #000 0 40px, transparent 40px 46px, #000 46px 70px, transparent 70px 78px);
+  background-color: #150c22; animation: cityMove 6s linear infinite; }
+.pf-city::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,10,38,.9), transparent 60%); }
+@keyframes cityMove { to { background-position: -280px 0, 0 0; } }
+.pf-road { position: absolute; left: 50%; bottom: 0; width: 160%; height: 56%; transform: translateX(-50%);
+  background: #1b1622; clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%); }
+.pf-road i { position: absolute; left: 50%; top: 0; bottom: 0; width: 1.4%; transform: translateX(-50%);
+  background: repeating-linear-gradient(180deg, #ffe7a8 0 22px, transparent 22px 52px); animation: roadMove .5s linear infinite; }
+@keyframes roadMove { to { background-position: 0 52px; } }
+.pf-car { position: absolute; left: 50%; bottom: 38%; width: 190px; height: 130px; margin-left: -95px; animation: carBob .35s ease-in-out infinite alternate; }
+@keyframes carBob { to { transform: translateY(-3px); } }
+.pf-car-win { position: absolute; left: 22px; right: 22px; top: 0; height: 58px; border-radius: 26px 26px 6px 6px; background: linear-gradient(180deg, #3a2f52, #1d1830); border: 5px solid #b3122f; border-bottom: 0; }
+.pf-car-win i { position: absolute; bottom: 0; width: 34px; height: 40px; border-radius: 50% 50% 8px 8px; background: #0b0814; }
+.pf-car-win i:first-child { left: 34px; } .pf-car-win i:last-child { right: 36px; height: 44px; }
+.pf-car-body { position: absolute; left: 0; right: 0; top: 54px; height: 54px; border-radius: 14px 14px 10px 10px; background: linear-gradient(180deg, #d81b3c, #8e0f2a); }
+.pf-car-body b { position: absolute; top: 14px; width: 34px; height: 14px; border-radius: 4px; background: #ff2a44; box-shadow: 0 0 18px 6px rgba(255,40,70,.6); }
+.pf-car-body b:first-child { left: 12px; } .pf-car-body b:nth-child(2) { right: 12px; }
+.pf-plate-car { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); padding: 2px 8px; border-radius: 3px; background: #f7eedc; color: #2c1b14; font: 700 .62rem/1.2 var(--f-ticket); letter-spacing: .1em; }
+.pf-wheel { position: absolute; bottom: 4px; width: 34px; height: 26px; border-radius: 6px; background: #0b0814; }
+.pf-car > .pf-wheel:nth-of-type(1) { left: 14px; } .pf-car > .pf-wheel:nth-of-type(2) { right: 14px; }
+.pf-car .pf-heart { position: absolute; left: 50%; top: -40px; margin-left: -16px; font-size: 2rem; opacity: 0; animation: popHeart .6s ease 2.4s forwards, floatUp 2s ease-in-out 3s infinite alternate; }
+@keyframes floatUp { to { transform: translateY(-12px); } }
+/* sorpresa */
+.pf-gift { background: radial-gradient(120% 80% at 50% 40%, #4a1a2c, #12050a 70%); }
+.pf-box { position: absolute; left: 50%; top: 50%; width: 170px; height: 170px; margin: -85px 0 0 -85px; animation: giftShake .5s ease-in-out .3s 3; }
+@keyframes giftShake { 25% { transform: rotate(-6deg); } 75% { transform: rotate(6deg); } }
+.pf-base { position: absolute; left: 10px; right: 10px; bottom: 0; height: 120px; background: linear-gradient(90deg, #b3122f 0 42%, #e9c46f 42% 58%, #b3122f 58%); border-radius: 6px; box-shadow: inset 0 -12px 0 rgba(0,0,0,.18); }
+.pf-lid { position: absolute; left: 0; right: 0; top: 18px; height: 40px; z-index: 1; background: linear-gradient(90deg, #d81b3c 0 42%, #f1d58f 42% 58%, #d81b3c 58%); border-radius: 6px;
+  animation: lidPop .7s cubic-bezier(.3,1.6,.5,1) 2s forwards; }
+.pf-lid::before, .pf-lid::after { content: ""; position: absolute; top: -26px; width: 44px; height: 32px; border: 8px solid #e9c46f; border-radius: 50% 50% 0 50%; }
+.pf-lid::before { left: 38px; transform: rotate(-20deg); } .pf-lid::after { right: 38px; border-radius: 50% 50% 50% 0; transform: rotate(20deg); }
+@keyframes lidPop { to { transform: translate(120px, -40px) rotate(38deg); } }
+.pf-gift .pf-msg { top: 12%; }
 /* helado */
 .pf-ice { background: linear-gradient(180deg, #ffd6e2, #ffeef3); }
 .pf-ice .pf-msg { color: #8e0f2a; text-shadow: none; }
@@ -1015,7 +1059,7 @@ body { touch-action: pan-y pinch-zoom; }
     <div class="bol" id="bol">
       <div class="bol-grid" id="bolGrid"></div>
       <div class="bol-sign">BOLETERÍA</div>
-      <div class="bol-windows"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+      <div class="bol-windows"><button data-i="0">Caja 1</button><button data-i="1">Caja 2</button><button data-i="2">Caja 3</button></div>
     </div>
     <p class="no-msg" id="guessMsg" aria-live="polite"></p>
     <div class="reveal" id="reveal" hidden>
@@ -2021,14 +2065,16 @@ function showMovie() {
 function buildGuess() {
   const grid = $("#bolGrid");
   grid.innerHTML = ""; delete grid.dataset.done; misses = 0;
+  $$(".bol-windows button").forEach(w => w.classList.remove("lit", "off"));
   $("#guessMsg").textContent = ""; $("#bol").hidden = false; $("#reveal").hidden = true;
   $("#guessTitle").textContent = "¿Qué película crees que vamos a ver?"; $("#guessSub").hidden = false;
-  MOVIES.forEach(m => {
+  MOVIES.forEach((m, idx) => {
     const b = document.createElement("button");
     b.className = "poster-btn";
     b.innerHTML = `<img src="${m.img}" alt="${m.t}"><span>${m.t}</span>`;
     b.addEventListener("click", () => {
       if (grid.dataset.done || b.classList.contains("wrong")) return;
+      $$(".bol-windows button")[idx]?.classList.add(m.ok ? "lit" : "off");
       if (m.ok) { grid.dataset.done = "1"; b.classList.add("right"); AudioFX.chime(); buzz([30, 60, 30]); showMovie(); }
       else {
         b.classList.add("wrong"); AudioFX.wrong(); buzz(90);
@@ -2039,6 +2085,12 @@ function buildGuess() {
   });
 }
 buildGuess();
+// Las ventanillas también sirven para elegir la película que tienen encima
+$$(".bol-windows button").forEach(w => w.addEventListener("click", () => {
+  const i = +w.dataset.i, b = $$(".poster-btn", $("#bolGrid"))[i];
+  if (!b || $("#bolGrid").dataset.done || b.classList.contains("wrong")) return;
+  b.click();
+}));
 
 // Combo
 const drinkHints = {
@@ -2097,12 +2149,10 @@ $("#comboForm").addEventListener("submit", async e => {
 
 // ---------- Después del cine: planes con animación ----------
 const PLANES = [
-  { id: "comer", icon: "🍔", t: "Ir a comer algo rico", msg: "Comida rica y besitos" },
-  { id: "helado", icon: "🍦", t: "Tomar un helado", msg: "Un helado para dos" },
-  { id: "caminar", icon: "🌙", t: "Caminar de la mano", msg: "Tú, yo y la luna" },
-  { id: "casa", icon: "🛋️", t: "Otra peli en casa con mantita", msg: "Segunda función: en casa" },
-  { id: "estrellas", icon: "✨", t: "Mirar las estrellas", msg: "Todas las estrellas, para ti" },
-  { id: "otra", icon: "✍️", t: "Otra cosa" },
+  { id: "manejar", icon: "🚗", t: "Manejar", msg: "Tú, yo y la ciudad" },
+  { id: "comer", icon: "🍔", t: "Comer algo rico", msg: "Comida rica y besitos" },
+  { id: "casa", icon: "🛋️", t: "Regalonear en casita", msg: "Regalones en casita" },
+  { id: "sorpresa", icon: "🎁", t: "Lo que tú quieras", msg: `Sorpresa… ${PLAN.firma} elige 😏` },
 ];
 let planElegido = "", planActual = null;
 (() => {
@@ -2128,6 +2178,9 @@ const COUPLE = `<svg viewBox="0 0 120 120" aria-hidden="true"><g fill="#ffd6e2">
   <path d="M50 52 q10 8 22 0" stroke="#ffd6e2" stroke-width="6" fill="none" stroke-linecap="round"/></g></svg><span class="pf-heart">❤️</span>`;
 function planScene(p) {
   switch (p.id) {
+    case "manejar": return ["pf-drive", stars(30) + `<div class="pf-city"></div><div class="pf-road"><i></i></div>` +
+      `<div class="pf-car"><div class="pf-car-win"><i></i><i></i></div><div class="pf-car-body"><b></b><b></b><span class="pf-plate-car">TE AMO</span></div><i class="pf-wheel"></i><i class="pf-wheel"></i><span class="pf-heart">❤️</span></div>`];
+    case "sorpresa": return ["pf-gift", stars(25) + `<div class="pf-box"><div class="pf-lid"></div><div class="pf-base"></div></div>`];
     case "comer": return ["pf-eat", `<div class="pf-plate"></div>` + [["🍔", -30, -20, -12], ["🍟", 40, -10, 14], ["🍕", -10, 40, 8], ["🌮", 50, 45, -10], ["🥤", -60, 30, 0]]
       .map(([e, x, y, r], i) => `<span class="pf-food" style="--x:${x}px;--y:${y}px;--r:${r}deg;animation-delay:${.3 + i * .35}s">${e}</span>`).join("")];
     case "helado": return ["pf-ice", `<div class="pf-cone"></div>` + [["#ffb3c7", 0], ["#fff4e0", 1], ["#7b4a2e", 2]]
@@ -2179,6 +2232,12 @@ function updateWa() {
 $("#moreHearts").addEventListener("click", () => burst(120));
 $("#restart").addEventListener("click", () => {
   resetLetter(); phase = "doors"; pov.hidden = true; buildGuess();
+// Las ventanillas también sirven para elegir la película que tienen encima
+$$(".bol-windows button").forEach(w => w.addEventListener("click", () => {
+  const i = +w.dataset.i, b = $$(".poster-btn", $("#bolGrid"))[i];
+  if (!b || $("#bolGrid").dataset.done || b.classList.contains("wrong")) return;
+  b.click();
+}));
   buildLobby("table"); entry.classList.remove("fade"); entry.hidden = false;
   $("#openBtn").hidden = false; $("#openBtn").classList.remove("open"); $("#knock").hidden = false; $("#soundTip").hidden = false; $("#noMsg").textContent = "";
   $("#verdict").hidden = true; noCount = 0;
