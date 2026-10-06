@@ -557,7 +557,10 @@ button { font: inherit; cursor: pointer; }
 @keyframes cheer { to { transform: translateY(-5%); } }
 .crowd .bravo { position: absolute; left: 50%; bottom: 105%; transform: translateX(-50%); font-family: var(--f-display); font-size: 1.6rem; color: var(--gold);
   text-shadow: 0 0 14px rgba(233,196,111,.8); white-space: nowrap; opacity: 0; visibility: hidden; transition: opacity .5s, visibility .5s; z-index: 3; }
-.crowd.clap .bravo { opacity: 1; visibility: visible; }
+.crowd.ovation .bravo { opacity: 1; visibility: visible; }
+.flowers { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+.flower { position: absolute; left: 0; top: 0; font-size: 2rem; line-height: 1; will-change: transform, opacity; filter: drop-shadow(0 3px 4px rgba(0,0,0,.45)); }
+.landed { position: absolute; font-size: .9rem; opacity: .9; transition: opacity 1.2s ease; }
 
 /* ---------- Elegir butaca ---------- */
 .seatmap { width: 100%; display: grid; gap: .8rem; justify-items: center; padding: 1rem .7rem; border-radius: 14px; background: #0d0408; border: 1px solid #3d1426; }
@@ -1234,6 +1237,7 @@ body { touch-action: pan-y pinch-zoom; }
   <span class="knock" id="knock">Toca la puerta para entrar</span>
   <span class="pick-hint" id="pickHint" hidden>Toca la carta para tomarla</span>
   <div class="crowd" id="crowd" hidden></div>
+  <div class="flowers" id="flowers" aria-hidden="true"></div>
   <button class="pick-hint sound-hint" id="soundHint" hidden>Toca para escuchar el video</button>
 </div>
 
@@ -1905,13 +1909,10 @@ function buildLobby(kind) {
       vid.currentTime = 0;
       vid.muted = !AudioFX.isOn();
       vid.volume = .5;
-      vid.addEventListener("playing", () => { if (!vid.muted) AudioFX.duck(true); });
+      vid.addEventListener("playing", () => { if (vid.dataset.live && !vid.muted) AudioFX.duck(true); });
       vid.addEventListener("ended", () => AudioFX.duck(false));
-      vid.play().catch(() => {
-        // el navegador no dejó sonar: se ve en silencio y se ofrece activar el sonido
-        vid.muted = true; vid.play().catch(() => {});
-        if (AudioFX.isOn()) $("#soundHint").hidden = false;
-      });
+      // se "desbloquea" ahora (todavía dentro del toque) y se reproduce al llegar a la butaca
+      vid.play().then(() => { if (!vid.dataset.live) { vid.pause(); vid.currentTime = 0; } }).catch(() => {});
     }
     // los cuadros cambian de foto escalonados
     wallTimers.forEach(clearTimeout); wallTimers = [];
@@ -1971,6 +1972,54 @@ function walk(duration = 4600) {
   return anim;
 }
 // Caminar a otra parte del cine (dulcería, sala) y volver a la página
+// ---------- Público: aplausos continuos y flores ----------
+const FLOWERS = ["🌹", "🌹", "🌸", "🌷", "💐", "🌺", "🌹"];
+let cheerTimers = [];
+function throwFlower() {
+  if (reduced) return;
+  const box = $("#flowers"), W = innerWidth, H = innerHeight;
+  const f = document.createElement("span");
+  f.className = "flower"; f.textContent = FLOWERS[Math.floor(Math.random() * FLOWERS.length)];
+  box.append(f);
+  // sale desde el público (abajo) y vuela hacia la pantalla
+  const x0 = W * (.1 + Math.random() * .8), y0 = H * (.9 + Math.random() * .05);
+  const x1 = W * (.3 + Math.random() * .4), y1 = H * (.36 + Math.random() * .16);
+  const peak = Math.min(y0, y1) - H * (.08 + Math.random() * .1);
+  const spin = (Math.random() < .5 ? -1 : 1) * (240 + Math.random() * 300);
+  const a = f.animate([
+    { transform: `translate(${x0}px, ${y0}px) scale(1.15) rotate(0deg)`, opacity: 0 },
+    { transform: `translate(${x0}px, ${y0 - 20}px) scale(1.1) rotate(${spin * .1}deg)`, opacity: 1, offset: .08 },
+    { transform: `translate(${(x0 + x1) / 2}px, ${peak}px) scale(.75) rotate(${spin * .6}deg)`, opacity: 1, offset: .55 },
+    { transform: `translate(${x1}px, ${y1}px) scale(.42) rotate(${spin}deg)`, opacity: 1 },
+  ], { duration: 1300 + Math.random() * 500, easing: "cubic-bezier(.25,.6,.4,1)" });
+  a.onfinish = () => {
+    // cae al pie de la pantalla y se queda un rato
+    f.remove();
+    const l = document.createElement("span");
+    l.className = "landed"; l.textContent = f.textContent;
+    l.style.left = x1 + "px"; l.style.top = (H * (.5 + Math.random() * .04)) + "px";
+    l.style.transform = `rotate(${Math.random() * 360}deg)`;
+    box.append(l);
+    if (box.querySelectorAll(".landed").length > 40) box.querySelector(".landed").remove();
+  };
+}
+function startCheer() {
+  stopCheer();
+  const crowd = $("#crowd");
+  cheerTimers.push(setTimeout(() => crowd.classList.add("clap"), 600));
+  // aplauso continuo, suave para que se siga escuchando el video
+  cheerTimers.push(setTimeout(() => AudioFX.applause(3.4, .2), 600));
+  cheerTimers.push(setInterval(() => AudioFX.applause(3.4, .2), 3000));
+  // flores en tandas
+  cheerTimers.push(setInterval(() => {
+    const n = 1 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < n; i++) setTimeout(throwFlower, i * 160);
+  }, 700));
+}
+function stopCheer() {
+  cheerTimers.forEach(t => { clearTimeout(t); clearInterval(t); });
+  cheerTimers = [];
+}
 async function travel(kind, next) {
   if (reduced) { go(next); return; }
   $("#openBtn").hidden = true; $("#knock").hidden = true; $("#soundTip").hidden = true; $("#pickHint").hidden = true;
@@ -1981,15 +2030,23 @@ async function travel(kind, next) {
   await walk(kind === "sala" ? 10500 : kind === "boleteria" ? 6000 : 3600).finished;
   const vid = kind === "sala" && $(".screen-video", cam);
   const crowd = $("#crowd");
+  if (vid && !vid.error) {
+    // ya sentada: empieza el baile desde el principio
+    vid.dataset.live = "1"; vid.currentTime = 0;
+    vid.play().then(() => { if (!vid.muted) AudioFX.duck(true); }).catch(() => {
+      // el navegador no dejó sonar: se ve en silencio y se ofrece activar el sonido
+      vid.muted = true; vid.play().catch(() => {});
+      if (AudioFX.isOn()) $("#soundHint").hidden = false;
+    });
+  }
   if (kind === "sala") {
     crowd.innerHTML = Array.from({ length: 7 }, (_, i) => {
       const w = [58, 70, 62, 76, 66, 74, 60, 70, 58][i];
       return `<div class="fan" style="--w:${w}px;--d:${(Math.random() * .3).toFixed(2)}s"><i class="hn l"></i><i class="hn r"></i><i class="hd"></i><i class="bd"></i></div>`;
     }).join("") + `<span class="bravo">¡Bravo! 👏</span>`;
     crowd.className = "crowd"; crowd.hidden = false; void crowd.offsetWidth; crowd.classList.add("up");
-    // aplausos cortos al empezar el baile
-    setTimeout(() => { crowd.classList.add("clap"); AudioFX.applause(1.6, .3); }, 700);
-    setTimeout(() => crowd.classList.remove("clap"), 2400);
+    // el público aplaude y lanza flores durante todo el baile
+    startCheer();
   }
   if (vid && !vid.ended && !vid.error) {
     $("#skipBtn").hidden = false;
@@ -2002,10 +2059,14 @@ async function travel(kind, next) {
   }
   if (vid) { vid.pause(); $("#soundHint").hidden = true; }
   if (kind === "sala") {
-    // ovación final
-    crowd.classList.add("clap"); AudioFX.applause(3.6, .6); burst(80);
+    // ovación final: más aplausos y una lluvia de flores
+    stopCheer();
+    crowd.classList.add("clap", "ovation"); AudioFX.applause(3.6, .6); burst(80);
+    for (let i = 0; i < 16; i++) setTimeout(throwFlower, i * 110);
     await sleep(3200);
-    crowd.classList.remove("clap", "up");
+    crowd.classList.remove("clap", "ovation", "up");
+    $$("#flowers .landed").forEach(f => f.style.opacity = 0);
+    setTimeout(() => { $("#flowers").innerHTML = ""; }, 1300);
     AudioFX.duck(false);
     setTimeout(() => { crowd.hidden = true; }, 900);
   }
