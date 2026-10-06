@@ -38,6 +38,7 @@
   color-scheme: dark;
 }
 html, body { height: 100%; overflow-x: hidden; max-width: 100%; overscroll-behavior-x: none; }
+body { margin: 0; }
 body {
   background:
     radial-gradient(120% 70% at 50% 0%, var(--velvet-2), var(--velvet) 70%) fixed,
@@ -271,9 +272,9 @@ button { font: inherit; cursor: pointer; }
 .held > :not(.hand) { position: relative; z-index: 2; }
 .held.enter { animation: heldIn 1.2s cubic-bezier(.2,.8,.2,1); }
 @keyframes heldIn { from { transform: translateY(70vh) rotate(-5deg); } }
-.held--card { padding-bottom: 8rem; }
+.held--card { padding-bottom: 3.5rem; }
 .held--card .scratch { max-width: 16.5rem; }
-.held--ticket { padding-bottom: 7rem; }
+.held--ticket { padding-bottom: 3.2rem; }
 .held--ticket .ticket { width: 86%; }
 
 .floor--candy {
@@ -806,15 +807,16 @@ button { font: inherit; cursor: pointer; }
 .stage { overflow-x: hidden; overflow-x: clip; }
 body { touch-action: pan-y pinch-zoom; }
 .stage {
-  min-height: 100%;
-  display: flex; flex-direction: column; align-items: center;
-  gap: 1.4rem;
-  padding-inline: 16px; padding-block: 1.2rem 2.5rem;
+  height: 100vh; height: 100dvh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1rem;
+  padding-inline: 16px; padding-block: calc(env(safe-area-inset-top, 0px) + 52px) calc(env(safe-area-inset-bottom, 0px) + 12px);
 }
+.stage > .scene { flex: 0 0 auto; transform-origin: 50% 50%; }
 
 .scene {
   width: 100%; max-width: 34rem;
-  display: flex; flex-direction: column; align-items: center; gap: 1.3rem;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
   animation: sceneIn .7s cubic-bezier(.2,.8,.2,1);
 }
 @keyframes sceneIn { from { opacity: 0; transform: translateY(18px) scale(.98); } }
@@ -832,9 +834,9 @@ body { touch-action: pan-y pinch-zoom; }
     var(--paper);
   color: var(--ink);
   border-radius: 4px;
-  padding: 2rem 1.5rem 1.8rem;
+  padding: 1.5rem 1.3rem 1.3rem;
   box-shadow: 0 2px 0 #e3d4b8, 0 24px 60px rgba(0,0,0,.55);
-  font-family: var(--f-letter); font-size: 1.25rem; line-height: 1.5; color: var(--ink);
+  font-family: var(--f-letter); font-size: 1.16rem; line-height: 1.38; color: var(--ink);
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .34  0 0 0 0 .22  0 0 0 .09 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"), radial-gradient(140% 90% at 30% 10%, rgba(255,255,255,.55), transparent 60%);
 }
 .letter .pend { visibility: hidden; }
@@ -899,7 +901,7 @@ body { touch-action: pan-y pinch-zoom; }
   font-family: var(--f-ui); font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft);
 }
 .letter__ref { text-align: right; }
-.letter p { margin: 0 0 .9rem; }
+.letter p { margin: 0 0 .6rem; }
 .letter .greet { margin-top: .2rem; font-style: italic; }
 .letter ul { margin: 0 0 .9rem; padding-left: 1.2rem; }
 .letter li { margin-bottom: .2rem; }
@@ -1292,7 +1294,7 @@ body { touch-action: pan-y pinch-zoom; }
     </div>
 
     <div class="row"><button class="btn btn--gold" id="planBtn">¿Y después del cine…?</button></div>
-    <p class="note">Guarda una captura de pantalla de esta entrada y mándame tu pedido.</p>
+    <p class="note">Guarda una captura y mándame tu pedido.</p>
     <div class="row">
       <a class="btn btn--gold" id="waBtn" href="https://wa.me/" target="_blank" rel="noopener">Enviarle mi pedido por WhatsApp</a>
     </div>
@@ -1415,9 +1417,29 @@ tick(); setInterval(tick, 1000);
 
 // Navegación entre escenas
 const steps = ["carta", "adivina", "combo", "entrada", "despues"];
+// Cada escena cabe completa en la pantalla: si es más alta, se achica lo justo
+let fitting = false, freezeFit = false;
+const curZoom = el => parseFloat((el.closest(".scene") || el).style.zoom) || 1;
+function fitScene() {
+  const sc = steps.map(id => $("#" + id)).find(el => !el.hidden);
+  if (!sc || fitting || freezeFit) return;
+  fitting = true;
+  const st = getComputedStyle($("#stage"));
+  const avail = innerHeight - parseFloat(st.paddingTop) - parseFloat(st.paddingBottom);
+  sc.style.zoom = 1;
+  const h = sc.offsetHeight;
+  const z = h > avail ? Math.max(.5, avail / h) : 1;
+  sc.style.zoom = z.toFixed(3);
+  requestAnimationFrame(() => { fitting = false; });
+}
+const fitObs = new ResizeObserver(() => requestAnimationFrame(fitScene));
+addEventListener("resize", () => requestAnimationFrame(fitScene));
 function go(id) {
   steps.forEach(s => $("#" + s).hidden = s !== id);
   scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+  fitObs.disconnect();
+  $$("#" + id + " > *").forEach(el => fitObs.observe(el));
+  requestAnimationFrame(fitScene);
   if (id === "entrada") requestAnimationFrame(() => holdWith($("#ticketHeld"), $("#ticket"), .3, 4));
 }
 $$("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
@@ -1942,8 +1964,14 @@ async function openEnvelope() {
   const open = { left: cx, top: cy - ph, width: fw, height: ph * 3 };
   letterEl.hidden = false; letterEl.style.visibility = "hidden";
   scrollTo(0, 0);
+  $("#answers").hidden = false; $("#answers").style.visibility = "hidden";
+  $("#writeHint").hidden = false;
+  freezeFit = false; fitting = false; fitScene();
   const lr = letterEl.getBoundingClientRect();
-  letterEl.style.minHeight = lr.height + "px";
+  const sc = $("#carta"), z0 = sc.style.zoom;
+  const natural = lr.height / (parseFloat(z0) || 1);
+  letterEl.style.minHeight = natural + "px";
+  freezeFit = true;
   prepareLetter();
   const h = Math.min(lr.height, innerHeight - lr.top - 12);
   const paper = document.createElement("div");
@@ -1981,7 +2009,8 @@ function finishLetter() {
   writing = false; pencil.hidden = true; $("#writeHint").hidden = true;
   $(".sig", letterEl).classList.remove("draw"); $(".sig", letterEl).classList.add("done");
   letterEl.style.minHeight = "";
-  $("#answers").hidden = false; $("#noMsg").hidden = false;
+  $("#answers").hidden = false; $("#answers").style.visibility = ""; $("#noMsg").hidden = false;
+  freezeFit = false; requestAnimationFrame(fitScene);
 }
 function showLetterNow() { pov.hidden = true; letterEl.hidden = false; prepareLetter(); finishLetter(); }
 function placePencil(node) {
@@ -1989,10 +2018,10 @@ function placePencil(node) {
   r.setStart(node, node.data.length); r.collapse(true);
   const rects = r.getClientRects();
   const box = rects.length ? rects[rects.length - 1] : node.parentElement.getBoundingClientRect();
-  const l = letterEl.getBoundingClientRect();
-  pencil.style.left = (box.right - l.left) + "px";
-  pencil.style.top = (box.bottom - l.top - 24) + "px";
-  if (box.bottom > innerHeight - 140) scrollBy(0, box.bottom - innerHeight + 200);
+  const l = letterEl.getBoundingClientRect(), z = curZoom(letterEl);
+  pencil.style.left = (box.right - l.left) / z + "px";
+  pencil.style.top = (box.bottom - l.top) / z - 24 + "px";
+
 }
 async function writeLetter() {
   writing = true; skipWrite = false;
@@ -2024,8 +2053,8 @@ resetLetter();
 async function drawSig() {
   const sig = $(".sig", letterEl);
   sig.classList.remove("done"); void sig.getBoundingClientRect(); sig.classList.add("draw");
-  const l = letterEl.getBoundingClientRect(), b = sig.getBoundingClientRect();
-  const x0 = b.left - l.left + b.width * .2, x1 = b.right - l.left, y = b.top - l.top + b.height * .6;
+  const l = letterEl.getBoundingClientRect(), b = sig.getBoundingClientRect(), z = curZoom(letterEl);
+  const x0 = (b.left - l.left + b.width * .2) / z, x1 = (b.right - l.left) / z, y = (b.top - l.top + b.height * .6) / z;
   const t0 = performance.now(), D = 2800;
   while (performance.now() - t0 < D) {
     if (skipWrite) return;
@@ -2143,8 +2172,9 @@ function dodge(e) {
   lastDodge = Date.now();
   const no = $("#noBtn"), si = $("#siBtn").getBoundingClientRect();
   const r = no.getBoundingClientRect(), m = 16;
+  const z = curZoom(no);
   if (!no.classList.contains("loose")) {
-    no.style.left = r.left + "px"; no.style.top = r.top + "px";
+    no.style.left = r.left / z + "px"; no.style.top = r.top / z + "px";
     no.classList.add("loose");
   }
   let x, y, tries = 0;
@@ -2155,7 +2185,7 @@ function dodge(e) {
   } while (tries < 30 && (
     Math.abs(x - r.left) < r.width && Math.abs(y - r.top) < r.height * 2 ||
     x < si.right + 10 && x + r.width > si.left - 10 && y < si.bottom + 10 && y + r.height > si.top - 10));
-  no.style.left = x + "px"; no.style.top = y + "px";
+  no.style.left = x / z + "px"; no.style.top = y / z + "px";
   $("#noMsg").textContent = noMsgs[noCount++ % noMsgs.length];
 }
 const noBtn = $("#noBtn");
