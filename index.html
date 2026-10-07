@@ -1885,6 +1885,94 @@ body { touch-action: pan-y pinch-zoom; }
 .cats:empty { display: none; }
 #combo .combo fieldset:first-of-type { display: none; }
 
+/* =================== PULIDO: fluidez, ruleta y ambiente de enamorados =================== */
+/* animaciones más livianas para el celular: nada de filtros animados a pantalla completa */
+@keyframes neon { 50% { opacity: .78; } }
+@keyframes envGlow { 50% { box-shadow: 0 0 26px 10px rgba(255,214,150,.8); } }
+@keyframes pfCam { from { transform: scale(1.08); } to { transform: none; } }
+.planfx .pf-stage { animation: pfCam 6s cubic-bezier(.2,.7,.2,1) both; will-change: transform; }
+.pf-dim { position: absolute; inset: 0; z-index: 8; background: #12050a; pointer-events: none; animation: dimOut .9s ease-out forwards; }
+@keyframes dimOut { to { opacity: 0; } }
+.pf-sunset { animation: none; }
+.pf-sunset::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,8,40,.55), rgba(60,10,40,.25)); opacity: 0; animation: showIn 7s ease forwards; pointer-events: none; }
+.planfx .pf-msg { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(20,8,14,.62); }
+.pf-card { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(18,6,12,.9); border-color: rgba(255,182,206,.55);
+  box-shadow: 0 18px 50px rgba(0,0,0,.55), 0 0 40px rgba(255,92,138,.25); animation: cardUp .7s cubic-bezier(.2,1.25,.4,1) both; }
+@keyframes cardUp { from { opacity: 0; transform: translate(-50%, 50px) scale(.92); } }
+.pf-card .pf-ico { font-size: 2.6rem; line-height: 1; margin-top: -2.6rem; filter: drop-shadow(0 6px 10px rgba(0,0,0,.4)); animation: icoBounce 1.6s ease-in-out .7s infinite; }
+@keyframes icoBounce { 50% { transform: translateY(-6px) rotate(-6deg); } }
+.planfx.revealing { will-change: clip-path; }
+/* transición suave entre pantallas */
+.veil { position: fixed; inset: 0; z-index: 45; pointer-events: none; opacity: 0; background: radial-gradient(80% 60% at 50% 45%, #4a1530, #12050a 75%); }
+.scene { animation: sceneIn .75s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes sceneIn { from { opacity: 0; transform: translateY(16px) scale(.985); } }
+
+/* ambiente: luces suaves y corazones que flotan detrás de todo */
+body { background:
+  radial-gradient(70% 45% at 50% 0%, rgba(255,92,138,.22), transparent 70%),
+  radial-gradient(60% 40% at 50% 100%, rgba(233,196,111,.12), transparent 70%),
+  radial-gradient(120% 70% at 50% 0%, #3a0f22, #1d0811 70%) fixed, #1d0811; }
+.entry:not([hidden]) ~ .ambient, .pov:not([hidden]) ~ .ambient { display: none; }
+.ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.ambient i { position: absolute; bottom: -20%; width: var(--s); height: var(--s); border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, var(--c) 0, transparent 68%); animation: drift var(--d) linear var(--w) infinite; will-change: transform, opacity; }
+.ambient b { position: absolute; bottom: -10%; font: 400 var(--s)/1 var(--f-ui); color: var(--c); opacity: 0; animation: drift var(--d) linear var(--w) infinite; will-change: transform, opacity; }
+@keyframes drift { 0% { transform: translate3d(0, 0, 0); opacity: 0; } 12% { opacity: var(--o); } 85% { opacity: var(--o); } 100% { transform: translate3d(var(--x), -125vh, 0); opacity: 0; } }
+main.stage { position: relative; z-index: 1; }
+/* habitación: luces del techo que titilan y un brillo cálido */
+.ceiling--table::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle, #fff3c4 0 3px, rgba(255,230,170,.7) 5px, transparent 12px) 30px 0 / 60px 120px; animation: twinkle 2.4s ease-in-out infinite; }
+.entry::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(60,10,30,.45)); }
+.pol b::after { content: " ♥"; font-size: .8em; }
+
+/* tablero de elección: terciopelo rosado con marco dorado */
+#despues .after-marquee { background: linear-gradient(180deg, #4a1530, #2a0a18); border: 2px solid var(--gold-soft); border-radius: 14px; box-shadow: 0 0 0 5px #2a0a18, 0 0 0 7px rgba(233,196,111,.35), 0 0 50px rgba(255,92,138,.25); }
+#despues .after-marquee::before { background: repeating-linear-gradient(90deg, #ff9ab8 0 10%, #fff4f7 10% 20%); border-radius: 12px 12px 0 0; }
+#despues .after-marquee::after { background: radial-gradient(circle at 50% 0, #ff9ab8 70%, transparent 72%) 0 0 / 10% 28px repeat-x; }
+#despues .after-marquee .scene-title { font-family: var(--f-script); font-size: clamp(2rem, 9vw, 2.6rem); line-height: 1.05; color: #ffe9f0; text-shadow: 0 0 14px rgba(255,92,138,.7); }
+.menu { background:
+  radial-gradient(circle, rgba(255,182,206,.08) 0 2px, transparent 3px) 0 0 / 26px 26px,
+  radial-gradient(120% 90% at 30% 10%, rgba(255,255,255,.07), transparent 60%), #3a0f22;
+  border: 3px solid var(--gold-soft); box-shadow: inset 0 0 0 5px #2a0a18, inset 0 0 0 6px rgba(233,196,111,.4), 0 18px 40px rgba(0,0,0,.45); border-radius: 16px; }
+.dest { background: linear-gradient(180deg, #fffaf4, #fbe9ee); }
+.dest::before { background: radial-gradient(circle at 35% 35%, #ffd6e2, #ff5c8a 60%, #b3122f); }
+.dest:hover .d-ico { transform: scale(1.12) rotate(-6deg); }
+.dest.picked { animation: pickPop .45s cubic-bezier(.3,1.6,.5,1); }
+@keyframes pickPop { 40% { transform: scale(1.14) rotate(-2deg); } }
+.dest.chosen { box-shadow: 0 0 0 2px var(--gold), 0 6px 14px rgba(0,0,0,.3); }
+.zoomtile { position: fixed; z-index: 58; display: grid; place-items: center; border-radius: 12px; background: linear-gradient(180deg, #fffaf4, #fbe9ee); box-shadow: 0 0 0 3px var(--stamp), 0 0 40px rgba(255,122,160,.7); font-size: 2.4rem; pointer-events: none; }
+.flyico { position: fixed; z-index: 90; font-size: 2.4rem; line-height: 1; pointer-events: none; filter: drop-shadow(0 6px 10px rgba(0,0,0,.4)); }
+.step-dots button.got { animation: gotIt .7s cubic-bezier(.3,1.6,.5,1); }
+@keyframes gotIt { 40% { transform: scale(1.25); box-shadow: 0 0 0 6px rgba(233,196,111,.3); } }
+
+/* ruleta */
+.spin-btn { align-self: center; border: 0; border-radius: 999px; padding: .62rem 1.2rem; font: 700 .82rem/1 var(--f-ui); letter-spacing: .04em; color: #fff;
+  background: linear-gradient(135deg, #ff5c8a, #b3122f); box-shadow: 0 6px 18px rgba(255,92,138,.45); animation: spinGlow 2.4s ease-in-out infinite; }
+.spin-btn:active { transform: scale(.96); }
+@keyframes spinGlow { 50% { box-shadow: 0 6px 26px rgba(255,92,138,.75), 0 0 0 6px rgba(255,92,138,.15); } }
+.wheelfx { position: fixed; inset: 0; z-index: 62; display: grid; place-content: center; justify-items: center; gap: 1.1rem; padding: 16px;
+  background: radial-gradient(90% 60% at 50% 40%, #4a1530, #12050a 75%); animation: fadeIn .4s ease; }
+.wheelfx h3 { margin: 0 0 1.4rem; font: 400 clamp(2rem, 9vw, 2.6rem)/1 var(--f-script); color: #ffe9f0; text-shadow: 0 0 14px rgba(255,92,138,.7); text-align: center; }
+.wheel-wrap { position: relative; width: min(84vw, 340px); aspect-ratio: 1; }
+.wheel-wrap::before { content: ""; position: absolute; inset: -14px; border-radius: 50%;
+  background: radial-gradient(circle, #fff3c4 0 3px, transparent 4px) 50% 0 / 100% 100%, conic-gradient(from 0deg, #e9c46f, #b8924a, #e9c46f, #b8924a, #e9c46f);
+  box-shadow: 0 0 40px rgba(255,92,138,.45); }
+.wheel-wrap .bulbs { position: absolute; inset: -9px; border-radius: 50%; pointer-events: none; }
+.wheel-wrap .bulbs i { position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px; border-radius: 50%; background: #fff6d0; box-shadow: 0 0 8px 3px rgba(255,230,160,.8); animation: twinkle 1s steps(2) infinite; }
+.wheel { position: absolute; inset: 0; width: 100%; height: 100%; will-change: transform; }
+.wheel text { font-size: 15px; dominant-baseline: middle; text-anchor: middle; }
+.wheel .lbl { font: 700 7px var(--f-ui); fill: #3a1f16; }
+.wheel-hub { position: absolute; left: 50%; top: 50%; width: 22%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; display: grid; place-items: center; font-size: 1.6rem; color: #fff;
+  background: radial-gradient(circle at 35% 30%, #ff9ab8, #b3122f 70%); border: 4px solid #e9c46f; box-shadow: 0 4px 12px rgba(0,0,0,.4); }
+.wheel-ptr { position: absolute; left: 50%; top: -26px; width: 44px; height: 50px; transform: translateX(-50%); transform-origin: 50% 20%; z-index: 2; filter: drop-shadow(0 4px 6px rgba(0,0,0,.45)); }
+.wheel-ptr.tick { animation: ptrTick .12s ease-out; }
+@keyframes ptrTick { 50% { transform: translateX(-50%) rotate(-14deg); } }
+.wheel-res { min-height: 3.4rem; text-align: center; display: grid; gap: .2rem; justify-items: center; }
+.wheel-res small { font: 600 .72rem/1 var(--f-ui); letter-spacing: .2em; text-transform: uppercase; color: #ffb3c7; }
+.wheel-res b { font: 400 clamp(1.4rem, 6vw, 1.8rem)/1.15 var(--f-display); color: var(--gold); animation: popHeart .5s cubic-bezier(.3,1.6,.5,1); }
+.wheel-actions { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: center; }
+.wheel-actions .btn { padding: .8rem 1.2rem; font-size: .8rem; letter-spacing: .08em; }
+.wheel-close { position: absolute; top: calc(env(safe-area-inset-top, 0px) + 14px); left: 14px; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
 }
@@ -1919,6 +2007,7 @@ body { touch-action: pan-y pinch-zoom; }
     <clipPath id="hThumbClip"><path d="M98 236 C100 206 112 182 128 164 C140 150 152 138 164 126 C172 117 180 108 189 103 C196 99 203 103 202 111 C201 118 194 125 187 131 C176 141 166 152 158 165 C148 182 141 202 138 228 Z"/></clipPath>
     <clipPath id="hSideClip"><path d="M88 236 C80 200 92 160 118 136 C132 123 148 118 160 124 C170 140 172 176 166 204 C160 224 150 240 140 250 Z"/></clipPath>
   </defs></svg>
+<div class="veil" id="veil" aria-hidden="true"></div>
 <canvas id="fx" aria-hidden="true"></canvas>
 <div class="controls">
   <button class="ctrl" id="skipBtn" hidden>Saltar</button>
@@ -1979,6 +2068,7 @@ body { touch-action: pan-y pinch-zoom; }
   <div class="pov-bg"></div>
   <span class="pick-hint" id="povHint" hidden></span>
 </div>
+<div class="ambient" id="ambient" aria-hidden="true"></div>
 
 <main class="stage" id="stage">
   <!-- 1. Carta formal -->
@@ -2247,6 +2337,7 @@ body { touch-action: pan-y pinch-zoom; }
     </div>
     <p class="scene-sub" id="bSub">Elige el lugar. Tú decides, yo me apunto a lo que sea.</p>
     <div class="cats" id="cats"></div>
+    <button class="spin-btn" id="spinBtn">🎡 ¿No sabes? Gira la ruleta</button>
     <div class="menu" id="plans"></div>
     <button class="dest dest--otra" data-plan="otra"><span class="d-ico" aria-hidden="true">✍️</span><b class="d-name">Lo que tú quieras</b><small>Escríbelo tú, yo me apunto</small><span class="d-tag">Elegido ♥</span></button>
     <div class="plan-other" id="planOther" hidden>
@@ -2279,12 +2370,29 @@ body { touch-action: pan-y pinch-zoom; }
 <div class="planfx" id="planFx" hidden>
   <div class="pf-stage" id="pfStage"></div>
   <div class="pf-card" id="pfCard" hidden>
-    <span class="eyebrow">¿Este es el plan?</span>
+    <span class="pf-ico" id="pfIco" aria-hidden="true"></span>
+    <span class="eyebrow" id="pfAsk">¿Este es el plan?</span>
     <h3 id="pfTitle"></h3>
     <div class="row">
-      <button class="btn btn--gold" id="pfYes">¡Sí, ese!</button>
-      <button class="btn btn--ghost" id="pfNo">Elegir otro</button>
+      <button class="btn btn--gold" id="pfYes">¡Sí, ese! 💖</button>
+      <button class="btn btn--ghost" id="pfNo">Ver otro</button>
     </div>
+  </div>
+</div>
+
+<div class="wheelfx" id="wheelFx" hidden role="dialog" aria-label="Ruleta">
+  <button class="link-btn wheel-close" id="wheelClose">← Volver</button>
+  <h3 id="wheelTitle">Que el destino decida</h3>
+  <div class="wheel-wrap">
+    <svg class="wheel-ptr" id="wheelPtr" viewBox="0 0 44 50" aria-hidden="true"><path d="M22 48 C10 34 2 26 2 15 C2 7 8 2 14 2 C18 2 21 5 22 8 C23 5 26 2 30 2 C36 2 42 7 42 15 C42 26 34 34 22 48 Z" fill="#ff3d7f" stroke="#fff" stroke-width="3"/></svg>
+    <div class="bulbs" id="wheelBulbs"></div>
+    <svg class="wheel" id="wheel" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
+    <div class="wheel-hub">♥</div>
+  </div>
+  <div class="wheel-res" id="wheelRes"><small>Toca girar</small></div>
+  <div class="wheel-actions">
+    <button class="btn btn--gold" id="wheelSpin">Girar 🎡</button>
+    <button class="btn btn--ghost" id="wheelGo" hidden>¡Me encanta, ese! 💖</button>
   </div>
 </div>
 
@@ -2403,6 +2511,7 @@ function fitScene() {
 const fitObs = new ResizeObserver(() => requestAnimationFrame(fitScene));
 addEventListener("resize", () => requestAnimationFrame(fitScene));
 function go(id) {
+  if (!reduced && $("#veil")) $("#veil").animate([{ opacity: .6 }, { opacity: 0 }], { duration: 600, easing: "ease-out" });
   steps.forEach(s => $("#" + s).hidden = s !== id);
   scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
   fitObs.disconnect();
@@ -3674,11 +3783,12 @@ const BOARDS = {
     ids: ["helado", "cafe", "estrellas", "atardecer", "parque", "peli", "casa", "dormir", "karaoke", "bailar", "juegos", "spa", "fotos", "sorpresa"] },
 };
 const ORDER = ["lugar", "comida", "despues"];
-let stage = "lugar", editing = false;
+let stage = "lugar", boardStage = "lugar", editing = false;
 const elec = { lugar: null, comida: null, despues: null };
 function renderBoard(st) {
-  stage = st; const B = BOARDS[st], grid = $("#plans");
+  stage = boardStage = st; const B = BOARDS[st], grid = $("#plans");
   $("#bEye").textContent = B.eye; $("#bTitle").textContent = B.title; $("#bSub").textContent = B.sub;
+  $("#spinBtn").textContent = { lugar: "🎡 ¿No sabes a dónde? Gira la ruleta", comida: "🎡 ¿No sabes qué comer? Gira la ruleta", despues: "🎡 ¿No sabes? Gira la ruleta" }[st];
   $$("#stepDots button").forEach(b => { const k = b.dataset.st; b.classList.toggle("on", k === st); b.classList.toggle("done", !!elec[k]); b.disabled = !(editing && elec[k]) && k !== st; });
   $("#cats").innerHTML = B.cats ? CATS.map(([k, t], i) => `<button class="cat${i ? "" : " on"}" data-cat="${k}">${t}</button>`).join("") : "";
   grid.innerHTML = B.ids.map(id => PLANES.find(x => x.id === id)).filter(Boolean).map((p, i) => `<button class="dest${elec[st]?.id === p.id ? " chosen" : ""}" data-plan="${p.id}" data-cat="${p.cat}" style="--i:${i}">
@@ -3701,14 +3811,111 @@ document.addEventListener("click", e => {
   b.classList.add("picked"); AudioFX.paper(); buzz(20);
   if (p.id === "otra") { $("#planOther").hidden = false; setTimeout(() => { $("#planOther").scrollIntoView({ behavior: "smooth", block: "center" }); $("#planOtherText").focus(); }, 250); return; }
   $("#planOther").hidden = true;
-  setTimeout(() => playPlan(p), reduced ? 0 : 450);
+  pickFx(b).then(o => playPlan(p, o));
 });
+// la tarjeta elegida salta al centro, late y desde ella se abre la animación
+function pickFx(b) {
+  const r = b.getBoundingClientRect(), o = { x: innerWidth / 2, y: innerHeight * .45 };
+  if (reduced) return Promise.resolve(o);
+  const z = document.createElement("div"); z.className = "zoomtile"; z.textContent = $(".d-ico", b).textContent;
+  Object.assign(z.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" });
+  document.body.append(z);
+  const dx = o.x - (r.left + r.width / 2), dy = o.y - (r.top + r.height / 2);
+  AudioFX.chime();
+  return z.animate([
+    { transform: "none" },
+    { transform: `translate(${dx * .5}px, ${dy * .5}px) scale(1.4) rotate(-6deg)`, offset: .45 },
+    { transform: `translate(${dx}px, ${dy}px) scale(1.9) rotate(0deg)`, offset: .8 },
+    { transform: `translate(${dx}px, ${dy}px) scale(1.75)` },
+  ], { duration: 650, easing: "cubic-bezier(.3,.7,.2,1)", fill: "forwards" }).finished.then(() => { setTimeout(() => z.remove(), 380); return o; });
+}
 $("#planOtherGo").addEventListener("click", () => {
   const txt = $("#planOtherText").value.trim();
   if (!txt) { $("#planOtherText").focus(); return; }
-  playPlan({ id: "otra", t: txt, msg: txt, scene: "marquee" });
+  const r = $("#planOtherGo").getBoundingClientRect();
+  playPlan({ id: "otra", t: txt, msg: txt, scene: "marquee" }, { x: r.left + r.width / 2, y: r.top + r.height / 2 });
 });
 renderBoard("lugar");
+function flyToChip(icon, st) {
+  const from = $("#pfIco").getBoundingClientRect(), chip = $(`#stepDots [data-st="${st}"]`);
+  if (reduced || !chip) return;
+  const f = document.createElement("span"); f.className = "flyico"; f.textContent = icon;
+  Object.assign(f.style, { left: from.left + "px", top: from.top + "px" }); document.body.append(f);
+  setTimeout(() => {
+    const to = chip.getBoundingClientRect();
+    const dx = to.left + to.width / 2 - (from.left + from.width / 2), dy = to.top + to.height / 2 - (from.top + from.height / 2);
+    f.animate([{ transform: "none" }, { transform: `translate(${dx * .4}px, ${dy * .6 - 80}px) scale(1.2) rotate(-12deg)`, offset: .5 }, { transform: `translate(${dx}px, ${dy}px) scale(.4)`, opacity: .2 }],
+      { duration: 800, easing: "cubic-bezier(.4,.1,.3,1)", fill: "forwards" }).finished.then(() => { f.remove(); const c = $(`#stepDots [data-st="${st}"]`); c?.classList.remove("got"); void c?.offsetWidth; c?.classList.add("got"); AudioFX.pencil(); });
+  }, 420);
+}
+// ---------- Ruleta: si no sabe qué elegir ----------
+let wheelOpts = [], wheelRot = 0, wheelWin = null, spinning = false;
+const SLICE_C = ["#ff9ab8", "#fff4f7", "#ffd6e2", "#e9c46f", "#ff7aa0", "#fbe9ee"];
+function openWheel() {
+  const pool = $$("#plans .dest:not(.off)").map(d => PLANES.find(x => x.id === d.dataset.plan)).filter(Boolean);
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  wheelOpts = pool.slice(0, Math.min(10, pool.length));
+  const n = wheelOpts.length, sl = 360 / n, rad = a => (a - 90) * Math.PI / 180;
+  $("#wheel").innerHTML = wheelOpts.map((p, i) => {
+    const a0 = rad(i * sl - sl / 2), a1 = rad(i * sl + sl / 2), R = 96;
+    return `<path d="M0 0 L${(R * Math.cos(a0)).toFixed(2)} ${(R * Math.sin(a0)).toFixed(2)} A${R} ${R} 0 0 1 ${(R * Math.cos(a1)).toFixed(2)} ${(R * Math.sin(a1)).toFixed(2)} Z" fill="${SLICE_C[i % SLICE_C.length]}" stroke="#fff" stroke-width="1.2"/>
+      <g transform="rotate(${i * sl})"><text x="0" y="-68" style="font-size:${n > 8 ? 19 : 23}px">${p.icon}</text></g>`;
+  }).join("");
+  $("#wheelBulbs").innerHTML = Array.from({ length: 16 }, (_, i) => `<i style="transform:rotate(${i * 22.5}deg) translateY(calc(-1 * (min(42vw, 170px) + 9px)));animation-delay:${(i % 2) * .5}s"></i>`).join("");
+  $("#wheelTitle").textContent = { lugar: "¿A dónde vamos?", comida: "¿Qué comemos?", despues: "¿Y después?" }[boardStage] || "Que el destino decida";
+  $("#wheelRes").innerHTML = "<small>Toca girar</small>"; $("#wheelGo").hidden = true; $("#wheelSpin").textContent = "Girar 🎡";
+  wheelRot = 0; $("#wheel").style.transform = "rotate(0deg)";
+  $("#wheelFx").hidden = false; AudioFX.paper();
+}
+function spinWheel() {
+  if (spinning || !wheelOpts.length) return;
+  spinning = true; $("#wheelGo").hidden = true; $("#wheelRes").innerHTML = "<small>Girando…</small>";
+  const n = wheelOpts.length, sl = 360 / n, idx = Math.floor(Math.random() * n);
+  const start = wheelRot, base = Math.ceil(start / 360) * 360;
+  const end = base + 360 * (5 + Math.floor(Math.random() * 2)) - idx * sl + (Math.random() - .5) * sl * .6;
+  const D = reduced ? 10 : 5200, t0 = performance.now(), ease = t => 1 - Math.pow(1 - t, 4);
+  let lastSlice = Math.floor((start + sl / 2) / sl);
+  const step = now => {
+    const k = Math.min(1, (now - t0) / D), r = start + (end - start) * ease(k);
+    $("#wheel").style.transform = `rotate(${r.toFixed(2)}deg)`;
+    const sIdx = Math.floor((r + sl / 2) / sl);
+    if (sIdx !== lastSlice) { lastSlice = sIdx; AudioFX.pencil(); const pt = $("#wheelPtr"); pt.classList.remove("tick"); void pt.offsetWidth; pt.classList.add("tick"); }
+    if (k < 1) requestAnimationFrame(step);
+    else {
+      wheelRot = end; spinning = false; wheelWin = wheelOpts[idx];
+      $("#wheelRes").innerHTML = `<small>La ruleta eligió</small><b>${wheelWin.icon} ${wheelWin.t}</b>`;
+      $("#wheelGo").hidden = false; $("#wheelSpin").textContent = "Girar otra vez";
+      AudioFX.tada(); burst(110); buzz([30, 50, 30]);
+    }
+  };
+  requestAnimationFrame(step);
+}
+$("#spinBtn").addEventListener("click", openWheel);
+$("#wheelSpin").addEventListener("click", spinWheel);
+$("#wheelClose").addEventListener("click", () => { if (!spinning) $("#wheelFx").hidden = true; });
+$("#wheelGo").addEventListener("click", () => {
+  const p = wheelWin; if (!p) return;
+  $$(".dest").forEach(c => c.classList.toggle("picked", c.dataset.plan === p.id));
+  const o = { x: innerWidth / 2, y: innerHeight * .42 };
+  $("#wheelFx").animate([{ opacity: 1 }, { opacity: 0 }], { duration: reduced ? 0 : 300 }).finished.then(() => { $("#wheelFx").hidden = true; });
+  playPlan(p, o);
+});
+
+// ---------- Ambiente: luces suaves y corazoncitos flotando ----------
+(() => {
+  if (reduced) return;
+  const C = ["rgba(255,122,160,.55)", "rgba(255,182,206,.5)", "rgba(233,196,111,.45)", "rgba(255,92,138,.4)"];
+  $("#ambient").innerHTML = Array.from({ length: 14 }, (_, i) => `<i style="left:${(Math.random() * 100).toFixed(1)}%;--s:${(40 + Math.random() * 110).toFixed(0)}px;--c:${C[i % 4]};--d:${(16 + Math.random() * 14).toFixed(1)}s;--w:${(-Math.random() * 24).toFixed(1)}s;--x:${((Math.random() - .5) * 80).toFixed(0)}px;--o:${(.35 + Math.random() * .4).toFixed(2)}"></i>`).join("") +
+    Array.from({ length: 10 }, (_, i) => `<b style="left:${(Math.random() * 100).toFixed(1)}%;--s:${(10 + Math.random() * 14).toFixed(0)}px;--c:${["#ff9ab8", "#ffd6e2", "#e9c46f"][i % 3]};--d:${(14 + Math.random() * 12).toFixed(1)}s;--w:${(-Math.random() * 20).toFixed(1)}s;--x:${((Math.random() - .5) * 60).toFixed(0)}px;--o:${(.4 + Math.random() * .4).toFixed(2)}">♥</b>`).join("");
+})();
+// los emojis se dibujan una vez antes de necesitarlos, para que el tablero no se trabe al aparecer
+setTimeout(() => {
+  const w = document.createElement("div");
+  Object.assign(w.style, { position: "fixed", left: "0", top: "0", opacity: ".01", pointerEvents: "none", fontSize: "2.2rem", width: "10px", overflow: "hidden", zIndex: "-1" });
+  w.textContent = PLANES.map(p => p.icon).join("") + "🍣🍙🍤🥟🍱🥢🍵🍟🥤😋🧀🍅🌿🥐🍰🍓🥪🧃🌼🌷🦋⛱️🐚🕊️🎈💗🌸🍿🎬🍫🧄🥕🍝🌶️🎲🧩🏆🎤💃🕺🌻🍭🎠🎆🖼️🎨🗿👗👟👜🛍️🎁💐💳😴🥰🧸👵☕🫖🏋️‍♀️🏋️💪💦🏃‍♀️🏃🏅🚴‍♀️🚴🌲🚂🚃🎫🧑‍🦰👩🍃🥂🍷🍽️🌹✨♨️🛶🦅🐠🐟🐡🐙🐧🦭🔦🗝️⏱️🎉🎳🔴";
+  document.body.append(w); setTimeout(() => w.remove(), 4000);
+}, 1500);
+
 // la tarjeta de embarque / pase con las tres elecciones
 function fillPass() {
   const L = elec.lugar, C = elec.comida, A = elec.despues;
@@ -3917,17 +4124,25 @@ function planScene(p) {
     default: return ["pf-night pf-premiere", stars(60) + marquee(p.t) + rising(14, 8)];
   }
 }
-function playPlan(p) {
+const ASK = { lugar: "¿Vamos aquí?", comida: "¿Comemos esto?", despues: "¿Y después, esto?" };
+function playPlan(p, origin) {
   planActual = p;
   const fx = $("#planFx"), stage = $("#pfStage");
   const [cls, html] = planScene(p);
   stage.className = "pf-stage " + cls;
-  stage.innerHTML = `<i class="pf-flash"></i>` + html + (p.scene === "marquee" || p.id === "cine" ? "" : `<div class="pf-msg">${p.msg}</div>`);
+  stage.innerHTML = `<i class="pf-dim"></i>` + html + (p.scene === "marquee" || p.id === "cine" ? "" : `<div class="pf-msg">${p.msg}</div>`);
   clearInterval(window._reps);
   if (p.id === "gym") { let n = 0; window._reps = setInterval(() => { const r = $("#pfReps"), k = $("#pfKiss"); if (!r) return clearInterval(window._reps); n++; r.textContent = n; k.textContent = n; if (n > 11) clearInterval(window._reps); }, 400); }
-  $("#pfTitle").textContent = p.t;
+  $("#pfTitle").textContent = p.t; $("#pfAsk").textContent = ASK[boardStage] || "¿Este es el plan?";
+  $("#pfIco").textContent = p.id === "otra" ? "✍️" : (PLANES.find(x => x.id === p.id)?.icon || "💖");
   $("#pfCard").hidden = true;
-  fx.hidden = false;
+  fx.hidden = false; fx.style.opacity = "";
+  if (origin && !reduced) {
+    const R = Math.hypot(Math.max(origin.x, innerWidth - origin.x), Math.max(origin.y, innerHeight - origin.y));
+    fx.classList.add("revealing");
+    fx.animate([{ clipPath: `circle(40px at ${origin.x}px ${origin.y}px)` }, { clipPath: `circle(${R + 20}px at ${origin.x}px ${origin.y}px)` }],
+      { duration: 750, easing: "cubic-bezier(.6,0,.2,1)" }).finished.then(() => fx.classList.remove("revealing"));
+  }
   clearTimeout(window._pp1); clearTimeout(window._pp2); (window._ppx || []).forEach(clearTimeout);
   if (p.scene === "marquee" && !reduced) {
     // 3, 2, 1… telón… ¡estreno!
@@ -3948,12 +4163,17 @@ $("#pfYes").addEventListener("click", () => {
   elec[stage] = { id: p.id, t: p.t, icon, propio };
   if (stage === "lugar") { planElegido = p.t; planPropio = propio; planIcon = icon; }
   fillPass(); updateWa();
-  $("#planFx").hidden = true; clearInterval(window._reps);
+  clearInterval(window._reps);
   AudioFX.kiss(); burst(60);
+  flyToChip(icon, stage);
+  $("#planFx").animate([{ opacity: 1 }, { opacity: 0 }], { duration: reduced ? 0 : 380, easing: "ease" }).finished.then(() => { $("#planFx").hidden = true; });
   if (editing) { editing = false; go("entrada"); rain(3000); return; }
-  if (stage === "lugar") { renderBoard("comida"); go("despues"); flapBoard(); }
-  else if (stage === "comida") go("combo");
-  else go("cuando");
+  const next = () => {
+    if (stage === "lugar") { renderBoard("comida"); go("despues"); flapBoard(); }
+    else if (stage === "comida") go("combo");
+    else go("cuando");
+  };
+  setTimeout(next, reduced ? 0 : 380);
 });
 
 // ---------- Mensaje de voz de Diego (al final) ----------
@@ -4032,7 +4252,10 @@ $("#ofBack").addEventListener("click", () => {
   $("#orderFx").hidden = true; $("#ofSlot").classList.remove("busy");
   rain(4000);
 });
-$("#pfNo").addEventListener("click", () => { $("#planFx").hidden = true; clearInterval(window._reps); $$(".dest").forEach(c => c.classList.remove("picked")); });
+$("#pfNo").addEventListener("click", () => {
+  clearInterval(window._reps); $$(".dest").forEach(c => c.classList.remove("picked"));
+  $("#planFx").animate([{ opacity: 1 }, { opacity: 0 }], { duration: reduced ? 0 : 320 }).finished.then(() => { $("#planFx").hidden = true; });
+});
 $("#planBtn").addEventListener("click", () => {
   editing = true; renderBoard("lugar");
   go("despues"); flapBoard();
