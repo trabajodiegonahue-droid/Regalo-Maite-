@@ -1781,6 +1781,110 @@ body { touch-action: pan-y pinch-zoom; }
 .pf-lake { position: absolute; left: -5%; right: -5%; bottom: 0; height: 38%; background: linear-gradient(180deg, #3a8ab8, #1a5a8a); }
 .pf-lake::after { content: ""; position: absolute; left: 30%; right: 30%; top: 0; height: 40%; background: linear-gradient(180deg, rgba(255,255,255,.35), transparent); clip-path: polygon(0 0, 100% 0, 58% 100%, 42% 100%); }
 
+/* =================== HABITACIÓN: la puerta, nuestras fotos y la carta =================== */
+.doors { background: radial-gradient(90% 60% at 50% 40%, #2a1a22, #0a0507 75%); }
+.doors .transom, .doors .door--r, .doors .front { display: none; }
+.door--l { left: 9%; right: 9%; width: auto; top: 9%; bottom: 0; border: 0; border-radius: 6px 6px 0 0; transform-origin: 0 50%;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.25), transparent 6%, transparent 94%, rgba(0,0,0,.3)),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.05) 0 3px, transparent 3px 11px),
+    linear-gradient(180deg, #b77a4a, #8a5530 60%, #6b3f22);
+  box-shadow: inset 0 0 0 10px #5a3420, 0 0 0 10px #3a2014, 0 0 60px rgba(255,180,120,.25);
+  transition: transform 1.6s cubic-bezier(.6,0,.2,1); }
+.door--l::before { content: ""; position: absolute; left: 14%; right: 14%; top: 7%; height: 38%; border-radius: 4px; transform: none; width: auto; aspect-ratio: auto;
+  background: none; box-shadow: inset 0 0 0 4px rgba(60,30,14,.5), inset 0 0 0 7px rgba(255,220,180,.12); filter: none; }
+.door--l::after { content: ""; position: absolute; left: 14%; right: 14%; top: 51%; height: 40%; border-radius: 4px; text-align: left;
+  box-shadow: inset 0 0 0 4px rgba(60,30,14,.5), inset 0 0 0 7px rgba(255,220,180,.12); }
+.door--l .bar { left: auto; right: 9%; top: 50%; width: 22px; height: 22px; border: 0; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff3c4, #c9a35a 55%, #7a5d2e); box-shadow: 0 3px 6px rgba(0,0,0,.5); }
+.door--l .kick, .door--l .lock { display: none; }
+.doors.open .door--l { transform: perspective(900px) rotateY(-100deg); }
+.doors::before { content: ""; position: absolute; left: 9%; right: 9%; top: 9%; bottom: 0; background: radial-gradient(80% 60% at 50% 60%, #ffd9a0, #c9784a 70%); opacity: 0; transition: opacity 1.2s ease .3s; }
+.doors.open::before { opacity: 1; }
+.door-lights { position: absolute; left: 4%; right: 4%; top: 5%; height: 34px; z-index: 3; border-top: 2px solid rgba(40,30,30,.9); border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  background: radial-gradient(circle, #ffe9a8 0 4px, rgba(255,220,140,.55) 5px, transparent 10px) 0 6px / 26px 22px repeat-x; animation: chase 1.4s steps(2) infinite; pointer-events: none; }
+.door-sign { position: absolute; left: 50%; top: 21%; z-index: 3; transform: translateX(-50%) rotate(-3deg); transform-origin: 50% -30px; padding: .55rem 1.1rem .6rem; border-radius: 10px;
+  background: linear-gradient(180deg, #fff8ec, #f2e2c4); box-shadow: 0 8px 18px rgba(0,0,0,.4); font: 400 1.7rem/1 var(--f-script); color: var(--stamp); white-space: nowrap;
+  animation: signSwing 3.2s ease-in-out infinite alternate; transition: opacity .5s; pointer-events: none; }
+.door-sign::before { content: ""; position: absolute; left: 22%; right: 22%; top: -30px; height: 30px; border: 2px solid #c9a35a; border-bottom: 0; border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+@keyframes signSwing { from { transform: translateX(-50%) rotate(-4deg); } to { transform: translateX(-50%) rotate(3deg); } }
+.doors.open .door-sign, .doors.open .door-mat { opacity: 0; }
+.door-mat { position: absolute; left: 50%; bottom: 3%; z-index: 3; transform: translateX(-50%); padding: .55rem 1.6rem; border-radius: 8px; background: repeating-linear-gradient(90deg, #8a5a34 0 4px, #a36c40 4px 8px); color: #fff3e0;
+  font: 700 .72rem/1 var(--f-ui); letter-spacing: .3em; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,.5); transition: opacity .5s; pointer-events: none; }
+.knock { bottom: 12%; }
+
+/* la habitación en 3D */
+.world[data-kind=table] { background: linear-gradient(180deg, #3a2428 0 8%, #efc3cc 8%); }
+.floor--table { background:
+  repeating-linear-gradient(180deg, rgba(0,0,0,.22) 0 2px, transparent 2px 260px),
+  repeating-linear-gradient(90deg, #5a3620 0 2px, #8a5a34 2px 46px, #7a4e2c 46px 48px, #946240 48px 92px); }
+.ceiling--table { background:
+  radial-gradient(circle, #ffe2a0 0 3px, rgba(255,210,130,.55) 5px, transparent 12px) 0 0 / 60px 120px,
+  radial-gradient(circle, #ffb3c7 0 3px, rgba(255,150,180,.5) 5px, transparent 12px) 30px 60px / 60px 120px,
+  linear-gradient(90deg, #2a1a1c, #3a2428 50%, #2a1a1c); }
+.wall--table { background:
+  radial-gradient(circle, #ffe2a0 0 3px, rgba(255,210,130,.5) 5px, transparent 11px) 0 6% / 44px 20px repeat-x,
+  linear-gradient(180deg, transparent 0 70%, #e9d6c0 70% 71%, #fff4ea 71% 72%, transparent 72%),
+  linear-gradient(180deg, transparent 0 72%, #f2e6d8 72%),
+  radial-gradient(circle, rgba(179,18,47,.16) 0 2px, transparent 3px) 0 0 / 34px 34px,
+  linear-gradient(180deg, #f7d6dc, #efc3cc 70%); }
+.wall--table::after { opacity: .45; }
+.back--room { display: grid; place-items: center; align-content: center; gap: 5%; background:
+  radial-gradient(circle, #ffe2a0 0 3px, rgba(255,210,130,.5) 5px, transparent 11px) 0 6% / 44px 20px repeat-x,
+  linear-gradient(180deg, transparent 0 72%, #f2e6d8 72%),
+  linear-gradient(180deg, #f7d6dc, #efc3cc 70%); }
+.back--room .neon { font: 400 2.6rem/1 var(--f-script); color: #fff; text-shadow: 0 0 6px #ff5c8a, 0 0 18px #ff2f6d, 0 0 40px rgba(255,47,109,.6); animation: neon 2.6s ease-in-out infinite; margin-top: -6%; }
+.room-win { position: relative; width: 52%; aspect-ratio: 4 / 3.4; border: 10px solid #fff8ef; border-radius: 6px; box-shadow: 0 0 0 4px #e0c9b0, 0 0 50px rgba(150,170,255,.35);
+  background: radial-gradient(circle at 72% 28%, #fffbe8 0 18px, rgba(255,245,200,.3) 22px, transparent 50px), radial-gradient(circle, #fff 0 1px, transparent 2px) 0 0 / 34px 30px, linear-gradient(180deg, #0a1438, #26306a); }
+.room-win::before, .room-win::after { content: ""; position: absolute; background: #fff8ef; }
+.room-win::before { left: 50%; top: 0; bottom: 0; width: 8px; margin-left: -4px; } .room-win::after { top: 50%; left: 0; right: 0; height: 8px; margin-top: -4px; }
+.room-win i { position: absolute; top: -18px; bottom: -14px; width: 32%; z-index: 1; background: repeating-linear-gradient(90deg, #e98aa6 0 10px, #f2a7bb 10px 20px); box-shadow: 0 6px 12px rgba(0,0,0,.2); }
+.room-win i:first-child { left: -22%; border-radius: 0 0 40% 0; } .room-win i:last-child { right: -22%; border-radius: 0 0 0 40%; }
+.photo-line { position: absolute; top: 16%; height: 2px; background: #6b4426; border-radius: 50%; }
+.pol { position: absolute; top: 18%; padding: 10px 10px 34px; background: #fffdf8; box-shadow: 0 10px 22px rgba(0,0,0,.35); transform-origin: 50% -16px; animation: polSway 4s ease-in-out infinite alternate; transition: box-shadow .5s, filter .5s; }
+.pol::before { content: ""; position: absolute; left: 50%; top: -16px; width: 12px; height: 26px; margin-left: -6px; border-radius: 3px; background: linear-gradient(180deg, #c98a4a, #8a5a2a); z-index: 2; }
+.pol .ph { position: relative; width: 100%; aspect-ratio: 3 / 4; background: #e9dfd2; overflow: hidden; display: grid; place-items: center; font-size: 3rem; }
+.pol .ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pol .ph img + img { opacity: 0; transition: opacity .9s; } .pol .ph img + img.on { opacity: 1; }
+.pol b { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center; font: 400 1.4rem/1 var(--f-script); color: var(--stamp); }
+@keyframes polSway { from { transform: rotate(var(--r, -3deg)); } to { transform: rotate(calc(var(--r, -3deg) * -0.6)); } }
+.pol, .frame3d, .tv3d, .photo-line { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.pol.seen, .frame3d.seen, .tv3d.seen { filter: brightness(1.12); box-shadow: 0 0 0 3px rgba(255,214,226,.9), 0 0 50px 10px rgba(255,190,210,.55); }
+.frame3d { position: absolute; top: 20%; border: 14px solid #c9a35a; box-shadow: inset 0 0 0 3px #7a5d2e, 0 12px 26px rgba(0,0,0,.35); background: #e9dfd2; overflow: hidden; transition: box-shadow .5s, filter .5s; }
+.frame3d img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.frame3d img + img { opacity: 0; transition: opacity .9s; } .frame3d img + img.on { opacity: 1; }
+.tv3d { position: absolute; top: 24%; padding: 10px; border-radius: 10px; background: #111; box-shadow: 0 0 0 3px #333, 0 0 60px rgba(150,180,255,.35); transition: box-shadow .5s, filter .5s; }
+.tv3d::after { content: ""; position: absolute; left: 50%; bottom: -60px; width: 50%; height: 60px; margin-left: -25%; background: linear-gradient(180deg, #6b4426, #4a2c1a); border-radius: 0 0 6px 6px; }
+.tv3d .scr { width: 100%; aspect-ratio: 9 / 13; background: #000 center / cover no-repeat; display: grid; place-items: center; color: #ff7aa0; font-size: 3rem; overflow: hidden; }
+.tv3d video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rug3d { border-radius: 50%; background: radial-gradient(ellipse, #ffd6e2 0 55%, #f2a7bb 56% 62%, #ffd6e2 63%); opacity: .95; }
+.lamp3d { display: grid; place-items: end center; }
+.lamp3d::before { content: ""; position: absolute; left: 50%; bottom: 0; width: 6px; height: 70%; margin-left: -3px; background: #3a2a22; }
+.lamp3d::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 34%; clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%); background: linear-gradient(180deg, #fff1d6, #ffd08a); box-shadow: 0 0 60px 20px rgba(255,210,140,.45); }
+.look-hint { position: absolute; left: 50%; top: 12%; z-index: 3; transform: translateX(-50%); padding: .5rem 1rem; border-radius: 999px; background: rgba(20,8,14,.6); color: #ffd6e2; font: 400 1.4rem/1 var(--f-script); pointer-events: none; animation: fadeIn .6s ease; white-space: nowrap; }
+
+/* sobre: el frente con el mensaje */
+.env-face { position: absolute; inset: 0; z-index: 6; border-radius: 6px; display: grid; place-content: center; justify-items: center; gap: .35rem; text-align: center; padding: 8%;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .34  0 0 0 0 .22  0 0 0 .08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"), var(--env);
+  box-shadow: inset 0 0 0 1px var(--env-dark); }
+.env-face b { font: 400 clamp(1.25rem, 6vw, 1.75rem)/1.15 var(--f-script); color: var(--stamp); }
+.env-face em { font: 400 clamp(1.4rem, 7vw, 2rem)/1 var(--f-script); color: var(--ink); font-style: normal; }
+.env-face small { font: 500 .62rem/1 var(--f-ui); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); }
+.env-face .stampbox { position: absolute; right: 7%; top: 9%; width: 13%; aspect-ratio: .8; border: 2px dashed #b3122f; display: grid; place-items: center; font-size: .9rem; color: #b3122f; transform: rotate(4deg); }
+/* el No se esconde detrás del Sí */
+.btn--si { position: relative; z-index: 22; }
+.btn--no.hiding { transition: left .6s cubic-bezier(.3,1.4,.5,1), top .6s cubic-bezier(.3,1.4,.5,1), transform .6s; z-index: 21; transform: scale(.82) rotate(-8deg); pointer-events: none; }
+/* tableros de elección */
+#despues .scene-title { font-size: clamp(1.5rem, 6.6vw, 2rem); }
+.step-dots { display: flex; gap: .4rem; justify-content: center; }
+.step-dots button { border: 1px solid #5a3f48; background: rgba(255,255,255,.04); color: var(--muted); border-radius: 999px; padding: .32rem .7rem; font: 600 .72rem/1 var(--f-ui); }
+.step-dots button.on { background: var(--gold); border-color: var(--gold); color: var(--velvet); }
+.step-dots button.done { color: var(--cream-text); border-color: var(--gold-soft); }
+.step-dots button:disabled { opacity: .55; cursor: default; }
+.cats:empty { display: none; }
+#combo .combo fieldset:first-of-type { display: none; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
 }
@@ -1847,6 +1951,7 @@ body { touch-action: pan-y pinch-zoom; }
     <div class="cam" id="cam"></div>
   </div>
   <button class="doors" id="openBtn" aria-label="Abrir la puerta">
+    <i class="door-lights"></i><span class="door-sign"><span data-name>Maite</span> ♥ <span data-firma>Diego</span></span><span class="door-mat">Bienvenida</span>
     <span class="door door--l"><i class="bar"></i><i class="kick"></i><i class="lock" style="left:22%;top:30%">🔒</i><i class="lock" style="left:64%;top:78%">💗</i></span>
     <span class="door door--r"><i class="bar"></i><i class="kick"></i><i class="lock" style="left:30%;top:76%">🔐</i><i class="lock" style="left:70%;top:28%">💗</i></span>
     <span class="transom">
@@ -1863,7 +1968,7 @@ body { touch-action: pan-y pinch-zoom; }
     <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
     <div><b>Sube el volumen</b><span>Esta cita es con sonido. Si puedes, usa audífonos.</span></div>
   </div>
-  <span class="knock" id="knock">Toca el portón para entrar</span>
+  <span class="knock" id="knock">Toca la puerta para entrar</span>
   <span class="pick-hint" id="pickHint" hidden>Toca la carta para tomarla</span>
   <div class="crowd" id="crowd" hidden></div>
   <div class="flowers" id="flowers" aria-hidden="true"></div>
@@ -1882,14 +1987,14 @@ body { touch-action: pan-y pinch-zoom; }
       <span class="pencil" id="pencil" hidden aria-hidden="true"><svg viewBox="0 0 40 40" width="40" height="40"><g transform="rotate(-38 0 20)"><polygon points="0,20 5,18 5,22" fill="#3a3532"/><polygon points="3,18.6 12,15 12,25 3,21.4" fill="#e7c49a"/><rect x="12" y="15" width="22" height="10" fill="#f2b632"/><rect x="12" y="18.5" width="22" height="3" fill="#e0a21f"/><rect x="34" y="15" width="3.5" height="10" fill="#a9adb6"/><rect x="37.5" y="15" width="5" height="10" rx="2" fill="#ef8fa3"/></g></svg></span>
       <div class="monogram" aria-hidden="true"><i></i><span data-inicial>M</span><i></i></div>
       <p class="greet">Hola <span data-name>Maite</span>, <span data-apodo-ella>mi wawita mosha</span>, ¿cómo estái?:</p>
-      <p>Ya erís mi polola y yo feliz, cachai, pero quiero seguir sumando momentos lindos contigo, así como full. Así que te quiero invitar oficialmente a salir conmigo. ¿A dónde? Esa es la gracia: esta vez decides tú, cachai.</p>
-      <p>Y obvio que incluye todo, cero costo pa' ti, cachai:</p>
+      <p>Ya erís mi polola y yo feliz, cachai, pero quiero que sigamos creando momentos lindos juntos, así como full. Así que te quiero invitar oficialmente a salir conmigo.</p>
+      <p>Y esta vez tú decides todo, cero costo pa' ti, cachai:</p>
       <ul>
-        <li>Una cita conmigo donde tú querái y haciendo lo que tú querái, demás que sí.</li>
-        <li>Tus antojos favoritos, los que querái.</li>
-        <li>Y la posibilidad, así como full real, de darte un beso cada vez que te rías. Y si no te ríes igual, cachai.</li>
+        <li>A dónde vamos: el lugar que tú querái, demás que sí.</li>
+        <li>Qué comemos: lo que se te antoje.</li>
+        <li>Y qué hacemos después, pa' que la cita no se acabe tan rápido. Con beso incluido cada vez que te rías, cachai.</li>
       </ul>
-      <p>Tú elegís el plan y el día; yo me encargo del resto, cachai.</p>
+      <p>Tú elegís, yo me encargo del resto y me apunto a lo que sea, cachai.</p>
       <p>Bueno, eso. Erís lo más lindo que me ha pasado y quiero que tengamos muchos recuerdos juntos, cachai. Quedo atento a tu respuesta, porfa no me dejes en visto.</p>
       <div class="sign"><small>Besitos y atentamente,</small><svg class="sig" viewBox="0 0 320 76" role="img" aria-label="Firma"><defs><clipPath id="sigClip"><rect id="sigRect" x="0" y="-20" width="0" height="120"/></clipPath></defs><text x="316" y="56" text-anchor="end" clip-path="url(#sigClip)" data-firma>Diego</text></svg></div>
       <p class="alias">tu <span data-apodo>wawita</span></p>
@@ -1909,7 +2014,7 @@ body { touch-action: pan-y pinch-zoom; }
     <div class="verdict" id="verdict" hidden>
       <p class="scold" id="scold" hidden>¿Por qué quisiste apretar No???</p>
       <p>Respuesta registrada: <b>Sí</b>. Era la única opción disponible. Nuestra cita queda oficialmente confirmada.</p>
-      <button class="btn btn--gold" id="goBol">Ir a elegir el plan 💌</button>
+      <button class="btn btn--gold" id="goBol">Elegir a dónde vamos 💌</button>
     </div>
   </section>
 
@@ -1934,9 +2039,9 @@ body { touch-action: pan-y pinch-zoom; }
 
   <!-- 3. Combo -->
   <section class="scene" id="combo" hidden>
-    <div class="bucket" aria-hidden="true">🍦</div>
-    <h2 class="scene-title">Antojos para la cita</h2>
-    <p class="scene-sub">Elige con los botones o escribe lo que quieras. Todo corre por mi cuenta.</p>
+    <div class="bucket" aria-hidden="true">🥤</div>
+    <h2 class="scene-title">¿Y para tomar y de postre?</h2>
+    <p class="scene-sub">Para acompañar la comida. Todo corre por mi cuenta.</p>
     <form class="combo" id="comboForm">
       <fieldset>
         <legend>Para picar</legend>
@@ -1967,7 +2072,7 @@ body { touch-action: pan-y pinch-zoom; }
       </fieldset>
 
       <fieldset>
-        <legend>Extra (puedes elegir varios)</legend>
+        <legend>De postre (puedes elegir varios)</legend>
         <div class="chips">
           <label class="chip"><input type="checkbox" name="extra" id="e-choco" value="Chocolate" checked><span>Chocolate</span></label>
           <label class="chip"><input type="checkbox" name="extra" id="e-gomitas" value="Gomitas"><span>Gomitas</span></label>
@@ -1985,7 +2090,7 @@ body { touch-action: pan-y pinch-zoom; }
         </div>
       </fieldset>
 
-      <div class="row"><button class="btn btn--gold" type="submit">Confirmar antojos</button></div>
+      <div class="row"><button class="btn btn--gold" type="submit">Listo, sigamos 💌</button></div>
     </form>
   </section>
 
@@ -2017,7 +2122,7 @@ body { touch-action: pan-y pinch-zoom; }
           <label class="chip"><input type="radio" name="momento" value="Todo el día"><span>Todo el día</span></label>
         </div>
       </fieldset>
-      <div class="row"><button class="btn btn--gold" type="submit">Siguiente: antojos a bordo</button></div>
+      <div class="row"><button class="btn btn--gold" type="submit">Ver nuestra cita 💌</button></div>
     </form>
   </section>
 
@@ -2029,15 +2134,15 @@ body { touch-action: pan-y pinch-zoom; }
       <div class="ticket__main">
         <div class="foil" aria-hidden="true"><span><b>Cita</b>privada</span></div>
         <div class="ticket__brand"><strong>Paseo Nosotros ♥</strong><small>Pase para dos</small></div>
-        <small class="pass-lbl">El plan</small>
+        <small class="pass-lbl">Vamos a</small>
         <p class="ticket__movie"><span id="tIcon">💌</span> <span id="tPlan">Tú eliges</span></p>
         <dl class="ticket__grid">
           <div><dt>Día</dt><dd id="tFecha">—</dd></div>
           <div><dt>Momento</dt><dd id="tHora">—</dd></div>
-          <div><dt>Onda</dt><dd id="tVibra">—</dd></div>
-          <div><dt>Vestimenta</dt><dd id="tLook">—</dd></div>
-          <div class="wide"><dt>Antojos</dt><dd id="tCombo">—</dd></div>
-          <div class="wide"><dt>No puede faltar</dt><dd id="tFalta">—</dd></div>
+          <div class="wide"><dt>Comemos</dt><dd id="tComida">—</dd></div>
+          <div class="wide"><dt>Y después</dt><dd id="tDespues">—</dd></div>
+          <div class="wide"><dt>Para tomar y de postre</dt><dd id="tCombo">—</dd></div>
+          <i hidden id="tVibra"></i><i hidden id="tLook"></i><i hidden id="tFalta"></i>
           <div><dt>Invitada</dt><dd data-name>Maite</dd></div>
           <div><dt>Acompañante</dt><dd data-firma>Diego</dd></div>
         </dl>
@@ -2063,7 +2168,7 @@ body { touch-action: pan-y pinch-zoom; }
       <p class="together">Pololeando hace <b class="togetherTime">—</b></p>
     </div>
 
-    <div class="row"><button class="btn btn--gold" id="orderBtn">Mandarle mi reserva 💌</button><button class="btn btn--ghost" id="planBtn">Cambiar el plan</button></div>
+    <div class="row"><button class="btn btn--gold" id="orderBtn">Mandarle mi reserva 💌</button><button class="btn btn--ghost" id="planBtn">Cambiar algo</button></div>
     <a id="waBtn" href="https://api.whatsapp.com/send" target="_blank" rel="noopener" hidden>WhatsApp</a>
     <div class="voice" id="voice" hidden>
       <button class="voice-btn" id="voiceBtn" aria-label="Escuchar el mensaje de Diego">
@@ -2135,17 +2240,18 @@ body { touch-action: pan-y pinch-zoom; }
 
   <!-- 5. Después del cine -->
   <section class="scene" id="despues" hidden>
+    <div class="step-dots" id="stepDots"><button data-st="lugar">📍 Lugar</button><button data-st="comida">🍽️ Comida</button><button data-st="despues">🌙 Después</button></div>
     <div class="after-marquee">
-      <span class="eyebrow">Kiosco de planes</span>
-      <h2 class="scene-title">¿Qué quieres hacer conmigo?</h2>
+      <span class="eyebrow" id="bEye">Paso 1 de 3</span>
+      <h2 class="scene-title" id="bTitle">¿A dónde quieres ir?</h2>
     </div>
-    <p class="scene-sub">Elige uno. Tú decides, yo me apunto a lo que sea.</p>
+    <p class="scene-sub" id="bSub">Elige el lugar. Tú decides, yo me apunto a lo que sea.</p>
     <div class="cats" id="cats"></div>
     <div class="menu" id="plans"></div>
     <button class="dest dest--otra" data-plan="otra"><span class="d-ico" aria-hidden="true">✍️</span><b class="d-name">Lo que tú quieras</b><small>Escríbelo tú, yo me apunto</small><span class="d-tag">Elegido ♥</span></button>
     <div class="plan-other" id="planOther" hidden>
       <span class="po-title">Lo que tú quieras</span>
-      <label for="planOtherText"><span data-firma>Diego</span> se apunta a lo que sea. Escribe tu plan:</label>
+      <label for="planOtherText" id="planOtherLbl"><span data-firma>Diego</span> se apunta a lo que sea. Escríbelo aquí:</label>
       <input type="text" id="planOtherText" maxlength="60" placeholder="ir a la playa, karaoke, comer sushi…" autocomplete="off">
       <button class="btn btn--gold" id="planOtherGo">Ver mi plan</button>
     </div>
@@ -2190,7 +2296,7 @@ body { touch-action: pan-y pinch-zoom; }
       <div class="of-paper" id="ofPaper">
         <div class="of-head"><b>Reserva</b><small>Cita para dos · Paseo Nosotros</small></div>
         <dl class="of-lines" id="ofLines"></dl>
-        <div class="of-main" id="ofMain"><small>El plan que quiero</small><b id="ofPlan"></b><em id="ofMine" hidden>(lo escribí yo ✍️)</em></div>
+        <div class="of-main" id="ofMain"><small>Nuestra cita</small><b id="ofPlan"></b><em id="ofMine" hidden>(lo escribí yo ✍️)</em></div>
         <div class="of-total"><span>Total</span><span>$0 + 1 beso 💋</span></div>
         <div class="of-foot">Paga: <span data-firma>Diego</span> · Cliente favorita: <span data-name>Maite</span></div>
         <div class="of-bar" aria-hidden="true"></div>
@@ -2555,21 +2661,22 @@ function face(cls, w, h, tf, html = "") {
   cam.append(el);
   return el;
 }
-const camAt = (z, y, look) => `rotateX(${-look}deg) translate3d(0,${y}px,${z}px)`;
+const camAt = (z, y, look, yaw = 0) => `rotateX(${-look}deg) rotateY(${yaw}deg) translate3d(0,${y}px,${z}px)`;
 let slideTimer = null, wallTimers = [];
 function buildLobby(kind) {
   cam.innerHTML = "";
-  const W = innerWidth, H = innerHeight, D = Math.round(Math.max(2400, H * 2.8));
+  const W = innerWidth, H = innerHeight, D = kind === "table" ? Math.round(Math.max(1500, H * 1.9)) : Math.round(Math.max(2400, H * 2.8));
   const zt = -(D - 560), th = Math.round(H * .36), tw = Math.min(W * .7, 360), tdp = tw * .62;
+  const RW = kind === "table" ? Math.round(W * 1.9) : W;   // la habitación es más ancha que un pasillo
   dims = { W, H, D, zt, th, tw, kind };
   $("#world").dataset.kind = kind;
-  const floor = face("floor floor--" + kind, W, D, `translate3d(0,${H / 2}px,${-D / 2}px) rotateX(90deg)`);
+  const floor = face("floor floor--" + kind, RW, D, `translate3d(0,${H / 2}px,${-D / 2}px) rotateX(90deg)`);
   const fcs = getComputedStyle(floor);
   floor.style.backgroundImage = `radial-gradient(${tw * 1.3}px ${tw * 1.1}px at 50% ${zt + D / 2}px, rgba(255,220,150,.42), transparent), ` + fcs.backgroundImage;
   floor.style.backgroundSize = "100% 100%, " + fcs.backgroundSize;
   floor.style.backgroundPosition = "0 0, " + fcs.backgroundPosition;
   floor.style.backgroundRepeat = "no-repeat, " + fcs.backgroundRepeat;
-  face("ceiling ceiling--" + kind, W, D, `translate3d(0,${-H / 2}px,${-D / 2}px) rotateX(-90deg)`);
+  face("ceiling ceiling--" + kind, RW, D, `translate3d(0,${-H / 2}px,${-D / 2}px) rotateX(-90deg)`);
   const posters = [
     ["Estreno", "linear-gradient(160deg,#ffb36b,#c2185b 60%,#3a0b2a)"],
     ["Próximamente", "linear-gradient(160deg,#6be0ff,#3949ab 60%,#120b3a)"],
@@ -2609,9 +2716,22 @@ function buildLobby(kind) {
     const [col, name, em] = STALLS[i + (side === "l" ? 0 : 3)];
     return `<div class="stall" style="left:${x}px;width:${w}px;--a:${col}"><i class="aw"></i><span class="goods">${em.map(e => `<span>${e}</span>`).join("")}</span><b>${name}</b></div><i class="sconce" style="left:${side === "l" ? at - 110 : D - at + 110}px"></i>`;
   }).join("");
-  const sideHtml = side => kind === "candy" ? shelves(side) : kind === "sala" ? wallPics(side) : kind === "boleteria" ? bolPosters(side) : wallHtml(side);
-  face("wall wall--l wall--" + kind, D, H, `translate3d(${-W / 2}px,0,${-D / 2}px) rotateY(90deg)`, sideHtml("l"));
-  face("wall wall--r wall--" + kind, D, H, `translate3d(${W / 2}px,0,${-D / 2}px) rotateY(-90deg)`, sideHtml("r"));
+  // la habitación: fotos alrededor del lugar donde ella se detiene a mirar
+  const T0 = D - 890, ph = (n, alt) => FOTOS[n - 1] ? `<img src="${FOTOS[n - 1]}" alt="" decoding="sync">` : alt;
+  const roomWall = side => {
+    const at = (d, w) => side === "l" ? d - w / 2 : D - d - w / 2;
+    if (side === "l") {
+      const w = H * .2, caps = ["Nosotros", "Te amo", "Siempre"];
+      return `<i class="photo-line" style="left:${at(T0 - 330, 30)}px;width:${700}px"></i>` + [[2, 10], [4, 11], [6, 12]].map(([a, b], i) =>
+        `<div class="pol" style="left:${at(T0 - 300 + i * 270, w)}px;width:${w}px;--r:${[-4, 3, -2][i]}deg;animation-delay:${-i * 1.2}s"><div class="ph">${ph(a, "📷")}${FOTOS[b - 1] ? ph(b, "") : ""}</div><b>${caps[i]}</b></div>`).join("");
+    }
+    const fw = H * .22, tw = H * .2;
+    return [[8, 5], [3, 7]].map(([a, b], i) => `<div class="frame3d" style="left:${at(T0 - 300 + i * 560, fw)}px;width:${fw}px;height:${fw * 1.25}px">${ph(a, "")}${FOTOS[b - 1] ? ph(b, "") : ""}</div>`).join("") +
+      `<div class="tv3d" style="left:${at(T0 - 20, tw)}px;width:${tw}px"><div class="scr" style="${VIDEO_BG ? `background-image:url('${VIDEO_BG}')` : ""}">${VIDEO ? `<video muted loop playsinline preload="auto"><source src="${VIDEO}" type="video/mp4"><source src="${VIDEO_WEBM}" type="video/webm"></video>` : "♥"}</div></div>`;
+  };
+  const sideHtml = side => kind === "table" ? roomWall(side) : kind === "candy" ? shelves(side) : kind === "sala" ? wallPics(side) : kind === "boleteria" ? bolPosters(side) : wallHtml(side);
+  face("wall wall--l wall--" + kind, D, H, `translate3d(${-RW / 2}px,0,${-D / 2}px) rotateY(90deg)`, sideHtml("l"));
+  face("wall wall--r wall--" + kind, D, H, `translate3d(${RW / 2}px,0,${-D / 2}px) rotateY(-90deg)`, sideHtml("r"));
   if (kind === "candy") {
     face("back back--candy", W, H, `translateZ(${-D}px)`, `<b>Antojos</b>`);
     const ch = H * .3, cd = 150, cw = W * .86;
@@ -2660,10 +2780,21 @@ function buildLobby(kind) {
       face("seats", sw, sh, `translate3d(${W / 2 - sw / 2}px,${H / 2 - sh / 2}px,${z}px)`);
     }
   } else {
-    face(kind === "table" ? "back back--term" : "back", W, H, `translateZ(${-D}px)`, kind === "table"
-      ? `<div class="gazebo"><i class="gz-roof"></i><i class="gz-col"></i><i class="gz-col"></i><i class="gz-base"></i><div class="gz-sign"><small>Hoy decides</small><b>Tú</b><i><svg viewBox="0 0 100 100"><path d="M50 84 C20 62 8 46 8 32 C8 18 19 9 31 9 C40 9 46 14 50 21 C54 14 60 9 69 9 C81 9 92 18 92 32 C92 46 80 62 50 84 Z" fill="none" stroke="#ff7aa0" stroke-width="7" stroke-linejoin="round"/></svg></i></div></div>` : `<b>Sala ?</b>`);
+    face(kind === "table" ? "back back--room" : "back", RW, H, `translateZ(${-D}px)`, kind === "table"
+      ? `<b class="neon">${PLAN.nombre} ♥ ${PLAN.firma}</b><div class="room-win"><i></i><i></i></div>` : kind === "xx" ? `<div class="gazebo"><i class="gz-roof"></i><i class="gz-col"></i><i class="gz-col"></i><i class="gz-base"></i><div class="gz-sign"><small>Hoy decides</small><b>Tú</b><i><svg viewBox="0 0 100 100"><path d="M50 84 C20 62 8 46 8 32 C8 18 19 9 31 9 C40 9 46 14 50 21 C54 14 60 9 69 9 C81 9 92 18 92 32 C92 46 80 62 50 84 Z" fill="none" stroke="#ff7aa0" stroke-width="7" stroke-linejoin="round"/></svg></i></div></div>` : `<b>Sala ?</b>`);
   }
   if (kind === "table") {
+    face("rug3d", tw * 1.5, tw * 1.05, `translate3d(0,${H / 2 - 1}px,${zt}px) rotateX(90deg)`);
+    face("lamp3d", 70, H * .55, `translate3d(${W * .62}px,${H / 2 - H * .275}px,${zt - 200}px)`);
+    face("lamp3d", 70, H * .55, `translate3d(${-W * .62}px,${H / 2 - H * .275}px,${zt - 200}px)`);
+    // los cuadros cambian de foto escalonados y la tele muestra el baile
+    wallTimers.forEach(clearTimeout); wallTimers = [];
+    $$(".pol .ph, .frame3d", cam).forEach((frame, j) => {
+      const imgs = $$("img", frame);
+      if (imgs.length < 2) return;
+      const flip = () => { imgs[1].classList.toggle("on"); wallTimers.push(setTimeout(flip, 3800)); };
+      wallTimers.push(setTimeout(flip, 2600 + j * 520));
+    });
     face("beam", tw * 1.5, H / 2 + (H / 2 - th), `translate3d(0,${(-H / 2 + (H / 2 - th)) / 2}px,${zt - 2}px)`);
     face("table-leg", 22, th, `translate3d(0,${H / 2 - th / 2}px,${zt}px)`);
     face("table-skirt", tw, 30, `translate3d(0,${H / 2 - th + 15}px,${zt + tdp / 2}px)`);
@@ -2701,7 +2832,32 @@ function walk(duration = 4600) {
   anim.finished.then(() => { $("#skipBtn").hidden = true; }, () => {});
   return anim;
 }
-// Caminar a otra parte del cine (dulcería, sala) y volver a la página
+// Ya frente a la mesa: mira a la izquierda (nuestras fotos), a la derecha (más fotos y la tele) y vuelve a la carta
+async function lookAround() {
+  const { zt } = dims, T = -zt - 330;
+  const tv = $(".tv3d video", cam);
+  if (tv) { tv.muted = true; tv.play().catch(() => {}); }
+  const hint = document.createElement("span"); hint.className = "look-hint"; entry.append(hint);
+  const say = t => { hint.textContent = t; hint.style.animation = "none"; void hint.offsetWidth; hint.style.animation = ""; };
+  const seen = (sel, on) => $$(sel, cam).forEach(e => e.classList.toggle("seen", on));
+  const A = 64;
+  const steps = [
+    [camAt(T, 0, 14, 0), 0], [camAt(T, 0, 2, -A), .16], [camAt(T, 0, 2, -A - 6), .38], [camAt(T, 0, 2, A), .58], [camAt(T, 0, 2, A + 6), .82], [camAt(T, 0, 14, 0), 1],
+  ].map(([transform, offset]) => ({ transform, offset, easing: "cubic-bezier(.45,0,.25,1)" }));
+  const anim = cam.animate(steps, { duration: 9000, fill: "forwards" });
+  curWalk = anim; $("#skipBtn").hidden = false;
+  const tm = [setTimeout(() => { say("Nuestras fotos ♥"); seen(".pol", true); AudioFX.chime(); }, 1300),
+    setTimeout(() => { seen(".pol", false); }, 4200),
+    setTimeout(() => { say("Y nuestro baile 💃"); seen(".frame3d, .tv3d", true); }, 5400),
+    setTimeout(() => { seen(".frame3d, .tv3d", false); hint.remove(); }, 7600)];
+  await anim.finished.catch(() => {});
+  tm.forEach(clearTimeout); hint.remove(); seen(".pol, .frame3d, .tv3d", false);
+  $("#skipBtn").hidden = true;
+  phase = "table";
+  env3d.classList.add("glow");
+  $("#pickHint").hidden = false;
+}
+// Caminar a otra parte (dulcería, sala) y volver a la página
 // ---------- Público: aplausos continuos y flores ----------
 const FLOWERS = ["🌹", "💗", "🌸", "🌷", "💖", "🌺", "🌹"];
 let cheerTimers = [];
@@ -2816,11 +2972,7 @@ $("#openBtn").addEventListener("click", () => {
   setTimeout(() => {
     $("#openBtn").hidden = true;
     floatHearts(9000);
-    walk().onfinish = () => {
-      phase = "table";
-      env3d.classList.add("glow");
-      $("#pickHint").hidden = false;
-    };
+    walk(5200).onfinish = () => lookAround();
   }, 1000);
 });
 
@@ -2836,7 +2988,7 @@ function buildPov() {
   env.className = "pov-env";
   Object.assign(env.style, { left: L + "px", top: T + "px", width: W + "px", height: H + "px" });
   env.innerHTML = `<span class="env-back"></span><span class="env-front"></span><span class="env-flap"></span>
-    ${WAX_SEAL}<span class="env-to">Para: ${PLAN.apodoElla}</span>`;
+    ${WAX_SEAL}<span class="env-face"><span class="stampbox">♥</span><small>Para ${PLAN.apodoElla}</small><b>Creemos más momentos juntos</b><em>Te amo</em></span>`;
   const fw = W * .86, ph = fw * .42;
   const fold = document.createElement("div");
   fold.className = "fold";
@@ -2879,12 +3031,20 @@ entry.addEventListener("click", async () => {
     { transform: "none" },
   ], { duration: 1300, easing: "cubic-bezier(.3,.6,.2,1)", fill: "forwards" }).finished;
   card.remove(); entry.hidden = true;
+  $$("video", cam).forEach(v => v.pause());
   openEnvelope();
 });
 
 async function openEnvelope() {
   const { l, r, env, fold, W, H, L, T, fw, ph, vw, vh } = P;
-  $("#povHint").textContent = "Toca el sello para abrirlo"; $("#povHint").hidden = false;
+  // primero ve el frente; al tocar, le da la vuelta
+  $("#povHint").textContent = "Toca para darle la vuelta"; $("#povHint").hidden = false;
+  await tapOnce(pov);
+  AudioFX.paper();
+  await env.animate([{ transform: "none" }, { transform: "scaleX(0) rotate(-3deg)" }], { duration: reduced ? 0 : 320, easing: "ease-in" }).finished;
+  $(".env-face", env)?.remove();
+  await env.animate([{ transform: "scaleX(0) rotate(3deg)" }, { transform: "none" }], { duration: reduced ? 0 : 360, easing: "cubic-bezier(.2,.9,.3,1.2)" }).finished;
+  $("#povHint").textContent = "Toca el sello para abrirlo";
   await tapOnce(pov);
   $("#povHint").hidden = true;
   // 1) el pulgar derecho rompe el sello
@@ -3187,16 +3347,24 @@ function dodge(e) {
     x < si.right + 10 && x + r.width > si.left - 10 && y < si.bottom + 10 && y + r.height > si.top - 10));
   no.style.left = x / z + "px"; no.style.top = y / z + "px";
   $("#noMsg").textContent = noMsgs[noCount++ % noMsgs.length];
+  // después de 3 arrancadas se rinde y se esconde detrás del Sí
+  if (noCount >= 3) setTimeout(() => {
+    const s = $("#siBtn").getBoundingClientRect(), rr = no.getBoundingClientRect();
+    no.classList.add("hiding");
+    no.style.left = (s.left + s.width - rr.width + 34) / z + "px"; no.style.top = (s.top - 10) / z + "px";
+    $("#noMsg").textContent = "El No se cansó y se escondió detrás del Sí 🙈";
+    $("#siBtn").animate([{ transform: "scale(1)" }, { transform: "scale(1.12)" }, { transform: "scale(1)" }], { duration: 500, delay: 500 });
+  }, 320);
 }
 const noBtn = $("#noBtn");
 noBtn.addEventListener("pointerdown", dodge);
 noBtn.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") dodge(e); });
 noBtn.addEventListener("click", e => e.preventDefault());
 noBtn.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") dodge(e); });
-function resetNo() { noBtn.classList.remove("loose"); noBtn.style.left = noBtn.style.top = ""; }
+function resetNo() { noBtn.classList.remove("loose", "hiding"); noBtn.style.left = noBtn.style.top = ""; }
 
 $("#toCombo").addEventListener("click", () => travel("candy", "combo"));
-$("#goBol").addEventListener("click", async () => { $("#planBack").hidden = true; await travel("boleteria", "despues"); flapBoard(); });
+$("#goBol").addEventListener("click", () => { editing = false; renderBoard("lugar"); go("despues"); flapBoard(); AudioFX.chime(); });
 
 // Boletería: adivinar la película
 const MOVIES = [
@@ -3272,7 +3440,7 @@ $("#whenForm").addEventListener("submit", e => {
   $("#tFecha").textContent = dia; $("#tHora").textContent = m;
   tick(); updateWa();
   AudioFX.chime();
-  travel("candy", "combo");
+  arrive();
 });
 
 // Antojos a bordo
@@ -3320,11 +3488,12 @@ $("#comboForm").addEventListener("submit", async e => {
   const cabritas = f.get("cabritas") === "Otra"
     ? (cabDet || "Algo para picar (a elección)")
     : `Algo ${f.get("cabritas")}` + (cabDet ? ` (${cabDet})` : "");
-  $("#tCombo").textContent = [cabritas, bebida, extras.join(", ") || "Sin extra"].join(" · ");
+  $("#tCombo").textContent = [bebida, extras.join(", ") || "Sin postre"].join(" · ");
 
   combo = { cabritas, bebida, extras: extras.join(", ") || "nada" };
   updateWa();
-  go("detalles");
+  if (editing) { editing = false; go("entrada"); return; }
+  renderBoard("despues"); go("despues"); flapBoard();
 });
 $("#seatOk").addEventListener("click", async () => {
   updateWa();
@@ -3339,6 +3508,16 @@ $("#seatOk").addEventListener("click", async () => {
   window._autoOrder = setTimeout(() => { if (!$("#entrada").hidden && $("#finale").hidden) showOrder(); }, reduced ? 600 : 4200);
 });
 $("#orderBtn").addEventListener("click", () => showOrder());
+// llega al pase de la cita con todo lo que eligió
+function arrive() {
+  if (yaEmbarcada) { go("entrada"); return; }
+  yaEmbarcada = true;
+  go("entrada");
+  $("#finaleBtn").hidden = false; $("#voice").hidden = false;
+  AudioFX.chime(); burst(120); rain(4500);
+  clearTimeout(window._autoOrder);
+  window._autoOrder = setTimeout(() => { if (!$("#entrada").hidden && $("#finale").hidden) showOrder(); }, reduced ? 600 : 4200);
+}
 // Detalles de la cita
 let detalles = null;
 $("#detForm").addEventListener("submit", e => {
@@ -3435,7 +3614,7 @@ $("#finAgain").addEventListener("click", () => { stopFireworks(); $("#finale").h
 // ---------- Después del cine: planes con animación ----------
 const PLANES = [
   { id: "nielol", cat: "temuco", icon: "🌲", t: "Mirador del Cerro Ñielol", price: "$", msg: "Temuco desde el Ñielol" },
-  { id: "feriapinto", cat: "temuco", icon: "🥟", t: "Sopaipillas en la Feria Pinto", price: "$", msg: "Feria Pinto juntitos" },
+  { id: "feriapinto", cat: "temuco", icon: "🍲", t: "Sopaipillas en la Feria Pinto", price: "$", msg: "Feria Pinto juntitos" },
   { id: "islacautin", cat: "temuco", icon: "🧺", t: "Picnic en el Parque Isla Cautín", price: "Gratis", msg: "Picnic en la Isla Cautín" },
   { id: "tren", cat: "temuco", icon: "🚂", t: "Museo Ferroviario Pablo Neruda", price: "$", msg: "Entre trenes a vapor" },
   { id: "canopy", cat: "temuco", icon: "🌳", t: "Canopy en Lautaro", price: "$$", msg: "¡Volando entre los árboles!" },
@@ -3444,12 +3623,15 @@ const PLANES = [
   { id: "conguillio", cat: "temuco", icon: "🌋", t: "Paseo al Conguillío", price: "$$", msg: "Araucarias y volcán" },
   { id: "cine", cat: "salir", icon: "🎬", t: "Ir al cine", msg: "Una peli juntitos" },
   { id: "comer", cat: "comer", icon: "🍝", t: "Cena romántica", msg: "Una cena rica para dos" },
-  { id: "sushi", cat: "comer", icon: "🍣", t: "Comer sushi", msg: "Sushi para dos 🥢" },
+  { id: "sushi", cat: "comer", icon: "🍣", t: "Sushi", msg: "Sushi para dos 🥢" },
   { id: "burger", cat: "comer", icon: "🍔", t: "Hamburguesa y papitas", msg: "Hamburguesas con todo" },
   { id: "pizza", cat: "comer", icon: "🍕", t: "Pizza", msg: "Una pizza para compartir" },
   { id: "helado", cat: "comer", icon: "🍦", t: "Ir por un helado", msg: "Helado de la mano" },
   { id: "cafe", cat: "comer", icon: "☕", t: "Café y algo dulce", msg: "Cafecito y algo dulce" },
-  { id: "completos", cat: "comer", icon: "🌭", t: "Comer completos", msg: "Completos italianos 🇨🇱" },
+  { id: "completos", cat: "comer", icon: "🌭", t: "Completos", msg: "Completos italianos 🇨🇱" },
+  { id: "empanadas", cat: "comer", icon: "🥟", t: "Empanadas", msg: "Empanaditas calentitas" },
+  { id: "china", cat: "comer", icon: "🥡", t: "Comida china", msg: "Chapsui y arrollados" },
+  { id: "tacos", cat: "comer", icon: "🌮", t: "Tacos", msg: "Noche de tacos" },
   { id: "picnic", cat: "aire", icon: "🧺", t: "Picnic", msg: "Picnic al sol" },
   { id: "atardecer", cat: "aire", icon: "🌅", t: "Ver el atardecer", msg: "El atardecer contigo" },
   { id: "playa", cat: "aire", icon: "🏖️", t: "Ir a la playa", msg: "Tú, yo y el mar" },
@@ -3481,32 +3663,58 @@ const PLANES = [
   { id: "otra", cat: "", icon: "✍️", t: "Lo que tú quieras", scene: "marquee" },
 ];
 let planElegido = "", planActual = null, planPropio = false, planIcon = "💌", yaEmbarcada = false;
-// Kiosco de planes: tarjetitas clavadas en una pizarra, con filtros por tipo de plan
-const CATS = [["todos", "Todos"], ["temuco", "📍 En Temuco"], ["comer", "🍽️ Comer"], ["aire", "🌳 Aire libre"], ["casa", "🏠 En casa"], ["salir", "✨ Salir"], ["activo", "👟 Activos"]];
-(() => {
-  const grid = $("#plans");
-  grid.innerHTML = PLANES.filter(p => p.id !== "otra").map((p, i) => `<button class="dest" data-plan="${p.id}" data-cat="${p.cat}" style="--i:${i}">
+// Kiosco de planes: tres tableros seguidos (a dónde vamos, qué comemos, qué hacemos después)
+const CATS = [["todos", "Todos"], ["temuco", "📍 En Temuco"], ["aire", "🌳 Aire libre"], ["salir", "✨ Salir"], ["casa", "🏠 En casa"], ["activo", "👟 Activos"]];
+const BOARDS = {
+  lugar: { eye: "Paso 1 de 3", title: "¿A dónde quieres ir?", sub: "Elige el lugar. Tú decides, yo me apunto a lo que sea.", cats: true, ph: "ir a la playa, al lago, a ver ballenas…",
+    ids: ["nielol", "islacautin", "tren", "canopy", "termas", "conguillio", "picnic", "atardecer", "playa", "parque", "estrellas", "cine", "feria", "museo", "fotos", "concierto", "acuario", "escape", "bolos", "karaoke", "bailar", "compras", "abuela", "casa", "peli", "cocinar", "juegos", "spa", "pintar", "manejar", "gym", "correr", "bici", "sorpresa"] },
+  comida: { eye: "Paso 2 de 3", title: "¿Qué quieres comer?", sub: "Elige del menú lo que se te antoje.", ph: "ramen, mote con huesillo, lo que sea…",
+    ids: ["comer", "sushi", "burger", "pizza", "completos", "empanadas", "china", "tacos", "feriapinto", "dreams", "cafe", "helado"] },
+  despues: { eye: "Paso 3 de 3", title: "¿Y después, qué hacemos?", sub: "Para que la cita no se acabe tan rápido.", ph: "pasear en auto, ir por un helado…",
+    ids: ["helado", "cafe", "estrellas", "atardecer", "parque", "peli", "casa", "dormir", "karaoke", "bailar", "juegos", "spa", "fotos", "sorpresa"] },
+};
+const ORDER = ["lugar", "comida", "despues"];
+let stage = "lugar", editing = false;
+const elec = { lugar: null, comida: null, despues: null };
+function renderBoard(st) {
+  stage = st; const B = BOARDS[st], grid = $("#plans");
+  $("#bEye").textContent = B.eye; $("#bTitle").textContent = B.title; $("#bSub").textContent = B.sub;
+  $$("#stepDots button").forEach(b => { const k = b.dataset.st; b.classList.toggle("on", k === st); b.classList.toggle("done", !!elec[k]); b.disabled = !(editing && elec[k]) && k !== st; });
+  $("#cats").innerHTML = B.cats ? CATS.map(([k, t], i) => `<button class="cat${i ? "" : " on"}" data-cat="${k}">${t}</button>`).join("") : "";
+  grid.innerHTML = B.ids.map(id => PLANES.find(x => x.id === id)).filter(Boolean).map((p, i) => `<button class="dest${elec[st]?.id === p.id ? " chosen" : ""}" data-plan="${p.id}" data-cat="${p.cat}" style="--i:${i}">
       <span class="d-ico" aria-hidden="true">${p.icon}</span><b class="d-name">${p.t}</b>${p.price ? `<small class="d-price">📍 ${p.price}</small>` : ""}<span class="d-tag">Elegido ♥</span></button>`).join("");
-  $("#cats").innerHTML = CATS.map(([k, t], i) => `<button class="cat${i ? "" : " on"}" data-cat="${k}">${t}</button>`).join("");
   $$(".cat").forEach(c => c.addEventListener("click", () => {
     $$(".cat").forEach(x => x.classList.toggle("on", x === c));
     $$(".dest", grid).forEach(d => d.classList.toggle("off", c.dataset.cat !== "todos" && d.dataset.cat !== c.dataset.cat));
     grid.scrollTop = 0; flapBoard(); AudioFX.paper();
   }));
-  $$(".dest").forEach(b => b.addEventListener("click", () => {
-    const p = PLANES.find(x => x.id === b.dataset.plan);
-    $$(".dest").forEach(c => c.classList.remove("picked"));
-    b.classList.add("picked"); AudioFX.paper(); buzz(20);
-    if (p.id === "otra") { $("#planOther").hidden = false; setTimeout(() => { $("#planOther").scrollIntoView({ behavior: "smooth", block: "center" }); $("#planOtherText").focus(); }, 250); return; }
-    $("#planOther").hidden = true;
-    setTimeout(() => playPlan(p), reduced ? 0 : 450);
-  }));
-  $("#planOtherGo").addEventListener("click", () => {
-    const txt = $("#planOtherText").value.trim();
-    if (!txt) { $("#planOtherText").focus(); return; }
-    playPlan({ id: "otra", t: txt, msg: txt, scene: "marquee" });
-  });
-})();
+  grid.scrollTop = 0;
+  $("#planOther").hidden = true; $("#planOtherText").value = ""; $("#planOtherText").placeholder = B.ph;
+  $(".dest--otra").classList.toggle("chosen", elec[st]?.propio || false); $(".dest--otra").classList.remove("picked");
+  $("#planBack").hidden = !editing;
+}
+$$("#stepDots button").forEach(b => b.addEventListener("click", () => { if (!b.disabled && b.dataset.st !== stage) { renderBoard(b.dataset.st); flapBoard(); AudioFX.paper(); } }));
+document.addEventListener("click", e => {
+  const b = e.target.closest(".dest"); if (!b) return;
+  const p = PLANES.find(x => x.id === b.dataset.plan);
+  $$(".dest").forEach(c => c.classList.remove("picked"));
+  b.classList.add("picked"); AudioFX.paper(); buzz(20);
+  if (p.id === "otra") { $("#planOther").hidden = false; setTimeout(() => { $("#planOther").scrollIntoView({ behavior: "smooth", block: "center" }); $("#planOtherText").focus(); }, 250); return; }
+  $("#planOther").hidden = true;
+  setTimeout(() => playPlan(p), reduced ? 0 : 450);
+});
+$("#planOtherGo").addEventListener("click", () => {
+  const txt = $("#planOtherText").value.trim();
+  if (!txt) { $("#planOtherText").focus(); return; }
+  playPlan({ id: "otra", t: txt, msg: txt, scene: "marquee" });
+});
+renderBoard("lugar");
+// la tarjeta de embarque / pase con las tres elecciones
+function fillPass() {
+  const L = elec.lugar, C = elec.comida, A = elec.despues;
+  $("#tPlan").textContent = L ? L.t : "Tú eliges"; $("#tIcon").textContent = L ? L.icon : "💌"; $("#tAsiento").textContent = L ? L.icon : "?";
+  $("#tComida").textContent = C ? `${C.icon} ${C.t}` : "—"; $("#tDespues").textContent = A ? `${A.icon} ${A.t}` : "—";
+}
 function flapBoard() {
   const grid = $("#plans");
   grid.classList.remove("in"); void grid.offsetWidth; grid.classList.add("in");
@@ -3570,6 +3778,13 @@ function planScene(p) {
     case "conguillio": return ["pf-congui", `<div class="pf-volcan" style="left:50%;bottom:38%;transform:translateX(-50%) scale(1.8)"></div><div class="pf-lake"></div>` +
       `<i class="pf-arau" style="left:4%;bottom:30%;transform:scale(1.3)"><i></i></i>`+`<i class="pf-arau" style="left:16%;bottom:34%;transform:scale(0.9)"><i></i></i>`+`<i class="pf-arau" style="left:80%;bottom:32%;transform:scale(1.1)"><i></i></i>`+`<i class="pf-arau" style="left:94%;bottom:30%;transform:scale(1.4)"><i></i></i>` +
       emo("🛶", 40, 72, 2.6, "pf-swim2", 1) + emo("🦅", 70, 20, 1.8, "pf-fly", .5) + coupleAt(80, 6, 90, "#1a2a20", 1.6) + rising(6, 40)];
+    case "empanadas": case "china": case "tacos": {
+      const F = { empanadas: ["🥟", "🥟", "🍷", "🌶️"], china: ["🥡", "🥢", "🍚", "🥠"], tacos: ["🌮", "🌯", "🥑", "🌶️"] }[p.id];
+      return ["pf-dinner", Array.from({ length: 12 }, () => `<i class="pf-bokeh" style="left:${Math.random() * 100}%;top:${Math.random() * 45}%;width:${20 + Math.random() * 50}px;animation-delay:${(Math.random() * 3).toFixed(1)}s"></i>`).join("") +
+        `<div class="pf-string">${"<i></i>".repeat(11)}</div><div class="pf-table"></div><div class="pf-plate2" style="top:60%"></div>` +
+        emo(F[0], 44, 56, 4.4, "pf-pop", .6) + emo(F[1], 60, 58, 3.6, "pf-pop", 1) + emo(F[2], 20, 72, 2.6, "pf-pop", 1.5) + emo(F[3], 80, 72, 2.4, "pf-pop", 1.8) +
+        `<i class="pf-steam2" style="left:46%;top:44%;animation-delay:1.4s"></i><i class="pf-steam2" style="left:56%;top:42%;animation-delay:2s"></i>` + emo("😋", 50, 30, 2.4, "pf-pop", 2.6) + rising(10, 40)];
+    }
     case "cine": return ["pf-cinema", `<div class="pf-proj"></div><div class="pf-cscreen"><b>${PLAN.nombre} ♥ ${PLAN.firma}<br><small style="font-size:.6em">una peli juntitos</small></b></div><div class="pf-rows"></div>` +
       `<div class="pf-heads"><i></i><i></i></div>` + emo("🍿", 50, 74, 3, "pf-pop", 1.2) +
       [30, 44, 58, 70].map((x, i) => emo("🍿", x, 66, 1.3, "pf-bounce", 1.6 + i * .25)).join("") + emo("💋", 50, 56, 1.8, "pf-pop", 3.2) + rising(8, 30)];
@@ -3729,14 +3944,16 @@ function playPlan(p) {
   window._pp2 = setTimeout(() => { $("#pfCard").hidden = false; }, reduced ? 0 : 4200);
 }
 $("#pfYes").addEventListener("click", () => {
-  planElegido = planActual.t; planPropio = planActual.id === "otra"; planIcon = PLANES.find(x => x.id === planActual.id)?.icon || "💌";
-  $$(".dest").forEach(c => c.classList.toggle("chosen", c.classList.contains("picked")));
-  $("#tPlan").textContent = planElegido; $("#tIcon").textContent = planPropio ? "✍️" : planIcon; $("#tAsiento").textContent = planPropio ? "✍️" : planIcon;
-  $("#planFx").hidden = true;
-  updateWa();
+  const p = planActual, propio = p.id === "otra", icon = propio ? "✍️" : (PLANES.find(x => x.id === p.id)?.icon || "💌");
+  elec[stage] = { id: p.id, t: p.t, icon, propio };
+  if (stage === "lugar") { planElegido = p.t; planPropio = propio; planIcon = icon; }
+  fillPass(); updateWa();
+  $("#planFx").hidden = true; clearInterval(window._reps);
   AudioFX.kiss(); burst(60);
-  if (yaEmbarcada) { go("entrada"); rain(3000); return; }
-  go("cuando");
+  if (editing) { editing = false; go("entrada"); rain(3000); return; }
+  if (stage === "lugar") { renderBoard("comida"); go("despues"); flapBoard(); }
+  else if (stage === "comida") go("combo");
+  else go("cuando");
 });
 
 // ---------- Mensaje de voz de Diego (al final) ----------
@@ -3773,15 +3990,15 @@ $("#voiceBtn").addEventListener("click", () => {
 function showOrder() {
   const fx = $("#orderFx"), rows = [["De", PLAN.nombre], ["Para", `${PLAN.firma} (${PLAN.apodo})`],
     ...(cuando ? [["Día", cuando.dia], ["Momento", cuando.momento]] : []),
-    ...(detalles ? [["Onda", detalles.vibra], ["Vestimenta", detalles.look], ["No puede faltar", detalles.falta]] : []),
-    ...(combo ? [["Para picar", combo.cabritas], ["Para tomar", combo.bebida], ["Extra", combo.extras]] : [])];
+    ...(combo ? [["Para tomar", combo.bebida], ["De postre", combo.extras]] : [])];
   $("#ofLines").innerHTML = "";
   rows.forEach(([k, v]) => {
     const d = document.createElement("div");
     d.append(Object.assign(document.createElement("dt"), { textContent: k }), Object.assign(document.createElement("dd"), { textContent: v }));
     $("#ofLines").append(d);
   });
-  $("#ofPlan").textContent = (planPropio ? "" : planIcon + " ") + (planElegido || "Tú eliges"); $("#ofMine").hidden = !planPropio;
+  $("#ofPlan").textContent = ORDER.map(k => elec[k] ? `${elec[k].icon} ${elec[k].t}` : "").filter(Boolean).join("\n") || "Tú eliges";
+  $("#ofPlan").style.whiteSpace = "pre-line"; $("#ofMine").hidden = !ORDER.some(k => elec[k]?.propio);
   $("#ofSend").href = waHref(); $("#ofSend").textContent = `Mandárselo a ${PLAN.firma} 💌`;
   $("#ofStamp").classList.remove("hit");
   fx.classList.remove("print", "ready"); fx.hidden = false; fitOrder(); void fx.offsetWidth; fx.classList.add("print");
@@ -3817,20 +4034,19 @@ $("#ofBack").addEventListener("click", () => {
 });
 $("#pfNo").addEventListener("click", () => { $("#planFx").hidden = true; clearInterval(window._reps); $$(".dest").forEach(c => c.classList.remove("picked")); });
 $("#planBtn").addEventListener("click", () => {
-  $("#planOther").hidden = true; $$(".dest").forEach(c => c.classList.remove("picked"));
-  $("#planBack").hidden = false;
-  $$(".cat").forEach((x, i) => x.classList.toggle("on", i === 0)); $$("#plans .dest").forEach(d => d.classList.remove("off"));
+  editing = true; renderBoard("lugar");
   go("despues"); flapBoard();
 });
-$("#planBack").addEventListener("click", () => go("entrada"));
+$("#planBack").addEventListener("click", () => { editing = false; go("entrada"); });
 // El mensaje que le llega a Diego por WhatsApp, armado como un pedido
 function pedidoMsg() {
   const limpio = t => String(t).replace(/[*_~`]/g, "").trim();
   const L = [`💌 *CITA CON ${PLAN.nombre.toUpperCase()}* 💌`, "━━━━━━━━━━━━━━━", `Para: ${PLAN.firma}, mi ${PLAN.apodo} 💌`, "Respuesta a la invitación: *SÍ* ❤️"];
-  if (planElegido) L.push("", "📍 *EL PLAN QUE QUIERO:*", `👉 ${planPropio ? "" : planIcon + " "}*${limpio(planElegido)}* 👈` + (planPropio ? "\n(lo escribí yo ✍️)" : ""));
+  const fila = (e, tag, x) => x && L.push(`${e} *${tag}:* ${x.propio ? "" : x.icon + " "}${limpio(x.t)}${x.propio ? " (lo escribí yo ✍️)" : ""}`);
+  L.push("");
+  fila("📍", "VAMOS A", elec.lugar); fila("🍽️", "COMEMOS", elec.comida); fila("🌙", "DESPUÉS", elec.despues);
   if (cuando) L.push("", `🗓️ Cuándo: ${cuando.dia} · ${cuando.momento}`);
-  if (detalles) L.push(`✨ Onda: ${detalles.vibra}`, `👗 Vestimenta: ${detalles.look}`, `💗 No puede faltar: ${detalles.falta}`);
-  if (combo) L.push("🍦 Mis antojos:", `   • ${combo.cabritas}`, `   • ${combo.bebida}`, `   • Extra: ${combo.extras}`);
+  if (combo) L.push(`🥤 Para tomar: ${combo.bebida}`, `🍫 De postre: ${combo.extras}`);
   L.push("━━━━━━━━━━━━━━━", "Total: $0 + 1 beso 💋");
   return L.join("\n");
 }
@@ -3845,6 +4061,7 @@ $("#restart").addEventListener("click", () => {
   resetLetter(); phase = "doors"; pov.hidden = true; buildGuess(); buildSeats();
   $("#finale").hidden = true; $("#finaleBtn").hidden = true; $("#orderFx").hidden = true;
   stopVoice(); $("#voice").hidden = true; $("#voiceMsg").hidden = true;
+  ORDER.forEach(k => elec[k] = null); editing = false; renderBoard("lugar"); fillPass();
   planElegido = ""; planPropio = false; planIcon = "💌"; yaEmbarcada = false; cuando = null; combo = null; detalles = null; cdTarget = null; stopFireworks(); clearTimeout(window._autoOrder);
   $("#tPlan").textContent = "Tú eliges"; $("#tIcon").textContent = "💌"; $("#tFecha").textContent = "Tú eliges"; $("#tHora").textContent = "Tú eliges"; $("#tAsiento").textContent = "?"; $("#tCombo").textContent = "—";
   $$(".dest").forEach(c => c.classList.remove("picked", "chosen")); ["tVibra", "tLook", "tFalta"].forEach(id => $("#" + id).textContent = "—"); $("#planOther").hidden = true; $("#planBack").hidden = true;
