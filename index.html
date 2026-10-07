@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Función para Maite</title>
+<title>Un vuelo para Maite</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Pinyon+Script&family=Josefin+Sans:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap">
@@ -1160,7 +1160,7 @@ body { touch-action: pan-y pinch-zoom; }
 .of-slot { position: relative; z-index: 2; height: 26px; margin-inline: -10px; border-radius: 12px 12px 6px 6px;
   background: linear-gradient(180deg, #3a2a2f, #1b1013 60%, #000); border: 1px solid var(--gold-soft); box-shadow: 0 8px 22px rgba(0,0,0,.6); }
 .of-slot::before { content: ""; position: absolute; left: 14px; right: 14px; bottom: 5px; height: 4px; border-radius: 4px; background: #000; box-shadow: inset 0 1px 2px rgba(255,255,255,.12); }
-.of-slot::after { content: "● PEDIDOS"; position: absolute; left: 16px; top: 3px; font: 700 .55rem/1 var(--f-ui); letter-spacing: .2em; color: var(--gold-soft); }
+.of-slot::after { content: "● RESERVAS"; position: absolute; left: 16px; top: 3px; font: 700 .55rem/1 var(--f-ui); letter-spacing: .2em; color: var(--gold-soft); }
 .of-slot.busy::after { color: #7dff9a; animation: blink .35s steps(2) infinite; }
 @keyframes blink { 50% { opacity: .3; } }
 .of-feed { overflow: hidden; margin-top: -8px; padding: 0 6px 10px; }
@@ -1229,6 +1229,245 @@ body { touch-action: pan-y pinch-zoom; }
 .voice-bar { width: 100%; height: 4px; border-radius: 4px; background: rgba(255,255,255,.12); overflow: hidden; }
 .voice-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--rose), var(--gold)); }
 .voice-msg { margin: 0; text-align: center; font-family: var(--f-letter); font-style: italic; font-size: 1.1rem; color: var(--cream-text); }
+
+
+/* =================== TEMÁTICA: VUELO / TERMINAL =================== */
+/* Entrada: puertas de vidrio del terminal */
+.doors { background: linear-gradient(180deg, #0a1022, #160a14 70%); }
+.transom { background: linear-gradient(180deg, #11161f, #0a0d14); border-bottom: 6px solid #8f9aa6; }
+.term-sign { display: grid; justify-items: center; gap: .35rem; width: 100%; padding: 0 12px; }
+.term-sign .ts-top { display: flex; align-items: center; gap: .6rem; font: 700 clamp(1rem, 5vw, 1.5rem)/1 var(--f-ui); letter-spacing: .22em; text-transform: uppercase; color: #ffd24a; text-shadow: 0 0 12px rgba(255,200,60,.6); }
+.term-sign .ts-top svg { width: 1.3em; height: 1.3em; fill: #ffd24a; }
+.term-sign .ts-sub { font: 600 .62rem/1 var(--f-ui); letter-spacing: .32em; text-transform: uppercase; color: #cfd8e3; }
+.term-sign .ts-row { display: flex; gap: .7rem; align-items: center; padding: .3rem .7rem; border-radius: 4px; background: #000; font: 700 .7rem/1 var(--f-ticket); letter-spacing: .14em; color: #ffcf4a; white-space: nowrap; }
+.term-sign .ts-row em { font-style: normal; color: #7dff9a; animation: knock 1.2s steps(2) infinite; }
+.term-sign .ts-heart { width: 1.1em; height: 1.1em; filter: drop-shadow(0 0 4px #ff5c8a); }
+.door { border-color: #8f9aa6; box-shadow: inset 0 0 0 2px #d9e1ea, inset 0 0 0 6px rgba(0,0,0,.35);
+  background: linear-gradient(115deg, rgba(255,255,255,.18), rgba(255,255,255,0) 30%, rgba(255,255,255,.1) 36%, rgba(255,255,255,0) 44%), rgba(18,28,44,.42); }
+.door .bar { background: linear-gradient(90deg, #6f7882, #eef3f8 45%, #7c8692); }
+.door .kick { background: linear-gradient(180deg, #b9c3cd, #6f7882); }
+.door::before { content: "♥"; position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); font-size: 2.2rem; color: rgba(255,140,175,.55); text-shadow: 0 0 14px rgba(255,90,140,.6); }
+.door::after { content: "Bienvenida"; position: absolute; left: 0; right: 0; top: 60%; text-align: center; font: 400 1.05rem/1 var(--f-script); color: rgba(255,214,226,.75); }
+.door--r::after { content: "a bordo"; }
+.carpet { background: linear-gradient(90deg, #a9b4c0 0 3%, #2b2f3a 3% 97%, #a9b4c0 97%); }
+.carpet::after { content: ""; position: absolute; left: 49%; right: 49%; top: 0; bottom: 0; background: repeating-linear-gradient(180deg, #fff 0 14px, transparent 14px 28px); opacity: .8; }
+.rope { border: 0; height: 9px; top: 22%; border-radius: 3px; background: linear-gradient(180deg, #3a63d8, #213f9a); }
+.post svg stop:nth-child(1) { stop-color: #5d6670; } .post svg stop:nth-child(2) { stop-color: #f2f6fa; } .post svg stop:nth-child(3) { stop-color: #6f7882; }
+
+/* Hall del terminal */
+.floor--table {
+  background:
+    linear-gradient(90deg, transparent 0 30%, rgba(255,214,140,.16) 30% 30.6%, transparent 30.6% 69.4%, rgba(255,214,140,.16) 69.4% 70%, transparent 70%),
+    repeating-linear-gradient(180deg, rgba(255,255,255,.07) 0 2px, transparent 2px 170px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.35) 0 2px, transparent 2px 12.5%),
+    linear-gradient(90deg, #15141c, #262532 50%, #15141c);
+}
+.ceiling--table {
+  background:
+    repeating-linear-gradient(180deg, transparent 0 190px, rgba(225,238,255,.9) 190px 198px, transparent 198px 260px) 50% 0 / 34% 100% no-repeat,
+    linear-gradient(90deg, #070a12, #10162a 50%, #070a12);
+}
+.wall--table {
+  background:
+    radial-gradient(circle, #ffcf6b 0 2px, rgba(255,207,107,.4) 3px, transparent 5px) 0 74% / 70px 12px repeat-x,
+    radial-gradient(circle, #6bb8ff 0 2px, transparent 4px) 35px 79% / 70px 10px repeat-x,
+    linear-gradient(180deg, transparent 0 84%, #8f9aa6 84% 84.6%, #0b0d14 84.6%),
+    repeating-linear-gradient(90deg, #0b0f1c 0 7px, transparent 7px 240px),
+    linear-gradient(180deg, #050816, #0d1a3a 60%, #1a1530 74%, #0b0d14 74%);
+}
+.wall--table .lightbox { border-color: #8f9aa6; }
+.back--term { background: linear-gradient(180deg, #0b0e18, #141a2c); }
+.fids3d { width: 88%; display: grid; gap: 7px; padding: 14px; border-radius: 10px; background: #050608; border: 6px solid #2b313c; box-shadow: 0 0 50px rgba(255,200,80,.18); }
+.fids3d .fh { display: flex; justify-content: space-between; align-items: center; font: 700 1.5rem/1 var(--f-ui); letter-spacing: .2em; text-transform: uppercase; color: #ffd24a; padding-bottom: 6px; border-bottom: 2px solid #232831; }
+.fids3d .fr { display: grid; grid-template-columns: 1fr 1.6fr 1fr; gap: 10px; font: 700 1.05rem/1.25 var(--f-ticket); letter-spacing: .1em; color: #ffcf4a; text-transform: uppercase; }
+.fids3d .fr span:last-child { text-align: right; color: #7dff9a; }
+.fids3d .fr.blink span:last-child { animation: knock 1.2s steps(2) infinite; }
+.fids3d .fheart { display: flex; justify-content: center; gap: .5rem; align-items: center; font: 400 1.6rem/1 var(--f-script); color: #ffd6e2; text-transform: none; letter-spacing: 0; padding-top: 4px; }
+
+/* Check-in */
+.wall--boleteria { background: linear-gradient(180deg, transparent 0 84%, #8f9aa6 84% 84.6%, #14161c 84.6%), repeating-linear-gradient(90deg, #22252e 0 4px, #191b22 4px 170px); }
+.lightbox--fids { place-items: stretch; padding: 8px; border-color: #2b313c; background: #050608 !important; box-shadow: 0 0 40px rgba(255,200,80,.2); font: 700 .78rem/1.25 var(--f-ticket); color: #ffcf4a; letter-spacing: .06em; text-transform: uppercase; }
+.lightbox--fids span { display: grid; gap: 5px; text-align: left; text-shadow: none; }
+.lightbox--fids span i { font-style: normal; display: block; color: #ffd24a; font-family: var(--f-ui); letter-spacing: .2em; border-bottom: 1px solid #232831; padding-bottom: 3px; }
+.post3d { background: linear-gradient(90deg, #5d6670, #f2f6fa 45%, #6f7882); }
+.post3d i { background: radial-gradient(circle at 35% 30%, #fff, #b9c3cd 60%, #5d6670); }
+.rope3d { border-bottom: 0; border-radius: 0; height: 10px !important; margin-top: 0; background: linear-gradient(180deg, #3a63d8, #213f9a); }
+.back--bol b { border-color: #ffd24a; color: #ffd24a; text-shadow: 0 0 16px rgba(255,210,74,.7); }
+
+/* Tablero de salidas: ella elige el destino */
+#despues .after-marquee { background: #07080c; border-color: #8f9aa6; box-shadow: 0 0 0 5px #07080c, 0 0 0 7px #3a404b, 0 0 40px rgba(255,210,74,.18); outline: none; animation: none; }
+#despues .after-marquee .eyebrow { color: #ffd24a; }
+.fids { width: 100%; display: grid; gap: 5px; padding: .6rem .5rem .7rem; border-radius: 12px; background: #050608; border: 4px solid #232831; box-shadow: 0 18px 40px rgba(0,0,0,.5); }
+.fids-head { display: grid; grid-template-columns: 2.4rem 1fr auto; gap: .6rem; padding: 0 .4rem .35rem; border-bottom: 1px solid #232831; font: 700 .58rem/1 var(--f-ui); letter-spacing: .2em; text-transform: uppercase; color: #8f9aa6; }
+.dest { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 2.4rem 1fr auto; gap: .6rem; align-items: center;
+  padding: .45rem .4rem; border-radius: 6px; background: linear-gradient(180deg, #111318, #0b0c10); border: 1px solid #1d2128; -webkit-tap-highlight-color: transparent; transition: transform .15s, box-shadow .2s; }
+.dest:focus-visible { outline: 2px solid #ffd24a; outline-offset: 2px; }
+.dest:active { transform: scale(.98); }
+.fids.in .dest { animation: destIn .5s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i) * 55ms); }
+@keyframes destIn { from { opacity: 0; transform: translateY(8px); } }
+.d-ico { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 6px; background: #1a1d24; font-size: 1.35rem; }
+.d-txt { display: grid; gap: .15rem; min-width: 0; }
+.d-name { font: 700 .95rem/1.2 var(--f-ticket); letter-spacing: .06em; text-transform: uppercase; color: #ffcf4a; text-shadow: 0 0 8px rgba(255,190,60,.35); overflow-wrap: anywhere; }
+.d-sub { font: 400 .68rem/1.25 var(--f-ui); color: #9aa4b1; }
+.d-st { font: 700 .56rem/1 var(--f-ui); letter-spacing: .14em; text-transform: uppercase; color: #7dff9a; padding: .3rem .4rem; border: 1px solid rgba(125,255,154,.35); border-radius: 4px; white-space: nowrap; }
+.d-st.blink { animation: knock 1.2s steps(2) infinite; }
+.dest.picked { background: linear-gradient(180deg, #2a1420, #160a12); border-color: #ff7aa0; box-shadow: 0 0 0 2px #ff7aa0, 0 0 26px rgba(255,122,160,.4); }
+.dest.picked .d-st { color: #ff9ab8; border-color: #ff7aa0; animation: none; }
+.dest.chosen .d-st { color: #ffd24a; border-color: #ffd24a; }
+
+/* escenas nuevas de destino (emojis animados) */
+.pf-emo { position: absolute; transform: translate(-50%, -50%); line-height: 1; opacity: 0; filter: drop-shadow(0 6px 10px rgba(0,0,0,.35)); }
+.pf-pop { animation: emoPop .6s cubic-bezier(.3,1.6,.5,1) both, emoFloat 2.4s ease-in-out .6s infinite alternate; }
+@keyframes emoPop { from { opacity: 0; transform: translate(-50%, -50%) scale(.2); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+@keyframes emoFloat { from { opacity: 1; transform: translate(-50%, -50%); } to { opacity: 1; transform: translate(-50%, calc(-50% - 10px)); } }
+.pf-lift { animation: emoPop .6s cubic-bezier(.3,1.6,.5,1) both, emoLift .7s ease-in-out .6s infinite alternate; }
+@keyframes emoLift { from { opacity: 1; transform: translate(-50%, -50%); } to { opacity: 1; transform: translate(-50%, calc(-50% - 26px)); } }
+.pf-run { animation: emoRun 3.4s linear both; }
+@keyframes emoRun { from { opacity: 1; left: 115%; } to { opacity: 1; left: var(--to, 50%); } }
+.pf-fly { animation: emoFly 6s ease-in-out infinite; }
+@keyframes emoFly { 0% { opacity: 0; transform: translate(-50%, -50%); } 10% { opacity: 1; } 50% { transform: translate(calc(-50% + 40px), calc(-50% - 30px)) rotate(10deg); } 100% { opacity: 1; transform: translate(-50%, -50%); } }
+.pf-picnic { background: linear-gradient(180deg, #ffb07a, #ff8fb1 45%, #ffd3a8 62%); }
+.pf-sun { position: absolute; left: 50%; top: 36%; width: 120px; height: 120px; margin-left: -60px; border-radius: 50%; background: radial-gradient(circle, #fff6d0, #ffd36b 60%); box-shadow: 0 0 80px 30px rgba(255,214,120,.55); animation: sunUp 2.4s ease both; }
+@keyframes sunUp { from { transform: translateY(160px); } }
+.pf-hill { position: absolute; left: -10%; right: -10%; bottom: 0; height: 40%; border-radius: 50% 50% 0 0 / 30% 30% 0 0; background: linear-gradient(180deg, #7cc46a, #3f8a35); }
+.pf-cloth { position: absolute; left: 50%; bottom: 14%; width: 74vw; max-width: 300px; height: 90px; transform: translateX(-50%) perspective(300px) rotateX(55deg);
+  background: repeating-conic-gradient(#e0435f 0 25%, #fff 0 50%) 0 0 / 34px 34px; box-shadow: 0 10px 20px rgba(0,0,0,.25); animation: blanketDrop .9s cubic-bezier(.3,1.3,.5,1) .6s both; }
+.pf-gym { background: radial-gradient(120% 70% at 50% 30%, #3a1a4a, #0d0912 70%); }
+.pf-spot { position: absolute; left: 50%; top: -10%; width: 70vw; height: 110%; transform: translateX(-50%); background: linear-gradient(180deg, rgba(255,240,200,.25), transparent 80%); clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%); }
+.pf-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: repeating-linear-gradient(90deg, #2a1c2e 0 60px, #23172a 60px 120px); }
+.pf-run-bg { background: linear-gradient(180deg, #ffd1a1, #ff9e9e 40%, #7f6bbf 70%); }
+.pf-track { position: absolute; left: -10%; right: -10%; bottom: 0; height: 32%; background: linear-gradient(180deg, #c4553f, #8f3a2c); }
+.pf-track::before { content: ""; position: absolute; left: 0; right: 0; top: 40%; height: 4px; background: repeating-linear-gradient(90deg, #fff 0 30px, transparent 30px 60px); animation: trackMove .6s linear infinite; }
+@keyframes trackMove { to { background-position: -60px 0; } }
+.pf-sleep { background: linear-gradient(180deg, #050a24, #14183c 60%, #2a1838); }
+.pf-bed { position: absolute; left: 50%; bottom: 20%; width: 80vw; max-width: 320px; height: 120px; transform: translateX(-50%); border-radius: 18px 18px 10px 10px; background: linear-gradient(180deg, #f6d7e2 0 40%, #c98aa3 40%); box-shadow: 0 -40px 0 -14px #5a3a6a; }
+.pf-bed::before, .pf-bed::after { content: ""; position: absolute; top: -14px; width: 34%; height: 36px; border-radius: 16px; background: #fff; }
+.pf-bed::before { left: 8%; } .pf-bed::after { right: 8%; }
+.pf-granny { background: radial-gradient(120% 80% at 50% 30%, #6a3a2a, #2a140c 70%); }
+.pf-window { position: absolute; left: 50%; top: 14%; width: 44vw; max-width: 180px; aspect-ratio: 1; transform: translateX(-50%); border: 8px solid #f6e3c4; border-radius: 8px; background: linear-gradient(180deg, #ffb07a, #ff8fb1); box-shadow: 0 0 60px rgba(255,190,120,.35); }
+.pf-window::before, .pf-window::after { content: ""; position: absolute; background: #f6e3c4; }
+.pf-window::before { left: 50%; top: 0; bottom: 0; width: 6px; margin-left: -3px; } .pf-window::after { top: 50%; left: 0; right: 0; height: 6px; margin-top: -3px; }
+.pf-tablecloth { position: absolute; left: -10%; right: -10%; bottom: 0; height: 30%; background: repeating-linear-gradient(90deg, #f6e3c4 0 24px, #e9c9a0 24px 48px); }
+.pf-steam2 { position: absolute; width: 10px; height: 40px; border-radius: 10px; background: linear-gradient(0deg, rgba(255,255,255,.45), transparent); animation: steam 2.2s ease-in-out infinite; }
+@keyframes steam { 0% { opacity: 0; transform: translateY(0) scaleX(1); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(-40px) scaleX(1.8); } }
+.pf-plane { position: absolute; left: -30%; top: 22%; font-size: 3rem; animation: planeAcross 4.5s ease-in-out .3s both; }
+@keyframes planeAcross { from { left: -30%; transform: rotate(-8deg); } to { left: 120%; transform: rotate(4deg); } }
+
+/* Tarjeta de embarque */
+.pass-lbl { display: block; margin-top: .2rem; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); }
+#tIcon { font-size: .9em; }
+/* asientos del avión: 3 + pasillo + 3 */
+.seatmap--plane { background: linear-gradient(180deg, #e9edf2, #cfd6df); border: 0; border-radius: 120px 120px 18px 18px / 70px 70px 18px 18px; padding-top: 2rem; }
+.seatmap--plane .seat-screen { color: #3a4452; border-bottom-color: #9aa4b1; background: none; box-shadow: none; }
+.seatmap--plane .seat-grid { grid-template-columns: auto repeat(3, 1fr) 1rem repeat(3, 1fr); }
+.seatmap--plane .seat-row { color: #5d6670; }
+.seatmap--plane .seat-col { font: 700 .62rem/1 var(--f-ui); color: #5d6670; text-align: center; }
+.seatmap--plane .seat { background: linear-gradient(180deg, #3a63d8, #213f9a); border-radius: 9px 9px 4px 4px; }
+.seatmap--plane .seat.taken { background: linear-gradient(180deg, #a9b1bb, #8b939d); }
+.seatmap--plane .seat.him { background: linear-gradient(180deg, #e9c46f, #b8924a); }
+.seatmap--plane .seat.mine { background: linear-gradient(180deg, #ff7aa0, #d81b60); }
+.seatmap--plane .seat-legend { color: #3a4452; }
+.seatmap--plane .lg-free { background: #2c52c0; } .seatmap--plane .lg-taken { background: #9aa2ac; }
+/* cabina del avión */
+.floor--sala { background: linear-gradient(90deg, #5d6670 0 33%, #2a3a6a 33% 67%, #5d6670 67%), #5d6670; }
+.floor--sala { background:
+  radial-gradient(circle, #8fd0ff 0 2px, transparent 4px) 33.5% 0 / 100% 120px repeat-y,
+  radial-gradient(circle, #8fd0ff 0 2px, transparent 4px) 66.5% 0 / 100% 120px repeat-y,
+  repeating-linear-gradient(180deg, rgba(255,255,255,.05) 0 3px, transparent 3px 40px),
+  linear-gradient(90deg, #3f4752 0 33%, #23315e 33% 67%, #3f4752 67%); }
+.ceiling--sala { background: linear-gradient(90deg, #cfd6df 0 30%, #f4f7fb 30% 70%, #cfd6df 70%); }
+.ceiling--sala::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(180deg, transparent 0 240px, rgba(255,255,255,.9) 240px 246px, transparent 246px 300px) 50% 0 / 20% 100% no-repeat; }
+.wall--sala { background:
+  linear-gradient(180deg, #c4ccd6 0 14%, #9aa4b1 14% 15%, #e3e8ee 15% 72%, #b9c2cc 72%); }
+.wall--sala .wallpic { border: 12px solid #f4f7fb; border-radius: 42% / 32%; box-shadow: inset 0 0 0 3px #9aa4b1, 0 0 0 3px #c4ccd6, 0 0 40px rgba(140,190,255,.35); }
+.back--sala { background: linear-gradient(180deg, #d4dbe3, #aeb7c2); }
+.seats { background:
+  radial-gradient(ellipse 15px 30px at 50% 40%, #2c52c0 92%, transparent 100%) 0 0 / 38px 100%,
+  linear-gradient(180deg, transparent 66%, #1a2a5a 66%); filter: brightness(.95); }
+/* final: nubes en vez de telón */
+.finale { background: linear-gradient(180deg, #0b1838, #2a1840 60%, #4a1838); }
+.fin-curtain { background:
+  radial-gradient(circle at 30% 30%, #fff 0 18%, transparent 19%) 0 0 / 140px 120px,
+  radial-gradient(circle at 70% 60%, #f4f0ff 0 22%, transparent 23%) 0 0 / 160px 140px,
+  linear-gradient(180deg, #e9e4ff, #ffd6e2); box-shadow: none; }
+.fin-curtain--l { border-radius: 0 60% 60% 0 / 0 50% 50% 0; } .fin-curtain--r { border-radius: 60% 0 0 60% / 50% 0 0 50%; }
+.finale.closed .fin-curtain { opacity: .96; }
+.fin-valance { display: none; }
+.fin-title { font-size: clamp(3rem, 15vw, 5rem); color: #b3122f; text-shadow: 0 2px 0 #fff, 0 0 24px rgba(255,255,255,.8); }
+.fin-msg { color: #4a1838; text-shadow: none; }
+.fin-sign { color: #b3122f; }
+.finale .eyebrow { color: #6d0a1d; }
+.fin-plane { position: absolute; z-index: 4; left: -20%; top: 14%; font-size: 3rem; opacity: 0; }
+.finale.closed .fin-plane { opacity: 1; animation: planeAcross 4s ease-in-out 1.2s both; }
+.finale .btn--ghost { color: #6d0a1d; border-color: #b3122f; }
+
+/* tarjeta de embarque compacta: todo cabe sin mover la página */
+#entrada { gap: .75rem; }
+#entrada .btn { padding: .75rem 1.1rem; font-size: .78rem; letter-spacing: .08em; }
+#entrada .countdown { gap: .4rem; }
+.voice-btn { grid-template-columns: auto 1fr; align-items: center; justify-items: start; text-align: left; padding: .6rem .8rem; gap: .8rem; }
+.voice-btn .cassette { zoom: .52; }
+.voice-side { display: grid; gap: .4rem; }
+.voice-txt b { font-size: 1.12rem; }
+.voice-wave { height: 16px; }
+.voice { margin: 0 auto; }
+/* tablero del hall y check-in */
+.fids3d .fh { font-size: .95rem; }
+.fids3d .fr { font-size: .62rem; grid-template-columns: .9fr 1.4fr 1.1fr; gap: 6px; }
+.fids3d .fheart { font-size: 1.2rem; }
+.floor--boleteria { background:
+  repeating-linear-gradient(180deg, rgba(255,255,255,.07) 0 2px, transparent 2px 170px),
+  repeating-linear-gradient(90deg, rgba(0,0,0,.35) 0 2px, transparent 2px 12.5%),
+  linear-gradient(90deg, #15141c, #262532 50%, #15141c); }
+/* final: cielo al atardecer y nubes que entran */
+.finale { background: linear-gradient(180deg, #7fa8ff, #c9b6ff 45%, #ffd6e2 80%); }
+.fin-curtain { width: 75%; border-radius: 0; filter: blur(1.5px) drop-shadow(0 8px 14px rgba(120,90,160,.25)); opacity: 0; background:
+  radial-gradient(circle 22px at calc(28% + -33px) calc(10% + 0px), rgba(255,255,255,1) 97%, transparent 100%),
+  radial-gradient(circle 30px at calc(28% + -6px) calc(10% + -17px), rgba(255,255,255,1) 97%, transparent 100%),
+  radial-gradient(circle 24px at calc(28% + 27px) calc(10% + -5px), rgba(255,255,255,1) 97%, transparent 100%),
+  radial-gradient(circle 17px at calc(28% + 51px) calc(10% + 6px), rgba(255,255,255,1) 97%, transparent 100%),
+  radial-gradient(circle 16px at calc(28% + -57px) calc(10% + 7px), rgba(255,255,255,1) 97%, transparent 100%),
+  radial-gradient(69px 18px at calc(28% + 0px) calc(10% + 12px), rgba(255,255,255,1) 97%, transparent 100%),
+  radial-gradient(circle 17px at calc(66% + -25px) calc(20% + 0px), rgba(255,255,255,0.92) 97%, transparent 100%),
+  radial-gradient(circle 23px at calc(66% + -5px) calc(20% + -13px), rgba(255,255,255,0.92) 97%, transparent 100%),
+  radial-gradient(circle 18px at calc(66% + 21px) calc(20% + -4px), rgba(255,255,255,0.92) 97%, transparent 100%),
+  radial-gradient(circle 13px at calc(66% + 39px) calc(20% + 5px), rgba(255,255,255,0.92) 97%, transparent 100%),
+  radial-gradient(circle 12px at calc(66% + -44px) calc(20% + 6px), rgba(255,255,255,0.92) 97%, transparent 100%),
+  radial-gradient(53px 14px at calc(66% + 0px) calc(20% + 9px), rgba(255,255,255,0.92) 97%, transparent 100%),
+  radial-gradient(circle 14px at calc(22% + -22px) calc(50% + 0px), rgba(255,255,255,0.85) 97%, transparent 100%),
+  radial-gradient(circle 20px at calc(22% + -4px) calc(50% + -11px), rgba(255,255,255,0.85) 97%, transparent 100%),
+  radial-gradient(circle 16px at calc(22% + 18px) calc(50% + -3px), rgba(255,255,255,0.85) 97%, transparent 100%),
+  radial-gradient(circle 11px at calc(22% + 34px) calc(50% + 4px), rgba(255,255,255,0.85) 97%, transparent 100%),
+  radial-gradient(circle 10px at calc(22% + -38px) calc(50% + 5px), rgba(255,255,255,0.85) 97%, transparent 100%),
+  radial-gradient(46px 12px at calc(22% + 0px) calc(50% + 8px), rgba(255,255,255,0.85) 97%, transparent 100%),
+  radial-gradient(circle 27px at calc(34% + -41px) calc(84% + 0px), rgba(255,255,255,1) 97%, transparent 100%),
+  radial-gradient(circle 37px at calc(34% + -7px) calc(84% + -21px), rgba(255,255,255,1) 97%, transparent 100%),
+  radial-gradient(circle 30px at calc(34% + 33px) calc(84% + -6px), rgba(255,255,255,1) 97%, transparent 100%),
+  radial-gradient(circle 21px at calc(34% + 63px) calc(84% + 7px), rgba(255,255,255,1) 97%, transparent 100%),
+  radial-gradient(circle 19px at calc(34% + -70px) calc(84% + 9px), rgba(255,255,255,1) 97%, transparent 100%),
+  radial-gradient(85px 22px at calc(34% + 0px) calc(84% + 15px), rgba(255,255,255,1) 97%, transparent 100%),
+  radial-gradient(circle 21px at calc(72% + -32px) calc(94% + 0px), rgba(255,255,255,0.95) 97%, transparent 100%),
+  radial-gradient(circle 29px at calc(72% + -6px) calc(94% + -16px), rgba(255,255,255,0.95) 97%, transparent 100%),
+  radial-gradient(circle 23px at calc(72% + 26px) calc(94% + -5px), rgba(255,255,255,0.95) 97%, transparent 100%),
+  radial-gradient(circle 16px at calc(72% + 49px) calc(94% + 6px), rgba(255,255,255,0.95) 97%, transparent 100%),
+  radial-gradient(circle 15px at calc(72% + -55px) calc(94% + 7px), rgba(255,255,255,0.95) 97%, transparent 100%),
+  radial-gradient(67px 17px at calc(72% + 0px) calc(94% + 12px), rgba(255,255,255,0.95) 97%, transparent 100%); transition: transform 2s cubic-bezier(.3,0,.2,1), opacity 1.2s ease; }
+.fin-curtain--r { transform: translateX(102%) scaleX(-1); }
+.finale.closed .fin-curtain--r { transform: scaleX(-1); }
+.finale.closed .fin-curtain { opacity: 1; }
+.fin-curtain--l, .fin-curtain--r { border-radius: 0; }
+.fin-content { padding-top: 2rem; }
+
+/* celulares de pantalla más baja: tablero y tarjeta más compactos */
+@media (max-height: 760px) {
+  .d-sub { display: none; }
+  .dest { padding: .32rem .4rem; }
+  .d-ico { width: 2rem; height: 2rem; font-size: 1.1rem; }
+  .fids { gap: 4px; }
+  #moreHearts { display: none; }
+  #entrada .scene-title { font-size: 1.5rem; }
+  #voiceHint { display: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
@@ -1299,8 +1538,11 @@ body { touch-action: pan-y pinch-zoom; }
     <span class="door door--l"><i class="bar"></i><i class="kick"></i></span>
     <span class="door door--r"><i class="bar"></i><i class="kick"></i></span>
     <span class="transom">
-      <i class="bulbs-row bulbs-row--t"></i><i class="bulbs-row bulbs-row--b"></i>
-      <svg class="neon-heart" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 84 C20 62 8 46 8 32 C8 18 19 9 31 9 C40 9 46 14 50 21 C54 14 60 9 69 9 C81 9 92 18 92 32 C92 46 80 62 50 84 Z" fill="none" stroke="#ff7aa0" stroke-width="6" stroke-linejoin="round"/></svg>
+      <span class="term-sign">
+        <span class="ts-top"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>Salidas</span>
+        <span class="ts-sub">Terminal Nosotros</span>
+        <span class="ts-row">WM 0310 · DESTINO ??? <em>EMBARCANDO</em></span>
+      </span>
     </span>
     <span class="front">
       <i class="carpet"></i>
@@ -1310,7 +1552,7 @@ body { touch-action: pan-y pinch-zoom; }
   </button>
   <div class="sound-tip" id="soundTip">
     <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-    <div><b>Sube el volumen</b><span>Esta función es con sonido. Si puedes, usa audífonos.</span></div>
+    <div><b>Sube el volumen</b><span>Este vuelo es con sonido. Si puedes, usa audífonos.</span></div>
   </div>
   <span class="knock" id="knock">Toca la puerta para entrar</span>
   <span class="pick-hint" id="pickHint" hidden>Toca la carta para tomarla</span>
@@ -1331,14 +1573,14 @@ body { touch-action: pan-y pinch-zoom; }
       <span class="pencil" id="pencil" hidden aria-hidden="true"><svg viewBox="0 0 40 40" width="40" height="40"><g transform="rotate(-38 0 20)"><polygon points="0,20 5,18 5,22" fill="#3a3532"/><polygon points="3,18.6 12,15 12,25 3,21.4" fill="#e7c49a"/><rect x="12" y="15" width="22" height="10" fill="#f2b632"/><rect x="12" y="18.5" width="22" height="3" fill="#e0a21f"/><rect x="34" y="15" width="3.5" height="10" fill="#a9adb6"/><rect x="37.5" y="15" width="5" height="10" rx="2" fill="#ef8fa3"/></g></svg></span>
       <div class="monogram" aria-hidden="true"><i></i><span data-inicial>M</span><i></i></div>
       <p class="greet">Hola <span data-name>Maite</span>, <span data-apodo-ella>mi wawita mosha</span>, ¿cómo estái?:</p>
-      <p>Ya erís mi polola y yo feliz, cachai, pero quiero seguir sumando momentos lindos contigo, así como full. Así que te quiero invitar oficialmente al cine conmigo, <b id="when">mañana</b> en <span data-cine>Cineplanet</span>. Terrible plan, demasiado, cachai.</p>
+      <p>Ya erís mi polola y yo feliz, cachai, pero quiero seguir sumando momentos lindos contigo, así como full. Así que te quiero invitar oficialmente a salir conmigo. ¿A dónde? Esa es la gracia: esta vez decides tú, cachai.</p>
       <p>Y obvio que incluye todo, cero costo pa' ti, cachai:</p>
       <ul>
-        <li>Una butaca al lado mío, súper reservada, nada que ver con andar buscando puesto, cachai.</li>
-        <li>Cabritas, bebida y el combo que tú querái, demás que sí.</li>
-        <li>Y la posibilidad, así como full real, de darte un beso cada vez que nos asustemos, po. Y si no nos asustamos igual, cachai.</li>
+        <li>Un pasaje ida y vuelta conmigo al destino que tú querái, demás que sí.</li>
+        <li>Tus antojos favoritos para el camino, los que querái.</li>
+        <li>Y la posibilidad, así como full real, de darte un beso en cada despegue. Y en cada aterrizaje también, cachai.</li>
       </ul>
-      <p>La sala y la hora son secretas, o sea, misterio total, cachai.</p>
+      <p>Tú elegís el destino y el día; yo me encargo del resto, cachai.</p>
       <p>Bueno, eso. Erís lo más lindo que me ha pasado y quiero que tengamos muchos recuerdos juntos, cachai. Quedo atento a tu respuesta, porfa no me dejes en visto.</p>
       <div class="sign"><small>Besitos y atentamente,</small><svg class="sig" viewBox="0 0 320 76" role="img" aria-label="Firma"><defs><clipPath id="sigClip"><rect id="sigRect" x="0" y="-20" width="0" height="120"/></clipPath></defs><text x="316" y="56" text-anchor="end" clip-path="url(#sigClip)" data-firma>Diego</text></svg></div>
       <p class="alias">tu <span data-apodo>wawita</span></p>
@@ -1357,8 +1599,8 @@ body { touch-action: pan-y pinch-zoom; }
 
     <div class="verdict" id="verdict" hidden>
       <p class="scold" id="scold" hidden>¿Por qué quisiste apretar No???</p>
-      <p>Respuesta registrada: <b>Sí</b>. Era la única opción disponible. La cita queda oficialmente confirmada.</p>
-      <button class="btn btn--gold" id="goBol">Ir a la boletería</button>
+      <p>Respuesta registrada: <b>Sí</b>. Era la única opción disponible. Tu vuelo queda oficialmente confirmado.</p>
+      <button class="btn btn--gold" id="goBol">Ir al mostrador ✈</button>
     </div>
   </section>
 
@@ -1383,21 +1625,21 @@ body { touch-action: pan-y pinch-zoom; }
 
   <!-- 3. Combo -->
   <section class="scene" id="combo" hidden>
-    <div class="bucket" aria-hidden="true">🍿</div>
-    <h2 class="scene-title">Arma tu combo</h2>
-    <p class="scene-sub">Elige con los botones o escribe lo que quieras. El pedido corre por mi cuenta.</p>
+    <div class="bucket" aria-hidden="true">🥤</div>
+    <h2 class="scene-title">Antojos a bordo</h2>
+    <p class="scene-sub">Elige con los botones o escribe lo que quieras. Todo corre por mi cuenta.</p>
     <form class="combo" id="comboForm">
       <fieldset>
-        <legend>Cabritas</legend>
+        <legend>Para picar</legend>
         <div class="chips">
-          <label class="chip"><input type="radio" name="cabritas" id="c-dulce" value="dulces" checked><span>Dulces</span></label>
-          <label class="chip"><input type="radio" name="cabritas" id="c-salado" value="saladas"><span>Saladas</span></label>
-          <label class="chip"><input type="radio" name="cabritas" id="c-ambas" value="dulces y saladas"><span>Ambas</span></label>
+          <label class="chip"><input type="radio" name="cabritas" id="c-dulce" value="dulce" checked><span>Algo dulce</span></label>
+          <label class="chip"><input type="radio" name="cabritas" id="c-salado" value="salado"><span>Algo salado</span></label>
+          <label class="chip"><input type="radio" name="cabritas" id="c-ambas" value="dulce y salado"><span>De todo</span></label>
           <label class="chip"><input type="radio" name="cabritas" id="c-otra" value="Otra"><span>Otra cosa</span></label>
         </div>
         <div class="field">
-          <label for="cabritasDetail" id="cabritasLabel">¿Algún detalle? Escríbelo aquí</label>
-          <input type="text" id="cabritasDetail" maxlength="60" placeholder="Ej: con caramelo, extra mantequilla, tamaño grande" autocomplete="off">
+          <label for="cabritasDetail" id="cabritasLabel">¿Algo en especial? Escríbelo aquí</label>
+          <input type="text" id="cabritasDetail" maxlength="60" placeholder="Ej: chocolate, papas fritas, sushi" autocomplete="off">
         </div>
       </fieldset>
 
@@ -1406,6 +1648,7 @@ body { touch-action: pan-y pinch-zoom; }
         <div class="chips">
           <label class="chip"><input type="radio" name="bebida" id="b-jugo" value="Jugo" checked><span>Jugo</span></label>
           <label class="chip"><input type="radio" name="bebida" id="b-bebida" value="Bebida"><span>Bebida</span></label>
+          <label class="chip"><input type="radio" name="bebida" id="b-cafe" value="Café"><span>Café</span></label>
           <label class="chip"><input type="radio" name="bebida" id="b-otra" value="Otra"><span>Otra cosa</span></label>
         </div>
         <div class="field">
@@ -1419,7 +1662,7 @@ body { touch-action: pan-y pinch-zoom; }
         <div class="chips">
           <label class="chip"><input type="checkbox" name="extra" id="e-choco" value="Chocolate" checked><span>Chocolate</span></label>
           <label class="chip"><input type="checkbox" name="extra" id="e-gomitas" value="Gomitas"><span>Gomitas</span></label>
-          <label class="chip"><input type="checkbox" name="extra" id="e-hamburguesa" value="Hamburguesa"><span>Hamburguesa</span></label>
+          <label class="chip"><input type="checkbox" name="extra" id="e-helado" value="Helado"><span>Helado</span></label>
           <label class="chip"><input type="checkbox" name="extra" id="e-besitos" value="Besitos"><span>Besitos</span></label>
           <label class="chip"><input type="checkbox" name="extra" id="e-otra" value="Otra"><span>Otra cosa</span></label>
         </div>
@@ -1433,32 +1676,64 @@ body { touch-action: pan-y pinch-zoom; }
         </div>
       </fieldset>
 
-      <div class="row"><button class="btn btn--gold" type="submit">Confirmar pedido</button></div>
+      <div class="row"><button class="btn btn--gold" type="submit">Confirmar antojos</button></div>
+    </form>
+  </section>
+
+  <!-- Cuándo despegamos -->
+  <section class="scene" id="cuando" hidden>
+    <div class="bucket" aria-hidden="true">🗓️</div>
+    <h2 class="scene-title">¿Cuándo despegamos?</h2>
+    <p class="scene-sub">Elige el día y el momento. Si no sabes, déjamelo a mí.</p>
+    <form class="combo" id="whenForm">
+      <fieldset>
+        <legend>Día</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="dia" value="Este fin de semana" checked><span>Este finde</span></label>
+          <label class="chip"><input type="radio" name="dia" value="La próxima semana"><span>La próxima semana</span></label>
+          <label class="chip"><input type="radio" name="dia" value="Cuando Diego diga"><span>Cuando tú digas</span></label>
+          <label class="chip"><input type="radio" name="dia" value="fecha" id="d-fecha"><span>Elijo la fecha</span></label>
+        </div>
+        <div class="field" id="fechaField" hidden>
+          <label for="fechaInput">¿Qué día?</label>
+          <input type="date" id="fechaInput">
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Momento</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="momento" value="En la mañana"><span>Mañana</span></label>
+          <label class="chip"><input type="radio" name="momento" value="En la tarde" checked><span>Tarde</span></label>
+          <label class="chip"><input type="radio" name="momento" value="En la noche"><span>Noche</span></label>
+          <label class="chip"><input type="radio" name="momento" value="Todo el día"><span>Todo el día</span></label>
+        </div>
+      </fieldset>
+      <div class="row"><button class="btn btn--gold" type="submit">Siguiente: antojos a bordo</button></div>
     </form>
   </section>
 
   <!-- 4. Entrada -->
   <section class="scene" id="entrada" hidden>
-    <h2 class="scene-title">Tu entrada está lista</h2>
+    <h2 class="scene-title">Tu tarjeta de embarque</h2>
     <div class="held held--ticket" id="ticketHeld">
     <div class="ticket" id="ticket">
       <div class="ticket__main">
-        <div class="foil" aria-hidden="true"><span><b>Función</b>privada</span></div>
-        <div class="ticket__brand"><strong>Cine Nosotros</strong><small>N.º 000001</small></div>
-        <p class="ticket__movie" data-pelicula>La otra madre</p>
+        <div class="foil" aria-hidden="true"><span><b>Vuelo</b>privado</span></div>
+        <div class="ticket__brand"><strong>Aerolínea Wawita ✈</strong><small>Tarjeta de embarque</small></div>
+        <small class="pass-lbl">Destino</small>
+        <p class="ticket__movie"><span id="tIcon">✈</span> <span id="tPlan">Tú eliges</span></p>
         <dl class="ticket__grid">
-          <div><dt>Fecha</dt><dd id="tFecha">—</dd></div>
-          <div><dt>Hora</dt><dd id="tHora">—</dd></div>
-          <div><dt>Cine</dt><dd data-cine>Cineplanet</dd></div>
-          <div><dt>Sala</dt><dd id="tSala">—</dd></div>
-          <div class="wide"><dt>Combo</dt><dd id="tCombo">—</dd></div>
-          <div class="wide" id="tPlanRow" hidden><dt>Después del cine</dt><dd id="tPlan">—</dd></div>
-          <div><dt>Invitada</dt><dd data-name>Maite</dd></div>
-          <div><dt>Acompañante</dt><dd data-firma>Tu esposo</dd></div>
+          <div><dt>Día</dt><dd id="tFecha">—</dd></div>
+          <div><dt>Momento</dt><dd id="tHora">—</dd></div>
+          <div><dt>Vuelo</dt><dd>WM 0310</dd></div>
+          <div><dt>Puerta</dt><dd>♥ 3</dd></div>
+          <div class="wide"><dt>Antojos a bordo</dt><dd id="tCombo">—</dd></div>
+          <div><dt>Pasajera</dt><dd data-name>Maite</dd></div>
+          <div><dt>Acompañante</dt><dd data-firma>Diego</dd></div>
         </dl>
       </div>
       <div class="ticket__stub">
-        <div class="admit">ADMITE 2<em>tú + yo</em></div>
+        <div class="admit">PASAJEROS 2<em>tú + yo</em></div>
         <div><div class="seat" id="tAsiento">?</div><div class="seat-label">asiento</div></div>
         <button class="qr" id="qrBtn" aria-label="Ver mensaje secreto"><span class="barcode" aria-hidden="true"></span></button>
         <span class="qr-cap">Toca el código</span>
@@ -1474,27 +1749,24 @@ body { touch-action: pan-y pinch-zoom; }
         <div class="countdown__cell"><b id="cdM">00</b><small>min</small></div>
         <div class="countdown__cell"><b id="cdS">00</b><small>seg</small></div>
       </div>
-      <div class="countdown__done" id="cdDone" hidden>¡Es hoy! Nos vemos en la sala.</div>
+      <div class="countdown__done" id="cdDone" hidden>¡Es hoy! Nos vemos en el destino.</div>
       <p class="together">Pololeando hace <b class="togetherTime">—</b></p>
     </div>
 
-    <div class="row"><button class="btn btn--gold" id="planBtn">¿Y después del cine…?</button></div>
-    <p class="note">Guarda una captura y mándame tu pedido.</p>
-    <div class="row">
-      <a class="btn btn--gold" id="waBtn" href="https://api.whatsapp.com/send" target="_blank" rel="noopener">Enviarle mi pedido por WhatsApp</a>
-    </div>
+    <div class="row"><button class="btn btn--gold" id="orderBtn">Confirmar mi reserva ✈</button><button class="btn btn--ghost" id="planBtn">Cambiar destino</button></div>
+    <a id="waBtn" href="https://api.whatsapp.com/send" target="_blank" rel="noopener" hidden>WhatsApp</a>
     <div class="voice" id="voice" hidden>
       <button class="voice-btn" id="voiceBtn" aria-label="Escuchar el mensaje de Diego">
         <div class="cassette" aria-hidden="true"><span class="cs-label">Para <span data-name>Maite</span> ♥</span><div class="cs-win"><i class="cs-reel"></i><i class="cs-tape"></i><i class="cs-reel"></i></div></div>
-        <span class="voice-txt"><b>Un mensaje de <span data-firma>Diego</span> para ti</b><small id="voiceHint">Dale play con volumen 🎧</small></span>
-        <span class="voice-wave" aria-hidden="true"><i style="animation-delay:0.00s"></i><i style="animation-delay:0.07s"></i><i style="animation-delay:0.14s"></i><i style="animation-delay:0.21s"></i><i style="animation-delay:0.28s"></i><i style="animation-delay:0.35s"></i><i style="animation-delay:0.42s"></i><i style="animation-delay:0.49s"></i><i style="animation-delay:0.56s"></i><i style="animation-delay:0.63s"></i><i style="animation-delay:0.70s"></i><i style="animation-delay:0.77s"></i><i style="animation-delay:0.84s"></i><i style="animation-delay:0.01s"></i><i style="animation-delay:0.08s"></i><i style="animation-delay:0.15s"></i><i style="animation-delay:0.22s"></i><i style="animation-delay:0.29s"></i><i style="animation-delay:0.36s"></i><i style="animation-delay:0.43s"></i><i style="animation-delay:0.50s"></i><i style="animation-delay:0.57s"></i></span>
+        <span class="voice-side"><span class="voice-txt"><b>Un mensaje de <span data-firma>Diego</span> para ti</b><small id="voiceHint">Dale play con volumen 🎧</small></span>
+        <span class="voice-wave" aria-hidden="true"><i style="animation-delay:0.00s"></i><i style="animation-delay:0.07s"></i><i style="animation-delay:0.14s"></i><i style="animation-delay:0.21s"></i><i style="animation-delay:0.28s"></i><i style="animation-delay:0.35s"></i><i style="animation-delay:0.42s"></i><i style="animation-delay:0.49s"></i><i style="animation-delay:0.56s"></i><i style="animation-delay:0.63s"></i><i style="animation-delay:0.70s"></i><i style="animation-delay:0.77s"></i><i style="animation-delay:0.84s"></i><i style="animation-delay:0.01s"></i><i style="animation-delay:0.08s"></i><i style="animation-delay:0.15s"></i><i style="animation-delay:0.22s"></i><i style="animation-delay:0.29s"></i><i style="animation-delay:0.36s"></i><i style="animation-delay:0.43s"></i><i style="animation-delay:0.50s"></i><i style="animation-delay:0.57s"></i></span></span>
       </button>
       <div class="voice-bar" aria-hidden="true"><i id="voiceProg"></i></div>
       <p class="voice-msg" id="voiceMsg" hidden></p>
     </div>
     <div class="row">
       <button class="btn btn--gold" id="creditsBtn" hidden>Ver los créditos</button><!-- créditos: se activan más adelante -->
-      <button class="btn btn--gold" id="finaleBtn" hidden>Cerrar el telón 🎬</button>
+      <button class="btn btn--gold" id="finaleBtn" hidden>Despegar ✈</button>
       <button class="btn btn--ghost" id="moreHearts">Más corazones</button>
       <button class="btn btn--ghost" id="restart">Ver desde el inicio</button>
     </div>
@@ -1502,46 +1774,46 @@ body { touch-action: pan-y pinch-zoom; }
 
   <!-- Elegir asiento -->
   <section class="scene" id="asiento" hidden>
-    <h2 class="scene-title">Elige tu butaca</h2>
-    <p class="scene-sub">La de <span data-firma>Diego</span> ya está reservada. ¿Dónde te sientas tú?</p>
-    <div class="seatmap">
-      <div class="seat-screen">PANTALLA</div>
+    <h2 class="scene-title">Elige tu asiento</h2>
+    <p class="scene-sub">El de <span data-firma>Diego</span> ya está reservado. ¿Dónde te sientas tú?</p>
+    <div class="seatmap seatmap--plane">
+      <div class="seat-screen">✈ FRENTE DEL AVIÓN</div>
       <div class="seat-grid" id="seatGrid"></div>
-      <div class="seat-legend"><span><i class="lg lg-free"></i>Libre</span><span><i class="lg lg-taken"></i>Ocupada</span><span><i class="lg lg-him"></i><span data-firma>Diego</span></span></div>
+      <div class="seat-legend"><span><i class="lg lg-free"></i>Libre</span><span><i class="lg lg-taken"></i>Ocupado</span><span><i class="lg lg-him"></i><span data-firma>Diego</span></span></div>
     </div>
     <p class="no-msg" id="seatMsg" aria-live="polite"></p>
-    <button class="btn btn--gold" id="seatOk" hidden>Confirmar butaca</button>
+    <button class="btn btn--gold" id="seatOk" hidden>Confirmar asiento</button>
   </section>
 
   <!-- 5. Después del cine -->
   <section class="scene" id="despues" hidden>
     <div class="after-marquee">
-      <span class="eyebrow">Función de trasnoche</span>
-      <h2 class="scene-title">¿Y después del cine…?</h2>
+      <span class="eyebrow">✈ Salidas · Departures</span>
+      <h2 class="scene-title">¿A dónde quieres ir conmigo?</h2>
     </div>
-    <p class="scene-sub">Elige tu entrada para el siguiente plan.</p>
-    <div class="plans" id="plans"></div>
+    <p class="scene-sub">Elige tu destino. Tú decides, yo me apunto a lo que sea.</p>
+    <div class="fids" id="plans"></div>
     <div class="plan-other" id="planOther" hidden>
       <span class="po-title">Lo que tú quieras</span>
-      <label for="planOtherText"><span data-firma>Diego</span> se apunta a lo que sea. Escríbelo aquí:</label>
+      <label for="planOtherText"><span data-firma>Diego</span> se apunta a lo que sea. Escribe tu destino:</label>
       <input type="text" id="planOtherText" maxlength="60" placeholder="ir a la playa, karaoke, comer sushi…" autocomplete="off">
-      <button class="btn btn--gold" id="planOtherGo">Ver mi plan</button>
+      <button class="btn btn--gold" id="planOtherGo">Ver mi destino</button>
     </div>
-    <button class="link-btn" id="planBack">Volver a mi entrada</button>
+    <button class="link-btn" id="planBack" hidden>Volver a mi tarjeta de embarque</button>
   </section>
 </main>
 
 <div class="finale" id="finale" hidden>
   <div class="fin-curtain fin-curtain--l"></div><div class="fin-curtain fin-curtain--r"></div>
-  <div class="fin-valance"></div>
+  <div class="fin-valance"></div><span class="fin-plane" aria-hidden="true">✈️</span>
   <div class="fin-content">
-    <span class="eyebrow">Fin de la función</span>
-    <h2 class="fin-title">Fin</h2>
-    <p class="fin-msg">Nos vemos en la función, <span data-apodo-ella>mi wawita mosha</span>.</p>
+    <span class="eyebrow">Despegamos</span>
+    <h2 class="fin-title">Buen viaje</h2>
+    <p class="fin-msg">Nos vemos en el destino que elegiste, <span data-apodo-ella>mi wawita mosha</span>.</p>
     <div class="fin-heart" aria-hidden="true">❤</div>
     <p class="fin-sign">Con amor, <span data-firma>Diego</span></p>
     <div class="fin-actions">
-      <a class="btn btn--gold" id="finWa" target="_blank" rel="noopener">Enviarle mi pedido por WhatsApp</a>
+      <a class="btn btn--gold" id="finWa" target="_blank" rel="noopener">Mandarle mi reserva por WhatsApp</a>
       <button class="btn btn--ghost" id="finAgain">Ver desde el inicio</button>
     </div>
   </div>
@@ -1550,7 +1822,7 @@ body { touch-action: pan-y pinch-zoom; }
 <div class="planfx" id="planFx" hidden>
   <div class="pf-stage" id="pfStage"></div>
   <div class="pf-card" id="pfCard" hidden>
-    <span class="eyebrow">¿Este es el plan?</span>
+    <span class="eyebrow">¿Despegamos a este destino?</span>
     <h3 id="pfTitle"></h3>
     <div class="row">
       <button class="btn btn--gold" id="pfYes">¡Sí, ese!</button>
@@ -1559,15 +1831,15 @@ body { touch-action: pan-y pinch-zoom; }
   </div>
 </div>
 
-<div class="orderfx" id="orderFx" hidden role="dialog" aria-label="Tu pedido">
+<div class="orderfx" id="orderFx" hidden role="dialog" aria-label="Tu reserva">
  <div class="of-box" id="ofBox">
   <div class="of-printer">
     <div class="of-slot" id="ofSlot" aria-hidden="true"></div>
     <div class="of-feed">
       <div class="of-paper" id="ofPaper">
-        <div class="of-head"><b>Pedido</b><small>Función de trasnoche · <span data-cine>Cineplanet</span></small></div>
+        <div class="of-head"><b>Reserva</b><small>Vuelo WM 0310 · Aerolínea Wawita</small></div>
         <dl class="of-lines" id="ofLines"></dl>
-        <div class="of-main" id="ofMain"><small>Después del cine quiero</small><b id="ofPlan"></b><em id="ofMine" hidden>(lo escribí yo ✍️)</em></div>
+        <div class="of-main" id="ofMain"><small>Quiero ir a</small><b id="ofPlan"></b><em id="ofMine" hidden>(lo escribí yo ✍️)</em></div>
         <div class="of-total"><span>Total</span><span>$0 + 1 beso 💋</span></div>
         <div class="of-foot">Paga: <span data-firma>Diego</span> · Cliente favorita: <span data-name>Maite</span></div>
         <div class="of-bar" aria-hidden="true"></div>
@@ -1577,7 +1849,7 @@ body { touch-action: pan-y pinch-zoom; }
   </div>
   <div class="of-actions">
     <a class="btn btn--gold" id="ofSend" target="_blank" rel="noopener">Mandárselo a Diego 💌</a>
-    <button class="link-btn" id="ofBack">Listo, volver a mi entrada</button>
+    <button class="link-btn" id="ofBack">Listo, volver a mi tarjeta</button>
   </div>
  </div>
 </div>
@@ -1605,7 +1877,7 @@ const PLAN = {
   cancion:  "Me Gusta Todo de Ti", artista: "Noche de Brujas",
   voz:      "",        // el audio de Diego para el final (si está vacío, el cassette avisa que viene pronto)
   musica:   "",     // archivo de la canción; si está vacío suena el piano
-  mensaje:  "Gracias por decir que sí. Eres mi película favorita, y cada función contigo es un estreno. Te amo.",             // tu número con código de país, sin + ni espacios. Ej: "56912345678"
+  mensaje:  "Gracias por decir que sí. Contigo cualquier destino es mi lugar favorito. Te amo.",             // tu número con código de país, sin + ni espacios. Ej: "56912345678"
 };
 /* ======================================================= */
 const FOTOS = ["", "", "", "", "", "", "", "", "", "", "", ""];
@@ -1626,25 +1898,16 @@ $$("[data-apodo]").forEach(el => el.textContent = PLAN.apodo);
 $$("[data-apodo-ella]").forEach(el => el.textContent = PLAN.apodoElla);
 $$("[data-pelicula]").forEach(el => el.textContent = PLAN.pelicula);
 $$("[data-cine]").forEach(el => el.textContent = PLAN.cine);
-$("#tFecha").textContent = day.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" });
-const secret = (el, v, empty) => { el.textContent = v || empty; el.classList.toggle("secret", !v); };
-secret($("#tHora"), PLAN.hora && PLAN.hora + " hrs", "Secreta");
-secret($("#tSala"), PLAN.sala, "Secreta");
-secret($("#tAsiento"), PLAN.asiento, "?");
-$("#cdLabel").textContent = PLAN.hora ? "Faltan para la función" : "Faltan para el día de la cita";
-
-// "Mañana", "Hoy" o la fecha, según cuándo lo abra
-(() => {
-  const today = new Date(); today.setHours(0, 0, 0, 0);
-  const diff = Math.round((day - today) / 864e5);
-  $("#when").textContent = diff <= 0 ? "hoy" : diff === 1 ? "mañana"
-    : "el " + day.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" });
-})();
+$("#tFecha").textContent = "Tú eliges"; $("#tHora").textContent = "Tú eliges";
+$("#tAsiento").textContent = "?";
+$("#cdLabel").textContent = "Faltan para despegar";
+// fecha del vuelo: solo si ella elige un día exacto hay cuenta regresiva
+let cdTarget = null;
 
 // Cuenta regresiva
 const pad = n => String(n).padStart(2, "0");
 function tick() {
-  let ms = Math.max(0, target - new Date());
+  let ms = cdTarget ? Math.max(0, cdTarget - new Date()) : 0;
   const done = ms === 0;
   const d = Math.floor(ms / 864e5); ms -= d * 864e5;
   const h = Math.floor(ms / 36e5);  ms -= h * 36e5;
@@ -1652,8 +1915,8 @@ function tick() {
   const s = Math.floor(ms / 1e3);
   $("#cdD").textContent = d; $("#cdH").textContent = pad(h);
   $("#cdM").textContent = pad(m); $("#cdS").textContent = pad(s);
-  $("#cdGrid").hidden = done; $("#cdDone").hidden = !done;
-  $("#cdLabel").hidden = done;
+  $("#cdGrid").hidden = !cdTarget || done; $("#cdDone").hidden = !cdTarget || !done;
+  $("#cdLabel").hidden = !cdTarget || done;
   let t = Math.max(0, new Date() - new Date(PLAN.pololeo.length > 10 ? PLAN.pololeo + ":00" : PLAN.pololeo + "T00:00:00"));
   const td = Math.floor(t / 864e5); t -= td * 864e5;
   const th = Math.floor(t / 36e5); t -= th * 36e5;
@@ -1664,7 +1927,7 @@ function tick() {
 tick(); setInterval(tick, 1000);
 
 // Navegación entre escenas
-const steps = ["carta", "adivina", "combo", "asiento", "entrada", "despues"];
+const steps = ["carta", "adivina", "despues", "cuando", "combo", "asiento", "entrada"];
 // Cada escena cabe completa en la pantalla: si es más alta, se achica lo justo
 let fitting = false, freezeFit = false;
 const curZoom = el => parseFloat((el.closest(".scene") || el).style.zoom) || 1;
@@ -1961,9 +2224,9 @@ function buildLobby(kind) {
     ["Función privada", "linear-gradient(160deg,#ffe08a,#e65100 60%,#2a0b05)"],
   ];
   const romance = [
-    [`<span><small>Una historia de amor</small>${PLAN.nombre} &amp; ${PLAN.firma}</span>`, "linear-gradient(160deg,#ffb3c7,#d81b60 55%,#3a0b2a)"],
-    [`<span><small>Estreno mundial</small>Nosotros</span>`, "linear-gradient(160deg,#ffd9a8,#b3122f 55%,#2a0710)"],
-    [`<span><small>Próximamente</small>Para siempre</span>`, "linear-gradient(160deg,#f7c9d5,#8e24aa 55%,#1d0a2a)"],
+    [`<span><small>Vuelo directo</small>${PLAN.nombre} &amp; ${PLAN.firma}</span>`, "linear-gradient(160deg,#ffb3c7,#d81b60 55%,#3a0b2a)"],
+    [`<span><small>Destino</small>Nosotros</span>`, "linear-gradient(160deg,#ffd9a8,#b3122f 55%,#2a0710)"],
+    [`<span><small>Próximo vuelo</small>Para siempre</span>`, "linear-gradient(160deg,#f7c9d5,#8e24aa 55%,#1d0a2a)"],
   ];
   const set = kind === "table" ? romance : posters;
   const wallHtml = side => set.map(([t, bg], i) => {
@@ -1986,22 +2249,25 @@ function buildLobby(kind) {
     const imgs = pair.filter(n => FOTOS[n - 1]).map(n => `<img src="${FOTOS[n - 1]}" alt="" decoding="sync">`).join("");
     return `<div class="wallpic" style="left:${x}px;width:${w}px">${imgs}</div>`;
   }).join("") : "";
-  const bolPosters = side => ["img/la-odisea.jpg", "img/la-otra-madre.jpg", "img/cars.jpg", "img/la-odisea.jpg"].slice(side === "l" ? 0 : 1, side === "l" ? 3 : 4).map((img, i) => {
-    const at = (i + .45) / 3.4 * D, w = H * .3, x = side === "l" ? at : D - at - w;
-    return `<div class="lightbox lightbox--poster" style="left:${x}px;width:${w}px"><img src="${img}" alt=""></div><i class="sconce" style="left:${side === "l" ? at - 110 : D - at + 110}px"></i>`;
+  // pantallas de salidas en las paredes del check-in
+  const bolPosters = side => [0, 1, 2].map(i => {
+    const at = (i + .45) / 3.4 * D, w = H * .34, x = side === "l" ? at : D - at - w;
+    const rows = PLANES.slice((i * 4 + (side === "l" ? 0 : 2)) % PLANES.length).concat(PLANES).slice(0, 5)
+      .map(p => `${p.t.length > 16 ? p.t.slice(0, 15) + "…" : p.t}`).join("<br>");
+    return `<div class="lightbox lightbox--fids" style="left:${x}px;width:${w}px"><span><i>✈ Salidas</i>${rows}</span></div><i class="sconce" style="left:${side === "l" ? at - 110 : D - at + 110}px"></i>`;
   }).join("");
   const sideHtml = side => kind === "candy" ? shelves(side) : kind === "sala" ? wallPics(side) : kind === "boleteria" ? bolPosters(side) : wallHtml(side);
   face("wall wall--l wall--" + kind, D, H, `translate3d(${-W / 2}px,0,${-D / 2}px) rotateY(90deg)`, sideHtml("l"));
   face("wall wall--r wall--" + kind, D, H, `translate3d(${W / 2}px,0,${-D / 2}px) rotateY(-90deg)`, sideHtml("r"));
   if (kind === "candy") {
-    face("back back--candy", W, H, `translateZ(${-D}px)`, `<b>Dulcería</b>`);
+    face("back back--candy", W, H, `translateZ(${-D}px)`, `<b>Cafetería ✈</b>`);
     const ch = H * .3, cd = 150, cw = W * .86;
-    face("counter-front", cw, ch, `translate3d(0,${H / 2 - ch / 2}px,${zt + cd / 2}px)`, `<span>Cabritas · Bebidas · Dulces</span>`);
+    face("counter-front", cw, ch, `translate3d(0,${H / 2 - ch / 2}px,${zt + cd / 2}px)`, `<span>Café · Jugos · Dulces</span>`);
     face("counter-top", cw, cd, `translate3d(0,${H / 2 - ch}px,${zt}px) rotateX(90deg)`);
     face("popcorn", cw * .34, H * .22, `translate3d(${-cw * .22}px,${H / 2 - ch - H * .11}px,${zt - 20}px)`, `<i></i>`);
     face("cups", cw * .3, H * .12, `translate3d(${cw * .24}px,${H / 2 - ch - H * .06}px,${zt}px)`);
   } else if (kind === "boleteria") {
-    face("back back--bol", W, H, `translateZ(${-D}px)`, `<div class="scr">${"<i></i>".repeat(6)}</div><b>BOLETERÍA</b>`);
+    face("back back--bol", W, H, `translateZ(${-D}px)`, `<div class="scr">${"<i></i>".repeat(6)}</div><b>CHECK-IN ✈</b>`);
     face("counter-front counter--bol", W * .94, H * .24, `translate3d(0,${H / 2 - H * .12}px,${-D + 90}px)`);
     // postes dorados con cordón de terciopelo a lo largo de la alfombra
     const ph = H * .2, gap = 320, x = W * .3;
@@ -2041,8 +2307,12 @@ function buildLobby(kind) {
       face("seats", sw, sh, `translate3d(${W / 2 - sw / 2}px,${H / 2 - sh / 2}px,${z}px)`);
     }
   } else {
-    face("back", W, H, `translateZ(${-D}px)`, kind === "table"
-      ? `<div class="premiere"><small>Función de estreno</small><b>Tú y yo</b><i><svg viewBox="0 0 100 100"><path d="M50 84 C20 62 8 46 8 32 C8 18 19 9 31 9 C40 9 46 14 50 21 C54 14 60 9 69 9 C81 9 92 18 92 32 C92 46 80 62 50 84 Z" fill="none" stroke="#ff7aa0" stroke-width="7" stroke-linejoin="round"/></svg></i></div>` : `<b>Sala ?</b>`);
+    face(kind === "table" ? "back back--term" : "back", W, H, `translateZ(${-D}px)`, kind === "table"
+      ? `<div class="fids3d"><div class="fh"><span>✈ Salidas</span><span>Hora</span></div>
+          <div class="fr blink"><span>WM 0310</span><span>Tú eliges</span><span>Embarcando</span></div>
+          <div class="fr"><span>WM 1809</span><span>Nosotros</span><span>A tiempo</span></div>
+          <div class="fr"><span>WM 0109</span><span>Para siempre</span><span>A tiempo</span></div>
+          <div class="fheart">${PLAN.nombre} <svg viewBox="0 0 100 100" width="30" height="30"><path d="M50 84 C20 62 8 46 8 32 C8 18 19 9 31 9 C40 9 46 14 50 21 C54 14 60 9 69 9 C81 9 92 18 92 32 C92 46 80 62 50 84 Z" fill="none" stroke="#ff7aa0" stroke-width="8"/></svg> ${PLAN.firma}</div></div>` : `<b>Sala ?</b>`);
   }
   if (kind === "table") {
     face("beam", tw * 1.5, H / 2 + (H / 2 - th), `translate3d(0,${(-H / 2 + (H / 2 - th)) / 2}px,${zt - 2}px)`);
@@ -2084,7 +2354,7 @@ function walk(duration = 4600) {
 }
 // Caminar a otra parte del cine (dulcería, sala) y volver a la página
 // ---------- Público: aplausos continuos y flores ----------
-const FLOWERS = ["🌹", "🌹", "🌸", "🌷", "💐", "🌺", "🌹"];
+const FLOWERS = ["🌹", "💗", "🌸", "🌷", "💖", "🌺", "🌹"];
 let cheerTimers = [];
 function throwFlower() {
   if (reduced) return;
@@ -2154,7 +2424,7 @@ async function travel(kind, next) {
     crowd.innerHTML = Array.from({ length: 7 }, (_, i) => {
       const w = [58, 70, 62, 76, 66, 74, 60, 70, 58][i];
       return `<div class="fan" style="--w:${w}px;--d:${(Math.random() * .3).toFixed(2)}s"><i class="hn l"></i><i class="hn r"></i><i class="hd"></i><i class="bd"></i></div>`;
-    }).join("") + `<span class="bravo">¡Bravo! 👏</span>`;
+    }).join("") + `<span class="bravo">¡Aterrizamos! 👏</span>`;
     crowd.className = "crowd"; crowd.hidden = false; void crowd.offsetWidth; crowd.classList.add("up");
     // el público aplaude y lanza flores durante todo el baile
     startCheer();
@@ -2577,7 +2847,7 @@ noBtn.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ")
 function resetNo() { noBtn.classList.remove("loose"); noBtn.style.left = noBtn.style.top = ""; }
 
 $("#toCombo").addEventListener("click", () => travel("candy", "combo"));
-$("#goBol").addEventListener("click", () => travel("boleteria", "adivina"));
+$("#goBol").addEventListener("click", async () => { $("#planBack").hidden = true; await travel("boleteria", "despues"); flapBoard(); });
 
 // Boletería: adivinar la película
 const MOVIES = [
@@ -2630,10 +2900,37 @@ $$(".bol-windows button").forEach(w => w.addEventListener("click", () => {
   b.click();
 }));
 
-// Combo
+// Cuándo despegamos
+let cuando = null;
+$$("input[name=dia]").forEach(r => r.addEventListener("change", () => {
+  const f = r.value === "fecha";
+  $("#fechaField").hidden = !f;
+  if (f) { const t = new Date(); t.setDate(t.getDate() + 1); $("#fechaInput").min = t.toISOString().slice(0, 10); $("#fechaInput").focus(); }
+}));
+$("#whenForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = new FormData(e.target), d = f.get("dia"), m = f.get("momento"), fv = $("#fechaInput").value;
+  cdTarget = null;
+  let dia = d;
+  if (d === "fecha") {
+    if (!fv) { $("#fechaInput").focus(); return; }
+    const dt = new Date(fv + "T00:00:00");
+    dia = dt.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" });
+    dia = dia[0].toUpperCase() + dia.slice(1);
+    cdTarget = new Date(fv + "T" + ({ "En la mañana": "10:00", "En la tarde": "16:00", "En la noche": "20:00" }[m] || "00:00") + ":00");
+  }
+  cuando = { dia, momento: m };
+  $("#tFecha").textContent = dia; $("#tHora").textContent = m;
+  tick(); updateWa();
+  AudioFX.chime();
+  travel("candy", "combo");
+});
+
+// Antojos a bordo
 const drinkHints = {
   Jugo:   ["¿De qué sabor?", "Ej: naranja, piña, frambuesa"],
   Bebida: ["¿Cuál bebida?", "Ej: Coca-Cola, Sprite, Fanta"],
+  Café:   ["¿Cómo te gusta?", "Ej: latte, capuchino, con leche"],
   Otra:   ["Escribe qué quieres tomar", "Ej: té helado, agua con gas"],
 };
 $$("input[name=bebida]").forEach(r => r.addEventListener("change", () => {
@@ -2643,8 +2940,8 @@ $$("input[name=bebida]").forEach(r => r.addEventListener("change", () => {
 $("#e-gomitas").addEventListener("change", e => { $("#gomitasField").hidden = !e.target.checked; });
 $$("input[name=cabritas]").forEach(r => r.addEventListener("change", () => {
   const otra = r.value === "Otra";
-  $("#cabritasLabel").textContent = otra ? "Escribe qué quieres en vez de cabritas" : "¿Algún detalle? Escríbelo aquí";
-  $("#cabritasDetail").placeholder = otra ? "Ej: papas fritas, maní, churros" : "Ej: con caramelo, extra mantequilla, tamaño grande";
+  $("#cabritasLabel").textContent = otra ? "Escribe qué quieres para picar" : "¿Algo en especial? Escríbelo aquí";
+  $("#cabritasDetail").placeholder = otra ? "Ej: papas fritas, maní, churros" : "Ej: chocolate, papas fritas, sushi";
   if (otra) $("#cabritasDetail").focus();
 }));
 $("#e-otra").addEventListener("change", e => {
@@ -2661,6 +2958,7 @@ $("#comboForm").addEventListener("submit", async e => {
   const tipo = f.get("bebida"), det = $("#drinkDetail").value.trim();
   const bebida = tipo === "Jugo" ? (det ? `Jugo de ${det}` : "Jugo (sabor a elección)")
     : tipo === "Bebida" ? (det ? `Bebida: ${det}` : "Bebida (a elección)")
+    : tipo === "Café" ? (det ? `Café ${det}` : "Café (como te guste)")
     : (det || "Bebestible a elección");
   const extras = f.getAll("extra").filter(x => x !== "Otra").map(x => {
     const g = $("#gomitasDetail").value.trim();
@@ -2672,7 +2970,7 @@ $("#comboForm").addEventListener("submit", async e => {
   const cabDet = $("#cabritasDetail").value.trim();
   const cabritas = f.get("cabritas") === "Otra"
     ? (cabDet || "Algo para picar (a elección)")
-    : `Cabritas ${f.get("cabritas")}` + (cabDet ? ` (${cabDet})` : "");
+    : `Algo ${f.get("cabritas")}` + (cabDet ? ` (${cabDet})` : "");
   $("#tCombo").textContent = [cabritas, bebida, extras.join(", ") || "Sin extra"].join(" · ");
 
   combo = { cabritas, bebida, extras: extras.join(", ") || "nada" };
@@ -2683,32 +2981,39 @@ $("#comboForm").addEventListener("submit", async e => {
 $("#seatOk").addEventListener("click", async () => {
   updateWa();
   await travel("sala", "entrada");
+  yaEmbarcada = true;
+  $("#finaleBtn").hidden = false; $("#voice").hidden = false;
   holdWith($("#ticketHeld"), $("#ticket"), .3, 4);
   AudioFX.chime();
   rain(10000);
+  // la reserva sale impresa sola la primera vez
+  clearTimeout(window._autoOrder);
+  window._autoOrder = setTimeout(() => { if (!$("#entrada").hidden && $("#finale").hidden) showOrder(); }, reduced ? 600 : 4200);
 });
+$("#orderBtn").addEventListener("click", () => showOrder());
 
 // ---------- Elegir butaca ----------
-const ROWS = ["A", "B", "C", "D", "E", "F", "G"], HIM = { r: "E", n: 5 };
+const ROWS = [1, 2, 3, 4, 5, 6, 7], COLS = ["A", "B", "C", "D", "E", "F"], HIM = { r: 4, n: "B" };
 let miButaca = "";
-const seatMsgs = ["¿Tan lejos? 🥺 Más cerca de Diego, porfa.", "Esa butaca está muy lejos de tu wawita.", "Ni lo pienses, al lado mío 😏", "Hay butacas libres justo al lado…"];
+const seatMsgs = ["¿Tan lejos? 🥺 Más cerca de Diego, porfa.", "Ese asiento está muy lejos de tu wawita.", "Ni lo pienses, al lado mío 😏", "Hay asientos libres justo al lado…"];
 let seatNo = 0;
 function buildSeats() {
   const g = $("#seatGrid"); g.innerHTML = ""; miButaca = "";
   $("#seatOk").hidden = true; $("#seatMsg").textContent = "";
-  const taken = new Set(["A3", "A4", "B6", "B7", "C1", "C2", "D8", "F3", "F4", "G6", "G7", "C5", "B2"]);
+  const taken = new Set(["1A", "1B", "2E", "2F", "3C", "3D", "5D", "5E", "6A", "6B", "7C", "7F", "2B", "4E"]);
+  g.insertAdjacentHTML("beforeend", `<span></span>` + COLS.map((c, i) => (i === 3 ? `<span></span>` : "") + `<span class="seat-col">${c}</span>`).join(""));
   for (const r of ROWS) {
     g.insertAdjacentHTML("beforeend", `<span class="seat-row">${r}</span>`);
-    for (let n = 1; n <= 8; n++) {
-      if (n === 5) g.insertAdjacentHTML("beforeend", `<span></span>`);
+    COLS.forEach((n, ci) => {
+      if (ci === 3) g.insertAdjacentHTML("beforeend", `<span></span>`);
       const id = r + n, b = document.createElement("button");
-      b.className = "seat"; b.dataset.id = id; b.setAttribute("aria-label", "Butaca " + id);
-      if (r === HIM.r && n === HIM.n) { b.classList.add("him"); b.setAttribute("aria-label", "Butaca " + id + " de Diego"); }
+      b.className = "seat"; b.dataset.id = id; b.setAttribute("aria-label", "Asiento " + id);
+      if (r === HIM.r && n === HIM.n) { b.classList.add("him"); b.setAttribute("aria-label", "Asiento " + id + " de Diego"); }
       else if (taken.has(id)) b.classList.add("taken");
-      else if (r === HIM.r && Math.abs(n - HIM.n) === 1) b.classList.add("near");
+      else if (r === HIM.r && Math.abs(ci - COLS.indexOf(HIM.n)) === 1) b.classList.add("near");
       b.addEventListener("click", () => pickSeat(b));
       g.append(b);
-    }
+    });
   }
 }
 function pickSeat(b) {
@@ -2723,10 +3028,10 @@ function pickSeat(b) {
   b.classList.remove("near"); b.classList.add("mine");
   b.insertAdjacentHTML("beforeend", `<span class="seat-heart">❤️</span>`);
   miButaca = b.dataset.id;
-  $("#seatMsg").textContent = `¡${miButaca}! Justo al lado de ${PLAN.firma} 💕`;
+  $("#seatMsg").textContent = `¡${miButaca}! Justo al lado de ${PLAN.firma}${miButaca.endsWith("A") ? ", y con ventana" : ""} 💕`;
   $("#seatOk").hidden = false;
   AudioFX.kiss(); buzz([20, 40, 20]); burst(60);
-  if (!PLAN.asiento) { $("#tAsiento").textContent = miButaca; $("#tAsiento").classList.remove("secret"); }
+  $("#tAsiento").textContent = miButaca; $("#tAsiento").classList.remove("secret");
 }
 buildSeats();
 
@@ -2746,31 +3051,61 @@ $("#finAgain").addEventListener("click", () => { $("#finale").hidden = true; $("
 
 // ---------- Después del cine: planes con animación ----------
 const PLANES = [
-  { id: "manejar", icon: "🚗", t: "Manejar", sub: "Copiloto con playlist incluida", msg: "Tú, yo y la ciudad" },
+  { id: "cine", icon: "🎬", t: "Ir al cine", sub: "Cabritas, peli y besos en lo oscuro", scene: "marquee" },
   { id: "comer", icon: "🍝", t: "Comer algo rico", sub: "Mesa para dos, yo invito", msg: "Una cena rica para dos" },
-  { id: "casa", icon: "🛋️", t: "Regalonear en casita", sub: "Mantita, cabritas y regaloneo", msg: "Regaloneo en casita" },
-  { id: "otra", icon: "✍️", t: "Lo que tú quieras", sub: "Tú decides, yo me apunto" },
+  { id: "picnic", icon: "🧺", t: "Picnic o paseo al aire libre", sub: "Parque, cerro o mirador", msg: "Picnic al atardecer" },
+  { id: "casa", icon: "🛋️", t: "Regalonear en casita", sub: "Mantita y regaloneo", msg: "Regaloneo en casita" },
+  { id: "manejar", icon: "🚗", t: "Aprender a manejar", sub: "Yo de copiloto, con paciencia", msg: "Clases de manejo conmigo" },
+  { id: "gym", icon: "🏋️", t: "Ir al gym juntos", sub: "Un beso por cada repetición", msg: "Gym en pareja 💪" },
+  { id: "correr", icon: "👟", t: "Salir a correr", sub: "A tu ritmo, yo te sigo", msg: "A correr juntitos" },
+  { id: "salir", icon: "✨", t: "Salir por ahí", sub: "Pasear, carretear, lo que salga", msg: "Tú y yo por ahí" },
+  { id: "dormir", icon: "😴", t: "Dormir", sub: "Siesta larga, cero alarma", msg: "Dormir rico juntitos" },
+  { id: "peli", icon: "🍿", t: "Ver peli en casa", sub: "Tú eliges la peli", msg: "Peli en casita" },
+  { id: "abuela", icon: "👵", t: "Ir donde mi abuela", sub: "Once con la abuela de Diego", msg: "Once donde la abuela" },
+  { id: "otra", icon: "✍️", t: "Lo que tú quieras", sub: "Escríbelo tú, yo me apunto", scene: "marquee" },
 ];
-let planElegido = "", planActual = null, planPropio = false;
+let planElegido = "", planActual = null, planPropio = false, planIcon = "✈", yaEmbarcada = false;
+// Tablero de salidas: cada destino es una fila; las letras giran como paletas al aparecer
+const ST = ["Embarcando", "A tiempo", "A tiempo", "Embarcando", "A tiempo", "A tiempo", "A tiempo", "Embarcando", "A tiempo", "A tiempo", "A tiempo", "Tú decides"];
 (() => {
   const grid = $("#plans");
-  grid.innerHTML = PLANES.map((p, i) => `<button class="plan-card" data-plan="${p.id}" style="animation-delay:${.1 + i * .12}s">
-      <span class="pc-stub" aria-hidden="true">${p.icon}</span>
-      <span class="pc-txt"><b>${p.t}</b><small>${p.sub}</small></span>
-      <span class="pc-stamp" aria-hidden="true">Elegido</span></button>`).join("");
-  $$(".plan-card", grid).forEach(b => b.addEventListener("click", () => {
+  grid.innerHTML = `<div class="fids-head" aria-hidden="true"><span></span><span>Destino</span><span>Estado</span></div>` +
+    PLANES.map((p, i) => `<button class="dest" data-plan="${p.id}" style="--i:${i}">
+      <span class="d-ico" aria-hidden="true">${p.icon}</span>
+      <span class="d-txt"><b class="d-name" data-t="${p.t}">${p.t}</b><span class="d-sub">${p.sub}</span></span>
+      <span class="d-st${ST[i] === "Embarcando" ? " blink" : ""}">${ST[i]}</span></button>`).join("");
+  $$(".dest", grid).forEach(b => b.addEventListener("click", () => {
     const p = PLANES.find(x => x.id === b.dataset.plan);
-    $$(".plan-card", grid).forEach(c => c.classList.remove("picked"));
-    b.classList.add("picked"); AudioFX.paper();
+    $$(".dest", grid).forEach(c => { c.classList.remove("picked"); $(".d-st", c).textContent = ST[PLANES.findIndex(x => x.id === c.dataset.plan)]; });
+    b.classList.add("picked"); $(".d-st", b).textContent = "Elegido ♥"; AudioFX.paper(); buzz(20);
     if (p.id === "otra") { $("#planOther").hidden = false; setTimeout(() => { $("#planOther").scrollIntoView({ behavior: "smooth", block: "center" }); $("#planOtherText").focus(); }, 250); return; }
+    $("#planOther").hidden = true;
     setTimeout(() => playPlan(p), reduced ? 0 : 450);
   }));
   $("#planOtherGo").addEventListener("click", () => {
     const txt = $("#planOtherText").value.trim();
     if (!txt) { $("#planOtherText").focus(); return; }
-    playPlan({ id: "otra", t: txt, msg: txt });
+    playPlan({ id: "otra", t: txt, msg: txt, scene: "marquee" });
   });
 })();
+function flapBoard() {
+  const grid = $("#plans");
+  grid.classList.remove("in"); void grid.offsetWidth; grid.classList.add("in");
+  if (reduced) return;
+  const ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  $$(".d-name", grid).forEach((el, i) => {
+    const t = el.dataset.t, steps = 14 + i * 2;
+    let k = 0;
+    clearInterval(el._flap);
+    el._flap = setInterval(() => {
+      k++;
+      const shown = Math.floor(t.length * Math.max(0, (k - 4) / (steps - 4)));
+      el.textContent = [...t].map((c, j) => j < shown || c === " " ? c : ABC[Math.floor(Math.random() * ABC.length)]).join("");
+      if (k % 3 === 0) AudioFX.pencil();
+      if (k >= steps) { clearInterval(el._flap); el.textContent = t; }
+    }, 45);
+  });
+}
 function rising(n, bottom = 30, chars = ["♥", "♥", "✦"]) {
   return Array.from({ length: n }, (_, i) => `<i class="pf-rise" style="left:${10 + Math.random() * 80}%;bottom:${bottom}%;animation-delay:${(1.2 + Math.random() * 3).toFixed(2)}s;font-size:${(.9 + Math.random() * 1.2).toFixed(2)}rem;color:${["#ff7aa0", "#ffb3c7", "#e9c46f", "#fff"][i % 4]}">${chars[i % chars.length]}</i>`).join("");
 }
@@ -2795,8 +3130,31 @@ const COUPLE = `<svg viewBox="0 0 120 120" aria-hidden="true"><g fill="#ffd6e2">
   <circle cx="38" cy="22" r="11"/><path d="M26 36 h24 l4 40 h-8 l-2 40 h-8 l-2-36 -2 36 h-8 l-2-40 h-8z"/>
   <circle cx="82" cy="26" r="10"/><path d="M76 20 q6-10 16 0 q2 16 -4 26 z"/><path d="M70 38 h24 l12 44 h-14 l-2 34 h-7 l-2-30 -2 30 h-7 l-2-34 h-12z"/>
   <path d="M50 52 q10 8 22 0" stroke="#ffd6e2" stroke-width="6" fill="none" stroke-linecap="round"/></g></svg><span class="pf-heart">❤️</span>`;
+const emo = (e, x, y, size, cls = "pf-pop", delay = 0, extra = "") =>
+  `<span class="pf-emo ${cls}" style="left:${x}%;top:${y}%;font-size:${size}rem;animation-delay:${delay}s${extra ? ";" + extra : ""}">${e}</span>`;
 function planScene(p) {
+  if (p.scene === "marquee") return ["pf-night pf-premiere", stars(60) + marquee(p.t) + rising(14, 8)];
   switch (p.id) {
+    case "picnic": return ["pf-picnic", `<div class="pf-sun"></div><div class="pf-hill"></div><div class="pf-cloth"></div>` +
+      emo("🧺", 50, 72, 3.2, "pf-pop", 1.3) + emo("🍓", 30, 76, 2, "pf-pop", 1.7) + emo("🥪", 70, 76, 2, "pf-pop", 1.9) + emo("🧃", 40, 82, 1.8, "pf-pop", 2.1) + emo("🌼", 12, 66, 1.6, "pf-pop", .8) + emo("🌷", 88, 64, 1.6, "pf-pop", 1) +
+      emo("🦋", 24, 40, 1.8, "pf-fly", .5) + emo("🦋", 78, 30, 1.5, "pf-fly", 1.4) + rising(10, 30)];
+    case "gym": return ["pf-gym", `<div class="pf-spot"></div><div class="pf-floor"></div>` +
+      emo("🏋️‍♀️", 34, 58, 4.2, "pf-lift", .6) + emo("🏋️", 66, 58, 4.2, "pf-lift", .9, "animation-duration:.6s,.8s") +
+      emo("💪", 50, 34, 2.6, "pf-pop", 2) + emo("💦", 22, 40, 1.6, "pf-pop", 2.4) + emo("💗", 78, 38, 1.8, "pf-pop", 2.6) + rising(10, 30)];
+    case "correr": return ["pf-run-bg", `<div class="pf-sun" style="top:30%"></div><div class="pf-track"></div>` +
+      emo("🏃‍♀️", 42, 66, 3.6, "pf-run", .2, "--to:42%") + emo("🏃", 62, 66, 3.6, "pf-run", .5, "--to:62%") +
+      emo("💗", 52, 46, 2.2, "pf-pop", 3.6) + rising(10, 30)];
+    case "salir": return ["pf-night", stars(40) + `<div class="pf-moon"></div><div class="pf-ground"></div>` +
+      [12, 48, 84].map(x => `<i class="pf-lamp" style="left:${x}%"></i>`).join("") + `<div class="pf-couple">${COUPLE}</div>` + emo("✨", 30, 30, 2, "pf-pop", 2) + emo("🎶", 70, 26, 2, "pf-pop", 2.4)];
+    case "dormir": return ["pf-sleep", stars(50) + `<div class="pf-moon"></div><div class="pf-bed"></div>` +
+      emo("😴", 38, 70, 2.8, "pf-pop", 1) + emo("🥰", 62, 70, 2.8, "pf-pop", 1.3) +
+      `<span class="pf-zz" style="left:56%;bottom:44%">z</span><span class="pf-zz" style="left:62%;bottom:50%;animation-delay:2.9s">Z</span><span class="pf-zz" style="left:68%;bottom:56%;animation-delay:3.4s">Z</span>`];
+    case "abuela": return ["pf-granny", `<div class="pf-window"></div><div class="pf-tablecloth"></div>` +
+      emo("👵", 50, 56, 4.4, "pf-pop", .6) + emo("🍰", 30, 80, 2.6, "pf-pop", 1.4) + emo("☕", 70, 80, 2.4, "pf-pop", 1.7) + emo("🫖", 50, 84, 2.2, "pf-pop", 2) +
+      `<i class="pf-steam2" style="left:69%;top:66%;animation-delay:2.2s"></i><i class="pf-steam2" style="left:72%;top:64%;animation-delay:2.8s"></i>` + emo("💗", 62, 40, 1.8, "pf-pop", 2.6) + rising(10, 30)];
+    case "peli": return ["pf-home", `<div class="pf-tv"></div><div class="pf-couch"></div>` +
+      `<i class="pf-head pf-head--l" style="left:calc(50% - 60px)"></i><i class="pf-head pf-head--r" style="left:calc(50% + 6px)"></i><div class="pf-blanket"></div>` +
+      emo("🍿", 74, 62, 2.6, "pf-pop", 2) + emo("🎬", 24, 20, 2, "pf-pop", 1.2) + rising(10, 50)];
     case "manejar": return ["pf-drive", stars(30) + `<div class="pf-moon" style="right:10%;top:21%;width:50px;height:50px"></div><div class="pf-city"></div><div class="pf-road"><i></i></div>` +
       [0, 1, 2].map(i => `<i class="pf-pass pf-pass--l" style="animation-delay:${i * .7}s"></i><i class="pf-pass pf-pass--r" style="animation-delay:${.35 + i * .7}s"></i>`).join("") +
       `<div class="pf-carhearts">${rising(10, 0, ["♥"])}</div>` +
@@ -2834,12 +3192,12 @@ function playPlan(p) {
   const fx = $("#planFx"), stage = $("#pfStage");
   const [cls, html] = planScene(p);
   stage.className = "pf-stage " + cls;
-  stage.innerHTML = html + (p.id === "otra" ? "" : `<div class="pf-msg">${p.msg}</div>`);
+  stage.innerHTML = html + (p.scene === "marquee" ? "" : `<div class="pf-msg">${p.msg}</div>`);
   $("#pfTitle").textContent = p.t;
   $("#pfCard").hidden = true;
   fx.hidden = false;
   clearTimeout(window._pp1); clearTimeout(window._pp2); (window._ppx || []).forEach(clearTimeout);
-  if (p.id === "otra" && !reduced) {
+  if (p.scene === "marquee" && !reduced) {
     // 3, 2, 1… telón… ¡estreno!
     window._ppx = [0, 800, 1600].map((d, i) => setTimeout(() => AudioFX.beep(i === 2 ? 1400 : 1000), d));
     window._ppx.push(setTimeout(() => AudioFX.drumroll(1.2), 2400));
@@ -2854,14 +3212,14 @@ function playPlan(p) {
   window._pp2 = setTimeout(() => { $("#pfCard").hidden = false; }, reduced ? 0 : 4200);
 }
 $("#pfYes").addEventListener("click", () => {
-  planElegido = planActual.t; planPropio = planActual.id === "otra";
-  $("#tPlan").textContent = planElegido; $("#tPlanRow").hidden = false;
-  $("#planBtn").textContent = "Cambiar el plan de después";
+  planElegido = planActual.t; planPropio = planActual.id === "otra"; planIcon = PLANES.find(x => x.id === planActual.id)?.icon || "✈";
+  $$(".dest").forEach(c => c.classList.toggle("chosen", c.classList.contains("picked")));
+  $("#tPlan").textContent = planElegido; $("#tIcon").textContent = planPropio ? "✍️" : planIcon;
   $("#planFx").hidden = true;
   updateWa();
-  go("entrada");
-  $("#finaleBtn").hidden = false; $("#voice").hidden = false;
-  showOrder();
+  AudioFX.kiss(); burst(60);
+  if (yaEmbarcada) { go("entrada"); rain(3000); return; }
+  go("cuando");
 });
 
 // ---------- Mensaje de voz de Diego (al final) ----------
@@ -2896,16 +3254,17 @@ $("#voiceBtn").addEventListener("click", () => {
 
 // ---------- El pedido: sale impreso como boleta y se le manda a Diego ----------
 function showOrder() {
-  const fx = $("#orderFx"), rows = [["De", PLAN.nombre], ["Para", `${PLAN.firma} (${PLAN.apodo})`], ["Película", PLAN.pelicula],
-    ...(miButaca ? [["Butaca", `${miButaca}, al lado tuyo`]] : []),
-    ...(combo ? [["Cabritas", combo.cabritas.replace(/^Cabritas /, "")], ["Para tomar", combo.bebida], ["Extra", combo.extras]] : [])];
+  const fx = $("#orderFx"), rows = [["De", PLAN.nombre], ["Para", `${PLAN.firma} (${PLAN.apodo})`],
+    ...(cuando ? [["Día", cuando.dia], ["Momento", cuando.momento]] : []),
+    ...(miButaca ? [["Asiento", `${miButaca}, al lado tuyo`]] : []),
+    ...(combo ? [["Para picar", combo.cabritas], ["Para tomar", combo.bebida], ["Extra", combo.extras]] : [])];
   $("#ofLines").innerHTML = "";
   rows.forEach(([k, v]) => {
     const d = document.createElement("div");
     d.append(Object.assign(document.createElement("dt"), { textContent: k }), Object.assign(document.createElement("dd"), { textContent: v }));
     $("#ofLines").append(d);
   });
-  $("#ofPlan").textContent = planElegido; $("#ofMine").hidden = !planPropio;
+  $("#ofPlan").textContent = (planPropio ? "" : planIcon + " ") + (planElegido || "Tú eliges"); $("#ofMine").hidden = !planPropio;
   $("#ofSend").href = waHref(); $("#ofSend").textContent = `Mandárselo a ${PLAN.firma} 💌`;
   $("#ofStamp").classList.remove("hit");
   fx.classList.remove("print", "ready"); fx.hidden = false; fitOrder(); void fx.offsetWidth; fx.classList.add("print");
@@ -2939,21 +3298,21 @@ $("#ofBack").addEventListener("click", () => {
   $("#orderFx").hidden = true; $("#ofSlot").classList.remove("busy");
   rain(4000);
 });
-$("#pfNo").addEventListener("click", () => { $("#planFx").hidden = true; $$(".plan-card").forEach(c => c.classList.remove("picked")); });
+$("#pfNo").addEventListener("click", () => { $("#planFx").hidden = true; $$(".dest").forEach((c, i) => { c.classList.remove("picked"); }); $$(".dest .d-st").forEach((el, i) => el.textContent = ST[i]); });
 $("#planBtn").addEventListener("click", () => {
-  $("#planOther").hidden = true; $$(".plan-card").forEach(c => c.classList.remove("picked"));
-  const g = $("#plans"); g.classList.remove("in"); void g.offsetWidth; g.classList.add("in");
-  go("despues");
+  $("#planOther").hidden = true; $$(".dest").forEach(c => c.classList.remove("picked"));
+  $("#planBack").hidden = false;
+  go("despues"); flapBoard();
 });
 $("#planBack").addEventListener("click", () => go("entrada"));
 // El mensaje que le llega a Diego por WhatsApp, armado como un pedido
 function pedidoMsg() {
   const limpio = t => String(t).replace(/[*_~`]/g, "").trim();
-  const L = [`🎟️ *PEDIDO DE ${PLAN.nombre.toUpperCase()}* 🎟️`, "━━━━━━━━━━━━━━━", `Para: ${PLAN.firma}, mi ${PLAN.apodo} 💌`, "Respuesta a la invitación: *SÍ* ❤️", ""];
-  L.push(`🎬 Película: ${PLAN.pelicula} · ${PLAN.cine}`);
-  if (miButaca) L.push(`💺 Mi butaca: ${miButaca} (al lado tuyo)`);
-  if (combo) L.push("🍿 Mi combo:", `   • ${combo.cabritas}`, `   • ${combo.bebida}`, `   • Extra: ${combo.extras}`);
-  if (planElegido) L.push("", "🌙 *DESPUÉS DEL CINE QUIERO:*", `👉 *${limpio(planElegido)}* 👈` + (planPropio ? "\n(lo escribí yo ✍️)" : ""));
+  const L = [`✈️ *RESERVA DE ${PLAN.nombre.toUpperCase()}* ✈️`, "━━━━━━━━━━━━━━━", `Para: ${PLAN.firma}, mi ${PLAN.apodo} 💌`, "Respuesta a la invitación: *SÍ* ❤️"];
+  if (planElegido) L.push("", "📍 *QUIERO IR A:*", `👉 *${limpio(planElegido)}* 👈` + (planPropio ? "\n(lo escribí yo ✍️)" : ""));
+  if (cuando) L.push("", `🗓️ Cuándo: ${cuando.dia} · ${cuando.momento}`);
+  if (miButaca) L.push(`💺 Mi asiento: ${miButaca} (al lado tuyo)`);
+  if (combo) L.push("🥤 Mis antojos:", `   • ${combo.cabritas}`, `   • ${combo.bebida}`, `   • Extra: ${combo.extras}`);
   L.push("━━━━━━━━━━━━━━━", "Total: $0 + 1 beso 💋");
   return L.join("\n");
 }
@@ -2968,7 +3327,9 @@ $("#restart").addEventListener("click", () => {
   resetLetter(); phase = "doors"; pov.hidden = true; buildGuess(); buildSeats();
   $("#finale").hidden = true; $("#finaleBtn").hidden = true; $("#orderFx").hidden = true;
   stopVoice(); $("#voice").hidden = true; $("#voiceMsg").hidden = true;
-  planElegido = ""; planPropio = false; $("#tPlanRow").hidden = true; $("#planBtn").textContent = "¿Y después del cine…?";
+  planElegido = ""; planPropio = false; planIcon = "✈"; yaEmbarcada = false; cuando = null; combo = null; cdTarget = null; clearTimeout(window._autoOrder);
+  $("#tPlan").textContent = "Tú eliges"; $("#tIcon").textContent = "✈"; $("#tFecha").textContent = "Tú eliges"; $("#tHora").textContent = "Tú eliges"; $("#tAsiento").textContent = "?"; $("#tCombo").textContent = "—";
+  $$(".dest").forEach(c => c.classList.remove("picked", "chosen")); $$(".dest .d-st").forEach((el, i) => el.textContent = ST[i]); $("#planOther").hidden = true; $("#planBack").hidden = true;
   buildLobby("table"); entry.classList.remove("fade"); entry.hidden = false;
   $("#openBtn").hidden = false; $("#openBtn").classList.remove("open"); $("#knock").hidden = false; $("#soundTip").hidden = false; $("#noMsg").textContent = "";
   $("#verdict").hidden = true; noCount = 0;
