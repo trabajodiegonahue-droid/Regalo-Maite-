@@ -1692,6 +1692,58 @@ body { touch-action: pan-y pinch-zoom; }
 .pf-ribbon::after { content: ""; position: absolute; left: 0; top: 10px; width: 46vw; height: 8px; background: repeating-linear-gradient(90deg, #ff3d7f 0 10px, #fff 10px 20px); transform-origin: 0 50%; animation: ribbon 3.6s ease forwards; }
 @keyframes ribbon { 85% { transform: none; } 100% { transform: rotate(70deg) scaleX(.5); } }
 
+/* planes nuevos */
+.pf-hotdog { background: radial-gradient(120% 80% at 50% 30%, #ffd36b, #e0602a 70%); }
+.pf-bun { position: absolute; left: 50%; top: 50%; width: 240px; height: 70px; margin-left: -120px; border-radius: 40px; background: linear-gradient(180deg, #f2b25e, #c47a2a); box-shadow: 0 12px 24px rgba(0,0,0,.3); animation: bunPop .6s cubic-bezier(.3,1.5,.5,1) .3s both; }
+@keyframes bunPop { from { opacity: 0; transform: scale(.2); } }
+.pf-sausage { position: absolute; left: 50%; top: calc(50% - 12px); width: 260px; height: 34px; margin-left: -130px; border-radius: 20px; background: linear-gradient(180deg, #e0603a, #a8321a); animation: layerDrop .5s cubic-bezier(.3,1.5,.5,1) .7s both; opacity: 0; }
+.pf-top { position: absolute; left: 50%; width: 220px; height: 22px; margin-left: -110px; border-radius: 14px; opacity: 0; animation: layerDrop .5s cubic-bezier(.3,1.5,.5,1) forwards; }
+.pf-tom { top: calc(50% - 26px); background-image: radial-gradient(circle, rgba(255,255,255,.4) 0 3px, transparent 4px) !important; background-size: 18px 18px !important; }
+.pf-palta { top: calc(50% - 44px); height: 26px; }
+.pf-mayo { top: calc(50% - 56px); height: 16px; clip-path: polygon(0 50%, 8% 0, 16% 60%, 24% 0, 32% 60%, 40% 0, 48% 60%, 56% 0, 64% 60%, 72% 0, 80% 60%, 88% 0, 100% 50%, 100% 100%, 0 100%); }
+.pf-spa { background: radial-gradient(120% 80% at 50% 30%, #c9f1e6, #6abfa8 70%); }
+.pf-towel { position: absolute; left: -5%; right: -5%; bottom: 0; height: 32%; background: repeating-linear-gradient(90deg, #fff 0 30px, #e9f6f2 30px 60px); border-top: 6px solid #fff; }
+.pf-paint { background: linear-gradient(180deg, #fff4e0, #ffe0c2); }
+.pf-easel { position: absolute; left: 50%; top: 22%; width: 10px; height: 64%; margin-left: -5px; background: #8a5a2a; box-shadow: -90px 30px 0 -2px #8a5a2a, 90px 30px 0 -2px #8a5a2a; }
+.pf-canvas { position: absolute; left: 50%; top: 18%; width: 64vw; max-width: 250px; aspect-ratio: 1; transform: translateX(-50%); background: #fff; border: 6px solid #c9a35a; box-shadow: 0 14px 30px rgba(0,0,0,.25); padding: 8%; }
+.pf-canvas svg { width: 100%; height: 100%; overflow: visible; }
+.pf-stroke { fill: none; stroke-width: 7; stroke-linecap: round; stroke-dasharray: 320; stroke-dashoffset: 320; animation: draw 2.2s ease 1s forwards; }
+.pf-stroke.s1 { stroke: #ff3d7f; } .pf-stroke.s2 { stroke: #3ad6ff; animation-delay: 2.6s; }
+.pf-dot { fill: #ffd24a; opacity: 0; animation: showIn .4s ease 3s forwards; }
+.pf-splat { position: absolute; bottom: 8%; width: 46px; height: 40px; border-radius: 50% 40% 55% 45%; opacity: 0; animation: emoPop .4s cubic-bezier(.3,1.6,.5,1) forwards; }
+.pf-booth { background: radial-gradient(120% 80% at 50% 30%, #4a1a3a, #12050a 70%); }
+.pf-strip { position: absolute; left: 50%; top: 16%; width: 46vw; max-width: 180px; transform: translateX(-50%) rotate(-3deg); background: #fff; padding: 8px 8px 0; display: grid; gap: 6px; box-shadow: 0 16px 34px rgba(0,0,0,.5); }
+.pf-strip b { display: block; text-align: center; font: 400 1.2rem/2 var(--f-script); color: #b3122f; }
+.pf-shot { aspect-ratio: 4 / 3; background: #222 center / cover no-repeat; display: grid; place-items: center; font-size: 2.2rem; filter: brightness(3) saturate(0); opacity: 0; animation: develop 1.2s ease forwards; }
+@keyframes develop { 0% { opacity: 1; filter: brightness(3) saturate(0); } 100% { opacity: 1; filter: none; } }
+.pf-flash2 { position: absolute; inset: 0; background: #fff; opacity: 0; animation: pfFlash .5s ease-out; pointer-events: none; }
+.pf-crowd2 { position: absolute; left: 0; right: 0; bottom: 0; height: 26%; }
+.pf-crowd2 i { position: absolute; bottom: 0; width: 9%; height: 70%; border-radius: 50% 50% 0 0; background: #0a0412; box-shadow: 0 -2px 8px rgba(255,150,200,.3); animation: jump .5s ease-in-out infinite alternate; }
+@keyframes jump { to { transform: translateY(-12px); } }
+.pf-light { position: absolute; bottom: 20%; width: 6px; height: 6px; border-radius: 50%; background: #fff; box-shadow: 0 0 12px 4px rgba(255,255,255,.8); animation: twinkle .8s ease-in-out infinite; }
+.pf-aqua { background: linear-gradient(180deg, #0a4a7a, #0e6aa0 50%, #1a8ac0); }
+.pf-bubble { position: absolute; bottom: -10%; aspect-ratio: 1; border-radius: 50%; border: 2px solid rgba(255,255,255,.6); animation: bubble 4s ease-in infinite; }
+@keyframes bubble { to { bottom: 110%; transform: translateX(20px); } }
+.pf-swim { position: absolute; left: -15%; font-size: 2.6rem; transform: scaleX(-1); animation: swim 6s linear infinite; }
+@keyframes swim { to { left: 115%; } }
+.pf-glassline { position: absolute; left: 0; right: 0; bottom: 18%; height: 4px; background: rgba(255,255,255,.35); }
+.pf-escape { background: radial-gradient(60% 50% at 50% 40%, #3a2a1a, #0a0604 75%); }
+.pf-door { position: absolute; left: 50%; top: 22%; width: 150px; height: 230px; margin-left: -75px; border-radius: 8px 8px 0 0; background: repeating-linear-gradient(90deg, #5a3a1a 0 24px, #4a2e12 24px 26px); border: 8px solid #2a1a0a; transform-origin: 0 50%; animation: doorOpen 1.4s ease 3.4s forwards; box-shadow: 0 0 60px rgba(255,200,100,.25); }
+@keyframes doorOpen { to { transform: perspective(500px) rotateY(-75deg); box-shadow: 0 0 120px 40px rgba(255,220,140,.6); } }
+.pf-keyhole { position: absolute; right: 18px; top: 50%; width: 14px; height: 24px; background: radial-gradient(circle at 50% 30%, #000 5px, transparent 6px), linear-gradient(#000, #000) 50% 100% / 5px 12px no-repeat; }
+.pf-key { animation: emoPop .5s cubic-bezier(.3,1.6,.5,1) both, keyGo 1.4s ease 1.8s forwards; }
+@keyframes keyGo { 0% { opacity: 1; } 100% { opacity: 1; left: 64%; top: 52%; transform: translate(-50%, -50%) rotate(90deg) scale(.6); } }
+.pf-code { position: absolute; left: 50%; bottom: 10%; transform: translateX(-50%); display: flex; gap: 6px; }
+.pf-code b { display: grid; place-items: center; width: 34px; height: 42px; border-radius: 6px; background: #111; color: #7dff9a; font: 700 1.3rem var(--f-ticket); opacity: 0; animation: showIn .3s ease forwards; box-shadow: 0 0 10px rgba(125,255,154,.4); }
+.pf-bowl { background: linear-gradient(180deg, #120a30, #2a1a5a); }
+.pf-lane { position: absolute; left: 50%; bottom: 0; width: 70%; height: 80%; transform: translateX(-50%) perspective(500px) rotateX(55deg); transform-origin: 50% 100%; background: repeating-linear-gradient(90deg, #e0a860 0 18px, #c98a4a 18px 20px); box-shadow: 0 0 0 10px #2a2a40; }
+.pf-pin { opacity: 1; animation: pinFall .8s ease-out forwards; animation-delay: inherit; }
+@keyframes pinFall { to { transform: translate(calc(-50% + var(--dx)), -80%) rotate(calc(var(--dx) * 3deg)); opacity: 0; } }
+.pf-ball { position: absolute; left: 50%; bottom: -10%; font-size: 3rem; transform: translateX(-50%); animation: ballRoll 1.9s cubic-bezier(.4,.1,.6,1) .2s forwards; }
+@keyframes ballRoll { to { bottom: 60%; font-size: 1.4rem; } }
+.pf-strike { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0); font: 400 3.6rem/1 var(--f-display); color: #ffd24a; text-shadow: 0 0 20px #ff3d7f, 0 4px 0 #b3122f; animation: strike .6s cubic-bezier(.3,1.6,.5,1) 2.5s forwards; }
+@keyframes strike { to { transform: translate(-50%, -50%) scale(1) rotate(-6deg); } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
 }
@@ -3352,6 +3404,7 @@ const PLANES = [
   { id: "pizza", cat: "comer", icon: "🍕", t: "Pizza", msg: "Una pizza para compartir" },
   { id: "helado", cat: "comer", icon: "🍦", t: "Ir por un helado", msg: "Helado de la mano" },
   { id: "cafe", cat: "comer", icon: "☕", t: "Café y algo dulce", msg: "Cafecito y algo dulce" },
+  { id: "completos", cat: "comer", icon: "🌭", t: "Comer completos", msg: "Completos italianos 🇨🇱" },
   { id: "picnic", cat: "aire", icon: "🧺", t: "Picnic", msg: "Picnic al sol" },
   { id: "atardecer", cat: "aire", icon: "🌅", t: "Ver el atardecer", msg: "El atardecer contigo" },
   { id: "playa", cat: "aire", icon: "🏖️", t: "Ir a la playa", msg: "Tú, yo y el mar" },
@@ -3361,11 +3414,18 @@ const PLANES = [
   { id: "peli", cat: "casa", icon: "🍿", t: "Ver peli en casa", msg: "Peli en casita" },
   { id: "cocinar", cat: "casa", icon: "👩‍🍳", t: "Cocinar juntos", msg: "Cocinando juntitos" },
   { id: "juegos", cat: "casa", icon: "🎲", t: "Noche de juegos", msg: "Noche de juegos" },
+  { id: "spa", cat: "casa", icon: "🧖‍♀️", t: "Spa en casita", msg: "Mascarillas y masajes" },
+  { id: "pintar", cat: "casa", icon: "🎨", t: "Pintar juntos", msg: "Pintando juntitos" },
   { id: "dormir", cat: "casa", icon: "😴", t: "Dormir", msg: "Dormir rico juntitos" },
   { id: "karaoke", cat: "salir", icon: "🎤", t: "Karaoke", msg: "Karaoke a dúo" },
   { id: "bailar", cat: "salir", icon: "💃", t: "Ir a bailar", msg: "A bailar toda la noche" },
   { id: "feria", cat: "salir", icon: "🎡", t: "Ir a la feria o juegos", msg: "Una vuelta en la rueda" },
   { id: "museo", cat: "salir", icon: "🖼️", t: "Museo o exposición", msg: "Un museo contigo" },
+  { id: "fotos", cat: "salir", icon: "📸", t: "Sesión de fotos", msg: "Fotos de nosotros" },
+  { id: "concierto", cat: "salir", icon: "🎸", t: "Ir a un concierto", msg: "Un concierto juntos" },
+  { id: "acuario", cat: "salir", icon: "🐧", t: "Zoológico o acuario", msg: "A ver animalitos" },
+  { id: "escape", cat: "salir", icon: "🔐", t: "Escape room", msg: "Escapamos juntos" },
+  { id: "bolos", cat: "activo", icon: "🎳", t: "Jugar bolos", msg: "¡Chuza de amor!" },
   { id: "compras", cat: "salir", icon: "🛍️", t: "Ir de compras", msg: "De compras (paga Diego)" },
   { id: "abuela", cat: "salir", icon: "👵", t: "Ir donde mi abuela", msg: "Once donde la abuela" },
   { id: "manejar", cat: "activo", icon: "🚗", t: "Aprender a manejar", msg: "Clases de manejo conmigo" },
@@ -3533,6 +3593,32 @@ function planScene(p) {
     case "abuela": return ["pf-granny", `<div class="pf-window"></div><div class="pf-tablecloth"></div>` +
       emo("👵", 50, 56, 4.4, "pf-pop", .6) + emo("🍰", 30, 80, 2.6, "pf-pop", 1.4) + emo("☕", 70, 80, 2.4, "pf-pop", 1.7) + emo("🫖", 50, 84, 2.2, "pf-pop", 2) +
       `<i class="pf-steam2" style="left:69%;top:66%;animation-delay:2.2s"></i><i class="pf-steam2" style="left:72%;top:64%;animation-delay:2.8s"></i>` + emo("💗", 62, 40, 1.8, "pf-pop", 2.6) + rising(10, 30)];
+    case "completos": return ["pf-hotdog", `<div class="pf-plate2" style="top:62%"></div><div class="pf-bun"></div><div class="pf-sausage"></div>` +
+      [["#e0352f", 0, "pf-tom"], ["#9be05a", 1, "pf-palta"], ["#fff6e0", 2, "pf-mayo"]].map(([c, i, k]) => `<div class="pf-top ${k}" style="background:${c};animation-delay:${1 + i * .55}s"></div>`).join("") +
+      emo("🍟", 18, 70, 2.6, "pf-pop", 2.8) + emo("🥤", 84, 68, 2.6, "pf-pop", 3) + emo("😋", 50, 30, 2.4, "pf-pop", 3.2) + rising(8, 40)];
+    case "spa": return ["pf-spa", Array.from({ length: 10 }, () => `<i class="pf-bokeh" style="left:${Math.random() * 100}%;top:${Math.random() * 50}%;width:${20 + Math.random() * 40}px;animation-delay:${(Math.random() * 3).toFixed(1)}s"></i>`).join("") +
+      `<div class="pf-towel"></div>` + emo("🧖‍♀️", 38, 54, 4.2, "pf-pop", .5) + emo("🧖‍♂️", 62, 54, 4.2, "pf-pop", .8) +
+      emo("🥒", 26, 76, 2, "pf-pop", 1.6) + emo("🕯️", 74, 76, 2.2, "pf-pop", 1.8) + emo("🛁", 50, 80, 2.4, "pf-pop", 2.1) + emo("💆‍♀️", 50, 30, 2, "pf-pop", 2.6) + rising(10, 30, ["✦", "♥", "○"])];
+    case "pintar": return ["pf-paint", `<div class="pf-easel"></div><div class="pf-canvas"><svg viewBox="0 0 100 100"><path class="pf-stroke s1" d="M50 84 C20 62 8 46 8 32 C8 18 19 9 31 9 C40 9 46 14 50 21 C54 14 60 9 69 9 C81 9 92 18 92 32 C92 46 80 62 50 84 Z"/><path class="pf-stroke s2" d="M14 92 Q50 70 86 92"/><circle class="pf-dot" cx="22" cy="22" r="5"/><circle class="pf-dot" cx="80" cy="20" r="4" style="animation-delay:3.2s"/></svg></div>` +
+      emo("🖌️", 70, 40, 2.6, "pf-dance", 1) + emo("🎨", 22, 74, 3, "pf-pop", .6) + [["#ff3d7f", 20], ["#ffd24a", 40], ["#3ad6ff", 60], ["#7dff9a", 80]].map(([c, x], i) => `<i class="pf-splat" style="left:${x}%;background:${c};animation-delay:${1.4 + i * .3}s"></i>`).join("")];
+    case "fotos": {
+      const pics = FOTOS.filter(Boolean);
+      return ["pf-booth", `<div class="pf-strip">${[0, 1, 2, 3].map(i => `<div class="pf-shot" style="animation-delay:${.8 + i * .9}s;${pics[i + 6] ? `background-image:url('${pics[i + 6]}')` : ""}">${pics[i + 6] ? "" : ["😘", "🥰", "😜", "💏"][i]}</div>`).join("")}<b>${PLAN.nombre} ♥ ${PLAN.firma}</b></div>` +
+        [0, 1, 2, 3].map(i => `<i class="pf-flash2" style="animation-delay:${.7 + i * .9}s"></i>`).join("") + emo("📸", 18, 20, 2.6, "pf-pop", .3) + rising(8, 20)];
+    }
+    case "concierto": return ["pf-stagebg", `<i class="pf-beam2" style="left:6%;background:linear-gradient(180deg,#3ad6ff,transparent)"></i><i class="pf-beam2" style="right:6%;background:linear-gradient(180deg,#ff3d7f,transparent);animation-delay:-1s"></i>` +
+      `<div class="pf-stage2" style="bottom:34%;height:10%"></div>` + emo("🎸", 34, 50, 3, "pf-dance", .5) + emo("🎤", 52, 48, 3, "pf-dance", .7) + emo("🥁", 70, 52, 3, "pf-dance", .9) +
+      `<div class="pf-crowd2">${Array.from({ length: 14 }, (_, i) => `<i style="left:${i * 7.4}%;animation-delay:${(i % 4) * .15}s"></i>`).join("")}</div>` +
+      Array.from({ length: 10 }, (_, i) => `<i class="pf-light" style="left:${5 + i * 10}%;animation-delay:${(i * .23).toFixed(2)}s"></i>`).join("") + coupleAt(50, 2, 90, "#ffd6e2", 1.2)];
+    case "acuario": return ["pf-aqua", Array.from({ length: 16 }, () => `<i class="pf-bubble" style="left:${Math.random() * 100}%;width:${6 + Math.random() * 14}px;animation-delay:${(Math.random() * 4).toFixed(1)}s;animation-duration:${(3 + Math.random() * 3).toFixed(1)}s"></i>`).join("") +
+      [["🐠", 20, 1], ["🐟", 50, 1.6], ["🐡", 34, 2.2], ["🐙", 70, .5]].map(([e, y, d]) => `<span class="pf-swim" style="top:${y}%;animation-delay:${d}s">${e}</span>`).join("") +
+      emo("🐧", 30, 80, 3.2, "pf-dance", 1) + emo("🐧", 44, 82, 2.6, "pf-dance", 1.2) + emo("🦭", 74, 82, 3, "pf-pop", 1.6) + `<div class="pf-glassline"></div>` + coupleAt(56, 0, 110, "#0b2a3a", 2)];
+    case "escape": return ["pf-escape", `<div class="pf-door"><i class="pf-keyhole"></i></div>` +
+      emo("🔦", 20, 30, 2.4, "pf-fly", .4) + emo("🧩", 80, 24, 2.2, "pf-fly", .8) + emo("🗝️", 30, 70, 3, "pf-key", 1.2) + emo("⏱️", 76, 70, 2.4, "pf-pop", .6) +
+      `<div class="pf-code">${["4", "-", "2", "-", "♥"].map((c, i) => `<b style="animation-delay:${1.6 + i * .35}s">${c}</b>`).join("")}</div>` + emo("🎉", 50, 22, 2.6, "pf-pop", 3.6)];
+    case "bolos": return ["pf-bowl", `<div class="pf-lane"></div>` +
+      [[50, 26], [44, 22], [56, 22], [38, 18], [50, 18], [62, 18]].map(([x, y], i) => `<span class="pf-emo pf-pin" style="left:${x}%;top:${y + 10}%;font-size:2rem;--dx:${(x - 50) * 3}px;animation-delay:1.9s">🎳</span>`).join("") +
+      `<span class="pf-ball">🔴</span>` + `<div class="pf-strike">¡CHUZA!</div>` + rising(10, 30)];
     case "sorpresa": return ["pf-gift", stars(25) + `<div class="pf-giftbeam"></div><div class="pf-box"><div class="pf-lid"></div><div class="pf-base"></div></div>` + rising(18, 44, ["♥", "✦", "♥", "?"])];
     case "comer": return ["pf-dinner",
       Array.from({ length: 14 }, (_, i) => `<i class="pf-bokeh" style="left:${Math.random() * 100}%;top:${Math.random() * 45}%;width:${20 + Math.random() * 50}px;animation-delay:${(Math.random() * 3).toFixed(1)}s"></i>`).join("") +
