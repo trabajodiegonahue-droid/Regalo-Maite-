@@ -189,13 +189,27 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .letter.unfold { animation: unfold 1.2s cubic-bezier(.2,.8,.2,1); }
 @keyframes unfold { from { transform: perspective(900px) rotateX(-70deg) scaleY(.3); opacity: 0; } }
 .letter .to { margin: 0 0 1rem; font: 400 2.2rem/1 var(--f-script); color: var(--rose-deep); }
-.letter .l { margin: 0 0 1rem; font-size: 1.2rem; line-height: 1.6; opacity: 0; transform: translateY(8px); filter: blur(3px); transition: opacity 1.4s ease, transform 1.4s ease, filter 1.4s ease; }
-.letter .l.in { opacity: 1; transform: none; filter: none; }
+.letter .l { margin: 0 0 1rem; font-size: 1.2rem; line-height: 1.6; }
+/* cada párrafo aparece recién cuando le toca: el papel crece de a poco, sin espacios vacíos */
+.letter .l:not(.in) { display: none; }
+.letter .l.in { animation: paraIn .7s cubic-bezier(.2,.8,.2,1); }
+@keyframes paraIn { from { opacity: 0; transform: translateY(6px); } }
+/* las palabras se van escribiendo, como si las fuera dejando la tinta */
+.letter .w { opacity: 0; filter: blur(2px); transition: opacity .55s ease, filter .55s ease; }
+.letter .w.on { opacity: 1; filter: none; }
+.letter .sign.in small, .letter .sign.in b { animation: paraIn 1s ease both; }
+.letter .sign.in b { animation-delay: .5s; } .letter .sign.in small:last-child { animation-delay: 1s; }
+.next-para { display: flex; justify-content: center; align-items: center; gap: .5rem; margin: .4rem auto 0; padding: .55rem 1rem; border: 0; border-radius: 999px; background: rgba(216,67,110,.1); color: var(--rose-deep);
+  font: 500 .82rem/1 var(--f-ui); letter-spacing: .04em; opacity: 0; transition: opacity .6s ease; }
+.next-para:not(.show) { display: none; }
+.next-para.show { opacity: 1; animation: nudgeDown 2s ease-in-out infinite; }
+@keyframes nudgeDown { 50% { transform: translateY(3px); } }
 .letter .sign { margin-top: 1.4rem; text-align: right; }
 .letter .sign small { display: block; font: italic 500 1.05rem/1 var(--f-serif); color: var(--ink-soft); }
 .letter .sign b { display: block; margin-top: .3rem; font: 400 2.8rem/1 var(--f-script); color: var(--ink); font-weight: 400; }
 .letter .tear { position: absolute; width: 22px; height: 30px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: radial-gradient(circle at 40% 60%, rgba(140,170,220,.35), rgba(140,170,220,.1)); filter: blur(.5px); }
-.read-hint { position: sticky; bottom: 6px; display: block; margin: .6rem auto 0; width: max-content; padding: .45rem .9rem; border-radius: 999px; background: rgba(20,10,24,.75); font: 500 .78rem/1 var(--f-ui); color: var(--muted); }
+.read-hint[hidden], .read-hint { display: none !important; }
+.read-hint-old { position: sticky; bottom: 6px; display: block; margin: .6rem auto 0; width: max-content; padding: .45rem .9rem; border-radius: 999px; background: rgba(20,10,24,.75); font: 500 .78rem/1 var(--f-ui); color: var(--muted); }
 .letter-end { display: grid; justify-items: center; gap: .9rem; margin-top: 1.6rem; }
 
 /* final: flores */
@@ -424,11 +438,11 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
       <p class="l">Gracias por existir, por elegirme y por dejarme quererte.</p>
       <svg class="te-amo l" id="teAmo" viewBox="0 0 320 90" aria-label="Te amo"><text x="160" y="66" text-anchor="middle">Te amo, Maite</text></svg>
       <div class="sign l"><small>Con todo lo que soy,</small><b>Diego</b><small>tu wawita</small></div>
+      <button class="next-para" id="nextPara">Toca para seguir leyendo ♥</button>
     </article>
     <div class="letter-end" id="letterEnd" hidden>
       <button class="btn" data-next="abrazo">Una cosa más…</button>
     </div>
-    <span class="read-hint" id="readHint">Desliza para seguir leyendo</span>
   </div>
 </section>
 
@@ -779,32 +793,57 @@ sf.addEventListener("click", async e => {
 });
 const envSVG = () => `<svg viewBox="0 0 120 80" width="120" height="80"><rect x="2" y="2" width="116" height="76" rx="6" fill="#f6ecdf" stroke="#d9c296"/><path d="M2 6 L60 46 L118 6" fill="none" stroke="#d9c296" stroke-width="2"/><circle cx="60" cy="44" r="11" fill="#c2183f"/><text x="60" y="49" text-anchor="middle" font-size="13" fill="#ffd6e2" font-family="serif">M</text></svg>`;
 
-// ---------- la carta: aparece línea por línea ----------
-let letterOn = false;
+// ---------- la carta: se escribe palabra por palabra; ella va al ritmo que quiere ----------
+let letterOn = false, wake = null, skipPara = false;
+// separa cada párrafo en palabras (una sola vez)
+$$("#letter p.l").forEach(p => { p.innerHTML = p.textContent.split(/(\s+)/).map(t => /\s+/.test(t) ? t : `<span class="w">${t}</span>`).join(""); });
+const waitTap = ms => new Promise(res => { const t = setTimeout(() => { wake = null; res(); }, reduced ? 0 : ms); wake = () => { clearTimeout(t); wake = null; res(); }; });
+function keepInView(el) {
+  const wrap = $("#letterWrap"), r = el.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
+  if (r.bottom > wr.bottom - 90) wrap.scrollTo({ top: wrap.scrollTop + (r.bottom - wr.bottom) + 110, behavior: reduced ? "auto" : "smooth" });
+}
 async function startLetter() {
   if (letterOn) return; letterOn = true;
-  const L = $("#letter"), wrap = $("#letterWrap"); L.classList.remove("unfold"); void L.offsetWidth; L.classList.add("unfold");
-  $$(".l", L).forEach(p => p.classList.remove("in")); $("#letterEnd").hidden = true;
+  const L = $("#letter"), wrap = $("#letterWrap"), btn = $("#nextPara");
+  L.classList.remove("unfold"); void L.offsetWidth; L.classList.add("unfold");
+  $$(".l", L).forEach(p => p.classList.remove("in")); $$(".w", L).forEach(w => w.classList.remove("on"));
+  $("#letterEnd").hidden = true; $$(".tear", L).forEach(t => t.remove()); wrap.scrollTop = 0;
+  btn.classList.remove("show"); btn.hidden = false;
   Audio.swell(.75);
   await sleep(1300);
-  for (const p of $$(".l", L)) {
-    p.classList.add("in");
-    if (p.id === "teAmo") { p.classList.remove("draw"); void p.getBoundingClientRect(); p.classList.add("draw"); }
-    const r = p.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
-    if (r.bottom > wr.bottom - 40) wrap.scrollTo({ top: wrap.scrollTop + (r.bottom - wr.bottom) + 80, behavior: reduced ? "auto" : "smooth" });
-    await sleep(Math.min(7000, 1600 + p.textContent.length * 38));
+  const paras = $$(".l", L);
+  for (let k = 0; k < paras.length; k++) {
+    const p = paras[k]; p.classList.add("in"); skipPara = false;
+    if (p.id === "teAmo") { p.classList.remove("draw"); void p.getBoundingClientRect(); p.classList.add("draw"); keepInView(p); await waitTap(4200); continue; }
+    const words = $$(".w", p);
+    keepInView(p);
+    for (let i = 0; i < words.length; i++) {
+      if (skipPara || reduced) { words.slice(i).forEach(w => w.classList.add("on")); break; }
+      words[i].classList.add("on");
+      if (i % 6 === 5) keepInView(words[i]);
+      await new Promise(r => setTimeout(r, /[.,:;!?…]$/.test(words[i].textContent) ? 260 : 85));
+    }
+    keepInView(p);
+    if (k < paras.length - 1) {
+      // pausa para que alcance a leer; si toca, sigue al tiro
+      btn.classList.add("show"); keepInView(btn);
+      await waitTap(Math.min(6500, 2200 + p.textContent.length * 18));
+      btn.classList.remove("show");
+    }
   }
+  btn.hidden = true;
   // una lágrima cae sobre el papel
   const tear = document.createElement("i"); tear.className = "tear"; tear.style.left = "68%"; tear.style.top = (L.scrollHeight - 160) + "px"; L.append(tear);
   tear.animate([{ transform: "translateY(-40px) scale(.5)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 900, easing: "ease-in", fill: "forwards" });
-  burst(60); $("#letterEnd").hidden = false; $("#readHint").hidden = true;
-  setTimeout(() => wrap.scrollTo({ top: wrap.scrollHeight, behavior: reduced ? "auto" : "smooth" }), 300);
+  burst(60); $("#letterEnd").hidden = false;
+  setTimeout(() => wrap.scrollTo({ top: wrap.scrollHeight, behavior: reduced ? "auto" : "smooth" }), 900);
 }
-$("#letterWrap").addEventListener("scroll", () => { const w = $("#letterWrap"); if (w.scrollTop + w.clientHeight > w.scrollHeight - 30) $("#readHint").hidden = true; });
+// tocar la carta: si se está escribiendo, termina el párrafo; si está en pausa, pasa al siguiente
+$("#letter").addEventListener("click", () => { if (!letterOn) return; if (wake) { Audio.paper(); wake(); } else skipPara = true; });
 
 // final
 $("#waBtn").href = `https://api.whatsapp.com/send?phone=${D.whatsapp}&text=${encodeURIComponent("Ya leí tu carta 🥹💌\nTe amo, mi wawita ❤️")}`;
-$("#againBtn").addEventListener("click", () => { letterOn = false; huntOn = false; hugged = false; $("#readHint").hidden = false; $$(".prom").forEach(b => b.classList.remove("lit")); $("#promDone").textContent = ""; show("intro"); });
+$("#againBtn").addEventListener("click", () => { letterOn = false; huntOn = false; hugged = false; $$(".prom").forEach(b => b.classList.remove("lit")); $("#promDone").textContent = ""; show("intro"); });
 </script>
 </body>
 </html>
