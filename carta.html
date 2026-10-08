@@ -395,6 +395,10 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .dream span { font-size: 1.8rem; flex: 0 0 auto; animation: floatY 3s ease-in-out infinite; }
 @keyframes floatY { 50% { transform: translateY(-4px); } }
 .dream p { margin: 0; font-size: 1.15rem; line-height: 1.35; }
+/* el sueño más grande, al final */
+.dream.big { background: linear-gradient(135deg, rgba(255,210,122,.22), rgba(255,140,180,.14)); border-color: rgba(255,210,122,.6); box-shadow: 0 0 26px rgba(255,210,122,.3); }
+.dream.big p { font-weight: 600; color: #ffe6b0; }
+@media (max-height: 760px) { .dream { padding: .55rem .85rem; } .dream p { font-size: 1rem; } .dream span { font-size: 1.45rem; } }
 /* promesas: velas que ella enciende */
 .promises { display: grid; gap: .55rem; width: min(100%, 24rem); }
 .prom { display: flex; align-items: center; gap: 1rem; border: 0; padding: .55rem .9rem; border-radius: 14px; background: rgba(255,255,255,.04); text-align: left; transition: background .6s ease; }
@@ -636,13 +640,13 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
   <div class="letter-wrap" id="letterWrap">
     <article class="letter" id="letter"><i class="stardot" id="stardot" aria-hidden="true"></i>
       <p class="to">Mi wawita mosha:</p>
-      <p class="l">Te escribo esto con el corazón en la mano, porque hay cosas que me cuesta decir en voz alta, pero que siento todos los días.</p>
-      <p class="l">Antes de ti, mis días eran normales. No malos, solo normales. Y un 1 de septiembre empezamos a hablar, y sin darme cuenta empecé a esperar con ansias cada notificación tuya y a contar las horas para volver a hablar contigo.</p>
+      <p class="l">Te escribo esto con el corazón en la mano, porque hay cosas que me cuesta decir en voz alta, pero que siento de verdad.</p>
+      <p class="l">Antes de ti, mis días eran súper fomes. No tenía con quién hablar ni a quién contarle cómo me había ido; andaba aburrido, con la cabeza en nada. Y un 1 de septiembre empezamos a hablar, y sin darme cuenta empecé a esperar con ansias cada notificación tuya. Ahora todo tiene más color, porque estás tú.</p>
       <p class="l">El 18 de septiembre te vi por primera vez, y algo en mí lo supo al tiro. Cuando nos despedimos, lo único que quería era que fuera ese día otra vez.</p>
-      <p class="l">Y el 3 de octubre, a las 14:15, me dijiste que sí. No sé si te diste cuenta, pero ese día me cambiaste la vida. Desde ese momento ya no camino solo: camino contigo.</p>
+      <p class="l">Y el 3 de octubre, a las 14:15, me dijiste que sí. No sé si te diste cuenta, pero ese día se me quedó grabado para siempre. Desde ese momento ya no camino solo: camino contigo.</p>
       <p class="l">Quiero que sepas algo: no eres solo mi polola. Eres mi persona favorita y mi lugar seguro. Me encanta tu forma de mirarme y cómo haces que sienta que todo va a estar bien.</p>
-      <p class="l">Recién estamos empezando, y eso es lo más lindo: todo lo que nos falta por vivir. Quiero conocer cada parte de ti, estar en tus días buenos y sobre todo en los malos. Quiero ser el abrazo al que llegas cuando el mundo pesa.</p>
-      <p class="l">No te prometo una vida perfecta, porque nadie la tiene. Pero sí te prometo que nunca vas a tener que dudar de lo que siento por ti, porque te lo voy a demostrar todos los días.</p>
+      <p class="l">Recién estamos empezando, claro, pero ya sueño con muchas cosas contigo. Quiero conocer cada parte de ti, estar en tus días buenos y sobre todo en los malos. Quiero ser el abrazo al que llegas cuando el mundo pesa.</p>
+      <p class="l">No te prometo una vida perfecta, porque nadie la tiene. Pero sí te prometo amarte toda la vida, darte lo que necesites y apoyarte en todo. Nunca vas a tener que dudar de lo que siento por ti, porque te lo voy a demostrar siempre.</p>
       <p class="l">Gracias por existir, por elegirme y por dejarme quererte.</p>
       <svg class="te-amo l" id="teAmo" viewBox="0 0 320 90" aria-label="Te amo"><text x="160" y="66" text-anchor="middle">Te amo, Maite</text></svg>
       <div class="sign l"><small>Con todo lo que soy,</small><b>Diego</b><small>tu wawita</small></div>
@@ -718,7 +722,7 @@ const RAZONES = [   // las razones de Diego, todas distintas
   "Te amo por tu forma de ser, que es única.",
   "Te amo porque eres humilde, aunque tienes todo para no serlo.",
   "Te amo porque eres una muy buena hija.",
-  "Te amo porque eres una hermana increíble.",
+  "Te amo porque eres la mejor hermana.",
   "Te amo porque eres una gran estudiante y me inspiras.",
   "Te amo porque eres inteligente.",
   "Te amo porque desde el día en que llegaste, mi vida no ha vuelto a ser la misma.",
@@ -819,7 +823,7 @@ function show(id) {
   if (id === "ch3") setTimeout(() => { if (cur === "ch3") { Audio.chime(); const r = $("#ch3 .polaroid").getBoundingClientRect(); burst(60, r.left + r.width / 2, r.top + 40); buzz(30); } }, reduced ? 0 : 2100);
   if (id === "prologo") runPrologue();
   if (id === "confes") buildConf();
-  if (id === "suenos") setTimeout(() => { if (cur === "suenos") $$("#suenos .next").forEach(b => b.classList.add("show")); }, reduced ? 0 : 6800);
+  if (id === "suenos") setTimeout(() => { if (cur === "suenos") $$("#suenos .next").forEach(b => b.classList.add("show")); }, reduced ? 0 : 7800);
   if (id === "promesas") setTimeout(() => { if (cur === "promesas") $("#promNext").classList.add("show"); }, reduced ? 0 : 25000);
   if (id === "abrazo") { hugged = false; hugP = 0; $("#hugRing").style.strokeDashoffset = 490; $("#hugMsg").textContent = ""; }
   if (id === "fotos") buildWall();
@@ -857,8 +861,16 @@ function buildConf() {
   setTimeout(() => $("#confNext").classList.add("show"), reduced ? 0 : 20000);
 }
 // lo que sueño contigo
-const DREAMS = [["🌅", "Ver muchos atardeceres contigo, abrazados y sin apuro."], ["✈️", "Conocer lugares nuevos de la mano."], ["🍳", "Cocinar juntos un domingo cualquiera y que nos quede mal… y reírnos igual."], ["🎂", "Celebrar nuestro primer año. Y el segundo. Y todos."], ["🏡", "Tener nuestro propio rincón algún día."], ["💍", "Y algún día, quién sabe…"]];
-$("#dreams").innerHTML = DREAMS.map(([e, t], i) => `<div class="dream" style="--dl:${(.6 + i * .9).toFixed(1)}s"><span aria-hidden="true">${e}</span><p>${t}</p></div>`).join("");
+const DREAMS = [   // los sueños de Diego con ella
+  ["☀️", "Despertar y que siempre estés a mi lado."],
+  ["✈️", "Hacer nuestro primer viaje juntos."],
+  ["🍳", "Cocinar juntos un domingo cualquiera y que nos quede mal… y reírnos igual."],
+  ["🎂", "Celebrar nuestro primer año… y muchos más."],
+  ["🏡", "Vivir juntos en nuestra propia casita."],
+  ["✨", "Ser felices para siempre."],
+  ["💍", "Casarme contigo y formar una familia juntos."],
+];
+$("#dreams").innerHTML = DREAMS.map(([e, t], i) => `<div class="dream${i === DREAMS.length - 1 ? " big" : ""}" style="--dl:${(.6 + i * .85).toFixed(2)}s"><span aria-hidden="true">${e}</span><p>${t}</p></div>`).join("");
 // promesas
 const PROMS = ["Escucharte siempre, aunque sea algo chiquitito.", "Cuidarte en los días difíciles.", "Hacerte reír cuando más lo necesites.", "Ser sincero contigo, siempre.", "Elegirte todos los días."];
 $("#promises").innerHTML = PROMS.map(t => `<button class="prom"><span class="cdl" aria-hidden="true"><i></i></span><p>Te prometo… ${t}</p></button>`).join("");
@@ -1116,7 +1128,7 @@ function openGift(id) {
     <div class="note note2" id="note"><span class="n-num" id="noteNum">Toca el frasco 💌</span><span class="n-txt" id="noteTxt"></span></div><p class="small jar-left" id="jarLeft"></p>`;
   if (id === "luna") { const info = moonInfo(new Date(D.pololeo)); html = `<h3>La luna de nuestro día</h3><canvas class="moon" id="moonCv" aria-label="${info.name}"></canvas><p>Así estaba la luna el <b>3 de octubre de 2026</b>, el día que empezamos.</p><p class="small">${info.name} · iluminada al ${Math.round(info.illum * 100)}%</p>`; }
   if (id === "rosa") html = `<h3>Una rosa que no se marchita</h3>${rosaHTML()}<p>Esta te la regalo aquí, para que la tengas siempre.</p><p class="small">Las de verdad van en camino… 🌷</p>`;
-  if (id === "abrazo") html = `<h3>Un secreto</h3><p style="font-size:1.3rem">Cada vez que alguien me pregunta por ti, se me nota en la cara lo enamorado que estoy.</p><p class="small">No se lo cuentes a nadie 🤫💗</p>`;
+  if (id === "abrazo") html = `<h3>Un secreto</h3><p style="font-size:1.3rem">Siempre que alguien me habla de ti, se me escapa una sonrisa y me quedo pensando en lo increíble que eres.</p><p class="small">No se lo cuentes a nadie 🤫💗</p>`;
   card.innerHTML = html + `<button class="btn btn--ghost" id="closeCard">Cerrar</button>`;
   $("#modal").hidden = false; Audio.chime();
   if (id === "luna") requestAnimationFrame(() => drawMoon($("#moonCv"), moonInfo(new Date(D.pololeo))));
