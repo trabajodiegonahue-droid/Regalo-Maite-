@@ -522,10 +522,10 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
     <article class="letter" id="letter"><i class="stardot" id="stardot" aria-hidden="true"></i>
       <p class="to">Mi wawita mosha:</p>
       <p class="l">Te escribo esto con el corazón en la mano, porque hay cosas que me cuesta decir en voz alta, pero que siento todos los días.</p>
-      <p class="l">Antes de ti, mis días eran normales. No malos, solo normales. Y un 1 de septiembre empezamos a hablar, y sin darme cuenta empecé a esperar tus mensajes, a sonreír como tonto mirando el celular, a contar las horas para volver a hablar contigo.</p>
-      <p class="l">El 18 de septiembre te vi por primera vez. Me acuerdo de los nervios y de pensar "ojalá le caiga bien". Y cuando nos despedimos, lo único que quería era que fuera ese día otra vez.</p>
+      <p class="l">Antes de ti, mis días eran normales. No malos, solo normales. Y un 1 de septiembre empezamos a hablar, y sin darme cuenta empecé a esperar con ansias cada notificación tuya y a contar las horas para volver a hablar contigo.</p>
+      <p class="l">El 18 de septiembre te vi por primera vez, y algo en mí lo supo al tiro. Cuando nos despedimos, lo único que quería era que fuera ese día otra vez.</p>
       <p class="l">Y el 3 de octubre, a las 14:15, me dijiste que sí. No sé si te diste cuenta, pero ese día me cambiaste la vida. Desde ese momento ya no camino solo: camino contigo.</p>
-      <p class="l">Quiero que sepas algo: no eres solo mi polola. Eres mi persona favorita, mi calma cuando todo está revuelto, la razón de muchas de mis sonrisas. Me encanta tu risa, tu forma de mirarme, cómo haces que sienta que todo va a estar bien.</p>
+      <p class="l">Quiero que sepas algo: no eres solo mi polola. Eres mi persona favorita y mi lugar seguro. Me encanta tu forma de mirarme y cómo haces que sienta que todo va a estar bien.</p>
       <p class="l">Recién estamos empezando, y eso es lo más lindo: todo lo que nos falta por vivir. Quiero conocer cada parte de ti, estar en tus días buenos y sobre todo en los malos. Quiero ser el abrazo al que llegas cuando el mundo pesa.</p>
       <p class="l">No te prometo una vida perfecta, porque nadie la tiene. Pero sí te prometo que nunca vas a tener que dudar de lo que siento por ti, porque te lo voy a demostrar todos los días.</p>
       <p class="l">Si estás llorando mientras lees esto, que sea de felicidad. Y si no, igual te mando un abrazo gigante, de esos que duran harto.</p>
@@ -582,26 +582,29 @@ const D = {
 };
 const FOTOS = ["__FOTO1__", "__FOTO2__", "__FOTO3__", "__FOTO4__", "__FOTO5__", "__FOTO6__", "__FOTO7__", "__FOTO8__", "__FOTO9__", "__FOTO10__", "__FOTO11__", "__FOTO12__"].map(f => f.startsWith("__") ? "" : f);
 const CAPS = ["El día que dijiste que sí", "Tu sonrisa", "Nosotros", "Mi lugar favorito", "Tú y yo", "Mi favorita ♥", "Contigo", "Mi wawita", "Mi persona", "Te amo", "Mi felicidad", "Nuestra primera foto"];
-const RAZONES = [   // las razones de Diego, en sus palabras
-  "Porque con un mensaje tuyo me alegras el día.",
-  "Porque con escuchar tu voz me calmo.",
-  "Porque al verte mi corazón se acelera.",
-  "Porque cuando te toco, se pausa todo.",
-  "Porque cuando te abrazo, mi cuerpo entra en estado de tranquilidad.",
-  "Porque cada vez que te veo me emociono al saber que estoy contigo.",
-  "Porque cuando te beso, el mundo deja de existir y solo existimos nosotros dos.",
-  "Porque cuando me mandas una foto me alegras el día.",
-  "Porque tu sonrisa me hace muy feliz.",
-  "Porque siento que tenemos una conexión ultra especial.",
-  "Por tu humor.",
-  "Por tu forma de ser.",
-  "Por tu humildad.",
-  "Porque eres una buena hermana, una buena hija y una buena estudiante.",
-  "Porque me enamoré de ti en el momento en que te vi, y desde ahí nada en mi vida volvió a ser igual.",
-  "Porque no puedo parar de pensar en ti.",
-  "Porque eres maravillosa.",
-  "Porque eres perfecta.",
-  "Porque eres hermosa.",
+const RAZONES = [   // las razones de Diego, todas distintas
+  "Te amo porque un simple mensaje tuyo cambia todo mi día.",
+  "Te amo porque escuchar tu voz me tranquiliza al tiro.",
+  "Te amo porque cada vez que te veo, el corazón se me acelera.",
+  "Te amo porque cuando te toco, siento que todo lo demás puede esperar.",
+  "Te amo porque en tus abrazos mi cuerpo por fin descansa y se llena de paz.",
+  "Te amo porque cada vez que te veo me sigue emocionando que seamos nosotros.",
+  "Te amo porque tus besos me hacen olvidar hasta dónde estoy.",
+  "Te amo porque cuando me mandas una foto, me pongo feliz al instante.",
+  "Te amo porque tu sonrisa es mi felicidad favorita.",
+  "Te amo porque lo nuestro es una conexión ultra especial, de esas que no se encuentran dos veces.",
+  "Te amo porque con tu humor me haces reír como nadie.",
+  "Te amo por tu forma de ser, que es única.",
+  "Te amo porque eres humilde, aunque tienes todo para no serlo.",
+  "Te amo porque eres una muy buena hija.",
+  "Te amo porque eres una hermana increíble.",
+  "Te amo porque eres una gran estudiante y me inspiras.",
+  "Te amo porque eres inteligente.",
+  "Te amo porque desde el día en que llegaste, mi vida no ha vuelto a ser la misma.",
+  "Te amo porque no hay un minuto en que no estés en mis pensamientos.",
+  "Te amo porque eres maravillosa.",
+  "Te amo porque para mí eres perfecta.",
+  "Te amo porque eres hermosa, por dentro y por fuera.",
   "Te amo simplemente porque eres tú. ♥",
 ];
 /* ======================================================= */
@@ -894,7 +897,7 @@ function openGift(id) {
     <div class="note note2" id="note"><span class="n-num" id="noteNum">Toca el frasco 💌</span><span class="n-txt" id="noteTxt"></span></div><p class="small jar-left" id="jarLeft"></p>`;
   if (id === "luna") { const info = moonInfo(new Date(D.pololeo)); html = `<h3>La luna de nuestro día</h3><canvas class="moon" id="moonCv" aria-label="${info.name}"></canvas><p>Así estaba la luna el <b>3 de octubre de 2026</b>, el día que empezamos.</p><p class="small">${info.name} · iluminada al ${Math.round(info.illum * 100)}%</p>`; }
   if (id === "rosa") html = `<h3>Una rosa que no se marchita</h3>${rosaHTML()}<p>Esta te la regalo aquí, para que la tengas siempre.</p><p class="small">Las de verdad van en camino… 🌷</p>`;
-  if (id === "abrazo") html = `<h3>Un secreto</h3><p style="font-size:1.3rem">Cuando estoy contigo, el mundo se queda en silencio y solo existes tú.</p><p class="small">No se lo cuentes a nadie 🤫💗</p>`;
+  if (id === "abrazo") html = `<h3>Un secreto</h3><p style="font-size:1.3rem">Cada vez que alguien me pregunta por ti, se me nota en la cara lo enamorado que estoy.</p><p class="small">No se lo cuentes a nadie 🤫💗</p>`;
   card.innerHTML = html + `<button class="btn btn--ghost" id="closeCard">Cerrar</button>`;
   $("#modal").hidden = false; Audio.chime();
   if (id === "luna") requestAnimationFrame(() => drawMoon($("#moonCv"), moonInfo(new Date(D.pololeo))));
