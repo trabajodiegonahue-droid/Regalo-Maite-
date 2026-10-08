@@ -178,6 +178,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
   transform: rotate(12deg) scale(2.4); opacity: 0; }
 .cp2 { display: grid; justify-items: center; gap: .15rem; margin: .5rem 0 .9rem; text-align: center; transform: rotate(var(--r));
   background: radial-gradient(circle at 0 50%, transparent 10px, var(--paper) 11px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 10px, var(--paper) 11px) right / 51% 100% no-repeat; }
+.cp2 .used { pointer-events: none; top: 8px; right: 6px; bottom: auto; font-size: .6rem; }
 .cp2 .cp-ico { font-size: 1.8rem; line-height: 1; }
 .cp2 .cp-btn { margin-top: .6rem; padding: .6rem 1.1rem; font-size: .75rem; text-decoration: none; }
 .coupon .used.hit { animation: stamp2 .45s cubic-bezier(.3,1.6,.5,1) forwards; }
@@ -223,6 +224,50 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 @keyframes unroll { from { opacity: 0; transform: translateY(-70px) scaleY(.08) rotate(-6deg); } 60% { opacity: 1; } }
 .note2.end { box-shadow: 0 0 0 3px #ffd27a, 0 0 30px rgba(255,210,122,.6), 0 8px 18px rgba(0,0,0,.35); }
 .jar-left { min-height: 1.4em; }
+.cp-count { margin-top: .35rem; font: 600 .72rem/1 var(--f-ui); letter-spacing: .06em; color: var(--rose-deep); }
+.cp-count.bump { animation: cpBump .45s cubic-bezier(.3,1.6,.5,1); }
+@keyframes cpBump { 50% { transform: scale(1.3); } }
+.vale-tally { display: grid; gap: .2rem; justify-items: center; margin: 0 0 .3rem; padding: .7rem 1.2rem; border-radius: 14px; background: rgba(255,210,122,.1); border: 1px solid rgba(255,210,122,.4); }
+.vale-tally b { font: 700 .72rem/1 var(--f-ui); letter-spacing: .2em; text-transform: uppercase; color: #ffd27a; }
+.vale-tally span { font: 500 1.15rem/1.2 var(--f-serif); color: #ffe9ef; }
+.vale-tally small { font-size: .8rem; color: var(--muted); }
+/* ===== BOLETO DORADO (última razón del frasco) ===== */
+.goldfx { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; align-content: center; gap: 1.4rem; padding: 20px; overflow: hidden;
+  background: radial-gradient(70% 55% at 50% 45%, rgba(120,70,10,.85), rgba(10,5,2,.94)); animation: fade .4s ease; }
+.goldfx.bye { animation: gBye .45s ease forwards; }
+@keyframes gBye { to { opacity: 0; transform: scale(1.06); } }
+.g-flash { position: absolute; inset: 0; background: #fff6d6; opacity: 0; animation: gFlash 1.4s ease 1.05s; pointer-events: none; }
+@keyframes gFlash { 0% { opacity: 0; } 12% { opacity: .95; } 100% { opacity: 0; } }
+.g-rays { position: absolute; left: 50%; top: 45%; width: 180vmax; height: 180vmax; margin: -90vmax 0 0 -90vmax; pointer-events: none; opacity: 0;
+  background: repeating-conic-gradient(rgba(255,214,120,.32) 0 6deg, transparent 6deg 18deg);
+  -webkit-mask: radial-gradient(circle, #000 8%, transparent 55%); mask: radial-gradient(circle, #000 8%, transparent 55%);
+  animation: gRaysIn 1s ease 1.1s forwards, gSpin 22s linear infinite; }
+@keyframes gRaysIn { to { opacity: 1; } }
+@keyframes gSpin { to { rotate: 360deg; } }
+.g-star { position: absolute; width: var(--s); height: var(--s); background: #fff3c4; clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  filter: drop-shadow(0 0 6px #ffd27a); opacity: 0; animation: gTwinkle 1.8s ease-in-out infinite; }
+@keyframes gTwinkle { 0%, 100% { opacity: 0; transform: scale(.3) rotate(0); } 50% { opacity: 1; transform: scale(1) rotate(45deg); } }
+.g-ticket { position: relative; z-index: 2; width: min(100%, 22rem); perspective: 900px; }
+.g-in { position: relative; overflow: hidden; display: grid; gap: .55rem; justify-items: center; text-align: center; padding: 1.5rem 1.3rem 1.2rem; border-radius: 16px; color: #4a2a05;
+  background: linear-gradient(135deg, #fff1b8 0%, #f5c84c 22%, #fff6d6 42%, #e5a92e 62%, #fff1b8 80%, #d99a22 100%);
+  box-shadow: 0 0 0 3px #fff3c4, 0 0 0 7px #c48a1c, 0 0 60px 14px rgba(255,200,80,.75), 0 30px 60px rgba(0,0,0,.6);
+  animation: gTicketIn 1.3s cubic-bezier(.2,.9,.25,1) both, gGlow 1.8s ease-in-out 1.4s infinite alternate; }
+.g-in::before, .g-in::after { content: ""; position: absolute; top: 50%; width: 26px; height: 26px; margin-top: -13px; border-radius: 50%; background: #2a1606; }
+.g-in::before { left: -13px; } .g-in::after { right: -13px; }
+@keyframes gTicketIn { 0% { opacity: 0; transform: translateY(70vh) rotateY(900deg) scale(.2); } 70% { opacity: 1; transform: translateY(-14px) rotateY(-12deg) scale(1.08); } 100% { transform: none; } }
+@keyframes gGlow { to { box-shadow: 0 0 0 3px #fff3c4, 0 0 0 7px #c48a1c, 0 0 100px 26px rgba(255,210,100,.95), 0 30px 60px rgba(0,0,0,.6); } }
+.g-shine { position: absolute; inset: -40% -80%; background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,.85) 50%, transparent 58%); transform: translateX(-60%); animation: gShine 2.4s ease-in-out 1.4s infinite; pointer-events: none; }
+@keyframes gShine { 0% { transform: translateX(-60%); } 60%, 100% { transform: translateX(60%); } }
+.g-top { position: relative; font: 700 .9rem/1 var(--f-ui); letter-spacing: .32em; text-transform: uppercase; color: #6a3a00; }
+.g-sub { position: relative; font: 600 .66rem/1 var(--f-ui); letter-spacing: .14em; text-transform: uppercase; color: #8a5a10; }
+.g-txt { position: relative; display: block; margin: .3rem 0; font: 400 clamp(2rem, 9.5vw, 2.7rem)/1.12 var(--f-script); color: #5a1a00; text-shadow: 0 1px 0 #fff6d6, 0 0 14px rgba(255,255,255,.6); }
+.g-foot { position: relative; padding-top: .55rem; border-top: 2px dashed rgba(106,58,0,.45); font: 600 .62rem/1.3 var(--f-ui); letter-spacing: .12em; text-transform: uppercase; color: #6a3a00; }
+.g-btn { position: relative; z-index: 2; opacity: 0; animation: fadeUp .6s ease 2.6s forwards; background: linear-gradient(180deg, #ffe08a, #e5a92e); color: #3a1f00; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+/* la nota del frasco queda dorada después */
+.note2.gold { background: linear-gradient(135deg, #fff1b8, #f5c84c 35%, #fff6d6 60%, #e5a92e); box-shadow: 0 0 0 3px #fff3c4, 0 0 34px rgba(255,200,80,.8); }
+.note2.gold .n-num { color: #6a3a00; }
+.note2.gold .n-txt { font: 400 1.7rem/1.15 var(--f-script); color: #5a1a00; }
 .jar-left b { color: #ffd27a; font-weight: 600; }
 @keyframes noteIn { from { opacity: 0; transform: translateY(40px) rotate(-8deg) scale(.7); } }
 .moon { width: 170px; aspect-ratio: 1; }
@@ -568,6 +613,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
     <h2 class="h-serif">Las flores de verdad te las quiero dar en persona</h2>
     <p class="lead">Así que avísame cuando termines de leer… y prepárate para un abrazo de esos largos.</p>
     <div class="links" style="display:grid;gap:.7rem;justify-items:center">
+      <p class="vale-tally" id="valeTally" hidden></p>
       <a class="btn" id="waBtn" href="https://api.whatsapp.com/send" target="_blank" rel="noopener" style="color:var(--night)">Ya leí tu carta 💌</a>
       <button class="btn btn--ghost" id="againBtn">Volver a empezar</button>
     </div>
@@ -709,7 +755,7 @@ function show(id) {
   if (id === "regalos") buildGifts();
   if (id === "buscar") startHunt();
   if (id === "carta") startLetter();
-  if (id === "final") { petals(12000, 90); Audio.swell(1); }
+  if (id === "final") { petals(12000, 90); Audio.swell(1); updateWaFinal(); }
 }
 $$("[data-next]").forEach(b => b.addEventListener("click", () => { Audio.paper(); show(b.dataset.next); }));
 $("#startBtn").addEventListener("click", () => { Audio.start(); $("#soundBtn").hidden = false; show("prologo"); });
@@ -826,6 +872,31 @@ function buildGifts() {
   setTimeout(() => $("#giftsNext").classList.add("show"), reduced ? 0 : 25000);
 }
 let razon = 0, jarBusy = false;
+const GOLD = ["#ffd27a", "#ffe9a8", "#f5b942", "#fff6d6", "#e8a93a"];
+function goldBurst(n, x = innerWidth / 2, y = innerHeight * .45) {
+  if (reduced) return;
+  for (let i = 0; i < n; i++) { const a = Math.random() * Math.PI * 2, v = 4 + Math.random() * 9;
+    add({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 4, gr: .22, r: Math.random() * 6, vr: (Math.random() - .5) * .2, s: 8 + Math.random() * 14, c: GOLD[i % 5], life: 0, k: "h" }); }
+}
+// la última razón sale como un boleto dorado, a lo grande
+function goldenTicket(text) {
+  return new Promise(res => {
+    const fx = document.createElement("div"); fx.className = "goldfx";
+    fx.innerHTML = `<i class="g-flash"></i><i class="g-rays"></i>${Array.from({ length: 26 }, (_, k) => `<i class="g-star" style="left:${(Math.random() * 100).toFixed(1)}%;top:${(Math.random() * 100).toFixed(1)}%;animation-delay:${(.6 + Math.random() * 2).toFixed(2)}s;--s:${(6 + Math.random() * 12).toFixed(0)}px"></i>`).join("")}
+      <div class="g-ticket"><div class="g-in"><i class="g-shine"></i>
+        <span class="g-top">✦ Boleto dorado ✦</span><span class="g-sub">Razón ${RAZONES.length} de ${RAZONES.length} · La más importante</span>
+        <b class="g-txt">${text}</b>
+        <span class="g-foot">Válido para toda la vida · Admite: tú y yo · N.º 1 de 1</span></div></div>
+      <button class="btn g-btn">Guardar mi boleto 💛</button>`;
+    document.body.append(fx);
+    Audio.chime(); setTimeout(() => Audio.chime(), 380); setTimeout(() => { Audio.chime(); Audio.pop(); }, 1250);
+    buzz([30, 60, 30, 60, 120]);
+    setTimeout(() => goldBurst(130), reduced ? 0 : 1250);
+    setTimeout(() => { goldBurst(80, innerWidth * .2, innerHeight * .3); goldBurst(80, innerWidth * .8, innerHeight * .3); }, reduced ? 0 : 1900);
+    setTimeout(() => petals(5000, 60), reduced ? 0 : 1500);
+    $(".g-btn", fx).addEventListener("click", () => { fx.classList.add("bye"); setTimeout(() => { fx.remove(); res(); }, reduced ? 0 : 450); });
+  });
+}
 const PAPER_C = ["#ffd6e2", "#fff3c4", "#ffe0cc", "#e8dcff", "#d6f1ff"];
 // el frasco con un papelito por cada razón que falta leer
 function fillJar(drop) {
@@ -842,7 +913,7 @@ async function drawReason() {
   if (razon >= RAZONES.length) {
     // se acabaron: se vuelve a llenar
     razon = 0; fillJar(true); Audio.chime();
-    $("#noteNum").textContent = "Toca el frasco 💌"; $("#noteTxt").textContent = ""; note.classList.remove("open", "end");
+    $("#noteNum").textContent = "Toca el frasco 💌"; $("#noteTxt").textContent = ""; note.classList.remove("open", "end", "gold");
     return;
   }
   jarBusy = true;
@@ -852,8 +923,9 @@ async function drawReason() {
   await sleep(520);
   top?.remove();
   const i = razon++;
-  note.classList.remove("open", "end"); void note.offsetWidth;
-  $("#noteNum").textContent = `Razón ${i + 1} de ${RAZONES.length}`;
+  note.classList.remove("open", "end", "gold"); void note.offsetWidth;
+  if (i === RAZONES.length - 1) { await goldenTicket(RAZONES[i]); note.classList.add("gold"); }
+  $("#noteNum").textContent = i === RAZONES.length - 1 ? "✦ Boleto dorado ✦" : `Razón ${i + 1} de ${RAZONES.length}`;
   $("#noteTxt").textContent = RAZONES[i];
   note.classList.add("open"); Audio.pop();
   const left = RAZONES.length - razon;
@@ -892,16 +964,25 @@ function rosaHTML() {
   return `<div class="rose" aria-hidden="true"><i class="stem"></i><i class="leaf l"></i><i class="leaf r"></i><div class="bloom">${ps.join("")}</div></div>`;
 }
 const VALES = [
-  { ico: "💋", t: "Vale por besos", sub: "Los que quieras, cuando quieras · Ilimitados · Nunca vencen", wa: "💋 Quiero canjear mi VALE POR BESOS 💋\n(y sigue valiendo para siempre 😌)" },
-  { ico: "🤗", t: "Vale por un abrazo", sub: "De esos largos que duran harto · Canjeable siempre · Sin fecha de vencimiento", wa: "🤗 Quiero canjear mi VALE POR UN ABRAZO 🤗\nDe esos largos, porfa 🥹" },
+  { ico: "💋", t: "Vale por besos", sub: "Los que quieras, cuando quieras · Ilimitados · Nunca vencen", uno: "beso", varios: "besos" },
+  { ico: "🤗", t: "Vale por un abrazo", sub: "De esos largos que duran harto · Canjeable siempre · Sin fecha de vencimiento", uno: "abrazo", varios: "abrazos" },
 ];
+// cuántas veces apretó cada vale (se guarda en su celular y se muestra al final)
+let valeCount = [0, 0];
+try { const v = JSON.parse(localStorage.getItem("maite_vales") || "[0,0]"); if (Array.isArray(v)) valeCount = [+v[0] || 0, +v[1] || 0]; } catch {}
+const saveVales = () => { try { localStorage.setItem("maite_vales", JSON.stringify(valeCount)); } catch {} };
+const valeTxt = k => valeCount[k] ? `Canjeado ${valeCount[k]} ${valeCount[k] === 1 ? "vez" : "veces"} ${VALES[k].ico}` : "Todavía sin canjear";
+function valesResumen() {
+  const [b, a] = valeCount, f = (n, k) => `${n} ${n === 1 ? VALES[k].uno : VALES[k].varios}`;
+  return { b, a, txt: b || a ? `Canjeaste ${f(b, 0)} y ${f(a, 1)} 😌` : "" };
+}
 function openGift(id) {
   const card = $("#card"); let html = "";
   const q = encodeURIComponent(`${D.cancion} ${D.artista}`);
-  if (id === "vale") html = `<h3>Tus vales</h3><p class="small">Canjéalos cuando quieras. Me llega el aviso al tiro 😌</p>` + VALES.map((v, k) =>
+  if (id === "vale") html = `<h3>Tus vales</h3><p class="small">Apriétalos todas las veces que quieras. Yo después cumplo cada uno 😌</p>` + VALES.map((v, k) =>
     `<div class="coupon cp2" style="--r:${k ? 1.5 : -1.5}deg"><span class="cp-ico">${v.ico}</span><b>${v.t}</b><small>${v.sub}</small>
-      <a class="btn cp-btn" data-vale="${k}" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?phone=${D.whatsapp}&text=${encodeURIComponent(v.wa)}">Canjear ${v.ico}</a>
-      <span class="used" id="used${k}">Canjeado ♥<br>(sigue valiendo)</span></div>`).join("");
+      <button class="btn cp-btn" data-vale="${k}">Canjear ${v.ico}</button><span class="cp-count" id="cpCount${k}">${valeTxt(k)}</span>
+      <span class="used${valeCount[k] ? " hit" : ""}" id="used${k}">Canjeado ♥<br>(sigue valiendo)</span></div>`).join("");
   if (id === "cancion") html = `<h3>Nuestra canción</h3><div class="vinyl" aria-hidden="true"></div><p><b>${D.cancion}</b><br><span style="color:var(--muted)">${D.artista}</span></p><p class="small">Cada vez que la escuche voy a pensar en ti.</p><div class="links"><a href="https://open.spotify.com/search/${q}" target="_blank" rel="noopener">Spotify</a><a href="${D.youtube}" target="_blank" rel="noopener">YouTube</a></div>`;
   if (id === "frasco") html = `<h3>Un frasco de razones</h3><p class="small">${RAZONES.length} razones por las que te amo. Toca el frasco para sacar un papelito.</p>
     <div class="jar-wrap"><button class="jar jar2" id="jar" aria-label="Sacar una razón"><i class="glass"><span class="papers" id="papers"></span></i><i class="cap"><i class="ribbon"></i></i><i class="tag">Razones por las<br>que te amo ♥</i></button></div>
@@ -913,8 +994,10 @@ function openGift(id) {
   $("#modal").hidden = false; Audio.chime();
   if (id === "luna") requestAnimationFrame(() => drawMoon($("#moonCv"), moonInfo(new Date(D.pololeo))));
   if (id === "vale") $$(".cp-btn", card).forEach(b => b.addEventListener("click", () => {
-    const k = +b.dataset.vale; $("#used" + k).classList.add("hit"); Audio.pop(); buzz([20, 40, 20]);
-    const r = b.getBoundingClientRect(); burst(50, r.left + r.width / 2, r.top); b.textContent = "Canjear otra vez " + VALES[k].ico;
+    const k = +b.dataset.vale; valeCount[k]++; saveVales(); updateWaFinal();
+    const st = $("#used" + k); st.classList.remove("hit"); void st.offsetWidth; st.classList.add("hit"); Audio.pop(); buzz([20, 40, 20]);
+    const c = $("#cpCount" + k); c.textContent = valeTxt(k); c.classList.remove("bump"); void c.offsetWidth; c.classList.add("bump");
+    const r = b.getBoundingClientRect(); burst(40, r.left + r.width / 2, r.top); b.textContent = "Canjear otra vez " + VALES[k].ico;
   }));
   if (id === "frasco") { fillJar(false); $("#jar").addEventListener("click", drawReason); }
   if (id === "rosa") setTimeout(() => { const r = $(".rose", card)?.getBoundingClientRect(); if (r) burst(40, r.left + r.width / 2, r.top + 30); }, reduced ? 0 : 3200);
@@ -1027,7 +1110,14 @@ async function startLetter() {
 $("#letter").addEventListener("click", () => { if (!letterOn) return; if (wake) { Audio.paper(); wake(); } else skipPara = true; });
 
 // final
-$("#waBtn").href = `https://api.whatsapp.com/send?phone=${D.whatsapp}&text=${encodeURIComponent("Ya leí tu carta 🥹💌\nTe amo, mi wawita ❤️")}`;
+function updateWaFinal() {
+  const r = valesResumen();
+  $("#waBtn").href = `https://api.whatsapp.com/send?phone=${D.whatsapp}&text=${encodeURIComponent("Ya leí tu carta 🥹💌\nTe amo, mi wawita ❤️" + (r.txt ? `\n\n🎟️ Mis vales: ${r.b} 💋 ${r.b === 1 ? "beso" : "besos"} y ${r.a} 🤗 ${r.a === 1 ? "abrazo" : "abrazos"}. Te toca cumplir 😌` : ""))}`;
+  const t = $("#valeTally");
+  if (r.txt) { t.innerHTML = `<b>🎟️ Tus vales</b><span>💋 ${r.b} ${r.b === 1 ? "beso" : "besos"} · 🤗 ${r.a} ${r.a === 1 ? "abrazo" : "abrazos"}</span><small>Y te los voy a cumplir todos</small>`; t.hidden = false; }
+  else t.hidden = true;
+}
+updateWaFinal();
 $("#againBtn").addEventListener("click", () => { letterOn = false; huntOn = false; hugged = false; $$(".prom").forEach(b => b.classList.remove("lit")); $("#promDone").textContent = ""; show("intro"); });
 </script>
 </body>
