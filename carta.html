@@ -6,7 +6,7 @@
 <title>Para Maite</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&family=Jost:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&family=Jost:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Great+Vibes&display=swap">
 <style>
 /* Una noche a la luz de una vela: cada parte ocupa la pantalla, una a la vez, como pasar páginas de un diario. */
 :root {
@@ -274,6 +274,34 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .letter .te-amo.draw text { animation: drawTxt 4s ease forwards, fillTxt 1s ease 3.6s forwards; }
 @keyframes drawTxt { to { stroke-dashoffset: 0; } }
 @keyframes fillTxt { to { fill: var(--rose-deep); } }
+
+/* =========== LA CARTA DE ESTA PÁGINA: escrita con luz de estrellas =========== */
+/* papel azul noche con borde dorado; las palabras se encienden como estrellas siguiendo una chispa */
+.letter { color: #f3e3c3; padding: 2.6rem 1.6rem 2.2rem; border-radius: 10px;
+  background:
+    radial-gradient(circle, rgba(255,240,200,.75) 0 1px, transparent 1.6px) 0 0 / 46px 52px,
+    radial-gradient(circle, rgba(255,240,200,.45) 0 .8px, transparent 1.4px) 23px 26px / 46px 52px,
+    radial-gradient(120% 70% at 50% 0%, #26306a, #141a3f 55%, #0c1030);
+  box-shadow: 0 30px 70px rgba(0,0,0,.65), 0 0 60px rgba(120,140,255,.18), inset 0 0 0 1px rgba(233,196,111,.55), inset 0 0 0 6px #121738, inset 0 0 0 7px rgba(233,196,111,.35); }
+.letter::before, .letter::after { content: "✦"; position: absolute; top: 12px; font-size: .9rem; color: #e9c46f; text-shadow: 0 0 8px rgba(255,214,140,.8); }
+.letter::before { left: 14px; } .letter::after { right: 14px; }
+.letter .to { font: 400 2.6rem/1.05 "Great Vibes", var(--f-script); background: linear-gradient(90deg, #f6d48a, #fff3d0 45%, #e9b85c); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 10px rgba(255,214,140,.35)); }
+.letter .l { font-family: "EB Garamond", var(--f-serif); font-size: 1.16rem; line-height: 1.72; letter-spacing: .005em; }
+.letter .w { opacity: 0; filter: none; color: #fff7e0; text-shadow: 0 0 14px rgba(255,220,150,.95), 0 0 2px #fff; transition: opacity .35s ease, color 1.6s ease, text-shadow 1.8s ease; }
+.letter .w.on { opacity: 1; color: #f3e3c3; text-shadow: 0 0 0 transparent; }
+.letter .sign small { font: italic 400 1.05rem/1.2 "EB Garamond", var(--f-serif); color: #c9b896; }
+.letter .sign b { font: 400 3rem/1 "Great Vibes", var(--f-script); color: #f6d48a; text-shadow: 0 0 14px rgba(255,214,140,.45); }
+.letter .te-amo text { font-family: "Great Vibes", var(--f-script); stroke: #f6d48a; }
+@keyframes fillTxt { to { fill: #f6d48a; } }
+.letter .te-amo.draw { filter: drop-shadow(0 0 10px rgba(255,214,140,.6)); }
+.next-para { background: rgba(233,196,111,.12); color: #f6d48a; border: 1px solid rgba(233,196,111,.35); }
+.stardot { position: absolute; z-index: 3; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: #fff; pointer-events: none; opacity: 0;
+  box-shadow: 0 0 6px 3px rgba(255,236,190,.95), 0 0 22px 8px rgba(255,200,120,.45); transition: left .09s linear, top .2s ease, opacity .4s; }
+.stardot.on { opacity: 1; }
+.stardot::after { content: ""; position: absolute; right: 4px; top: 3px; width: 34px; height: 2px; border-radius: 2px; background: linear-gradient(270deg, rgba(255,240,210,.9), transparent); }
+.letter.unfold { animation: materialize 1.8s cubic-bezier(.2,.8,.2,1); }
+@keyframes materialize { 0% { opacity: 0; transform: scale(.15); filter: brightness(4) blur(6px); border-radius: 50%; } 45% { opacity: 1; filter: brightness(1.8) blur(1px); } 100% { transform: none; filter: none; } }
+.letter .tear { background: radial-gradient(circle at 40% 60%, rgba(200,220,255,.45), rgba(200,220,255,.08)); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
   .reveal > *, .bubble, .typing, .letter p.l { opacity: 1 !important; transform: none !important; filter: none !important; }
@@ -425,7 +453,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 <!-- 8. La carta -->
 <section class="scene" id="carta">
   <div class="letter-wrap" id="letterWrap">
-    <article class="letter" id="letter">
+    <article class="letter" id="letter"><i class="stardot" id="stardot" aria-hidden="true"></i>
       <p class="to">Mi wawita mosha:</p>
       <p class="l">Te escribo esto con el corazón en la mano, porque hay cosas que me cuesta decir en voz alta, pero que siento todos los días.</p>
       <p class="l">Antes de ti, mis días eran normales. No malos, solo normales. Y un 1 de septiembre empezamos a hablar, y sin darme cuenta empecé a esperar tus mensajes, a sonreír como tonto mirando el celular, a contar las horas para volver a hablar contigo.</p>
@@ -791,8 +819,13 @@ sf.addEventListener("click", async e => {
   hint.textContent = msg; hint.classList.remove("bump"); void hint.offsetWidth; hint.classList.add("bump");
   Audio.tick(q < .08 ? 88 : q < .16 ? 84 : q < .3 ? 79 : 72);
 });
-const envSVG = () => `<svg viewBox="0 0 120 80" width="120" height="80"><rect x="2" y="2" width="116" height="76" rx="6" fill="#f6ecdf" stroke="#d9c296"/><path d="M2 6 L60 46 L118 6" fill="none" stroke="#d9c296" stroke-width="2"/><circle cx="60" cy="44" r="11" fill="#c2183f"/><text x="60" y="49" text-anchor="middle" font-size="13" fill="#ffd6e2" font-family="serif">M</text></svg>`;
+const envSVG = () => `<svg viewBox="0 0 120 80" width="120" height="80"><defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26306a"/><stop offset="1" stop-color="#121738"/></linearGradient></defs><rect x="2" y="2" width="116" height="76" rx="6" fill="url(#eg)" stroke="#e9c46f"/><path d="M2 6 L60 46 L118 6" fill="none" stroke="#e9c46f" stroke-width="1.5"/><circle cx="20" cy="62" r="1" fill="#fff"/><circle cx="96" cy="58" r="1.2" fill="#fff"/><circle cx="60" cy="44" r="12" fill="#e9c46f"/><path d="M60 35 L62.6 41.2 L69 41.5 L64 45.6 L65.7 52 L60 48.3 L54.3 52 L56 45.6 L51 41.5 L57.4 41.2 Z" fill="#121738"/></svg>`;
 
+function moveDot(w) {
+  const d = $("#stardot"), L = $("#letter"); if (!d || reduced) return;
+  d.style.left = (w.offsetLeft + w.offsetWidth + 3) + "px"; d.style.top = (w.offsetTop + w.offsetHeight * .55) + "px"; d.classList.add("on");
+  clearTimeout(moveDot.t); moveDot.t = setTimeout(() => d.classList.remove("on"), 700);
+}
 // ---------- la carta: se escribe palabra por palabra; ella va al ritmo que quiere ----------
 let letterOn = false, wake = null, skipPara = false;
 // separa cada párrafo en palabras (una sola vez)
@@ -819,7 +852,7 @@ async function startLetter() {
     keepInView(p);
     for (let i = 0; i < words.length; i++) {
       if (skipPara || reduced) { words.slice(i).forEach(w => w.classList.add("on")); break; }
-      words[i].classList.add("on");
+      words[i].classList.add("on"); moveDot(words[i]);
       if (i % 6 === 5) keepInView(words[i]);
       await new Promise(r => setTimeout(r, /[.,:;!?…]$/.test(words[i].textContent) ? 260 : 85));
     }
