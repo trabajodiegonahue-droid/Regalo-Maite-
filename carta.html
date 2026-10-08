@@ -577,7 +577,6 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
       <p class="l">Quiero que sepas algo: no eres solo mi polola. Eres mi persona favorita y mi lugar seguro. Me encanta tu forma de mirarme y cómo haces que sienta que todo va a estar bien.</p>
       <p class="l">Recién estamos empezando, y eso es lo más lindo: todo lo que nos falta por vivir. Quiero conocer cada parte de ti, estar en tus días buenos y sobre todo en los malos. Quiero ser el abrazo al que llegas cuando el mundo pesa.</p>
       <p class="l">No te prometo una vida perfecta, porque nadie la tiene. Pero sí te prometo que nunca vas a tener que dudar de lo que siento por ti, porque te lo voy a demostrar todos los días.</p>
-      <p class="l">Si estás llorando mientras lees esto, que sea de felicidad. Y si no, igual te mando un abrazo gigante, de esos que duran harto.</p>
       <p class="l">Gracias por existir, por elegirme y por dejarme quererte.</p>
       <svg class="te-amo l" id="teAmo" viewBox="0 0 320 90" aria-label="Te amo"><text x="160" y="66" text-anchor="middle">Te amo, Maite</text></svg>
       <div class="sign l"><small>Con todo lo que soy,</small><b>Diego</b><small>tu wawita</small></div>
@@ -608,7 +607,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 <!-- 9. Final -->
 <section class="scene" id="final">
   <div class="inner reveal">
-    <span class="eyebrow">Si estás llorando, que sea de felicidad 🥹</span>
+    <span class="eyebrow">Con todo mi amor</span>
     <div class="flowers-final" aria-hidden="true">🌷🌹💐🌹🌷</div>
     <h2 class="h-serif">Las flores de verdad te las quiero dar en persona</h2>
     <p class="lead">Así que avísame cuando termines de leer… y prepárate para un abrazo de esos largos.</p>
@@ -1100,9 +1099,6 @@ async function startLetter() {
     }
   }
   btn.hidden = true;
-  // una lágrima cae sobre el papel
-  const tear = document.createElement("i"); tear.className = "tear"; tear.style.left = "68%"; tear.style.top = (L.scrollHeight - 160) + "px"; L.append(tear);
-  tear.animate([{ transform: "translateY(-40px) scale(.5)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 900, easing: "ease-in", fill: "forwards" });
   burst(60); $("#letterEnd").hidden = false;
   setTimeout(() => wrap.scrollTo({ top: wrap.scrollHeight, behavior: reduced ? "auto" : "smooth" }), 900);
 }
