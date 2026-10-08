@@ -82,6 +82,13 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .bubble.her { justify-self: start; background: #3a2a40; color: var(--text); border-bottom-left-radius: 6px; }
 .scene.on .bubble { animation: pop .5s cubic-bezier(.3,1.4,.5,1) forwards; }
 @keyframes pop { to { opacity: 1; transform: none; } }
+.chat-time { justify-self: center; font: 500 .66rem/1.2 var(--f-ui); letter-spacing: .06em; color: var(--muted); text-align: center; }
+/* la historia que ella subió: atardecer en la playa */
+.story { position: relative; width: 74px; height: 120px; padding: 0; border-radius: 14px; overflow: hidden; background: linear-gradient(180deg, #5d6b7c 0 45%, #f0a35a 52%, #3f5566 56% 100%) !important; }
+.story-sun { position: absolute; left: 30%; top: 47%; width: 40%; height: 4px; border-radius: 50%; background: #ffd27a; box-shadow: 0 0 10px 3px rgba(255,190,90,.8); }
+.story-sea { position: absolute; left: 0; right: 0; top: 58%; height: 14%; background: repeating-linear-gradient(180deg, rgba(255,255,255,.25) 0 1px, transparent 1px 5px); }
+.story-girl { position: absolute; left: 22%; bottom: 0; width: 30px; height: 46px; background: #141018; border-radius: 45% 45% 10% 10% / 35% 35% 8% 8%; }
+.story-girl::before { content: ""; position: absolute; left: 7px; top: -12px; width: 16px; height: 18px; border-radius: 50% 50% 40% 40%; background: #141018; }
 .typing { justify-self: start; display: flex; gap: 4px; padding: .7rem .9rem; border-radius: 18px; background: #3a2a40; opacity: 0; }
 .scene.on .typing { animation: pop .4s ease forwards; }
 .typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: dot 1s ease-in-out infinite; }
@@ -104,7 +111,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .count small { font: 500 .62rem/1 var(--f-ui); letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
 
 /* muro de fotos */
-.wall { position: relative; width: min(100%, 26rem); height: min(62vh, 32rem); }
+.wall { position: relative; width: min(100%, 26rem); height: min(54vh, 30rem); }
 .wall .pol { position: absolute; width: 34%; padding: 5px 5px 18px; background: #fffdf8; box-shadow: 0 10px 22px rgba(0,0,0,.5); border: 0; transform: rotate(var(--r)); transition: transform .3s ease; }
 .wall .pol .ph { width: 100%; aspect-ratio: 1; background: #e9dfd2 center / cover no-repeat; display: grid; place-items: center; font-size: 1.6rem; }
 .wall .pol span { position: absolute; left: 0; right: 0; bottom: 2px; font: 400 .9rem/1 var(--f-script); color: var(--rose-deep); }
@@ -113,13 +120,33 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .wall .pol.fav { z-index: 3; box-shadow: 0 0 0 3px #ffd27a, 0 0 28px rgba(255,210,122,.75), 0 10px 22px rgba(0,0,0,.5); }
 .wall .pol.fav::after { content: "⭐ Mi favorita"; position: absolute; left: 50%; top: -11px; transform: translateX(-50%) rotate(-3deg); white-space: nowrap; padding: .18rem .5rem;
   border-radius: 999px; background: #ffd27a; color: #5a1830; font: 700 .6rem/1 var(--f-ui, sans-serif); letter-spacing: .04em; box-shadow: 0 3px 8px rgba(0,0,0,.4); }
-.scene.on .wall .pol.fav { animation: scatter .9s cubic-bezier(.2,.9,.3,1.15) both, favGlow 1.6s ease-in-out 2.2s infinite alternate; animation-delay: var(--dl), 2.2s; }
+.scene.on .wall .pol.fav { animation: scatter .9s cubic-bezier(.2,.9,.3,1.15) both, favGlow 1.6s ease-in-out infinite alternate; animation-delay: var(--dl), 5.4s; }
+.wall .pol span { font-size: 1.05rem; }
+/* la frase que se arma con las palabras de las fotos */
+.phrase { max-width: 23rem; margin: .5rem auto 0; text-align: center; font: 400 1.75rem/1.25 var(--f-script); color: var(--text); min-height: 2.5em; }
+.phrase span { display: inline-block; opacity: 0; transform: translateY(10px) scale(.8); }
+.scene.on .phrase span { animation: phWord .6s cubic-bezier(.3,1.5,.5,1) forwards; animation-delay: var(--d); }
+@keyframes phWord { 50% { opacity: 1; color: #ffd27a; text-shadow: 0 0 14px rgba(255,210,122,.9); } to { opacity: 1; transform: none; } }
+.scene.on .phrase { animation: phDone 1.4s ease forwards; animation-delay: var(--end, 5s); }
+@keyframes phDone { 40% { transform: scale(1.06); } to { color: #ffe6ef; text-shadow: 0 0 18px rgba(255,140,180,.75); } }
+#lbCap b { display: block; color: #b3122f; font-weight: 400; font-size: 2.1rem; line-height: 1.1; }
+#lbCap small { display: block; margin-top: .15rem; font: 700 .7rem/1 var(--f-ui); color: #b8862e; letter-spacing: .06em; }
+#lbCap em { display: block; margin-top: .35rem; font: italic 400 .82rem/1.3 var(--f-serif); color: #6a4a52; }
+#lbCap em u { text-decoration: none; color: #b3122f; font-weight: 600; }
+@media (max-height: 720px) {
+  .chat { gap: .35rem; padding: .7rem .8rem; }
+  .chat .bubble { font-size: .84rem; padding: .45rem .75rem; }
+  .story { width: 56px; height: 86px; }
+  .chat .typing { display: none; }
+}
 @keyframes favGlow { to { box-shadow: 0 0 0 3px #ffd27a, 0 0 44px rgba(255,210,122,.95), 0 10px 22px rgba(0,0,0,.5); } }
 @keyframes scatter { from { opacity: 0; transform: translate(var(--fx), 60vh) rotate(calc(var(--r) * 4)); } }
 .wall .pol:active { transform: rotate(0deg) scale(1.05); }
 .lightbox { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 24px; background: rgba(8,4,10,.86); animation: fade .4s ease; }
 @keyframes fade { from { opacity: 0; } }
 .lightbox .polaroid { width: min(84vw, 22rem); animation: zoomIn .5s cubic-bezier(.2,1.2,.4,1); }
+.lightbox .polaroid { padding-bottom: .7rem; }
+.lightbox .polaroid figcaption { position: static; margin-top: .45rem; text-align: center; }
 @keyframes zoomIn { from { transform: scale(.6) rotate(-8deg); opacity: 0; } }
 
 /* regalitos */
@@ -347,10 +374,13 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
     <span class="date">1 de septiembre de 2026</span>
     <h2 class="h-serif">El día que empezamos a hablar</h2>
     <div class="chat" aria-hidden="true">
-      <span class="bubble me" style="animation-delay:1.4s">Hola 🙂</span>
-      <span class="bubble her" style="animation-delay:2.4s">Holaa</span>
-      <span class="bubble me" style="animation-delay:3.3s">¿Cómo estái?</span>
-      <span class="typing" style="animation-delay:4.2s"><i></i><i></i><i></i></span>
+      <span class="chat-time">1 sept, 22:12 · Respondiste a su historia</span>
+      <span class="story bubble me" style="animation-delay:1s"><i class="story-sun"></i><i class="story-sea"></i><i class="story-girl"></i></span>
+      <span class="bubble me" style="animation-delay:2s">Y eso dónde? Como para ir</span>
+      <span class="bubble her" style="animation-delay:3.1s">En la serena parece</span>
+      <span class="bubble me" style="animation-delay:4.1s">Cómo que parece 🧐</span>
+      <span class="bubble me" style="animation-delay:5s">Voy a llegar a la serena y resulta que era en coyhaique</span>
+      <span class="typing" style="animation-delay:6s"><i></i><i></i><i></i></span>
     </div>
     <p class="lead">Una conversación cualquiera. No tenía idea de que ahí empezaba lo más lindo que me ha pasado.</p>
     <button class="btn btn--ghost next" data-next="ch2">Seguir</button>
@@ -363,7 +393,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
     <span class="date">18 de septiembre de 2026</span>
     <h2 class="h-serif">El día que te vi por primera vez</h2>
     <figure class="polaroid drop" style="--r:-4deg"><div class="ph" data-foto="12">📷</div><figcaption>Nuestra primera foto</figcaption></figure>
-    <p class="lead">Me puse nervioso, no te voy a mentir. Pero apenas te vi, supe que quería verte de nuevo.</p>
+    <p class="lead">Cuando te vi me enamoré de inmediato. Fue algo que vino directo del corazón… y cuando nos tocamos las manos, todo se pausó y solo estábamos tú y yo.</p>
     <button class="btn btn--ghost next" data-next="ch3">Seguir</button>
   </div>
 </section>
@@ -408,6 +438,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
   <div class="inner">
     <span class="eyebrow">Nuestros momentos</span>
     <div class="wall" id="wall"></div>
+    <p class="phrase" id="phrase" aria-label="Maite, eres la mujer con la que quiero estar toda mi vida"></p>
     <p class="small">Toca una foto para verla de cerca.</p>
     <button class="btn btn--ghost next" data-next="regalos">Seguir</button>
   </div>
@@ -614,7 +645,7 @@ let cur = "intro";
 function show(id) {
   $("#" + cur).classList.remove("on"); cur = id; const sc = $("#" + id); sc.classList.add("on");
   $$(".next", sc).forEach(b => { b.classList.remove("show"); });
-  const delay = { ch1: 5200, ch2: 3200, ch3: 3600, cuenta: 2800, fotos: 3200 }[id];
+  const delay = { ch1: 6400, ch2: 3200, ch3: 3600, cuenta: 2800, fotos: 5600 }[id];
   if (delay) setTimeout(() => { if (cur === id) $$(".next", sc).forEach(b => b.classList.add("show")); }, reduced ? 0 : delay);
   if (id === "ch3") setTimeout(() => { if (cur === "ch3") { Audio.chime(); const r = $("#ch3 .polaroid").getBoundingClientRect(); burst(60, r.left + r.width / 2, r.top + 40); buzz(30); } }, reduced ? 0 : 2100);
   if (id === "prologo") runPrologue();
@@ -639,7 +670,12 @@ function runPrologue() {
 }
 $("#proSkip").addEventListener("click", () => { proT.forEach(clearTimeout); show("ch1"); });
 // cosas que nunca te he dicho
-const CONF = ["A veces me quedo mirando tus fotos y sonrío solo.", "Cuando dijiste que sí, quise gritarlo a todo el mundo.", "Me da un poquito de miedo lo mucho que te quiero. Pero es un miedo bonito.", "Desde que estás, todos mis planes te incluyen."];
+const CONF = [
+  "Veo todas tus fotos cuando estoy aburrido y sonrío como tontito.",
+  "Me lagrimean los ojos cada vez que pienso en que estoy contigo.",
+  "Todas las noches abrazo una almohada pensando que eres tú para poder dormir.",
+  "Todos los días intento pensar algo nuevo para poder seguir estando a tu nivel.",
+];
 let confBuilt = false;
 function buildConf() {
   if (confBuilt) return; confBuilt = true;
@@ -692,17 +728,24 @@ tick(); setInterval(tick, 1000);
 
 // muro de fotos
 let wallBuilt = false;
-const FAV = 5;   // foto 6: la favorita de Diego
+// cada foto trae una palabra; al caer van armando la frase de abajo
+const WALL = [1, 12, 2, 3, 4, 5, 7, 8, 9, 10, 11, 6];   // número de foto en cada lugar del muro (la 1 es la del sí, la 6 su favorita)
+const WORDS = ["Maite,", "eres", "la", "mujer", "con", "la", "que", "quiero", "estar", "toda", "mi", "vida"];
+const STEP = .36;
 function buildWall() {
   if (wallBuilt) return; wallBuilt = true;
   const spots = [[2, 2], [34, 0], [66, 4], [0, 26], [33, 24], [64, 28], [4, 50], [35, 49], [65, 52], [1, 72], [33, 73], [64, 74]];
   $("#wall").innerHTML = spots.map(([x, y], i) => {
-    const f = FOTOS[i], r = ((i * 37) % 13) - 6;
-    return `<button class="pol${i === FAV ? " fav" : ""}" data-i="${i}" style="left:${x}%;top:${y}%;--r:${r}deg;--dl:${(i * .12).toFixed(2)}s;--fx:${(i % 3 - 1) * 40}px" aria-label="Ver foto: ${CAPS[i]}"><div class="ph" style="${f ? `background-image:url('${f}')` : ""}">${f ? "" : "💗"}</div><span>${CAPS[i]}</span></button>`;
+    const n = WALL[i], f = FOTOS[n - 1], r = ((i * 37) % 13) - 6;
+    return `<button class="pol${n === 6 ? " fav" : ""}" data-i="${i}" style="left:${x}%;top:${y}%;--r:${r}deg;--dl:${(i * STEP).toFixed(2)}s;--fx:${(i % 3 - 1) * 40}px" aria-label="Foto: ${WORDS[i]}"><div class="ph" style="${f ? `background-image:url('${f}')` : ""}">${f ? "" : "💗"}</div><span>${WORDS[i].replace(",", "")}</span></button>`;
   }).join("");
+  $("#phrase").innerHTML = WORDS.map((w, i) => `<span style="--d:${(i * STEP + .75).toFixed(2)}s">${w}</span>`).join(" ");
+  $("#phrase").style.setProperty("--end", (WORDS.length * STEP + 1).toFixed(2) + "s");
   $$("#wall .pol").forEach(b => b.addEventListener("click", () => {
-    const i = +b.dataset.i, f = FOTOS[i];
-    $("#lbPh").style.backgroundImage = f ? `url('${f}')` : ""; $("#lbPh").textContent = f ? "" : "💗"; $("#lbCap").textContent = CAPS[i];
+    const i = +b.dataset.i, n = WALL[i], f = FOTOS[n - 1];
+    $("#lbPh").style.backgroundImage = f ? `url('${f}')` : ""; $("#lbPh").textContent = f ? "" : "💗";
+    $("#lbCap").innerHTML = `<b>${WORDS[i].replace(",", "")}</b>` + (n === 6 ? `<small>⭐ Mi favorita</small>` : "") +
+      `<em>${WORDS.map((w, k) => k === i ? `<u>${w}</u>` : w).join(" ")}</em>`;
     $("#lightbox").hidden = false; Audio.pop();
   }));
 }
