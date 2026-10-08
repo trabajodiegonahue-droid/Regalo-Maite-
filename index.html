@@ -2025,8 +2025,7 @@ main.stage { position: relative; z-index: 1; }
 /* ruleta */
 /* ---------- cajitas sorpresa ---------- */
 .gifts { width: 100%; }
-.gift-shelf { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.3rem .6rem; padding: 1.6rem .4rem .6rem; border-radius: 16px;
-  background: linear-gradient(180deg, transparent 0 46%, rgba(120,70,40,.9) 46% 49%, transparent 49% 94%, rgba(120,70,40,.9) 94% 97%, transparent 97%); }
+.gift-shelf { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.3rem 0; padding: 1.4rem .4rem .4rem; }
 .gbox { all: unset; box-sizing: border-box; cursor: pointer; position: relative; display: grid; justify-items: center; align-content: end; gap: .5rem; -webkit-tap-highlight-color: transparent;
   animation: gbIn .6s cubic-bezier(.2,1.35,.4,1) both; animation-delay: calc(var(--i) * 70ms); }
 @keyframes gbIn { from { opacity: 0; transform: translateY(-40px) scale(.6); } }
@@ -2043,7 +2042,12 @@ main.stage { position: relative; z-index: 1; }
   background: linear-gradient(90deg, transparent 42%, var(--r) 42% 58%, transparent 58%), linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.18)), var(--c);
   box-shadow: inset 0 -7px 0 rgba(0,0,0,.18), 0 10px 18px rgba(0,0,0,.45); }
 .gb-ico { position: relative; z-index: 1; display: grid; place-items: center; width: 2.3rem; height: 2.3rem; border-radius: 50%; font-size: 1.3rem; background: #fffaf4; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
-.gb-name { font: 600 .74rem/1.15 var(--f-ui); letter-spacing: .03em; color: var(--cream-text); text-align: center; }
+/* tablita de repisa bajo cada cajita */
+.gbox::before { content: ""; position: absolute; left: 0; right: 0; bottom: calc(.74rem * 1.15 + .5rem - 6px); height: 6px; border-radius: 2px;
+  background: linear-gradient(180deg, #a9744a, #6b4426); box-shadow: 0 4px 6px rgba(0,0,0,.35); }
+.gbox[data-gcat="todo"]::before { left: -12%; right: -12%; }
+.gb-name { white-space: nowrap; font: 600 .74rem/1.15 var(--f-ui); letter-spacing: .03em; color: var(--cream-text); text-align: center; }
+.gbox[data-gcat="todo"] { grid-column: 2; }
 .gbox.chosen .gb-name::after { content: " ♥"; color: #ff7aa0; }
 .gbox.chosen .gb-body { box-shadow: inset 0 -7px 0 rgba(0,0,0,.18), 0 0 0 3px #ffd6e2, 0 0 24px rgba(255,122,160,.7); }
 .gbox:active .gb-pkg { transform: scale(.94); }
@@ -2292,12 +2296,7 @@ main.stage { position: relative; z-index: 1; }
       <div class="monogram" aria-hidden="true"><i></i><span data-inicial>M</span><i></i></div>
       <p class="greet">Hola <span data-name>Maite</span>, <span data-apodo-ella>mi wawita mosha</span>, ¿cómo estái?:</p>
       <p>Ya erís mi polola y yo feliz, cachai, pero quiero que sigamos creando momentos lindos juntos, así como full. Así que te quiero invitar oficialmente a salir conmigo.</p>
-      <p>Y esta vez tú decides todo, cero costo pa' ti, cachai:</p>
-      <ul>
-        <li>A dónde vamos: el lugar que tú querái, demás que sí.</li>
-        <li>Qué comemos: lo que se te antoje.</li>
-        <li>Y qué hacemos después, pa' que la cita no se acabe tan rápido. Con beso incluido cada vez que te rías, cachai.</li>
-      </ul>
+      <p>Y esta vez tú decides qué hacemos, cero costo pa' ti, cachai. Salir, pasear, comer algo rico o quedarnos regaloneando: lo que tú querái, demás que sí. Con beso incluido cada vez que te rías.</p>
       <p>Tú elegís, yo me encargo del resto y me apunto a lo que sea, cachai.</p>
       <p>Bueno, eso. Erís lo más lindo que me ha pasado y quiero que tengamos muchos recuerdos juntos, cachai. Quedo atento a tu respuesta, porfa no me dejes en visto.</p>
       <div class="sign"><small>Besitos y atentamente,</small><svg class="sig" viewBox="0 0 320 76" role="img" aria-label="Firma"><defs><clipPath id="sigClip"><rect id="sigRect" x="0" y="-20" width="0" height="120"/></clipPath></defs><text x="316" y="56" text-anchor="end" clip-path="url(#sigClip)" data-firma>Diego</text></svg></div>
@@ -2322,7 +2321,7 @@ main.stage { position: relative; z-index: 1; }
     <div class="verdict" id="verdict" hidden>
       <p class="scold" id="scold" hidden>¿Por qué quisiste apretar No???</p>
       <p>Respuesta registrada: <b>Sí</b>. Era la única opción disponible. Nuestra cita queda oficialmente confirmada.</p>
-      <button class="btn btn--gold" id="goBol">Elegir a dónde vamos 💌</button>
+      <button class="btn btn--gold" id="goBol">Elegir qué hacemos 💌</button>
     </div>
   </section>
 
@@ -2443,14 +2442,14 @@ main.stage { position: relative; z-index: 1; }
       <div class="ticket__main">
         <div class="foil" aria-hidden="true"><span><b>Cita</b>privada</span></div>
         <div class="ticket__brand"><strong>Paseo Nosotros ♥</strong><small>Pase para dos</small></div>
-        <small class="pass-lbl">Vamos a</small>
+        <small class="pass-lbl">Nuestro plan</small>
         <p class="ticket__movie"><span id="tIcon">💌</span> <span id="tPlan">Tú eliges</span></p>
         <dl class="ticket__grid">
           <div><dt>Día</dt><dd id="tFecha">—</dd></div>
           <div><dt>Momento</dt><dd id="tHora">—</dd></div>
-          <div class="wide"><dt>Comemos</dt><dd id="tComida">—</dd></div>
-          <div class="wide"><dt>Y después</dt><dd id="tDespues">—</dd></div>
-          <div class="wide"><dt>Para tomar y de postre</dt><dd id="tCombo">—</dd></div>
+          <div class="wide" hidden><dt>Comemos</dt><dd id="tComida">—</dd></div>
+          <div class="wide" hidden><dt>Y después</dt><dd id="tDespues">—</dd></div>
+          <div class="wide" hidden><dt>Para tomar y de postre</dt><dd id="tCombo">—</dd></div>
           <i hidden id="tVibra"></i><i hidden id="tLook"></i><i hidden id="tFalta"></i>
           <div><dt>Invitada</dt><dd data-name>Maite</dd></div>
           <div><dt>Acompañante</dt><dd data-firma>Diego</dd></div>
@@ -2549,7 +2548,7 @@ main.stage { position: relative; z-index: 1; }
 
   <!-- 5. Después del cine -->
   <section class="scene" id="despues" hidden>
-    <div class="step-dots" id="stepDots"><button data-st="lugar">📍 Lugar</button><button data-st="comida">🍽️ Comida</button><button data-st="despues">🌙 Después</button></div>
+    <div class="step-dots" id="stepDots" hidden><button data-st="lugar">📍 Lugar</button><button data-st="comida">🍽️ Comida</button><button data-st="despues">🌙 Después</button></div>
     <div class="after-marquee">
       <span class="eyebrow" id="bEye">Paso 1 de 3</span>
       <h2 class="scene-title" id="bTitle">¿A dónde quieres ir?</h2>
@@ -4106,20 +4105,20 @@ let planElegido = "", planActual = null, planPropio = false, planIcon = "💌", 
 // Kiosco de planes: tres tableros seguidos (a dónde vamos, qué comemos, qué hacemos después)
 const CATS = [["todos", "Todos"], ["temuco", "📍 En Temuco"], ["aire", "🌳 Aire libre"], ["salir", "✨ Salir"], ["casa", "🏠 En casa"], ["activo", "👟 Activos"]];
 const BOARDS = {
-  lugar: { eye: "Paso 1 de 3", title: "¿A dónde quieres ir?", sub: "Elige el lugar. Tú decides, yo me apunto a lo que sea.", cats: true, ph: "ir a la playa, al lago, a ver ballenas…",
-    ids: ["nielol", "islacautin", "tren", "canopy", "termas", "conguillio", "picnic", "atardecer", "playa", "parque", "estrellas", "cine", "feria", "museo", "fotos", "concierto", "acuario", "escape", "bolos", "karaoke", "bailar", "compras", "abuela", "casa", "peli", "cocinar", "juegos", "spa", "pintar", "manejar", "gym", "correr", "bici", "sorpresa"] },
+  lugar: { eye: "Tú decides", title: "¿Qué quieres hacer?", sub: "Abre una cajita y elige lo que más te guste. Yo me apunto a lo que sea.", cats: true, ph: "ir a la playa, al lago, a ver ballenas…",
+    ids: ["nielol", "islacautin", "tren", "canopy", "termas", "conguillio", "picnic", "atardecer", "playa", "parque", "estrellas", "cine", "feria", "museo", "fotos", "concierto", "acuario", "escape", "bolos", "karaoke", "bailar", "compras", "abuela", "casa", "peli", "cocinar", "juegos", "spa", "pintar", "manejar", "gym", "correr", "bici", "sorpresa", "comer", "sushi", "pizza", "burger", "completos", "empanadas", "china", "tacos", "cafe", "helado", "feriapinto", "dreams"] },
   comida: { eye: "Paso 2 de 3", title: "¿Qué quieres comer?", sub: "Elige del menú lo que se te antoje.", ph: "ramen, mote con huesillo, lo que sea…",
     ids: ["comer", "sushi", "burger", "pizza", "completos", "empanadas", "china", "tacos", "feriapinto", "dreams", "cafe", "helado"] },
   despues: { eye: "Paso 3 de 3", title: "¿Y después, qué hacemos?", sub: "Para que la cita no se acabe tan rápido.", ph: "pasear en auto, ir por un helado…",
     ids: ["helado", "cafe", "estrellas", "atardecer", "parque", "peli", "casa", "dormir", "karaoke", "bailar", "juegos", "spa", "fotos", "sorpresa"] },
 };
-const ORDER = ["lugar", "comida", "despues"];
+const ORDER = ["lugar"];   // ella elige solo qué quiere hacer
 let stage = "lugar", boardStage = "lugar", editing = false;
 const elec = { lugar: null, comida: null, despues: null };
 function renderBoard(st) {
   stage = boardStage = st; const B = BOARDS[st], grid = $("#plans");
   $("#bEye").textContent = B.eye; $("#bTitle").textContent = B.title; $("#bSub").textContent = B.sub;
-  $("#spinBtn").textContent = { lugar: "🎡 ¿No sabes a dónde? Gira la ruleta", comida: "🎡 ¿No sabes qué comer? Gira la ruleta", despues: "🎡 ¿No sabes? Gira la ruleta" }[st];
+  $("#spinBtn").textContent = { lugar: "🎡 ¿No sabes qué hacer? Gira la ruleta", comida: "🎡 ¿No sabes qué comer? Gira la ruleta", despues: "🎡 ¿No sabes? Gira la ruleta" }[st];
   $$("#stepDots button").forEach(b => { const k = b.dataset.st; b.classList.toggle("on", k === st); b.classList.toggle("done", !!elec[k]); b.disabled = !(editing && elec[k]) && k !== st; });
   $("#cats").innerHTML = B.cats ? CATS.map(([k, t], i) => `<button class="cat${i ? "" : " on"}" data-cat="${k}">${t}</button>`).join("") : "";
   grid.innerHTML = B.ids.map(id => PLANES.find(x => x.id === id)).filter(Boolean).map((p, i) => `<button class="dest${elec[st]?.id === p.id ? " chosen" : ""}" data-plan="${p.id}" data-cat="${p.cat}" style="--i:${i}">
@@ -4139,7 +4138,8 @@ function renderBoard(st) {
 }
 // ---------- Cajitas sorpresa para elegir el lugar ----------
 const GIFTS = [["temuco", "📍", "En Temuco", "#d81b60", "#ffd27a"], ["aire", "🌳", "Aire libre", "#2a9d6a", "#ffe3ec"], ["salir", "✨", "Salir", "#7d4aff", "#ffd27a"],
-  ["casa", "🛋️", "En casita", "#e07a1a", "#fff3e0"], ["activo", "👟", "Activos", "#1a6ad0", "#ffd27a"], ["todo", "❓", "Sorpresa", "#b8862e", "#ff5c8a"]];
+  ["comer", "🍽️", "Comer rico", "#c0392b", "#ffe3ec"], ["casa", "🛋️", "En casita", "#e07a1a", "#fff3e0"], ["activo", "👟", "Activos", "#1a6ad0", "#ffd27a"],
+  ["todo", "❓", "Sorpresa", "#b8862e", "#ff5c8a"]];
 let giftCat = null, giftBag = [], giftIdx = 0;
 const shuffled = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const giftPool = k => BOARDS.lugar.ids.map(id => PLANES.find(p => p.id === id)).filter(p => p && (k === "todo" || p.cat === k));
@@ -4223,7 +4223,7 @@ $("#planOtherGo").addEventListener("click", () => {
 renderBoard("lugar");
 function flyToChip(icon, st) {
   const from = $("#pfIco").getBoundingClientRect(), chip = $(`#stepDots [data-st="${st}"]`);
-  if (reduced || !chip) return;
+  if (reduced || !chip || !chip.offsetParent) return;
   const f = document.createElement("span"); f.className = "flyico"; f.textContent = icon;
   Object.assign(f.style, { left: from.left + "px", top: from.top + "px" }); document.body.append(f);
   setTimeout(() => {
@@ -4247,7 +4247,7 @@ function openWheel() {
       <g transform="rotate(${i * sl})"><text x="0" y="-68" style="font-size:${n > 8 ? 19 : 23}px">${p.icon}</text></g>`;
   }).join("");
   $("#wheelBulbs").innerHTML = Array.from({ length: 16 }, (_, i) => `<i style="transform:rotate(${i * 22.5}deg) translateY(calc(-1 * (min(42vw, 170px) + 9px)));animation-delay:${(i % 2) * .5}s"></i>`).join("");
-  $("#wheelTitle").textContent = { lugar: "¿A dónde vamos?", comida: "¿Qué comemos?", despues: "¿Y después?" }[boardStage] || "Que el destino decida";
+  $("#wheelTitle").textContent = { lugar: "¿Qué hacemos?", comida: "¿Qué comemos?", despues: "¿Y después?" }[boardStage] || "Que el destino decida";
   $("#wheelRes").innerHTML = "<small>Toca girar</small>"; $("#wheelGo").hidden = true; $("#wheelSpin").textContent = "Girar 🎡";
   wheelRot = 0; $("#wheel").style.transform = "rotate(0deg)"; $(".wheel-wrap").classList.remove("spinning", "won");
   $("#wheelFx").hidden = false; AudioFX.paper();
@@ -4516,7 +4516,7 @@ function planScene(p) {
     default: return ["pf-night pf-premiere", stars(60) + marquee(p.t) + rising(14, 8)];
   }
 }
-const ASK = { lugar: "¿Vamos aquí?", comida: "¿Comemos esto?", despues: "¿Y después, esto?" };
+const ASK = { lugar: "¿Hacemos esto?", comida: "¿Comemos esto?", despues: "¿Y después, esto?" };
 function playPlan(p, origin) {
   planActual = p;
   const fx = $("#planFx"), stage = $("#pfStage");
@@ -4567,9 +4567,7 @@ $("#pfYes").addEventListener("click", () => {
   $("#planFx").animate([{ opacity: 1 }, { opacity: 0 }], { duration: reduced ? 0 : 420, delay: reduced ? 0 : 700, easing: "ease", fill: "forwards" }).finished.then(() => { $("#planFx").hidden = true; $("#planFx").getAnimations().forEach(a => a.cancel()); });
   if (editing) { editing = false; go("entrada"); rain(3000); return; }
   const next = () => {
-    if (stage === "lugar") { renderBoard("comida"); go("despues"); flapBoard(); }
-    else if (stage === "comida") go("combo");
-    else go("cuando");
+    go("cuando");
   };
   setTimeout(next, reduced ? 0 : 1080);
 });
@@ -4680,7 +4678,7 @@ function pedidoMsg() {
   const L = [`💌 *CITA CON ${PLAN.nombre.toUpperCase()}* 💌`, "━━━━━━━━━━━━━━━", `Para: ${PLAN.firma}, mi ${PLAN.apodo} 💌`, "Respuesta a la invitación: *SÍ* ❤️"];
   const fila = (e, tag, x) => x && L.push(`${e} *${tag}:* ${x.propio ? "" : x.icon + " "}${limpio(x.t)}${x.propio ? " (lo escribí yo ✍️)" : ""}`);
   L.push("");
-  fila("📍", "VAMOS A", elec.lugar); fila("🍽️", "COMEMOS", elec.comida); fila("🌙", "DESPUÉS", elec.despues);
+  fila("💖", "QUIERO", elec.lugar);
   if (cuando) L.push("", `🗓️ Cuándo: ${cuando.dia} · ${cuando.momento}`);
   if (combo) L.push(`🥤 Para tomar: ${combo.bebida}`, `🍫 De postre: ${combo.extras}`);
   L.push("━━━━━━━━━━━━━━━", "Total: $0 + 1 beso 💋");
