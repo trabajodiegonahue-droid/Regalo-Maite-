@@ -2023,6 +2023,59 @@ main.stage { position: relative; z-index: 1; }
 @keyframes gotIt { 40% { transform: scale(1.25); box-shadow: 0 0 0 6px rgba(233,196,111,.3); } }
 
 /* ruleta */
+/* ---------- cajitas sorpresa ---------- */
+.gifts { width: 100%; }
+.gift-shelf { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.3rem .6rem; padding: 1.6rem .4rem .6rem; border-radius: 16px;
+  background: linear-gradient(180deg, transparent 0 46%, rgba(120,70,40,.9) 46% 49%, transparent 49% 94%, rgba(120,70,40,.9) 94% 97%, transparent 97%); }
+.gbox { all: unset; box-sizing: border-box; cursor: pointer; position: relative; display: grid; justify-items: center; align-content: end; gap: .5rem; -webkit-tap-highlight-color: transparent;
+  animation: gbIn .6s cubic-bezier(.2,1.35,.4,1) both; animation-delay: calc(var(--i) * 70ms); }
+@keyframes gbIn { from { opacity: 0; transform: translateY(-40px) scale(.6); } }
+.gb-pkg { display: grid; justify-items: center; width: 100%; animation: gbIdle 4.2s ease-in-out infinite; animation-delay: calc(1s + var(--i) * .7s); transform-origin: 50% 100%; }
+@keyframes gbIdle { 0%, 86%, 100% { transform: none; } 89% { transform: rotate(-5deg) translateY(-3px); } 92% { transform: rotate(5deg) translateY(-3px); } 95% { transform: rotate(-2deg); } }
+.gb-lid { position: relative; z-index: 2; width: 84%; height: 1.05rem; margin-bottom: -.2rem; border-radius: 5px;
+  background: linear-gradient(90deg, transparent 43%, var(--r) 43% 57%, transparent 57%), linear-gradient(180deg, rgba(255,255,255,.3), rgba(0,0,0,.12)), var(--c);
+  box-shadow: 0 4px 6px rgba(0,0,0,.3); }
+.gb-bow { position: absolute; left: 50%; bottom: 80%; width: 0; height: 0; }
+.gb-bow::before, .gb-bow::after { content: ""; position: absolute; bottom: -3px; width: 1.15rem; height: .8rem; border: 4px solid var(--r); border-radius: 50%; box-sizing: border-box; }
+.gb-bow::before { right: -1px; transform: rotate(-24deg); transform-origin: right bottom; }
+.gb-bow::after { left: -1px; transform: rotate(24deg); transform-origin: left bottom; }
+.gb-body { position: relative; width: 72%; aspect-ratio: 1 / .8; border-radius: 4px 4px 8px 8px; display: grid; place-items: center;
+  background: linear-gradient(90deg, transparent 42%, var(--r) 42% 58%, transparent 58%), linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.18)), var(--c);
+  box-shadow: inset 0 -7px 0 rgba(0,0,0,.18), 0 10px 18px rgba(0,0,0,.45); }
+.gb-ico { position: relative; z-index: 1; display: grid; place-items: center; width: 2.3rem; height: 2.3rem; border-radius: 50%; font-size: 1.3rem; background: #fffaf4; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
+.gb-name { font: 600 .74rem/1.15 var(--f-ui); letter-spacing: .03em; color: var(--cream-text); text-align: center; }
+.gbox.chosen .gb-name::after { content: " ♥"; color: #ff7aa0; }
+.gbox.chosen .gb-body { box-shadow: inset 0 -7px 0 rgba(0,0,0,.18), 0 0 0 3px #ffd6e2, 0 0 24px rgba(255,122,160,.7); }
+.gbox:active .gb-pkg { transform: scale(.94); }
+.gbox.opening .gb-pkg { animation: gbShake .45s ease-in-out; }
+@keyframes gbShake { 20% { transform: rotate(-9deg) scale(1.06); } 40% { transform: rotate(8deg) scale(1.1); } 60% { transform: rotate(-6deg) scale(1.12); } 80% { transform: rotate(4deg) scale(1.1); } }
+.gbox.opening .gb-lid { animation: lidPop .55s cubic-bezier(.2,.8,.3,1) .38s forwards; }
+@keyframes lidPop { to { transform: translate(18px, -70px) rotate(32deg); opacity: 0; } }
+.gbox.opening .gb-body { animation: bodyGlow .5s ease .4s forwards; }
+@keyframes bodyGlow { to { box-shadow: inset 0 -7px 0 rgba(0,0,0,.18), 0 -18px 40px 6px rgba(255,236,190,.9); } }
+.gift-hint { margin: .5rem 0 0; text-align: center; font-size: .9rem; color: var(--muted); animation: knock 2.4s ease-in-out infinite; }
+.gift-open { position: relative; display: grid; justify-items: center; gap: .55rem; padding: .3rem 0 .2rem; }
+.go-title { margin: 0; font: 400 1.7rem/1.1 var(--f-script); color: #ffe9f0; text-shadow: 0 0 12px rgba(255,92,138,.6); animation: fadeIn .6s ease; }
+.go-cards { position: relative; z-index: 2; width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .55rem; padding: 0 .3rem; }
+.gift-card { min-height: 6.6rem; animation: cardOut .75s cubic-bezier(.2,1.25,.35,1) both, cardFloat 3.2s ease-in-out infinite;
+  animation-delay: calc(.35s + var(--i) * .13s), calc(1.3s + var(--i) * .45s); }
+.gift-open.again .gift-card { animation-delay: calc(.05s + var(--i) * .1s), calc(1s + var(--i) * .45s); }
+@keyframes cardOut { from { opacity: 0; transform: translate(var(--fx), 170px) scale(.15) rotate(var(--fr)); } }
+@keyframes cardFloat { 50% { transform: translateY(-6px); } }
+.go-box { position: relative; display: grid; justify-items: center; width: 46%; margin-top: .3rem; }
+.go-box .gb-body { width: 100%; aspect-ratio: 1 / .62; border-radius: 3px 3px 10px 10px; }
+.go-box .gb-body::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 22%; background: rgba(0,0,0,.32); border-radius: 3px 3px 0 0; }
+.go-lid { position: absolute; left: 50%; top: -.5rem; width: 108%; margin: 0 0 0 -54%; animation: lidFly 1s cubic-bezier(.2,.8,.3,1) forwards; }
+@keyframes lidFly { 0% { transform: none; } 100% { transform: translate(90px, -150px) rotate(70deg); opacity: 0; } }
+.gift-open.again .go-lid { display: none; }
+.go-rays { position: absolute; left: 50%; top: 10%; width: 300px; height: 300px; margin: -150px 0 0 -150px; z-index: -1; pointer-events: none; border-radius: 50%;
+  background: repeating-conic-gradient(rgba(255,230,180,.38) 0 7deg, transparent 7deg 22deg); -webkit-mask: radial-gradient(circle, #000 20%, transparent 68%); mask: radial-gradient(circle, #000 20%, transparent 68%);
+  animation: raysIn .8s ease both, raysSpin 14s linear infinite; }
+@keyframes raysIn { from { opacity: 0; transform: scale(.3); } }
+@keyframes raysSpin { to { rotate: 360deg; } }
+.go-actions { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin-top: .3rem; }
+.go-btn { border: 1px solid rgba(255,182,206,.5); background: rgba(255,255,255,.06); color: var(--cream-text); border-radius: 999px; padding: .55rem 1rem; font: 600 .78rem/1 var(--f-ui); letter-spacing: .03em; cursor: pointer; }
+.go-btn:active { transform: scale(.95); }
 .spin-btn { align-self: center; border: 0; border-radius: 999px; padding: .62rem 1.2rem; font: 700 .82rem/1 var(--f-ui); letter-spacing: .04em; color: #fff;
   background: linear-gradient(135deg, #ff5c8a, #b3122f); box-shadow: 0 6px 18px rgba(255,92,138,.45); animation: spinGlow 2.4s ease-in-out infinite; }
 .spin-btn:active { transform: scale(.96); }
@@ -2504,6 +2557,7 @@ main.stage { position: relative; z-index: 1; }
     <p class="scene-sub" id="bSub">Elige el lugar. Tú decides, yo me apunto a lo que sea.</p>
     <div class="cats" id="cats"></div>
     <button class="spin-btn" id="spinBtn">🎡 ¿No sabes? Gira la ruleta</button>
+    <div class="gifts" id="gifts" hidden></div>
     <div class="menu" id="plans"></div>
     <button class="dest dest--otra" data-plan="otra"><span class="d-ico" aria-hidden="true">✍️</span><b class="d-name">Lo que tú quieras</b><small>Escríbelo tú, yo me apunto</small><span class="d-tag">Elegido ♥</span></button>
     <div class="plan-other" id="planOther" hidden>
@@ -4079,7 +4133,50 @@ function renderBoard(st) {
   $("#planOther").hidden = true; $("#planOtherText").value = ""; $("#planOtherText").placeholder = B.ph;
   $(".dest--otra").classList.toggle("chosen", elec[st]?.propio || false); $(".dest--otra").classList.remove("picked");
   $("#planBack").hidden = !editing;
+  // el lugar se elige abriendo cajitas sorpresa; comida y después siguen con el menú
+  const g = st === "lugar"; $("#gifts").hidden = !g; grid.hidden = g; $("#cats").hidden = g;
+  if (g) renderGifts();
 }
+// ---------- Cajitas sorpresa para elegir el lugar ----------
+const GIFTS = [["temuco", "📍", "En Temuco", "#d81b60", "#ffd27a"], ["aire", "🌳", "Aire libre", "#2a9d6a", "#ffe3ec"], ["salir", "✨", "Salir", "#7d4aff", "#ffd27a"],
+  ["casa", "🛋️", "En casita", "#e07a1a", "#fff3e0"], ["activo", "👟", "Activos", "#1a6ad0", "#ffd27a"], ["todo", "❓", "Sorpresa", "#b8862e", "#ff5c8a"]];
+let giftCat = null, giftBag = [], giftIdx = 0;
+const shuffled = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const giftPool = k => BOARDS.lugar.ids.map(id => PLANES.find(p => p.id === id)).filter(p => p && (k === "todo" || p.cat === k));
+function renderGifts() {
+  giftCat = null;
+  const ch = elec.lugar && PLANES.find(p => p.id === elec.lugar.id);
+  $("#gifts").innerHTML = `<div class="gift-shelf">${GIFTS.map(([k, ic, t, c, r], i) =>
+    `<button class="gbox${ch && ch.cat === k ? " chosen" : ""}" data-gcat="${k}" style="--c:${c};--r:${r};--i:${i}"><span class="gb-pkg"><span class="gb-lid"><i class="gb-bow"></i></span><span class="gb-body"><span class="gb-ico">${ic}</span></span></span><b class="gb-name">${t}</b></button>`).join("")}</div>
+    <p class="gift-hint">Abre una cajita y mira qué planes trae 🎁</p>`;
+}
+async function openGift(btn) {
+  if (btn.classList.contains("opening")) return;
+  const k = btn.dataset.gcat, r = btn.getBoundingClientRect();
+  btn.classList.add("opening"); AudioFX.paper(); buzz(15);
+  setTimeout(() => { AudioFX.glint(2); burst(36, r.left + r.width / 2, r.top + r.height * .3); }, reduced ? 0 : 430);
+  await sleep(reduced ? 0 : 820);
+  giftCat = k; giftBag = shuffled(giftPool(k)); giftIdx = 0;
+  showGiftCards(false);
+}
+function showGiftCards(again) {
+  const [, ic, t, c, r] = GIFTS.find(g => g[0] === giftCat), n = giftBag.length;
+  const pick = Array.from({ length: Math.min(3, n) }, (_, j) => giftBag[(giftIdx + j) % n]); giftIdx += 3;
+  const cards = pick.map((p, i) => `<button class="dest gift-card${elec.lugar?.id === p.id ? " chosen" : ""}" data-plan="${p.id}" data-cat="${p.cat}" style="--i:${i};--fx:${(1 - i) * 105}%;--fr:${(1 - i) * 25}deg">
+      <span class="d-ico" aria-hidden="true">${p.icon}</span><b class="d-name">${p.t}</b><span class="d-tag">Elegido ♥</span></button>`).join("");
+  $("#gifts").innerHTML = `<div class="gift-open${again ? " again" : ""}" style="--c:${c};--r:${r}">
+    <p class="go-title">${ic} ${t}</p>
+    <div class="go-cards">${cards}</div>
+    <div class="go-box"><i class="go-rays"></i><span class="gb-lid go-lid"><i class="gb-bow"></i></span><span class="gb-body"></span></div>
+    <div class="go-actions">${n > 3 ? `<button class="go-btn" id="giftMore">🔄 Otros planes</button>` : ""}<button class="go-btn" id="giftBack">🎁 Otra cajita</button></div>
+  </div>`;
+  AudioFX.chime();
+}
+$("#gifts").addEventListener("click", e => {
+  const b = e.target.closest(".gbox"); if (b) { openGift(b); return; }
+  if (e.target.closest("#giftMore")) { AudioFX.paper(); showGiftCards(true); return; }
+  if (e.target.closest("#giftBack")) { AudioFX.paper(); renderGifts(); }
+});
 $$("#stepDots button").forEach(b => b.addEventListener("click", () => { if (!b.disabled && b.dataset.st !== stage) { renderBoard(b.dataset.st); flapBoard(); AudioFX.paper(); } }));
 document.addEventListener("click", e => {
   const b = e.target.closest(".dest"); if (!b) return;
