@@ -191,6 +191,35 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .jar:active { transform: rotate(-6deg); }
 .note { width: 100%; min-height: 4.6rem; display: grid; place-items: center; padding: 1rem; border-radius: 6px; background: var(--paper); color: var(--ink); font: italic 500 1.2rem/1.35 var(--f-serif); box-shadow: 0 8px 18px rgba(0,0,0,.35); }
 .note.pop { animation: noteIn .6s cubic-bezier(.3,1.4,.5,1); }
+/* frasco 2.0: papelitos de colores dentro, uno vuela y se desenrolla */
+.jar-wrap { display: grid; place-items: center; padding-top: .4rem; }
+.jar2 { width: 150px; height: 190px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.jar2 .glass { inset: 30px 12px 0; overflow: hidden; box-shadow: inset 0 0 18px rgba(255,255,255,.12), 0 10px 26px rgba(0,0,0,.4); }
+.jar2 .glass::before { content: none; }
+.jar2 .glass::after { content: ""; position: absolute; left: 14%; top: 8%; width: 12%; height: 70%; border-radius: 999px; background: linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,0)); pointer-events: none; }
+.jar2 .cap { left: 20px; right: 20px; top: 12px; height: 24px; border-radius: 7px; box-shadow: inset 0 -4px 0 rgba(0,0,0,.18); transition: transform .3s; }
+.jar2 .ribbon { position: absolute; left: -6px; right: -6px; top: 15px; height: 6px; background: #d8436e; border-radius: 3px; }
+.jar2 .ribbon::after { content: "♥"; position: absolute; right: 8px; top: -9px; color: #ff7aa0; font-size: 1rem; }
+.jar2 .tag { position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%) rotate(-4deg); z-index: 2; padding: .3rem .5rem; border-radius: 4px; background: #fffaf0; color: #7a2a40;
+  font: 400 .9rem/1.05 var(--f-script); box-shadow: 0 3px 8px rgba(0,0,0,.35); white-space: nowrap; pointer-events: none; }
+.papers { position: absolute; inset: 0; }
+.papers i { position: absolute; width: 22px; height: 13px; border-radius: 3px; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), 0 2px 3px rgba(0,0,0,.25);
+  transform: rotate(var(--r)); animation: paperDrop .6s cubic-bezier(.3,1.3,.5,1) both; }
+.papers i::after { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 3px; margin-left: -1.5px; background: #d8436e; opacity: .7; }
+@keyframes paperDrop { from { opacity: 0; transform: translateY(-160px) rotate(var(--r)); } }
+.papers i.out { animation: paperOut .55s cubic-bezier(.5,0,.3,1) forwards; z-index: 3; }
+@keyframes paperOut { 30% { transform: translateY(-20px) rotate(0) scale(1.2); } to { opacity: 0; transform: translateY(-190px) rotate(-200deg) scale(1.6); } }
+.jar2.shake { animation: jarShake .5s ease-in-out; }
+.jar2.shake .cap { transform: translateY(-14px) rotate(-10deg); }
+@keyframes jarShake { 20% { transform: rotate(-7deg); } 45% { transform: rotate(6deg); } 70% { transform: rotate(-3deg); } }
+.note2 { display: grid; gap: .35rem; align-content: center; text-align: center; min-height: 6rem; transform-origin: 50% 0; }
+.note2 .n-num { font: 700 .7rem/1 var(--f-ui); letter-spacing: .2em; text-transform: uppercase; color: #b3122f; }
+.note2 .n-txt { font: italic 500 1.25rem/1.35 var(--f-serif); color: var(--ink); }
+.note2.open { animation: unroll .7s cubic-bezier(.2,1.1,.3,1); }
+@keyframes unroll { from { opacity: 0; transform: translateY(-70px) scaleY(.08) rotate(-6deg); } 60% { opacity: 1; } }
+.note2.end { box-shadow: 0 0 0 3px #ffd27a, 0 0 30px rgba(255,210,122,.6), 0 8px 18px rgba(0,0,0,.35); }
+.jar-left { min-height: 1.4em; }
+.jar-left b { color: #ffd27a; font-weight: 600; }
 @keyframes noteIn { from { opacity: 0; transform: translateY(40px) rotate(-8deg) scale(.7); } }
 .moon { width: 170px; aspect-ratio: 1; }
 .rose { position: relative; width: 190px; height: 210px; }
@@ -553,11 +582,26 @@ const D = {
 };
 const FOTOS = ["__FOTO1__", "__FOTO2__", "__FOTO3__", "__FOTO4__", "__FOTO5__", "__FOTO6__", "__FOTO7__", "__FOTO8__", "__FOTO9__", "__FOTO10__", "__FOTO11__", "__FOTO12__"].map(f => f.startsWith("__") ? "" : f);
 const CAPS = ["El día que dijiste que sí", "Tu sonrisa", "Nosotros", "Mi lugar favorito", "Tú y yo", "Mi favorita ♥", "Contigo", "Mi wawita", "Mi persona", "Te amo", "Mi felicidad", "Nuestra primera foto"];
-const RAZONES = [
-  "Porque tu risa me arregla el día.", "Porque contigo puedo ser yo mismo.", "Porque me miras como nadie me ha mirado.",
-  "Porque haces que lo simple se sienta especial.", "Porque eres tierna hasta cuando te enojas.", "Porque me escuchas de verdad.",
-  "Porque tus abrazos son mi lugar seguro.", "Porque me haces querer ser mejor.", "Porque contigo el tiempo se pasa volando.",
-  "Porque eres mi wawita mosha.", "Porque dijiste que sí.", "Porque me gusta todo de ti.",
+const RAZONES = [   // las razones de Diego, en sus palabras
+  "Porque con un mensaje tuyo me alegras el día.",
+  "Porque con escuchar tu voz me calmo.",
+  "Porque al verte mi corazón se acelera.",
+  "Porque cuando te toco, se pausa todo.",
+  "Porque cuando te abrazo, mi cuerpo entra en estado de tranquilidad.",
+  "Porque cada vez que te veo me emociono al saber que estoy contigo.",
+  "Porque cuando te beso, el mundo deja de existir y solo existimos nosotros dos.",
+  "Porque cuando me mandas una foto me alegras el día.",
+  "Porque tu sonrisa me hace muy feliz.",
+  "Porque siento que tenemos una conexión ultra especial.",
+  "Por tu humor.",
+  "Por tu forma de ser.",
+  "Por tu humildad.",
+  "Porque eres una buena hermana, una buena hija y una buena estudiante.",
+  "Porque me enamoré de ti en el momento en que te vi, y desde ahí nada en mi vida volvió a ser igual.",
+  "Porque no puedo parar de pensar en ti.",
+  "Porque eres maravillosa.",
+  "Porque eres perfecta.",
+  "Porque eres hermosa.",
 ];
 /* ======================================================= */
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -773,7 +817,45 @@ function buildGifts() {
   }));
   setTimeout(() => $("#giftsNext").classList.add("show"), reduced ? 0 : 25000);
 }
-let razon = 0;
+let razon = 0, jarBusy = false;
+const PAPER_C = ["#ffd6e2", "#fff3c4", "#ffe0cc", "#e8dcff", "#d6f1ff"];
+// el frasco con un papelito por cada razón que falta leer
+function fillJar(drop) {
+  const left = RAZONES.length - razon;
+  $("#papers").innerHTML = Array.from({ length: left }, (_, k) => {
+    const row = Math.floor(k / 5), col = k % 5;
+    return `<i style="left:${(6 + col * 18 + (row % 2) * 8 + Math.random() * 4).toFixed(1)}%;bottom:${(4 + row * 11 + Math.random() * 3).toFixed(1)}%;--r:${(Math.random() * 70 - 35).toFixed(0)}deg;--c:${PAPER_C[k % PAPER_C.length]};${drop ? `animation-delay:${(k * .07).toFixed(2)}s` : "animation:none"}"></i>`;
+  }).join("");
+  $("#jarLeft").textContent = left ? `Quedan ${left} papelitos en el frasco` : "";
+}
+async function drawReason() {
+  if (jarBusy) return;
+  const jar = $("#jar"), note = $("#note");
+  if (razon >= RAZONES.length) {
+    // se acabaron: se vuelve a llenar
+    razon = 0; fillJar(true); Audio.chime();
+    $("#noteNum").textContent = "Toca el frasco 💌"; $("#noteTxt").textContent = ""; note.classList.remove("open", "end");
+    return;
+  }
+  jarBusy = true;
+  jar.classList.remove("shake"); void jar.offsetWidth; jar.classList.add("shake"); Audio.paper(); buzz(15);
+  const ps = $$("#papers i"), top = ps[ps.length - 1];
+  if (top) { top.style.animation = "none"; void top.offsetWidth; top.classList.add("out"); }
+  await sleep(520);
+  top?.remove();
+  const i = razon++;
+  note.classList.remove("open", "end"); void note.offsetWidth;
+  $("#noteNum").textContent = `Razón ${i + 1} de ${RAZONES.length}`;
+  $("#noteTxt").textContent = RAZONES[i];
+  note.classList.add("open"); Audio.pop();
+  const left = RAZONES.length - razon;
+  $("#jarLeft").textContent = left > 1 ? `Quedan ${left} papelitos en el frasco` : left === 1 ? "Queda el último papelito 💗" : "";
+  if (!left) setTimeout(() => {
+    note.classList.add("end"); burst(60); Audio.chime(); buzz([20, 40, 20]);
+    $("#jarLeft").innerHTML = `Ya leíste las ${RAZONES.length}… pero tengo muchas más, y cada día encuentro una nueva 💗<br><b>Toca el frasco para llenarlo otra vez</b>`;
+  }, reduced ? 0 : 1600);
+  await sleep(400); jarBusy = false;
+}
 function moonInfo(date) {
   const syn = 29.530588853, ref = Date.UTC(2000, 0, 6, 18, 14) / 864e5, age = ((date.getTime() / 864e5 - ref) % syn + syn) % syn;
   const illum = (1 - Math.cos(2 * Math.PI * age / syn)) / 2;
@@ -806,7 +888,9 @@ function openGift(id) {
   const q = encodeURIComponent(`${D.cancion} ${D.artista}`);
   if (id === "vale") html = `<h3>Un vale para ti</h3><div class="coupon"><b>Un abrazo infinito</b><small>Válido para siempre · Canjeable las veces que quieras · Sin fecha de vencimiento</small><span class="used" id="used">Canjeado ♥<br>(sigue valiendo)</span></div><button class="btn" id="canjear">Canjear ahora</button>`;
   if (id === "cancion") html = `<h3>Nuestra canción</h3><div class="vinyl" aria-hidden="true"></div><p><b>${D.cancion}</b><br><span style="color:var(--muted)">${D.artista}</span></p><p class="small">Cada vez que la escuche voy a pensar en ti.</p><div class="links"><a href="https://open.spotify.com/search/${q}" target="_blank" rel="noopener">Spotify</a><a href="${D.youtube}" target="_blank" rel="noopener">YouTube</a></div>`;
-  if (id === "frasco") html = `<h3>Un frasco de razones</h3><p class="small">Razones por las que te amo. Toca el frasco para sacar una.</p><button class="jar" id="jar" aria-label="Sacar una razón"><i class="glass"></i><i class="cap"></i></button><div class="note" id="note">Toca el frasco 💌</div>`;
+  if (id === "frasco") html = `<h3>Un frasco de razones</h3><p class="small">${RAZONES.length} razones por las que te amo. Toca el frasco para sacar un papelito.</p>
+    <div class="jar-wrap"><button class="jar jar2" id="jar" aria-label="Sacar una razón"><i class="glass"><span class="papers" id="papers"></span></i><i class="cap"><i class="ribbon"></i></i><i class="tag">Razones por las<br>que te amo ♥</i></button></div>
+    <div class="note note2" id="note"><span class="n-num" id="noteNum">Toca el frasco 💌</span><span class="n-txt" id="noteTxt"></span></div><p class="small jar-left" id="jarLeft"></p>`;
   if (id === "luna") { const info = moonInfo(new Date(D.pololeo)); html = `<h3>La luna de nuestro día</h3><canvas class="moon" id="moonCv" aria-label="${info.name}"></canvas><p>Así estaba la luna el <b>3 de octubre de 2026</b>, el día que empezamos.</p><p class="small">${info.name} · iluminada al ${Math.round(info.illum * 100)}%</p>`; }
   if (id === "rosa") html = `<h3>Una rosa que no se marchita</h3>${rosaHTML()}<p>Esta te la regalo aquí, para que la tengas siempre.</p><p class="small">Las de verdad van en camino… 🌷</p>`;
   if (id === "abrazo") html = `<h3>Un secreto</h3><p style="font-size:1.3rem">Cuando estoy contigo, el mundo se queda en silencio y solo existes tú.</p><p class="small">No se lo cuentes a nadie 🤫💗</p>`;
@@ -814,7 +898,7 @@ function openGift(id) {
   $("#modal").hidden = false; Audio.chime();
   if (id === "luna") requestAnimationFrame(() => drawMoon($("#moonCv"), moonInfo(new Date(D.pololeo))));
   if (id === "vale") $("#canjear").addEventListener("click", () => { $("#used").classList.add("hit"); Audio.pop(); buzz([20, 40, 20]); burst(50); $("#canjear").textContent = "Canjeado 💗"; });
-  if (id === "frasco") $("#jar").addEventListener("click", () => { const n = $("#note"); n.textContent = RAZONES[razon++ % RAZONES.length]; n.classList.remove("pop"); void n.offsetWidth; n.classList.add("pop"); Audio.pop(); });
+  if (id === "frasco") { fillJar(false); $("#jar").addEventListener("click", drawReason); }
   if (id === "rosa") setTimeout(() => { const r = $(".rose", card)?.getBoundingClientRect(); if (r) burst(40, r.left + r.width / 2, r.top + 30); }, reduced ? 0 : 3200);
   $("#closeCard").addEventListener("click", closeModal);
 }
