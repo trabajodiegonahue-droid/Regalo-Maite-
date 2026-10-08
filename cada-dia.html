@@ -196,7 +196,7 @@ canvas#fx { position: fixed; inset: 0; z-index: 35; pointer-events: none; width:
 <script>
 /* ============ DATOS ============ */
 const D = { nombre: "Maite", firma: "Diego", apodoElla: "mi wawita mosha", pololeo: "2026-10-03T14:15:00", inicio: "2026-10-08", whatsapp: "56941089585",
-  cancion: "Te Amo, Para Siempre", artista: "Noche de Brujas" };
+  cancion: "Te Amo, Para Siempre", artista: "Noche de Brujas", youtube: "https://www.youtube.com/watch?v=xwBwzPWLYpE" };
 const FOTOS = ["__FOTO1__", "__FOTO2__", "__FOTO3__", "__FOTO4__", "__FOTO5__", "__FOTO6__", "__FOTO7__", "__FOTO8__", "__FOTO9__", "__FOTO10__", "__FOTO11__", "__FOTO12__"].map(f => f.startsWith("__") ? "" : f);
 const CAPS = ["El día del sí", "Tu sonrisa", "Nosotros", "Mi lugar favorito", "Tú y yo", "Siempre tú", "Contigo", "Mi wawita", "Mi persona", "Te amo", "Mi felicidad", "Mi todo"];
 // un mensaje por día, en orden, a partir del día "inicio"
@@ -342,7 +342,7 @@ $("#more").addEventListener("click", () => { shown += 10; renderArchive(); });
 // canción y botones
 const q = encodeURIComponent(`${D.cancion} ${D.artista}`);
 $("#songName").textContent = D.cancion; $("#songArtist").textContent = D.artista;
-$("#sp").href = `https://open.spotify.com/search/${q}`; $("#yt").href = `https://www.youtube.com/results?search_query=${q}`;
+$("#sp").href = `https://open.spotify.com/search/${q}`; $("#yt").href = `${D.youtube}`;
 $("#kissBtn").href = wa("Te mando un beso 💋"); $("#missBtn").href = wa("Te extraño 🥺💗");
 
 // corazones (canvas)

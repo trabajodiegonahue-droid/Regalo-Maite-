@@ -484,7 +484,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 const D = {
   nombre: "Maite", firma: "Diego", apodo: "wawita", apodoElla: "mi wawita mosha",
   pololeo: "2026-10-03T14:15:00", whatsapp: "56941089585",
-  cancion: "Te Amo, Para Siempre", artista: "Noche de Brujas",
+  cancion: "Te Amo, Para Siempre", artista: "Noche de Brujas", youtube: "https://www.youtube.com/watch?v=xwBwzPWLYpE",
 };
 const FOTOS = ["__FOTO1__", "__FOTO2__", "__FOTO3__", "__FOTO4__", "__FOTO5__", "__FOTO6__", "__FOTO7__", "__FOTO8__", "__FOTO9__", "__FOTO10__", "__FOTO11__", "__FOTO12__"].map(f => f.startsWith("__") ? "" : f);
 const CAPS = ["El sí", "Tu sonrisa", "Nosotros", "Mi lugar favorito", "Tú y yo", "Siempre tú", "Contigo", "Mi wawita", "Mi persona", "Te amo", "Mi felicidad", "Mi todo"];
@@ -727,7 +727,7 @@ function openGift(id) {
   const card = $("#card"); let html = "";
   const q = encodeURIComponent(`${D.cancion} ${D.artista}`);
   if (id === "vale") html = `<h3>Un vale para ti</h3><div class="coupon"><b>Un abrazo infinito</b><small>Válido para siempre · Canjeable las veces que quieras · Sin fecha de vencimiento</small><span class="used" id="used">Canjeado ♥<br>(sigue valiendo)</span></div><button class="btn" id="canjear">Canjear ahora</button>`;
-  if (id === "cancion") html = `<h3>Nuestra canción</h3><div class="vinyl" aria-hidden="true"></div><p><b>${D.cancion}</b><br><span style="color:var(--muted)">${D.artista}</span></p><p class="small">Cada vez que la escuche voy a pensar en ti.</p><div class="links"><a href="https://open.spotify.com/search/${q}" target="_blank" rel="noopener">Spotify</a><a href="https://www.youtube.com/results?search_query=${q}" target="_blank" rel="noopener">YouTube</a></div>`;
+  if (id === "cancion") html = `<h3>Nuestra canción</h3><div class="vinyl" aria-hidden="true"></div><p><b>${D.cancion}</b><br><span style="color:var(--muted)">${D.artista}</span></p><p class="small">Cada vez que la escuche voy a pensar en ti.</p><div class="links"><a href="https://open.spotify.com/search/${q}" target="_blank" rel="noopener">Spotify</a><a href="${D.youtube}" target="_blank" rel="noopener">YouTube</a></div>`;
   if (id === "frasco") html = `<h3>Un frasco de razones</h3><p class="small">Razones por las que te amo. Toca el frasco para sacar una.</p><button class="jar" id="jar" aria-label="Sacar una razón"><i class="glass"></i><i class="cap"></i></button><div class="note" id="note">Toca el frasco 💌</div>`;
   if (id === "luna") { const info = moonInfo(new Date(D.pololeo)); html = `<h3>La luna de nuestro día</h3><canvas class="moon" id="moonCv" aria-label="${info.name}"></canvas><p>Así estaba la luna el <b>3 de octubre de 2026</b>, el día que empezamos.</p><p class="small">${info.name} · iluminada al ${Math.round(info.illum * 100)}%</p>`; }
   if (id === "rosa") html = `<h3>Una rosa que no se marchita</h3>${rosaHTML()}<p>Esta te la regalo aquí, para que la tengas siempre.</p><p class="small">Las de verdad van en camino… 🌷</p>`;
