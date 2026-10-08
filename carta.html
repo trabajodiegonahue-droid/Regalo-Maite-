@@ -176,6 +176,10 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .coupon small { display: block; margin-top: .5rem; font: 500 .7rem/1.4 var(--f-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
 .coupon .used { position: absolute; right: 8px; bottom: -14px; padding: .25rem .5rem; border: 3px double var(--rose-deep); border-radius: 6px; font: 600 .72rem/1.1 var(--f-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--rose-deep);
   transform: rotate(12deg) scale(2.4); opacity: 0; }
+.cp2 { display: grid; justify-items: center; gap: .15rem; margin: .5rem 0 .9rem; text-align: center; transform: rotate(var(--r));
+  background: radial-gradient(circle at 0 50%, transparent 10px, var(--paper) 11px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 10px, var(--paper) 11px) right / 51% 100% no-repeat; }
+.cp2 .cp-ico { font-size: 1.8rem; line-height: 1; }
+.cp2 .cp-btn { margin-top: .6rem; padding: .6rem 1.1rem; font-size: .75rem; text-decoration: none; }
 .coupon .used.hit { animation: stamp2 .45s cubic-bezier(.3,1.6,.5,1) forwards; }
 @keyframes stamp2 { to { transform: rotate(12deg) scale(1); opacity: .9; } }
 .vinyl { width: 170px; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
@@ -801,7 +805,7 @@ $("#lightbox").addEventListener("click", () => { $("#lightbox").hidden = true; }
 
 // ---------- regalitos ----------
 const GIFTS = [
-  { id: "vale", icon: "🎟️", t: "Un vale", c: "#d8436e" },
+  { id: "vale", icon: "🎟️", t: "Tus vales", c: "#d8436e" },
   { id: "cancion", icon: "🎶", t: "Nuestra canción", c: "#7a4ab8" },
   { id: "frasco", icon: "🫙", t: "Un frasco", c: "#2f8a6a" },
   { id: "luna", icon: "🌙", t: "Una luna", c: "#3a5ab8" },
@@ -887,10 +891,17 @@ function rosaHTML() {
   rings.forEach(([n, w, h, t, d], ri) => { for (let i = 0; i < n; i++) ps.push(`<i class="petal" style="--w:${w}px;--h:${h}px;--a:${(i * 360 / n + ri * 30).toFixed(0)}deg;--t:-${t}px;--dl:${(1.4 + d * .5 + i * .08).toFixed(2)}s"></i>`); });
   return `<div class="rose" aria-hidden="true"><i class="stem"></i><i class="leaf l"></i><i class="leaf r"></i><div class="bloom">${ps.join("")}</div></div>`;
 }
+const VALES = [
+  { ico: "💋", t: "Vale por besos", sub: "Los que quieras, cuando quieras · Ilimitados · Nunca vencen", wa: "💋 Quiero canjear mi VALE POR BESOS 💋\n(y sigue valiendo para siempre 😌)" },
+  { ico: "🤗", t: "Vale por un abrazo", sub: "De esos largos que duran harto · Canjeable siempre · Sin fecha de vencimiento", wa: "🤗 Quiero canjear mi VALE POR UN ABRAZO 🤗\nDe esos largos, porfa 🥹" },
+];
 function openGift(id) {
   const card = $("#card"); let html = "";
   const q = encodeURIComponent(`${D.cancion} ${D.artista}`);
-  if (id === "vale") html = `<h3>Un vale para ti</h3><div class="coupon"><b>Un abrazo infinito</b><small>Válido para siempre · Canjeable las veces que quieras · Sin fecha de vencimiento</small><span class="used" id="used">Canjeado ♥<br>(sigue valiendo)</span></div><button class="btn" id="canjear">Canjear ahora</button>`;
+  if (id === "vale") html = `<h3>Tus vales</h3><p class="small">Canjéalos cuando quieras. Me llega el aviso al tiro 😌</p>` + VALES.map((v, k) =>
+    `<div class="coupon cp2" style="--r:${k ? 1.5 : -1.5}deg"><span class="cp-ico">${v.ico}</span><b>${v.t}</b><small>${v.sub}</small>
+      <a class="btn cp-btn" data-vale="${k}" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?phone=${D.whatsapp}&text=${encodeURIComponent(v.wa)}">Canjear ${v.ico}</a>
+      <span class="used" id="used${k}">Canjeado ♥<br>(sigue valiendo)</span></div>`).join("");
   if (id === "cancion") html = `<h3>Nuestra canción</h3><div class="vinyl" aria-hidden="true"></div><p><b>${D.cancion}</b><br><span style="color:var(--muted)">${D.artista}</span></p><p class="small">Cada vez que la escuche voy a pensar en ti.</p><div class="links"><a href="https://open.spotify.com/search/${q}" target="_blank" rel="noopener">Spotify</a><a href="${D.youtube}" target="_blank" rel="noopener">YouTube</a></div>`;
   if (id === "frasco") html = `<h3>Un frasco de razones</h3><p class="small">${RAZONES.length} razones por las que te amo. Toca el frasco para sacar un papelito.</p>
     <div class="jar-wrap"><button class="jar jar2" id="jar" aria-label="Sacar una razón"><i class="glass"><span class="papers" id="papers"></span></i><i class="cap"><i class="ribbon"></i></i><i class="tag">Razones por las<br>que te amo ♥</i></button></div>
@@ -901,7 +912,10 @@ function openGift(id) {
   card.innerHTML = html + `<button class="btn btn--ghost" id="closeCard">Cerrar</button>`;
   $("#modal").hidden = false; Audio.chime();
   if (id === "luna") requestAnimationFrame(() => drawMoon($("#moonCv"), moonInfo(new Date(D.pololeo))));
-  if (id === "vale") $("#canjear").addEventListener("click", () => { $("#used").classList.add("hit"); Audio.pop(); buzz([20, 40, 20]); burst(50); $("#canjear").textContent = "Canjeado 💗"; });
+  if (id === "vale") $$(".cp-btn", card).forEach(b => b.addEventListener("click", () => {
+    const k = +b.dataset.vale; $("#used" + k).classList.add("hit"); Audio.pop(); buzz([20, 40, 20]);
+    const r = b.getBoundingClientRect(); burst(50, r.left + r.width / 2, r.top); b.textContent = "Canjear otra vez " + VALES[k].ico;
+  }));
   if (id === "frasco") { fillJar(false); $("#jar").addEventListener("click", drawReason); }
   if (id === "rosa") setTimeout(() => { const r = $(".rose", card)?.getBoundingClientRect(); if (r) burst(40, r.left + r.width / 2, r.top + 30); }, reduced ? 0 : 3200);
   $("#closeCard").addEventListener("click", closeModal);
