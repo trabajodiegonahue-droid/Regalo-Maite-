@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cada día, Maite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Pinyon+Script&family=Jost:wght@400;500;600&display=swap">
+<style>
+/* Un rincón que ella abre cada día: una columna como un diario de bolsillo, con un sobre nuevo por día. */
+:root {
+  --blush: #fbe9ec;
+  --blush-2: #f6d5dc;
+  --card: #fffaf8;
+  --wine: #6d0f2c;
+  --rose: #d8436e;
+  --rose-soft: #f29bb2;
+  --gold: #c99a3e;
+  --ink: #3a2026;
+  --ink-soft: #85606a;
+  --line: rgba(109,15,44,.12);
+  --f-script: "Pinyon Script", "Snell Roundhand", "Apple Chancery", cursive;
+  --f-serif: "Cormorant Garamond", "Garamond", Georgia, serif;
+  --f-ui: "Jost", "Futura", "Century Gothic", system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-height: 100%; color: var(--ink); font-family: var(--f-serif);
+  background: radial-gradient(90% 40% at 50% 0%, #ffd9e2, transparent 70%), linear-gradient(180deg, var(--blush), #fff3f1 60%, var(--blush-2)); background-attachment: fixed; -webkit-tap-highlight-color: transparent; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+.page { width: min(100%, 30rem); margin: 0 auto; padding-inline: 16px; padding-block: 22px 60px; display: grid; gap: 1.1rem; }
+
+/* encabezado */
+.top { display: grid; justify-items: center; gap: .3rem; text-align: center; padding-top: .4rem; }
+.today { font: 500 .72rem/1 var(--f-ui); letter-spacing: .28em; text-transform: uppercase; color: var(--ink-soft); }
+.hello { margin: 0; font: 400 clamp(2.4rem, 11vw, 3.2rem)/1.05 var(--f-script); color: var(--wine); text-wrap: balance; }
+.together { font: 500 1.15rem/1.3 var(--f-serif); color: var(--ink); }
+.together b { font-size: 1.5em; color: var(--rose); font-variant-numeric: tabular-nums; }
+.milestone { font: 500 .82rem/1.4 var(--f-ui); color: var(--ink-soft); }
+
+/* tarjetas */
+.card { position: relative; background: var(--card); border-radius: 18px; padding: 1.2rem 1.1rem; box-shadow: 0 1px 0 var(--line), 0 14px 34px rgba(109,15,44,.08); display: grid; gap: .8rem; }
+.label { display: flex; align-items: center; justify-content: space-between; gap: .6rem; font: 600 .7rem/1 var(--f-ui); letter-spacing: .22em; text-transform: uppercase; color: var(--rose); }
+.label small { font: 500 .72rem/1 var(--f-ui); letter-spacing: .04em; text-transform: none; color: var(--ink-soft); }
+
+/* el sobre de hoy */
+.envwrap { display: grid; place-items: center; padding: .6rem 0 .2rem; }
+.env { position: relative; width: min(78vw, 280px); aspect-ratio: 3 / 2; border: 0; padding: 0; background: none; perspective: 900px; }
+.env .back { position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(180deg, #f3dcc0, #ead0ae); box-shadow: 0 16px 30px rgba(109,15,44,.18); }
+.env .paper { position: absolute; left: 7%; right: 7%; top: 8%; height: 84%; border-radius: 6px; background: #fffdf8; box-shadow: 0 2px 6px rgba(0,0,0,.08); transition: transform .9s cubic-bezier(.3,1.2,.4,1) .35s; }
+.env .paper::before { content: ""; position: absolute; left: 14%; right: 14%; top: 22%; height: 46%; background: repeating-linear-gradient(180deg, transparent 0 9px, rgba(109,15,44,.12) 9px 10px); }
+.env .front { position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(160deg, #f6e2c8, #eed5b4); clip-path: polygon(0 34%, 50% 70%, 100% 34%, 100% 100%, 0 100%); }
+.env .flap { position: absolute; left: 0; right: 0; top: 0; height: 64%; transform-origin: 50% 0; background: linear-gradient(180deg, #ecd3b0, #e2c49c); clip-path: polygon(0 0, 100% 0, 50% 100%); transition: transform .7s ease; z-index: 3; }
+.env .seal { position: absolute; left: 50%; top: 56%; z-index: 4; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; display: grid; place-items: center; color: #ffd9e2; font: 400 1.5rem/1 var(--f-script);
+  background: radial-gradient(circle at 38% 32%, #e8586f, #b3122f 55%, #6d0a1d); box-shadow: 0 4px 10px rgba(0,0,0,.25); transition: transform .4s ease, opacity .4s ease; }
+.env:not(.open) { animation: nudge 3.2s ease-in-out infinite; }
+@keyframes nudge { 0%, 78%, 100% { transform: none; } 84% { transform: rotate(-3deg) translateY(-3px); } 90% { transform: rotate(2deg); } }
+.env.open .seal { transform: scale(1.6); opacity: 0; }
+.env.open .flap { transform: rotateX(180deg); z-index: 0; }
+.env.open .paper { transform: translateY(-46%); }
+.tapme { font: 500 .85rem/1 var(--f-ui); color: var(--ink-soft); }
+.note { margin: 0; padding: 1.1rem 1rem; border-radius: 12px; background: linear-gradient(180deg, #fff, #fff6f3); border: 1px solid var(--line); font: italic 500 1.32rem/1.45 var(--f-serif); color: var(--ink); text-align: center; text-wrap: pretty; }
+.note.in { animation: noteIn .9s cubic-bezier(.2,.9,.3,1.1); }
+@keyframes noteIn { from { opacity: 0; transform: translateY(18px) scale(.97); } }
+.note-sign { text-align: right; font: 400 1.6rem/1 var(--f-script); color: var(--wine); margin-top: -.2rem; }
+.soon { font: 500 .8rem/1.4 var(--f-ui); color: var(--ink-soft); text-align: center; }
+
+/* foto del día */
+.photo { position: relative; margin: 0; padding: .55rem .55rem 2.3rem; background: #fff; box-shadow: 0 10px 26px rgba(109,15,44,.15); transform: rotate(-1.5deg); justify-self: center; width: min(76vw, 300px); }
+.photo .ph { width: 100%; aspect-ratio: 4 / 5; background: var(--blush-2) center / cover no-repeat; display: grid; place-items: center; font-size: 3rem; }
+.photo figcaption { position: absolute; left: 0; right: 0; bottom: .45rem; text-align: center; font: 400 1.55rem/1 var(--f-script); color: var(--rose); }
+
+/* ábrelo cuando */
+.when { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+.wbtn { border: 1px solid var(--line); background: linear-gradient(180deg, #fff, #fff4f1); border-radius: 14px; padding: .8rem .6rem; display: grid; justify-items: center; gap: .3rem; text-align: center; transition: transform .15s ease; }
+.wbtn:active { transform: scale(.96); }
+.wbtn span { font-size: 1.6rem; line-height: 1; }
+.wbtn b { font: 500 .8rem/1.25 var(--f-ui); color: var(--ink); }
+
+/* te amo: el corazón que se toca */
+.loveheart { display: grid; justify-items: center; gap: .5rem; }
+.bigheart { width: 120px; height: 120px; border: 0; background: none; padding: 0; animation: beat 1.4s ease-in-out infinite; }
+.bigheart svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 10px 18px rgba(216,67,110,.35)); }
+.bigheart:active { transform: scale(.9); }
+@keyframes beat { 0%, 55%, 100% { transform: scale(1); } 65% { transform: scale(1.1); } 75% { transform: scale(1); } 85% { transform: scale(1.06); } }
+.lovecount { font: 500 1.05rem/1.3 var(--f-serif); color: var(--ink-soft); text-align: center; }
+.lovecount b { color: var(--rose); font-size: 1.3em; font-variant-numeric: tabular-nums; }
+.floaty { position: fixed; z-index: 30; pointer-events: none; font: 600 1rem/1 var(--f-ui); color: var(--rose); white-space: nowrap; }
+
+/* mensajes guardados */
+.archive { display: grid; gap: .5rem; }
+.arch { display: grid; grid-template-columns: auto 1fr; gap: .2rem .8rem; align-items: start; padding: .7rem .8rem; border-radius: 12px; border: 1px solid var(--line); background: #fff; text-align: left; }
+.arch .d { grid-row: span 2; display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 10px; background: var(--blush); font: 600 .78rem/1.05 var(--f-ui); color: var(--wine); text-align: center; }
+.arch .t { font: italic 500 1.08rem/1.35 var(--f-serif); color: var(--ink); }
+.arch.locked { opacity: .55; }
+.arch.locked .t { font-style: normal; font: 500 .85rem/1.3 var(--f-ui); color: var(--ink-soft); }
+.more { justify-self: center; border: 0; background: none; font: 500 .85rem/1 var(--f-ui); color: var(--rose); text-decoration: underline; text-underline-offset: 3px; padding: .4rem; }
+
+/* acciones */
+.actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+.btn { display: inline-flex; justify-content: center; align-items: center; gap: .4rem; border: 0; border-radius: 999px; padding: .9rem 1rem; font: 600 .82rem/1 var(--f-ui); letter-spacing: .06em; text-decoration: none; text-align: center;
+  color: #fff; background: linear-gradient(180deg, #e2557e, var(--rose)); box-shadow: 0 8px 20px rgba(216,67,110,.3); }
+.btn--soft { color: var(--wine); background: #fff; border: 1px solid var(--line); box-shadow: none; }
+.song { display: flex; align-items: center; gap: .9rem; }
+.disc { flex: 0 0 auto; width: 58px; height: 58px; border-radius: 50%; background: radial-gradient(circle, var(--rose) 0 18%, #1a1a1a 19% 21%, transparent 22%), repeating-radial-gradient(circle, #151515 0 2px, #252525 2px 4px); animation: spin 4s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.song div { min-width: 0; display: grid; gap: .15rem; }
+.song b { font: 600 1.15rem/1.2 var(--f-serif); }
+.song small { font: 500 .8rem/1.2 var(--f-ui); color: var(--ink-soft); }
+.song .links { display: flex; gap: .5rem; margin-top: .3rem; }
+.song .links a { font: 500 .78rem/1 var(--f-ui); color: var(--rose); text-decoration: none; padding: .45rem .7rem; border: 1px solid var(--line); border-radius: 999px; background: #fff; }
+.foot { text-align: center; font: 400 1.7rem/1.1 var(--f-script); color: var(--wine); padding-top: .4rem; }
+.foot small { display: block; margin-top: .4rem; font: 500 .75rem/1.4 var(--f-ui); color: var(--ink-soft); }
+
+/* ventana para "ábrelo cuando" */
+.modal { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 20px; background: rgba(58,32,38,.55); animation: fade .3s ease; }
+@keyframes fade { from { opacity: 0; } }
+.letter { width: min(100%, 24rem); max-height: calc(100% - 20px); overflow: auto; padding: 1.6rem 1.3rem 1.2rem; border-radius: 6px; background: linear-gradient(180deg, #fffdf8, #fbefe2); box-shadow: 0 30px 60px rgba(0,0,0,.3); display: grid; gap: .8rem; animation: open .55s cubic-bezier(.2,1.1,.4,1); transform-origin: 50% 0; }
+@keyframes open { from { opacity: 0; transform: perspective(800px) rotateX(-50deg) translateY(-10px); } }
+.letter h3 { margin: 0; font: 400 2rem/1.05 var(--f-script); color: var(--rose); }
+.letter p { margin: 0; font: 500 1.22rem/1.5 var(--f-serif); color: var(--ink); }
+.letter .s { text-align: right; font: 400 1.6rem/1 var(--f-script); color: var(--wine); }
+canvas#fx { position: fixed; inset: 0; z-index: 35; pointer-events: none; width: 100%; height: 100%; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+</style>
+</head>
+<body>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+<main class="page">
+  <header class="top">
+    <span class="today" id="today"></span>
+    <h1 class="hello" id="hello">Hola, mi wawita mosha</h1>
+    <p class="together" style="margin:0">Llevamos <b id="days">0</b> <span id="daysWord">días</span> juntos</p>
+    <span class="milestone" id="milestone"></span>
+  </header>
+
+  <section class="card" aria-labelledby="l-hoy">
+    <div class="label" id="l-hoy">Mensaje de hoy <small id="msgNum"></small></div>
+    <div class="envwrap">
+      <button class="env" id="env" aria-label="Abrir el mensaje de hoy"><i class="back"></i><i class="paper"></i><i class="front"></i><i class="flap"></i><span class="seal">M</span></button>
+    </div>
+    <span class="tapme" id="tapme" style="text-align:center">Toca el sobre para abrirlo</span>
+    <div id="noteBox" hidden>
+      <p class="note" id="note"></p>
+      <div class="note-sign">Diego</div>
+      <p class="soon">Mañana te espera otro sobre 💌</p>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="l-foto">
+    <div class="label" id="l-foto">Foto del día</div>
+    <figure class="photo"><div class="ph" id="photo">💗</div><figcaption id="photoCap">Nosotros</figcaption></figure>
+  </section>
+
+  <section class="card" aria-labelledby="l-cuando">
+    <div class="label" id="l-cuando">Ábrelo cuando…</div>
+    <div class="when" id="when"></div>
+  </section>
+
+  <section class="card" aria-labelledby="l-amo">
+    <div class="label" id="l-amo">¿Cuánto te amo?</div>
+    <div class="loveheart">
+      <button class="bigheart" id="bigheart" aria-label="Tocar el corazón"><svg viewBox="0 0 100 100"><defs><radialGradient id="hg" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#ff9ab8"/><stop offset=".6" stop-color="#d8436e"/><stop offset="1" stop-color="#8e0f2c"/></radialGradient></defs><path d="M50 88 C18 64 4 48 4 31 C4 16 16 6 30 6 C39 6 46 11 50 18 C54 11 61 6 70 6 C84 6 96 16 96 31 C96 48 82 64 50 88 Z" fill="url(#hg)"/><ellipse cx="30" cy="28" rx="9" ry="6" fill="#fff" opacity=".35" transform="rotate(-30 30 28)"/></svg></button>
+      <p class="lovecount" id="lovecount" style="margin:0">Tócalo y te digo</p>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="l-arch">
+    <div class="label" id="l-arch">Tus mensajes <small>se desbloquea uno cada día</small></div>
+    <div class="archive" id="archive"></div>
+    <button class="more" id="more">Ver más</button>
+  </section>
+
+  <section class="card" aria-labelledby="l-song">
+    <div class="label" id="l-song">Nuestra canción</div>
+    <div class="song"><i class="disc" aria-hidden="true"></i><div><b id="songName"></b><small id="songArtist"></small><span class="links"><a id="sp" target="_blank" rel="noopener">Spotify</a><a id="yt" target="_blank" rel="noopener">YouTube</a></span></div></div>
+  </section>
+
+  <section class="card" aria-labelledby="l-acc">
+    <div class="label" id="l-acc">¿Te acordaste de mí?</div>
+    <div class="actions">
+      <a class="btn" id="kissBtn" target="_blank" rel="noopener">Mandarme un beso 💋</a>
+      <a class="btn btn--soft" id="missBtn" target="_blank" rel="noopener">Te extraño 🥺</a>
+    </div>
+  </section>
+
+  <footer class="foot">Te amo, mi wawita mosha<small>Vuelve mañana: siempre habrá algo nuevo para ti.</small></footer>
+</main>
+<div class="modal" id="modal" hidden><div class="letter" id="letter"></div></div>
+
+<script>
+/* ============ DATOS ============ */
+const D = { nombre: "Maite", firma: "Diego", apodoElla: "mi wawita mosha", pololeo: "2026-10-03T14:15:00", inicio: "2026-10-08", whatsapp: "56941089585",
+  cancion: "Me Gusta Todo de Ti", artista: "Noche de Brujas" };
+const FOTOS = ["__FOTO1__", "__FOTO2__", "__FOTO3__", "__FOTO4__", "__FOTO5__", "__FOTO6__", "__FOTO7__", "__FOTO8__", "__FOTO9__", "__FOTO10__", "__FOTO11__", "__FOTO12__"].map(f => f.startsWith("__") ? "" : f);
+const CAPS = ["El día del sí", "Tu sonrisa", "Nosotros", "Mi lugar favorito", "Tú y yo", "Siempre tú", "Contigo", "Mi wawita", "Mi persona", "Te amo", "Mi felicidad", "Mi todo"];
+// un mensaje por día, en orden, a partir del día "inicio"
+const MSGS = [
+  "Hoy empieza algo nuevo: cada día vas a tener aquí un mensajito mío. Para que nunca se te olvide lo mucho que te amo.",
+  "Buenos días, mi wawita mosha. Si hoy se te complica algo, acuérdate de que hay alguien que piensa en ti todo el rato.",
+  "Me gusta todo de ti. Pero tu risa… tu risa me gana siempre.",
+  "No sé qué hice para tenerte, pero lo volvería a hacer mil veces.",
+  "Hoy te quiero recordar algo simple: eres increíble. Y no lo digo porque seas mi polola, lo digo porque es verdad.",
+  "Si pudiera darte algo hoy, te daría un abrazo de esos largos, de los que no se sueltan.",
+  "Gracias por elegirme. Yo te elijo a ti, todos los días.",
+  "Una semana de mensajitos. Y todavía me quedan muchísimas cosas lindas por decirte.",
+  "Tus ojos tienen algo que me deja tonto. Sí, todavía me pasa.",
+  "Pase lo que pase hoy, aquí estoy. Para escucharte, para reírnos, para lo que sea.",
+  "Me encanta cómo dices mi nombre.",
+  "Cuando estoy contigo, el tiempo se pasa volando. Cuando no, te extraño al tiro.",
+  "Hoy toca recordarte que eres hermosa. Por dentro y por fuera.",
+  "Contigo aprendí que lo simple también puede ser lo más bonito.",
+  "Si estás leyendo esto, es porque te acordaste de mí. Y yo, seguro, también me estoy acordando de ti.",
+  "Eres mi lugar seguro, mi wawita.",
+  "Me haces querer ser mejor persona. Gracias por eso.",
+  "Un día más contigo es un día que vale la pena.",
+  "Me gusta imaginar todo lo que nos queda por vivir juntos.",
+  "Hoy no tengo nada especial que decirte… solo que te amo. Como ayer. Más que ayer.",
+  "Eres mi persona favorita en todo el mundo.",
+  "Me acuerdo del día que dijiste que sí y todavía sonrío solo.",
+  "Si hoy fue un mal día, mañana va a ser mejor. Y si fue un buen día, me alegro por ti, preciosa.",
+  "Tus abrazos arreglan cualquier cosa.",
+  "Gracias por tenerme paciencia. Y por quererme como soy.",
+  "Cada vez que suena nuestra canción, pienso en ti.",
+  "No te cambiaría por nada ni por nadie.",
+  "Quiero que sepas que me haces muy feliz. Así de simple.",
+  "Hoy te mando un beso. Bueno, varios. Muchos.",
+  "Pronto cumplimos un mes. Un mes que se siente como lo mejor de mi año.",
+  "Me gusta cómo me miras cuando crees que no me doy cuenta.",
+  "Eres tierna hasta cuando te enojas. Pero no te enojes mucho, porfa 😌",
+  "Si pudiera, te llevaría a todos los lugares lindos del mundo. Por ahora, partamos por el Ñielol.",
+  "Contigo me siento en casa.",
+  "Te amo en los días buenos y en los días difíciles. En todos.",
+  "Me encantas, Maite. Completa.",
+  "Hoy te deseo un día tan bonito como tú.",
+  "Gracias por cada risa, cada conversación y cada momento juntos.",
+  "Lo mejor de mi día casi siempre tiene que ver contigo.",
+  "No se me ocurre un lugar donde prefiera estar que a tu lado.",
+  "Eres mi wawita mosha, y eso no lo cambia nada.",
+  "Me gusta que seamos nosotros. Así, tal cual.",
+  "Hoy acuérdate de tomar agua, de comer rico y de que te amo.",
+  "Cada día contigo es mi película favorita.",
+  "Gracias por existir. En serio.",
+  "Quiero seguir creando momentos contigo. Muchos. Para siempre.",
+  "Si alguna vez dudas de cuánto te amo, vuelve a leer todos estos mensajes.",
+  "Eres lo más lindo que me ha pasado.",
+  "Mi corazón es tuyo. Cuídalo, que es medio regalón.",
+  "Te amo hoy, mañana y todos los días que vengan.",
+];
+const WHEN = [
+  { k: "extranes", e: "🥺", t: "me extrañes", h: "Para cuando me extrañes", p: ["Yo también te estoy extrañando, te lo aseguro.", "Cierra los ojos un ratito e imagina que te estoy abrazando. Eso es exactamente lo que haría si estuviera ahí.", "Y mándame un mensaje, que me encanta saber que te acordaste de mí."] },
+  { k: "triste", e: "🌧️", t: "estés triste", h: "Para cuando estés triste", p: ["Mi amor, está bien estar triste a veces. No tienes que hacerte la fuerte conmigo.", "Lo que sea que esté pasando, no estás sola. Me tienes a mí, siempre.", "Llámame si quieres hablar, o si no quieres hablar también. Yo te escucho y te acompaño."] },
+  { k: "dormir", e: "🌙", t: "no puedas dormir", h: "Para cuando no puedas dormir", p: ["Respira lento, mi wawita. Inhala… y bota todo.", "Piensa en algo lindo: en nosotros caminando, en un abrazo largo, en lo mucho que te amo.", "Que sueñes bonito. Mañana es otro día y yo voy a estar ahí."] },
+  { k: "reir", e: "😂", t: "necesites reírte", h: "Para cuando necesites reírte", p: ["Acuérdate de que el botón No de la invitación se escondió detrás del Sí porque sabía que no tenía ninguna oportunidad.", "Y que tu pololo te hizo una página entera porque está demasiado enamorado. Un poquito ridículo, pero tuyo.", "Ya, ahora sonríe. Así. Esa es la sonrisa que me encanta."] },
+  { k: "enojada", e: "😤", t: "estés enojada conmigo", h: "Para cuando estés enojada conmigo", p: ["Perdón, mi amor. Aunque no sepa todavía qué hice, perdón 😅", "En serio: si te molestó algo, dímelo. Prefiero conversarlo a que te quedes con eso.", "Y aunque estés enojada, te amo igual. No se me pasa ni un poquito."] },
+  { k: "amor", e: "💗", t: "quieras saber cuánto te amo", h: "Para cuando quieras saber cuánto te amo", p: ["Más de lo que puedo escribir aquí.", "Te amo en las cosas grandes y en las chiquititas: en un mensaje de buenos días, en una mirada, en un abrazo.", "Si algún día lo dudas, mírame a los ojos. Ahí está la respuesta."] },
+];
+const LOVE = ["Te amo", "Te amo más", "Más que ayer", "Hasta la luna", "Y de vuelta", "Más que las estrellas", "Infinito", "Infinito × 2", "Más que todo", "No hay número", "Siempre", "Para siempre ♥"];
+/* ======================================================= */
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k, d) { try { const v = localStorage.getItem("maite-" + k); return v == null ? d : JSON.parse(v); } catch { return d; } }, set(k, v) { try { localStorage.setItem("maite-" + k, JSON.stringify(v)); } catch {} } };
+const dayStart = d => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
+const now = new Date(), today0 = dayStart(now);
+const idx = Math.max(0, Math.round((today0 - dayStart(new Date(D.inicio + "T00:00:00"))) / 864e5));   // 0 = primer día
+const msgFor = i => MSGS[i % MSGS.length];
+const fmt = (d, o) => d.toLocaleDateString("es-CL", o);
+const wa = t => `https://api.whatsapp.com/send?phone=${D.whatsapp}&text=${encodeURIComponent(t)}`;
+
+// encabezado
+const h = now.getHours();
+$("#today").textContent = fmt(now, { weekday: "long", day: "numeric", month: "long" });
+$("#hello").textContent = (h < 6 ? "Hola, trasnochadora" : h < 12 ? "Buenos días" : h < 20 ? "Buenas tardes" : "Buenas noches") + `, ${D.apodoElla}`;
+const since = Math.floor((now - new Date(D.pololeo)) / 864e5);
+$("#days").textContent = since; $("#daysWord").textContent = since === 1 ? "día" : "días";
+(() => {
+  const start = new Date(D.pololeo); let m = 1, next;
+  while (true) { next = new Date(start); next.setMonth(start.getMonth() + m); if (next > now) break; m++; }
+  const left = Math.ceil((dayStart(next) - today0) / 864e5);
+  const name = m % 12 === 0 ? `${m / 12} ${m === 12 ? "año" : "años"}` : `${m} ${m === 1 ? "mes" : "meses"}`;
+  $("#milestone").textContent = left === 0 ? `¡Hoy cumplimos ${name}! 🎉` : `Faltan ${left} ${left === 1 ? "día" : "días"} para cumplir ${name} 💗`;
+})();
+
+// sobre del día
+$("#msgNum").textContent = `N.º ${idx + 1}`;
+$("#note").textContent = msgFor(idx);
+const openedToday = store.get("abierto", "") === today0.toISOString().slice(0, 10);
+function openEnv(anim) {
+  $("#env").classList.add("open"); $("#tapme").hidden = true;
+  setTimeout(() => { $("#noteBox").hidden = false; const n = $("#note"); n.classList.remove("in"); void n.offsetWidth; n.classList.add("in"); if (anim) burst(50, $("#env")); }, anim && !reduced ? 900 : 0);
+  store.set("abierto", today0.toISOString().slice(0, 10));
+}
+if (openedToday) openEnv(false);
+$("#env").addEventListener("click", () => { if (!$("#env").classList.contains("open")) openEnv(true); });
+
+// foto del día
+(() => { const list = FOTOS.map((f, i) => [f, CAPS[i]]).filter(([f]) => f), [f, c] = list.length ? list[idx % list.length] : ["", CAPS[idx % CAPS.length]];
+  if (f) { $("#photo").style.backgroundImage = `url('${f}')`; $("#photo").textContent = ""; } $("#photoCap").textContent = c; })();
+
+// ábrelo cuando
+$("#when").innerHTML = WHEN.map(w => `<button class="wbtn" data-k="${w.k}"><span aria-hidden="true">${w.e}</span><b>Cuando ${w.t}</b></button>`).join("");
+$$(".wbtn").forEach(b => b.addEventListener("click", () => {
+  const w = WHEN.find(x => x.k === b.dataset.k);
+  $("#letter").innerHTML = `<h3>${w.h}</h3>${w.p.map(t => `<p>${t}</p>`).join("")}<div class="s">Diego</div><button class="btn btn--soft" id="close">Cerrar</button>`;
+  $("#modal").hidden = false; $("#close").addEventListener("click", () => { $("#modal").hidden = true; });
+}));
+$("#modal").addEventListener("click", e => { if (e.target.id === "modal") $("#modal").hidden = true; });
+
+// corazón
+let loves = store.get("teamos", 0);
+const showLove = () => { $("#lovecount").innerHTML = loves ? `Me has hecho decirte te amo <b>${loves}</b> ${loves === 1 ? "vez" : "veces"}… y nunca me voy a cansar` : "Tócalo y te digo"; };
+showLove();
+$("#bigheart").addEventListener("click", e => {
+  loves++; store.set("teamos", loves); showLove();
+  const r = $("#bigheart").getBoundingClientRect(), f = document.createElement("span"); f.className = "floaty"; f.textContent = LOVE[(loves - 1) % LOVE.length];
+  f.style.left = r.left + r.width / 2 + "px"; f.style.top = r.top + "px"; document.body.append(f);
+  f.animate([{ transform: "translate(-50%, 0) scale(.8)", opacity: 0 }, { transform: "translate(-50%, -30px) scale(1.1)", opacity: 1, offset: .25 }, { transform: `translate(calc(-50% + ${(Math.random() - .5) * 80}px), -110px)`, opacity: 0 }], { duration: 1500, easing: "ease-out" }).finished.then(() => f.remove());
+  burst(12, $("#bigheart")); try { navigator.vibrate?.(15); } catch {}
+});
+
+// mensajes guardados (los de días anteriores; los que vienen, con candado)
+let shown = 5;
+function renderArchive() {
+  const items = [];
+  for (let i = idx; i >= 0 && items.length < shown; i--) {
+    const d = new Date(dayStart(new Date(D.inicio + "T00:00:00")).getTime() + i * 864e5);
+    items.push(`<div class="arch"><span class="d">${fmt(d, { day: "numeric" })}<br>${fmt(d, { month: "short" }).replace(".", "")}</span><span class="t">${msgFor(i)}</span></div>`);
+  }
+  const t = new Date(today0.getTime() + 864e5);
+  items.unshift(`<div class="arch locked"><span class="d">🔒</span><span class="t">El de mañana se abre el ${fmt(t, { weekday: "long" })}. No hagas trampa 😌</span></div>`);
+  $("#archive").innerHTML = items.join("");
+  $("#more").hidden = shown >= idx + 1;
+}
+renderArchive();
+$("#more").addEventListener("click", () => { shown += 10; renderArchive(); });
+
+// canción y botones
+const q = encodeURIComponent(`${D.cancion} ${D.artista}`);
+$("#songName").textContent = D.cancion; $("#songArtist").textContent = D.artista;
+$("#sp").href = `https://open.spotify.com/search/${q}`; $("#yt").href = `https://www.youtube.com/results?search_query=${q}`;
+$("#kissBtn").href = wa("Te mando un beso 💋"); $("#missBtn").href = wa("Te extraño 🥺💗");
+
+// corazones (canvas)
+const fx = $("#fx"), g = fx.getContext("2d"); let parts = [], running = false, lastT = 0;
+function sizeFx() { const d = devicePixelRatio || 1; fx.width = innerWidth * d; fx.height = innerHeight * d; g.setTransform(d, 0, 0, d, 0, 0); }
+addEventListener("resize", sizeFx); sizeFx();
+function burst(n, el) {
+  if (reduced) return; const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  for (let i = 0; i < n; i++) parts.push({ x, y, vx: (Math.random() - .5) * 8, vy: -Math.random() * 8 - 3, s: 9 + Math.random() * 12, r: Math.random() * 6, vr: (Math.random() - .5) * .1, c: ["#ff9ab8", "#d8436e", "#f6c56b", "#ff6f91"][i % 4], life: 0 });
+  if (!running) { running = true; lastT = 0; requestAnimationFrame(loop); }
+}
+function loop(t) {
+  const dt = Math.min(3, lastT ? (t - lastT) / 16.67 : 1); lastT = t;
+  g.clearRect(0, 0, innerWidth, innerHeight); parts = parts.filter(p => p.life < 140 && p.y < innerHeight + 30);
+  for (const p of parts) {
+    p.vy += .25 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.vr * dt; p.life += dt;
+    g.save(); g.translate(p.x, p.y); g.rotate(p.r); g.scale(.4 + .6 * Math.abs(Math.cos(p.life / 10)), 1); g.globalAlpha = Math.max(0, 1 - p.life / 140); g.fillStyle = p.c;
+    const s = p.s; g.translate(0, -s / 2); g.beginPath(); g.moveTo(0, s * .3); g.bezierCurveTo(0, 0, -s * .5, 0, -s * .5, s * .3); g.bezierCurveTo(-s * .5, s * .6, 0, s * .75, 0, s); g.bezierCurveTo(0, s * .75, s * .5, s * .6, s * .5, s * .3); g.bezierCurveTo(s * .5, 0, 0, 0, 0, s * .3); g.fill(); g.restore();
+  }
+  if (parts.length) requestAnimationFrame(loop); else { running = false; g.clearRect(0, 0, innerWidth, innerHeight); }
+}
+</script>
+</body>
+</html>
