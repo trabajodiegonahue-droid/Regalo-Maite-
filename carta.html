@@ -109,6 +109,12 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .wall .pol .ph { width: 100%; aspect-ratio: 1; background: #e9dfd2 center / cover no-repeat; display: grid; place-items: center; font-size: 1.6rem; }
 .wall .pol span { position: absolute; left: 0; right: 0; bottom: 2px; font: 400 .9rem/1 var(--f-script); color: var(--rose-deep); }
 .scene.on .wall .pol { animation: scatter .9s cubic-bezier(.2,.9,.3,1.15) both; animation-delay: var(--dl); }
+/* la favorita: encima de las demás, con brillo y su cinta */
+.wall .pol.fav { z-index: 3; box-shadow: 0 0 0 3px #ffd27a, 0 0 28px rgba(255,210,122,.75), 0 10px 22px rgba(0,0,0,.5); }
+.wall .pol.fav::after { content: "⭐ Mi favorita"; position: absolute; left: 50%; top: -11px; transform: translateX(-50%) rotate(-3deg); white-space: nowrap; padding: .18rem .5rem;
+  border-radius: 999px; background: #ffd27a; color: #5a1830; font: 700 .6rem/1 var(--f-ui, sans-serif); letter-spacing: .04em; box-shadow: 0 3px 8px rgba(0,0,0,.4); }
+.scene.on .wall .pol.fav { animation: scatter .9s cubic-bezier(.2,.9,.3,1.15) both, favGlow 1.6s ease-in-out 2.2s infinite alternate; animation-delay: var(--dl), 2.2s; }
+@keyframes favGlow { to { box-shadow: 0 0 0 3px #ffd27a, 0 0 44px rgba(255,210,122,.95), 0 10px 22px rgba(0,0,0,.5); } }
 @keyframes scatter { from { opacity: 0; transform: translate(var(--fx), 60vh) rotate(calc(var(--r) * 4)); } }
 .wall .pol:active { transform: rotate(0deg) scale(1.05); }
 .lightbox { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 24px; background: rgba(8,4,10,.86); animation: fade .4s ease; }
@@ -356,7 +362,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
   <div class="inner reveal">
     <span class="date">18 de septiembre de 2026</span>
     <h2 class="h-serif">El día que te vi por primera vez</h2>
-    <figure class="polaroid drop" style="--r:-4deg"><div class="ph" data-foto="2">📷</div><figcaption>Tú y yo</figcaption></figure>
+    <figure class="polaroid drop" style="--r:-4deg"><div class="ph" data-foto="12">📷</div><figcaption>Nuestra primera foto</figcaption></figure>
     <p class="lead">Me puse nervioso, no te voy a mentir. Pero apenas te vi, supe que quería verte de nuevo.</p>
     <button class="btn btn--ghost next" data-next="ch3">Seguir</button>
   </div>
@@ -515,7 +521,7 @@ const D = {
   cancion: "Te Amo, Para Siempre", artista: "Noche de Brujas", youtube: "https://www.youtube.com/watch?v=xwBwzPWLYpE",
 };
 const FOTOS = ["__FOTO1__", "__FOTO2__", "__FOTO3__", "__FOTO4__", "__FOTO5__", "__FOTO6__", "__FOTO7__", "__FOTO8__", "__FOTO9__", "__FOTO10__", "__FOTO11__", "__FOTO12__"].map(f => f.startsWith("__") ? "" : f);
-const CAPS = ["El sí", "Tu sonrisa", "Nosotros", "Mi lugar favorito", "Tú y yo", "Siempre tú", "Contigo", "Mi wawita", "Mi persona", "Te amo", "Mi felicidad", "Mi todo"];
+const CAPS = ["El día que dijiste que sí", "Tu sonrisa", "Nosotros", "Mi lugar favorito", "Tú y yo", "Mi favorita ♥", "Contigo", "Mi wawita", "Mi persona", "Te amo", "Mi felicidad", "Nuestra primera foto"];
 const RAZONES = [
   "Porque tu risa me arregla el día.", "Porque contigo puedo ser yo mismo.", "Porque me miras como nadie me ha mirado.",
   "Porque haces que lo simple se sienta especial.", "Porque eres tierna hasta cuando te enojas.", "Porque me escuchas de verdad.",
@@ -686,12 +692,13 @@ tick(); setInterval(tick, 1000);
 
 // muro de fotos
 let wallBuilt = false;
+const FAV = 5;   // foto 6: la favorita de Diego
 function buildWall() {
   if (wallBuilt) return; wallBuilt = true;
   const spots = [[2, 2], [34, 0], [66, 4], [0, 26], [33, 24], [64, 28], [4, 50], [35, 49], [65, 52], [1, 72], [33, 73], [64, 74]];
   $("#wall").innerHTML = spots.map(([x, y], i) => {
     const f = FOTOS[i], r = ((i * 37) % 13) - 6;
-    return `<button class="pol" data-i="${i}" style="left:${x}%;top:${y}%;--r:${r}deg;--dl:${(i * .12).toFixed(2)}s;--fx:${(i % 3 - 1) * 40}px" aria-label="Ver foto: ${CAPS[i]}"><div class="ph" style="${f ? `background-image:url('${f}')` : ""}">${f ? "" : "💗"}</div><span>${CAPS[i]}</span></button>`;
+    return `<button class="pol${i === FAV ? " fav" : ""}" data-i="${i}" style="left:${x}%;top:${y}%;--r:${r}deg;--dl:${(i * .12).toFixed(2)}s;--fx:${(i % 3 - 1) * 40}px" aria-label="Ver foto: ${CAPS[i]}"><div class="ph" style="${f ? `background-image:url('${f}')` : ""}">${f ? "" : "💗"}</div><span>${CAPS[i]}</span></button>`;
   }).join("");
   $$("#wall .pol").forEach(b => b.addEventListener("click", () => {
     const i = +b.dataset.i, f = FOTOS[i];
