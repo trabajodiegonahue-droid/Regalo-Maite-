@@ -247,6 +247,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .mp-city { font: 400 26px var(--f-script); fill: rgba(255,233,239,.75); }
 .mpin { position: absolute; display: flex; align-items: center; gap: .3rem; width: max-content; pointer-events: none; transform: translate(-1.05rem, -50%); }
 .mpin.l { transform: translate(calc(-100% + 1.05rem), -50%); flex-direction: row-reverse; }
+.mpin.b { transform: translate(-50%, -1.05rem); flex-direction: column; gap: .35rem; }
 .mpin > i { display: grid; place-items: center; width: 2.1rem; height: 2.1rem; flex: none; border-radius: 50% 50% 50% 0; transform: rotate(-45deg) scale(0); font-style: normal; font-size: 1rem;
   background: #fffaf0; box-shadow: 0 0 0 3px #ff7aa0, 0 6px 14px rgba(0,0,0,.5); }
 .mpin > i > span { display: block; transform: rotate(45deg); line-height: 1; }
@@ -258,6 +259,8 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 @keyframes pinAgain { 50% { transform: rotate(-45deg) scale(1.3); box-shadow: 0 0 0 3px #ffd27a, 0 0 18px rgba(255,210,122,.8); } }
 .map-cap { margin: 0; min-height: 2.8em; max-width: 22rem; font: italic 500 1.12rem/1.35 var(--f-serif); color: #ffe9ef; }
 .map-cap.on { animation: capIn .6s cubic-bezier(.2,.8,.2,1); }
+#mapLegs.done path { stroke: #ff7aa0; animation: heartGlow 1.6s ease-in-out infinite alternate; }
+@keyframes heartGlow { to { stroke: #ffd27a; } }
 @keyframes capIn { from { opacity: 0; transform: translateY(8px); } }
 .map-lead { opacity: 0; transition: opacity .8s ease; font-size: .95rem !important; }
 .map-lead.on { opacity: 1; }
@@ -539,13 +542,10 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
         <rect x="2" y="2" width="316" height="436" rx="22" fill="#1d1226" stroke="rgba(255,207,138,.3)"/>
         <g stroke="rgba(255,255,255,.07)" stroke-width="5" fill="none" stroke-linecap="round">
           <path d="M20 120 L300 140"/><path d="M10 235 L310 250"/><path d="M30 320 L300 335"/><path d="M160 20 L170 420"/><path d="M265 20 L255 420"/></g>
-        <path d="M44 30 L52 420" stroke="rgba(255,255,255,.13)" stroke-width="9" fill="none" stroke-linecap="round"/>
-        <text x="38" y="268" class="mp-lbl" transform="rotate(-88 38 268)">Av. Alemania</text>
         <path d="M-10 418 C 60 392, 90 430, 160 410 S 260 372, 330 404" stroke="#3a5d8f" stroke-width="16" fill="none" opacity=".55" stroke-linecap="round"/>
         <text x="20" y="432" class="mp-lbl">Río Cautín</text>
-        <ellipse cx="236" cy="62" rx="58" ry="28" fill="#24412e" opacity=".85"/>
-        <text x="236" y="66" class="mp-lbl" text-anchor="middle">Cerro Ñielol</text>
         <text x="20" y="40" class="mp-city">Temuco</text>
+        <path id="mapFill" fill="rgba(255,92,138,.16)" stroke="none" opacity="0"/>
         <g id="mapLegs" fill="none" stroke-width="4" stroke-linecap="round" filter="url(#mpGlow)"></g>
         <g id="mapHeart" transform="translate(250 385)"><path d="M0 7 C-9 0 -11 -5 -7 -9 C-4 -12 -1 -10 0 -7 C1 -10 4 -12 7 -9 C11 -5 9 0 0 7 Z" fill="#ff3d7f" stroke="#fff" stroke-width="1.2"/></g>
       </svg>
@@ -868,11 +868,11 @@ const DREAMS = [   // los sueños de Diego con ella
   ["🎂", "Celebrar nuestro primer año… y muchos más."],
   ["🏡", "Vivir juntos en nuestra propia casita."],
   ["✨", "Ser felices para siempre."],
-  ["💍", "Casarme contigo y formar una familia juntos."],
+  ["💞", "Y quizás algún día… 👶 💍"],
 ];
 $("#dreams").innerHTML = DREAMS.map(([e, t], i) => `<div class="dream${i === DREAMS.length - 1 ? " big" : ""}" style="--dl:${(.6 + i * .85).toFixed(2)}s"><span aria-hidden="true">${e}</span><p>${t}</p></div>`).join("");
 // promesas
-const PROMS = ["Escucharte siempre, aunque sea algo chiquitito.", "Cuidarte en los días difíciles.", "Hacerte reír cuando más lo necesites.", "Ser sincero contigo, siempre.", "Elegirte todos los días."];
+const PROMS = ["Escucharte siempre, aunque sea algo chiquitito.", "Cuidarte en los días difíciles.", "Hacerte reír cuando más lo necesites.", "Elegirte todos los días."];
 $("#promises").innerHTML = PROMS.map(t => `<button class="prom"><span class="cdl" aria-hidden="true"><i></i></span><p>Te prometo… ${t}</p></button>`).join("");
 $$(".prom").forEach(b => b.addEventListener("click", () => {
   if (b.classList.contains("lit")) return; b.classList.add("lit"); Audio.tick(76 + $$(".prom.lit").length * 2); try { navigator.vibrate?.(15); } catch {}
@@ -909,23 +909,27 @@ function tick() {
 tick(); setInterval(tick, 1000);
 
 // mapa: el recorrido de ese día, tramo por tramo; el corazón se detiene en cada parada y abajo se cuenta la historia
+// cada lugar queda sobre la silueta de un corazón (u = 0 es la punta de abajo, π la hendidura de arriba)
+const heartXY = u => { const t = u + Math.PI; return { x: 160 + 16 * Math.sin(t) ** 3 * 8.4, y: 222 - (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) * 10.6 }; };
 const LUGARES = {
-  sofo: { x: 250, y: 385, ico: "🇨🇱", n: "La Sofo", lado: "l" },
-  portal: { x: 84, y: 330, ico: "🎬", n: "Portal Temuco", lado: "r" },
-  depa: { x: 228, y: 262, ico: "🏠", n: "Mi depa", lado: "r" },
-  sushi: { x: 74, y: 196, ico: "🍣", n: "Mr. Sushi", lado: "r" },
-  helado: { x: 176, y: 152, ico: "🍦", n: "El helado", lado: "r" },
-  casa: { x: 96, y: 86, ico: "🏡", n: "Tu casa", lado: "r" },
+  sofo: { u: 0, ico: "🇨🇱", n: "La Sofo", lado: "r" },
+  portal: { u: .95, ico: "🎬", n: "Portal Temuco", lado: "b" },
+  sushi: { u: 1.98, ico: "🍣", n: "Mr. Sushi", lado: "b" },
+  depa: { u: Math.PI, ico: "🏠", n: "Mi depa", lado: "b" },
+  helado: { u: 4.3, ico: "🍦", n: "El helado", lado: "b" },
+  casa: { u: 5.33, ico: "🏡", n: "Tu casa", lado: "b" },
 };
+for (const l of Object.values(LUGARES)) Object.assign(l, heartXY(l.u));
+// el recorrido de ese día; "u" es hasta dónde avanza por el corazón (de vuelta = hacia atrás)
 const RECORRIDO = [
-  ["sofo", "18 de septiembre · En La Sofo te vi por primera vez."],
-  ["portal", "Nuestra primera peli juntos, en el Portal Temuco 🎬"],
-  ["depa", "3 de octubre, 14:15 · En mi depa, en Los Pablos, me dijiste que sí ♥"],
-  ["sushi", "Para celebrar, sushi en el Mr. Sushi de Avenida Alemania 🍣"],
-  ["depa", "De vuelta al depa, juntitos 🏠"],
-  ["helado", "Tu papá nos pasó a buscar y fuimos por un helado 🍦"],
-  ["casa", "Y de ahí, a tu casa 🏡"],
-  ["depa", "Y yo me volví en Uber… con el corazón lleno 🚗"],
+  ["sofo", "18 de septiembre · En La Sofo te vi por primera vez.", 0],
+  ["portal", "Nuestra primera peli juntos, en el Portal Temuco 🎬", .95],
+  ["depa", "3 de octubre, 14:15 · En mi depa, en Los Pablos, me dijiste que sí ♥", Math.PI],
+  ["sushi", "Para celebrar, sushi en el Mr. Sushi de Avenida Alemania 🍣", 1.98],
+  ["depa", "De vuelta al depa, juntitos 🏠", Math.PI],
+  ["helado", "Tu papá nos pasó a buscar y fuimos por un helado 🍦", 4.3],
+  ["casa", "Y de ahí, a tu casa 🏡", 5.33],
+  ["depa", "Y yo me volví en Uber… con el corazón lleno 🚗", 2 * Math.PI + Math.PI],
 ];
 let mapRun = 0;
 function runMap() {
@@ -933,20 +937,22 @@ function runMap() {
   const NS = "http://www.w3.org/2000/svg", COL = ["#ff9ab8", "#ffb3c7", "#ffd27a", "#ff9ab8", "#ffc4d6", "#ffd27a", "#ff9ab8"];
   $("#mapPins").innerHTML = Object.entries(LUGARES).map(([k, l]) => `<div class="mpin ${l.lado}" data-k="${k}" style="left:${(l.x / 3.2).toFixed(2)}%;top:${(l.y / 4.4).toFixed(2)}%"><i><span>${l.ico}</span></i><b>${l.n}</b></div>`).join("");
   legsG.innerHTML = ""; $("#mapLead").classList.remove("on");
-  const legs = RECORRIDO.slice(1).map(([k], i) => {
-    const a = LUGARES[RECORRIDO[i][0]], b = LUGARES[k], mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1;
-    const bend = (i % 2 ? -1 : 1) * Math.min(46, d * .28), cx = mx - dy / d * bend, cy = my + dx / d * bend;
-    const p = document.createElementNS(NS, "path"); p.setAttribute("d", `M${a.x} ${a.y} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${b.x} ${b.y}`); p.setAttribute("stroke", COL[i % COL.length]);
-    if (i === RECORRIDO.length - 2) p.setAttribute("stroke-dasharray", "2 7");   // el Uber de vuelta, punteado
+  const arc = (u0, u1) => { const n = Math.max(2, Math.ceil(Math.abs(u1 - u0) / .035)); let d = "";
+    for (let i = 0; i <= n; i++) { const q = heartXY(u0 + (u1 - u0) * i / n); d += (i ? " L" : "M") + q.x.toFixed(1) + " " + q.y.toFixed(1); } return d; };
+  $("#mapFill").setAttribute("d", arc(0, 2 * Math.PI) + " Z"); $("#mapFill").style.transition = "none"; $("#mapFill").style.opacity = 0;
+  const legs = RECORRIDO.slice(1).map(([k, , u], i) => {
+    const p = document.createElementNS(NS, "path"); p.setAttribute("d", arc(RECORRIDO[i][2], u)); p.setAttribute("stroke", COL[i % COL.length]);
     legsG.append(p); const L = p.getTotalLength(); p.style.opacity = 0; return { p, L, to: k };
   });
   const say = t => { cap.classList.remove("on"); void cap.offsetWidth; cap.textContent = t; cap.classList.add("on"); };
   const arrive = k => { const pin = $(`.mpin[data-k="${k}"]`); if (!pin.classList.contains("on")) { pin.classList.add("on"); Audio.pop(); } else { pin.classList.remove("again"); void pin.offsetWidth; pin.classList.add("again"); Audio.tick?.(84); } buzz(15); };
-  const s0 = LUGARES.sofo; heart.setAttribute("transform", `translate(${s0.x} ${s0.y})`);
+  const s0 = LUGARES.sofo; heart.setAttribute("transform", `translate(${s0.x} ${s0.y})`); legsG.classList.remove("done");
   let li = 0;
   const leg = () => {
     if (run !== mapRun || cur !== "mapa") return;
-    if (li >= legs.length) { const r = heart.getBoundingClientRect(); burst(60, r.left + r.width / 2, r.top); Audio.chime(); $("#mapLead").classList.add("on"); $$("#mapa .next").forEach(b => b.classList.add("show")); return; }
+    if (li >= legs.length) {
+      const f = $("#mapFill"); f.style.transition = "opacity 1.4s ease"; f.style.opacity = 1; legsG.classList.add("done"); say("Y sin darnos cuenta, nuestro camino formó un corazón ♥");
+      const m = $("#map").getBoundingClientRect(); burst(90, m.left + m.width / 2, m.top + m.height * .45); Audio.chime(); $("#mapLead").classList.add("on"); $$("#mapa .next").forEach(b => b.classList.add("show")); return; }
     const { p, L, to } = legs[li], dashed = p.hasAttribute("stroke-dasharray"), D = reduced ? 1 : 600 + L * 3.2; let t0 = 0;
     if (!dashed) { p.style.strokeDasharray = L; p.style.strokeDashoffset = L; }
     p.style.opacity = 1;
