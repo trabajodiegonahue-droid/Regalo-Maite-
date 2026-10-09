@@ -74,6 +74,22 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
   background: radial-gradient(circle at 50% 72%, #fffbe6 0 22%, #ffd36b 45%, rgba(255,120,40,.55) 70%, transparent 72%); box-shadow: 0 0 30px 12px rgba(255,190,100,.35), 0 0 90px 40px rgba(255,160,80,.15); animation: flick 1.6s ease-in-out infinite alternate; }
 @keyframes flick { 0% { transform: rotate(-2deg) scale(1); } 40% { transform: rotate(2deg) scale(.94, 1.06); } 100% { transform: rotate(-1deg) scale(1.03, .97); } }
 
+/* bienvenida: corazón de velitas */
+.candle-heart { position: relative; width: min(78vw, 19rem, 40vh); aspect-ratio: 1 / .92; margin: .4rem 0 .2rem; display: grid; place-items: center; }
+.candle-heart::before { content: ""; position: absolute; inset: 8% 10% 14%; border-radius: 50%; background: radial-gradient(circle, rgba(255,120,160,.38), rgba(255,140,90,.12) 55%, transparent 72%);
+  opacity: 0; animation: chGlow 1.6s ease 3.2s forwards, chBeat 2.4s ease-in-out 4.8s infinite; }
+@keyframes chGlow { to { opacity: 1; } }
+@keyframes chBeat { 0%, 100% { transform: scale(1); } 12% { transform: scale(1.08); } 24% { transform: scale(1); } 36% { transform: scale(1.05); } }
+.ch-name { position: relative; margin-top: 9%; font-size: clamp(2.3rem, 11vw, 3.3rem); line-height: .95; text-align: center; opacity: 0; animation: up 1.2s cubic-bezier(.2,.8,.2,1) 2.6s forwards; transform: translateY(12px); }
+.tl { position: absolute; width: 18px; height: 12px; margin: -6px 0 0 -9px; border-radius: 3px 3px 6px 6px; background: linear-gradient(180deg, #f6ead6, #c9b79a); box-shadow: 0 2px 5px rgba(0,0,0,.55); }
+.tl i { position: absolute; left: 50%; bottom: 9px; width: 9px; height: 17px; margin-left: -4.5px; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; transform-origin: 50% 90%;
+  background: radial-gradient(circle at 50% 72%, #fffbe6 0 22%, #ffd36b 45%, rgba(255,120,40,.55) 70%, transparent 72%); box-shadow: 0 0 14px 6px rgba(255,190,100,.35), 0 0 40px 14px rgba(255,160,80,.12);
+  transform: scale(0); animation: tlOn .5s cubic-bezier(.3,1.6,.5,1) var(--d) forwards, flick 1.6s ease-in-out calc(var(--d) + .5s) infinite alternate; }
+@keyframes tlOn { to { transform: scale(1); } }
+.intro-love { margin: 0; font: italic 500 1.25rem/1.35 var(--f-serif); color: #ffe3ea; }
+.btn-love { animation: lovePulse 1.8s ease-in-out infinite; }
+@keyframes lovePulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,140,180,.45); } 50% { box-shadow: 0 0 0 12px rgba(255,140,180,0); } }
+
 /* capítulos */
 .date { font: italic 500 1.05rem/1 var(--f-serif); color: var(--rose); letter-spacing: .02em; }
 .chat { width: min(100%, 19rem); display: grid; gap: .5rem; padding: 1rem; border-radius: 22px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); }
@@ -473,11 +489,11 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 <!-- 0. Inicio -->
 <section class="scene on" id="intro">
   <div class="inner reveal">
-    <span class="eyebrow">Solo para ti</span>
-    <h1 class="h-script">Para Maite</h1>
-    <div class="candle" aria-hidden="true"><i class="wax"></i><i class="wick"></i><i class="flame"></i></div>
-    <p class="small">Busca un lugar tranquilo y, si puedes, ponte audífonos. Esto lo hice pensando en ti.</p>
-    <button class="btn" id="startBtn">Empezar</button>
+    <span class="eyebrow">Solo para ti, <span data-apodo-ella>mi wawita mosha</span></span>
+    <div class="candle-heart" id="candleHeart"><h1 class="h-script ch-name">Para<br>Maite</h1></div>
+    <p class="intro-love">Hice esto pensando en cada parte de ti 💗</p>
+    <p class="small">Busca un lugar tranquilo y, si puedes, ponte audífonos.</p>
+    <button class="btn btn-love" id="startBtn">Empezar ♥</button>
   </div>
 </section>
 
@@ -834,6 +850,21 @@ function show(id) {
   if (id === "final") { petals(12000, 90); Audio.swell(1); updateWaFinal(); }
 }
 $$("[data-next]").forEach(b => b.addEventListener("click", () => { Audio.paper(); show(b.dataset.next); }));
+// bienvenida: un corazón de velitas que se encienden una por una, y pétalos cayendo
+(() => {
+  const N = 16, box = $("#candleHeart");
+  // puntos repartidos parejo a lo largo del contorno del corazón (empezando en la punta de abajo)
+  const H = t => ({ x: 50 + 16 * Math.sin(t) ** 3 * 2.75, y: 47 - (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) * 2.55 });
+  const smp = Array.from({ length: 401 }, (_, j) => H(Math.PI + j / 400 * Math.PI * 2)), acc = [0];
+  for (let j = 1; j < smp.length; j++) acc.push(acc[j - 1] + Math.hypot(smp[j].x - smp[j - 1].x, smp[j].y - smp[j - 1].y));
+  const at = L => { let j = acc.findIndex(v => v >= L); return smp[Math.max(0, j)]; };
+  box.insertAdjacentHTML("afterbegin", Array.from({ length: N }, (_, i) => {
+    const { x, y } = at(acc[acc.length - 1] * i / N);
+    const k = Math.min(i, N - i);   // se encienden desde la punta de abajo hacia arriba, por los dos lados
+    return `<span class="tl" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;--d:${(1 + k * .22).toFixed(2)}s" aria-hidden="true"><i></i></span>`;
+  }).join(""));
+  setTimeout(() => { if (cur === "intro") petals(16000, 260); }, reduced ? 0 : 1800);
+})();
 $("#startBtn").addEventListener("click", () => { Audio.start(); $("#soundBtn").hidden = false; show("prologo"); });
 // prólogo
 let proT = [];
