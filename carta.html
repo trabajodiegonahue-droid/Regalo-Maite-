@@ -630,9 +630,9 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
   <div class="hunt-top">
     <span class="eyebrow">Falta lo más importante</span>
     <h2 class="h-serif">Escondí una carta entre las estrellas</h2>
-    <p class="small">Toca el cielo para buscarla. Te voy diciendo si estás cerca.</p>
+    <p class="small" id="huntSub">Mira bien el cielo…</p>
   </div>
-  <div class="hint" id="hint">Busca la estrella ✨</div>
+  <div class="hint" id="hint" hidden></div>
 </section>
 
 <!-- 8. La carta -->
@@ -1152,31 +1152,66 @@ function closeModal() { $("#modal").hidden = true; }
 $("#modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal(); });
 
 // ---------- buscar la carta entre las estrellas ----------
-const sf = $("#starfield"), sg = sf.getContext("2d"); let stars = [], target = null, tries = 0, huntOn = false, found = false, shoot = null;
+const sf = $("#starfield"), sg = sf.getContext("2d"); let stars = [], target = null, tries = 0, huntOn = false, found = false, shoot = null, cHeart = [], cName = [], huntT0 = 0, targetOn = false;
+// una constelación con forma de corazón; adentro su nombre escrito con estrellas y el punto de la "i" es la estrella de la carta
 function startHunt() {
-  if (huntOn) return; huntOn = true; found = false; tries = 0;
+  if (huntOn) return; huntOn = true; found = false; tries = 0; targetOn = false;
   const d = devicePixelRatio || 1, W = innerWidth, H = innerHeight; sf.width = W * d; sf.height = H * d; sg.setTransform(d, 0, 0, d, 0, 0);
-  stars = Array.from({ length: Math.round(W * H / 2600) }, () => ({ x: Math.random() * W, y: H * .26 + Math.random() * H * .62, r: .5 + Math.random() * 1.6, p: Math.random() * 6 }));
-  target = { x: W * (.18 + Math.random() * .64), y: H * (.38 + Math.random() * .4), r: 2.1, p: 0 };
-  $("#hint").textContent = "Busca la estrella ✨";
+  stars = Array.from({ length: Math.round(W * H / 3400) }, () => ({ x: Math.random() * W, y: H * .24 + Math.random() * H * .7, r: .4 + Math.random() * 1.3, p: Math.random() * 6 }));
+  // el corazón
+  const sc = Math.min(W * .026, H * .0175), cx = W / 2, cy = H * .55;
+  cHeart = Array.from({ length: 20 }, (_, i) => { const t = Math.PI + i / 20 * Math.PI * 2;
+    return { x: cx + 16 * Math.sin(t) ** 3 * sc, y: cy - (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) * sc, r: 1.6 + Math.random() * .7, p: Math.random() * 6 }; });
+  // "Maıte" (con la i sin punto: el punto es la estrella)
+  const fs = Math.round(sc * 7.6), font = `700 ${fs}px "Cormorant Garamond", Georgia, serif`, cv = document.createElement("canvas"), g = cv.getContext("2d");
+  g.font = font; const parts = ["Ma", "ı", "te"], ws = parts.map(t => g.measureText(t).width), tw = ws.reduce((a, b) => a + b, 0) + 8, th = Math.ceil(fs * 1.4);
+  cv.width = Math.ceil(tw); cv.height = th; g.font = font; g.fillStyle = "#fff"; g.textBaseline = "alphabetic"; const base = Math.round(fs * 1.05); g.fillText("Maıte", 4, base);
+  const xh = g.measureText("x").actualBoundingBoxAscent || fs * .45;
+  const data = g.getImageData(0, 0, cv.width, th).data, step = Math.max(2, Math.round(fs / 22)), pts = [];
+  for (let y = 0; y < th; y += step) for (let x = 0; x < cv.width; x += step) if (data[(y * cv.width + x) * 4 + 3] > 150) pts.push([x, y]);
+  const ox = cx - tw / 2, oy = cy - sc * 1.6 - base + xh / 2;
+  cName = pts.filter((_, i) => i % Math.max(1, Math.ceil(pts.length / 520)) === 0).map(([x, y]) => ({ x: ox + x, y: oy + y, r: .9 + Math.random() * .6, p: Math.random() * 6, k: x / tw }));
+  target = { x: ox + 4 + ws[0] + ws[1] / 2, y: oy + base - xh - fs * .2, r: 3, p: 0 };
+  $("#hint").hidden = true; $("#huntSub").textContent = "Mira bien el cielo…";
+  huntT0 = performance.now();
   requestAnimationFrame(drawSky);
 }
 function drawSky(t) {
   if (cur !== "buscar") { huntOn = false; return; }
-  const W = innerWidth, H = innerHeight; sg.clearRect(0, 0, W, H);
-  for (const s of stars) { const a = .35 + .65 * (.5 + .5 * Math.sin(t / 900 + s.p)); sg.globalAlpha = a; sg.fillStyle = "#fff"; sg.beginPath(); sg.arc(s.x, s.y, s.r, 0, 7); sg.fill(); }
-  if (target && !found) {
-    const help = Math.min(1, tries / 8), pulse = .5 + .5 * Math.sin(t / (500 - help * 250));
-    const gr = sg.createRadialGradient(target.x, target.y, 0, target.x, target.y, 10 + help * 16 * pulse);
-    gr.addColorStop(0, `rgba(255,214,226,${.5 + .5 * pulse})`); gr.addColorStop(1, "transparent"); sg.globalAlpha = .35 + help * .6; sg.fillStyle = gr; sg.beginPath(); sg.arc(target.x, target.y, 26, 0, 7); sg.fill();
-    sg.globalAlpha = .8 + .2 * pulse; sg.fillStyle = "#ffe3ea"; sg.beginPath(); sg.arc(target.x, target.y, target.r + pulse * .8, 0, 7); sg.fill();
+  const W = innerWidth, H = innerHeight, e = (t - huntT0) / 1000; sg.clearRect(0, 0, W, H);
+  for (const s of stars) { const a = .3 + .6 * (.5 + .5 * Math.sin(t / 900 + s.p)); sg.globalAlpha = a; sg.fillStyle = "#fff"; sg.beginPath(); sg.arc(s.x, s.y, s.r, 0, 7); sg.fill(); }
+  // 1) las estrellas del corazón se van uniendo (0.6 s → 3.8 s)
+  const n = cHeart.length, prog = Math.max(0, Math.min(1, (e - .6) / 3.2)) * n;
+  sg.strokeStyle = "rgba(255,200,220,.55)"; sg.lineWidth = 1.3; sg.shadowColor = "rgba(255,140,180,.9)"; sg.shadowBlur = 8;
+  sg.beginPath();
+  for (let i = 0; i < Math.min(n, Math.ceil(prog)); i++) {
+    const a = cHeart[i], b = cHeart[(i + 1) % n], f = Math.min(1, prog - i);
+    sg.moveTo(a.x, a.y); sg.lineTo(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f);
   }
-  if (shoot) { const k = Math.min(1, (t - shoot.t0) / 900); const x = shoot.x - k * 160, y = shoot.y + k * 90; const lg = sg.createLinearGradient(x, y, x + 120, y - 68); lg.addColorStop(0, "rgba(255,240,220,1)"); lg.addColorStop(1, "transparent"); sg.globalAlpha = 1 - k * .3; sg.strokeStyle = lg; sg.lineWidth = 2.5; sg.beginPath(); sg.moveTo(x, y); sg.lineTo(x + 120, y - 68); sg.stroke(); }
+  sg.globalAlpha = 1; sg.stroke(); sg.shadowBlur = 0;
+  cHeart.forEach((s, i) => { if (i > prog) return; const a = .7 + .3 * Math.sin(t / 600 + s.p); sg.globalAlpha = a; sg.fillStyle = "#ffe3ea"; sg.beginPath(); sg.arc(s.x, s.y, s.r, 0, 7); sg.fill(); });
+  // 2) su nombre aparece letra por letra (4 s → 6 s)
+  const nk = (e - 4) / 2;
+  if (nk > 0) { sg.shadowColor = "rgba(255,214,150,.95)"; sg.shadowBlur = 6; sg.fillStyle = "#fff6e0";
+    for (const s of cName) { if (s.k > nk) continue; const a = Math.min(1, (nk - s.k) * 4) * (.8 + .2 * Math.sin(t / 700 + s.p)); sg.globalAlpha = a; sg.beginPath(); sg.arc(s.x, s.y, s.r, 0, 7); sg.fill(); }
+    sg.shadowBlur = 0; }
+  // 3) el punto de la i: la estrella de la carta
+  if (e > 6.2 && !targetOn) { targetOn = true; const h = $("#hint"); h.textContent = "Toca la estrella de la i ✨"; h.hidden = false; $("#huntSub").textContent = "Escrito con estrellas, solo para ti"; Audio.chime(); }
+  if (target && !found && targetOn) {
+    const grow = Math.min(1, (e - 6.2) / .8), pulse = .5 + .5 * Math.sin(t / 380);
+    const gr = sg.createRadialGradient(target.x, target.y, 0, target.x, target.y, (14 + 18 * pulse) * grow);
+    gr.addColorStop(0, `rgba(255,226,160,${.7 + .3 * pulse})`); gr.addColorStop(1, "transparent"); sg.globalAlpha = 1; sg.fillStyle = gr; sg.beginPath(); sg.arc(target.x, target.y, 34 * grow, 0, 7); sg.fill();
+    // estrella de cuatro puntas
+    const R = (7 + 3 * pulse) * grow, r = R * .32; sg.fillStyle = "#fff3c4"; sg.beginPath();
+    for (let k = 0; k < 8; k++) { const ang = k * Math.PI / 4 - Math.PI / 2, rr = k % 2 ? r : R; sg[k ? "lineTo" : "moveTo"](target.x + Math.cos(ang) * rr, target.y + Math.sin(ang) * rr); }
+    sg.closePath(); sg.fill();
+  }
+  if (shoot) { const k = Math.min(1, (t - shoot.t0) / 900); const x = shoot.x - k * 160, y = shoot.y + k * 90; const lg = sg.createLinearGradient(x, y, x + 120, y - 68); lg.addColorStop(0, "rgba(255,240,220,1)"); lg.addColorStop(1, "rgba(255,240,220,0)"); sg.globalAlpha = 1 - k; sg.strokeStyle = lg; sg.lineWidth = 2; sg.beginPath(); sg.moveTo(x, y); sg.lineTo(x + 120, y - 68); sg.stroke(); }
   sg.globalAlpha = 1;
   requestAnimationFrame(drawSky);
 }
 sf.addEventListener("click", async e => {
-  if (found || !target) return;
+  if (found || !target || !targetOn) return;
   const r = sf.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, dist = Math.hypot(x - target.x, y - target.y), hint = $("#hint");
   tries++;
   // un corazoncito donde tocó
@@ -1195,7 +1230,7 @@ sf.addEventListener("click", async e => {
     return;
   }
   const W = Math.hypot(innerWidth, innerHeight), q = dist / W;
-  const msg = q < .08 ? "¡Muy caliente! 🔥" : q < .16 ? "Caliente 😊" : q < .3 ? "Tibio 🙂" : "Frío 🥶";
+  const msg = q < .08 ? "¡Casi! Es la estrellita sobre la i ✨" : "Busca el punto de la i en tu nombre 😉";
   hint.textContent = msg; hint.classList.remove("bump"); void hint.offsetWidth; hint.classList.add("bump");
   Audio.tick(q < .08 ? 88 : q < .16 ? 84 : q < .3 ? 79 : 72);
 });
