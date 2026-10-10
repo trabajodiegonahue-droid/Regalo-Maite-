@@ -299,6 +299,31 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 #pienso.fin .dcard { display: none; }
 .dlines p.on { opacity: 1; transform: none; }
 .dlines .dsum { font: 400 1.7rem/1.15 var(--f-script); color: #ffd27a; text-shadow: 0 0 14px rgba(255,200,100,.5); }
+/* te amo que crece */
+#crece { overflow: hidden; }
+.cr-glow { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 1.2s ease;
+  background: radial-gradient(60% 45% at 50% 48%, rgba(255,92,138,.55), rgba(216,67,110,.18) 55%, transparent 80%); }
+#crece .inner { position: relative; z-index: 1; }
+.cr-stage { height: min(13rem, 30vh); width: 100%; display: grid; place-items: center; }
+.cr-word { border: 0; background: none; padding: .6rem 1rem; cursor: pointer; color: #ffe3ea; font: italic 500 1.05rem/1 var(--f-serif); letter-spacing: .04em; white-space: nowrap;
+  opacity: .5; transition: font-size .7s cubic-bezier(.3,1.4,.5,1), opacity .7s ease, text-shadow .7s ease, letter-spacing .7s ease; position: relative; }
+.cr-word::after { content: ""; position: absolute; inset: -.2rem -.4rem; border-radius: 999px; border: 1px solid rgba(255,207,138,.45); animation: crRing 2s ease-out infinite; }
+.cr-word[data-lv]:not([data-lv="0"])::after { display: none; }
+@keyframes crRing { from { transform: scale(.85); opacity: .9; } to { transform: scale(1.35); opacity: 0; } }
+.cr-word[data-lv="1"] { font-size: 1.7rem; opacity: .7; text-shadow: 0 0 10px rgba(255,143,171,.4); }
+.cr-word[data-lv="2"] { font-size: 2.5rem; opacity: .85; text-shadow: 0 0 16px rgba(255,143,171,.55); animation: crBeat 1.4s ease-in-out infinite; }
+.cr-word[data-lv="3"] { font-size: clamp(2.6rem, 13vw, 3.4rem); font-style: normal; font-weight: 600; letter-spacing: .06em; opacity: 1; text-shadow: 0 0 22px rgba(255,92,138,.7); animation: crBeat 1s ease-in-out infinite; }
+.cr-word[data-lv="4"], .cr-word[data-lv="5"] { font-size: clamp(3rem, 15.5vw, 4.4rem); font-style: normal; font-weight: 700; letter-spacing: .05em; opacity: 1; color: #fff; text-shadow: 0 0 18px #ff5c8a, 0 0 42px rgba(255,92,138,.8); animation: crBeat .7s ease-in-out infinite; }
+.cr-word[data-lv="5"] { cursor: default; color: #ffe9b0; text-shadow: 0 0 20px #ffcf8a, 0 0 48px rgba(255,92,138,.9); animation: crBeat 1.3s ease-in-out infinite; }
+.cr-word.hit { animation: crHit .5s cubic-bezier(.3,1.6,.5,1); }
+@keyframes crBeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.08); } 30% { transform: scale(1); } 45% { transform: scale(1.04); } }
+@keyframes crHit { 0% { transform: scale(.8); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
+.cr-sub { margin: 0; min-height: 1.6rem; font: italic 500 1.2rem/1.3 var(--f-serif); color: #ffd6e0; transition: opacity .4s ease; }
+.cr-sub.swap { opacity: 0; }
+.cr-hint { transition: opacity .5s ease; }
+.cr-hint.off { opacity: 0; }
+.cr-end { min-height: 3.6rem; font: 400 clamp(1.7rem, 7.5vw, 2.1rem)/1.2 var(--f-script); color: #ffd27a; text-shadow: 0 0 14px rgba(255,200,100,.5); opacity: 0; transform: translateY(10px); transition: opacity 1.2s ease, transform 1.2s ease; }
+.cr-end.on { opacity: 1; transform: none; }
 /* nuestro mapa */
 .map { position: relative; width: min(100%, 21rem, calc(54vh * .727)); aspect-ratio: 320 / 440; }
 .map svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
@@ -730,7 +755,20 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
     <h2 class="h-serif">Enciende cada vela</h2>
     <div class="promises" id="promises"></div>
     <p class="prom-done" id="promDone"></p>
-    <button class="btn btn--ghost next" id="promNext" data-next="buscar">Seguir</button>
+    <button class="btn btn--ghost next" id="promNext" data-next="crece">Seguir</button>
+  </div>
+</section>
+
+<!-- Te amo que crece: de bajito a gritarlo -->
+<section class="scene" id="crece">
+  <div class="cr-glow" id="crGlow" aria-hidden="true"></div>
+  <div class="inner">
+    <span class="eyebrow">Te quiero decir algo</span>
+    <div class="cr-stage"><button class="cr-word" id="crWord" data-lv="0">te amo</button></div>
+    <p class="cr-sub" id="crSub" aria-live="polite">(bajito, como un secreto)</p>
+    <p class="small cr-hint" id="crHint">Tócalo para que te lo diga más fuerte</p>
+    <p class="cr-end" id="crEnd"></p>
+    <button class="btn btn--ghost next" id="crNext" data-next="buscar">Seguir</button>
   </div>
 </section>
 
@@ -943,6 +981,7 @@ function show(id) {
   if (id === "fotos") buildWall();
   if (id === "mapa") runMap();
   if (id === "pienso") runPienso();
+  if (id === "crece") runCrece();
   if (id === "regalos") buildGifts();
   if (id === "buscar") startHunt();
   if (id === "carta") startLetter();
@@ -1008,6 +1047,45 @@ $$(".prom").forEach(b => b.addEventListener("click", () => {
   if (b.classList.contains("lit")) return; b.classList.add("lit"); Audio.tick(76 + $$(".prom.lit").length * 2); try { navigator.vibrate?.(15); } catch {}
   if ($$(".prom.lit").length === PROMS.length) { $("#promDone").textContent = "Te lo prometo, mi amor. 🕯️"; $("#promNext").classList.add("show"); Audio.chime(); burst(50); }
 }));
+// te amo que crece: cada toque lo dice más fuerte
+const CRECE = [
+  ["te amo", "(bajito, como un secreto)"],
+  ["Te amo", "un poquito más fuerte…"],
+  ["Te amo ♥", "más fuerte…"],
+  ["TE AMO", "¡que lo escuche todo Temuco!"],
+  ["TE AMO ♥", "¡que lo escuche el mundo entero!"],
+];
+let crLv = 0, crRain;
+function runCrece() {
+  crLv = 0; clearInterval(crRain); const w = $("#crWord");
+  w.dataset.lv = 0; w.textContent = CRECE[0][0]; w.disabled = false; w.setAttribute("aria-label", "te amo. Tócalo para que te lo diga más fuerte");
+  $("#crSub").textContent = CRECE[0][1]; $("#crHint").classList.remove("off"); $("#crGlow").style.opacity = 0;
+  $("#crEnd").classList.remove("on"); $("#crEnd").textContent = ""; $("#crNext").classList.remove("show");
+}
+$("#crWord").addEventListener("click", () => {
+  const w = $("#crWord"); if (crLv >= CRECE.length) return;
+  crLv++; $("#crHint").classList.add("off");
+  const r = w.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  w.classList.remove("hit"); void w.offsetWidth; w.classList.add("hit"); setTimeout(() => w.classList.remove("hit"), 520);
+  if (crLv < CRECE.length) {
+    w.dataset.lv = crLv; w.textContent = CRECE[crLv][0]; w.setAttribute("aria-label", CRECE[crLv][0]);
+    const sub = $("#crSub"); sub.classList.add("swap"); setTimeout(() => { sub.textContent = CRECE[crLv][1]; sub.classList.remove("swap"); }, 250);
+    $("#crGlow").style.opacity = (crLv / CRECE.length * .9).toFixed(2);
+    burst([0, 8, 16, 28, 46][crLv], cx, cy);
+    Audio.tick(72 + crLv * 3); if (crLv >= 3) Audio.tick(79 + crLv * 3);
+    buzz([0, 12, 22, 35, 50][crLv]);
+    return;
+  }
+  // el último: lo grita con todo y llueven corazones
+  w.dataset.lv = 5; w.textContent = "TE AMO ♥"; w.disabled = true;
+  $("#crSub").classList.add("swap"); $("#crGlow").style.opacity = 1;
+  burst(130, cx, cy); setTimeout(() => burst(80, innerWidth * .25, innerHeight * .6), 260); setTimeout(() => burst(80, innerWidth * .75, innerHeight * .6), 480);
+  Audio.chime(); setTimeout(() => Audio.chime(), 420); buzz([60, 50, 60, 50, 120]);
+  if (!reduced) { const end = Date.now() + 6500; crRain = setInterval(() => { if (Date.now() > end || cur !== "crece") return clearInterval(crRain);
+    add({ x: Math.random() * innerWidth, y: -20, vx: 0, vy: 1.6 + Math.random() * 2, gr: 0, r: Math.random() * 6, vr: (Math.random() - .5) * .05, sway: Math.random() * 6, s: 12 + Math.random() * 16, c: COLS[Math.floor(Math.random() * 5)], life: 0, k: "h", a: .9 }); }, 70); }
+  setTimeout(() => { if (cur !== "crece") return; $("#crEnd").innerHTML = "Y mañana te voy a amar<br>todavía más. ♥"; $("#crEnd").classList.add("on"); }, reduced ? 0 : 2200);
+  setTimeout(() => { if (cur === "crece") $("#crNext").classList.add("show"); }, reduced ? 0 : 4200);
+});
 // abrazo: mantener presionado
 let hugT = null, hugP = 0, hugged = false;
 const HUG_MS = 4200;
