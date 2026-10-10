@@ -256,6 +256,49 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 @keyframes vozWave { 50% { height: 100%; } }
 .voz-bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,.12); overflow: hidden; }
 .voz-bar i { display: block; height: 100%; width: 0; background: #ffd27a; }
+/* un día cualquiera */
+#pienso { overflow: hidden; }
+.dsky { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.dsky i { position: absolute; inset: 0; opacity: 0; transition: opacity 1.6s ease; }
+.dsky i.on { opacity: 1; }
+.dsky::after { content: ""; position: absolute; inset: 0; background: rgba(12,5,18,.42); }
+.dsky [data-s=dawn] { background: linear-gradient(180deg, #6d5a8f, #f3a59b 55%, #f6cf8e); }
+.dsky [data-s=morning] { background: linear-gradient(180deg, #6fa8de, #a9d3f2 55%, #f7e3b6); }
+.dsky [data-s=noon] { background: linear-gradient(180deg, #3d8fd9, #7fc0f2 60%, #c6e6ff); }
+.dsky [data-s=after] { background: linear-gradient(180deg, #c97a5a, #f0a868 50%, #e57a8c); }
+.dsky [data-s=dusk] { background: linear-gradient(180deg, #3a2a66, #9a4f8f 50%, #f08a6a); }
+.dsky [data-s=night] { background: linear-gradient(180deg, #050a24, #1c1448 60%, #2a1838); }
+#pienso .inner { position: relative; z-index: 1; }
+.dstage { position: relative; width: min(64vw, 16rem, 34vh); aspect-ratio: 1; }
+.dclock, .dfinal { position: absolute; inset: 0; transition: opacity .8s ease, transform .8s ease; }
+.dclock svg { width: 100%; height: 100%; display: block; }
+.dlbl { font: 600 9px var(--f-ui); fill: rgba(255,255,255,.6); text-anchor: middle; }
+.dhand { position: absolute; inset: 0; }
+.dhand::before { content: ""; position: absolute; left: 50%; top: 14%; bottom: 50%; width: 2px; margin-left: -1px; background: linear-gradient(to top, rgba(255,214,226,.7), transparent); }
+.dsun { position: absolute; left: 50%; top: 1%; font-size: 1.7rem; font-style: normal; line-height: 1; filter: drop-shadow(0 0 10px rgba(255,220,140,.9)); }
+.dcenter { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 3.2rem; line-height: 1; filter: drop-shadow(0 6px 12px rgba(0,0,0,.4)); }
+.dcenter.pop { animation: dPop .55s cubic-bezier(.3,1.6,.5,1); }
+@keyframes dPop { from { transform: translate(-50%, -50%) scale(.3); opacity: 0; } }
+.dcard { min-height: 5.6rem; display: grid; gap: .2rem; justify-items: center; opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; }
+.dcard.on { opacity: 1; transform: none; }
+.dcard small { font: 700 .72rem/1 var(--f-ui); letter-spacing: .2em; color: #ffd27a; }
+.dcard b { font: 400 1.6rem/1.1 var(--f-script); color: #ffe9ef; }
+.dcard p { margin: 0; max-width: 20rem; font: italic 500 1.12rem/1.35 var(--f-serif); color: #fff3f6; }
+.dfinal { opacity: 0; transform: scale(.8); pointer-events: none; }
+#pienso.fin .dclock { opacity: 0; transform: scale(.85); }
+#pienso.fin .dfinal { opacity: 1; transform: none; }
+.dheart { position: absolute; left: 50%; top: 50%; font-size: 4.2rem; line-height: 1; transform: translate(-50%, -50%); animation: dBeat 1.3s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(255,80,130,.8)); }
+@keyframes dBeat { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 15% { transform: translate(-50%, -50%) scale(1.15); } 30% { transform: translate(-50%, -50%) scale(1); } 45% { transform: translate(-50%, -50%) scale(1.08); } }
+.dorbit span { position: absolute; left: 50%; top: 50%; margin: -.85rem 0 0 -.85rem; font-size: 1.7rem; line-height: 1; animation: dOrb 16s linear infinite; }
+.dorbit span:nth-child(2) { animation-delay: -2.667s; } .dorbit span:nth-child(3) { animation-delay: -5.333s; } .dorbit span:nth-child(4) { animation-delay: -8s; }
+.dorbit span:nth-child(5) { animation-delay: -10.667s; } .dorbit span:nth-child(6) { animation-delay: -13.333s; }
+@keyframes dOrb { from { transform: rotate(0deg) translateX(min(26vw, 6.6rem, 14vh)) rotate(0deg); } to { transform: rotate(360deg) translateX(min(26vw, 6.6rem, 14vh)) rotate(-360deg); } }
+.dlines { display: grid; gap: .35rem; justify-items: center; min-height: 0; }
+.dlines p { margin: 0; max-width: 21rem; font: italic 500 1.15rem/1.35 var(--f-serif); color: #ffe9ef; opacity: 0; transform: translateY(8px); transition: opacity .8s ease, transform .8s ease; display: none; }
+#pienso.fin .dlines p { display: block; }
+#pienso.fin .dcard { display: none; }
+.dlines p.on { opacity: 1; transform: none; }
+.dlines .dsum { font: 400 1.7rem/1.15 var(--f-script); color: #ffd27a; text-shadow: 0 0 14px rgba(255,200,100,.5); }
 /* nuestro mapa */
 .map { position: relative; width: min(100%, 21rem, calc(54vh * .727)); aspect-ratio: 320 / 440; }
 .map svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
@@ -625,6 +668,30 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
     <span class="eyebrow">Lo que sueño contigo</span>
     <h2 class="h-serif">Todo lo que nos falta por vivir</h2>
     <div class="dreams" id="dreams"></div>
+    <button class="btn btn--ghost next" data-next="pienso">Seguir</button>
+  </div>
+</section>
+
+<!-- Un día cualquiera: pienso en ella a cada hora -->
+<section class="scene" id="pienso">
+  <div class="dsky" aria-hidden="true"><i data-s="dawn"></i><i data-s="morning"></i><i data-s="noon"></i><i data-s="after"></i><i data-s="dusk"></i><i data-s="night"></i></div>
+  <div class="inner">
+    <span class="eyebrow">Un día cualquiera</span>
+    <h2 class="h-serif">En todo lo que hago, estás tú</h2>
+    <div class="dstage">
+      <div class="dclock" id="dclock">
+        <svg viewBox="-100 -100 200 200" aria-hidden="true"><circle r="92" fill="rgba(10,5,20,.28)" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/><g id="dticks"></g>
+          <text y="-72" class="dlbl">00</text><text x="74" y="4" class="dlbl">06</text><text y="80" class="dlbl">12</text><text x="-74" y="4" class="dlbl">18</text></svg>
+        <div class="dhand" id="dhand"><i class="dsun" id="dsun">☀️</i></div>
+        <div class="dcenter" id="dcenter">💭</div>
+      </div>
+      <div class="dfinal" id="dfinal">
+        <div class="dorbit" aria-hidden="true"><span>☀️</span><span>☕</span><span>🍽️</span><span>⚽</span><span>🌆</span><span>🌙</span></div>
+        <div class="dheart" aria-hidden="true">❤️</div>
+      </div>
+    </div>
+    <div class="dcard" id="dcard"><small id="dtime"></small><b id="dwhat"></b><p id="dline"></p></div>
+    <div class="dlines" id="dlines"><p class="dsum">Todos los días, a cada hora, estás tú.</p><p>Pienso en cómo hacerte feliz.</p><p>En darte todo lo que te mereces.</p><p>Y en ser la mejor versión de mí, para ti.</p></div>
     <button class="btn btn--ghost next" data-next="promesas">Seguir</button>
   </div>
 </section>
@@ -742,7 +809,7 @@ const RAZONES = [   // las razones de Diego, todas distintas
   "Te amo porque eres una gran estudiante y me inspiras.",
   "Te amo porque eres inteligente.",
   "Te amo porque desde el día en que llegaste, mi vida no ha vuelto a ser la misma.",
-  "Te amo porque no hay un minuto en que no estés en mis pensamientos.",
+  "Te amo porque contigo todo es más bonito.",
   "Te amo porque eres maravillosa.",
   "Te amo porque para mí eres perfecta.",
   "Te amo porque eres hermosa, por dentro y por fuera.",
@@ -844,6 +911,7 @@ function show(id) {
   if (id === "abrazo") { hugged = false; hugP = 0; $("#hugRing").style.strokeDashoffset = 490; $("#hugMsg").textContent = ""; }
   if (id === "fotos") buildWall();
   if (id === "mapa") runMap();
+  if (id === "pienso") runPienso();
   if (id === "regalos") buildGifts();
   if (id === "buscar") startHunt();
   if (id === "carta") startLetter();
@@ -999,6 +1067,47 @@ function runMap() {
     requestAnimationFrame(step);
   };
   setTimeout(() => { if (run !== mapRun) return; arrive("sofo"); say(RECORRIDO[0][1]); setTimeout(leg, reduced ? 0 : 1600); }, reduced ? 0 : 1100);
+}
+// un día cualquiera: el sol da la vuelta al reloj y a cada hora aparece un momento en que piensa en ella
+const DIA = [
+  [7, "☀️", "Al despertar", "Abro los ojos y lo primero que aparece eres tú.", "dawn"],
+  [8, "☕", "Tomando desayuno", "Entre el pan y el café, te me cruzas por la cabeza.", "morning"],
+  [13, "🍽️", "Almorzando", "A mediodía me pregunto qué estarás comiendo tú.", "noon"],
+  [17, "⚽", "Jugando a la pelota", "Hasta entre pase y pase, apareces tú.", "after"],
+  [20, "🌆", "Cuando cae la tarde", "Cuento las horas para volver a hablarte.", "dusk"],
+  [23, "🌙", "En la noche", "Y antes de dormir, eres mi último pensamiento.", "night"],
+];
+let piensoRun = 0;
+function runPienso() {
+  const run = ++piensoRun, sc = $("#pienso"), hand = $("#dhand"), sun = $("#dsun"), card = $("#dcard");
+  if (!$("#dticks").childElementCount) $("#dticks").innerHTML = Array.from({ length: 24 }, (_, h) => `<line x1="0" y1="${h % 6 ? -86 : -82}" x2="0" y2="-90" stroke="rgba(255,255,255,${h % 6 ? .35 : .7})" stroke-width="${h % 6 ? 1 : 2}" transform="rotate(${h * 15})"/>`).join("");
+  sc.classList.remove("fin"); card.classList.remove("on"); $$(".dsky i").forEach(x => x.classList.remove("on")); $$("#dlines p").forEach(x => x.classList.remove("on"));
+  const setH = (h, ms) => { const deg = h * 15; hand.style.transition = sun.style.transition = ms ? `transform ${ms}ms cubic-bezier(.45,0,.25,1)` : "none";
+    hand.style.transform = `rotate(${deg}deg)`; sun.style.transform = `translateX(-50%) rotate(${-deg}deg)`; };
+  setH(5, 0); sun.textContent = "🌙"; $("#dcenter").textContent = "💭";
+  let i = 0;
+  const step = () => {
+    if (run !== piensoRun || cur !== "pienso") return;
+    if (i >= DIA.length) return finale();
+    const [h, ico, what, line, sky] = DIA[i];
+    setH(h, reduced ? 0 : 1300);
+    setTimeout(() => {
+      if (run !== piensoRun) return;
+      sun.textContent = h >= 19 || h < 6 ? "🌙" : "☀️";
+      $$(".dsky i").forEach(x => x.classList.toggle("on", x.dataset.s === sky));
+      const c = $("#dcenter"); c.textContent = ico; c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop");
+      card.classList.remove("on"); void card.offsetWidth;
+      $("#dtime").textContent = String(h).padStart(2, "0") + ":00"; $("#dwhat").textContent = what; $("#dline").textContent = line; card.classList.add("on");
+      Audio.pop(); buzz(12);
+      i++; setTimeout(step, reduced ? 0 : 2300);
+    }, reduced ? 0 : 1300);
+  };
+  const finale = () => {
+    sc.classList.add("fin"); card.classList.remove("on"); Audio.chime();
+    $$("#dlines p").forEach((p, k) => setTimeout(() => { if (run === piensoRun) { p.classList.add("on"); if (k) Audio.tick?.(84 + k * 2); } }, reduced ? 0 : 900 + k * 1500));
+    setTimeout(() => { if (run !== piensoRun) return; const r = $(".dheart").getBoundingClientRect(); burst(70, r.left + r.width / 2, r.top + r.height / 2); buzz([20, 40, 20]); $$("#pienso .next").forEach(b => b.classList.add("show")); }, reduced ? 0 : 900 + 4 * 1500);
+  };
+  setTimeout(step, reduced ? 0 : 1600);
 }
 // muro de fotos
 let wallBuilt = false;
