@@ -397,6 +397,16 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .jar-left b { color: #ffd27a; font-weight: 600; }
 @keyframes noteIn { from { opacity: 0; transform: translateY(40px) rotate(-8deg) scale(.7); } }
 .moon { width: 170px; aspect-ratio: 1; }
+.hlock { position: relative; width: 160px; height: 190px; margin: .4rem auto; }
+.hlock svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.hl-shk { transform-origin: 108px 96px; animation: hlOpen .7s cubic-bezier(.3,1.4,.5,1) 2.3s both; }
+@keyframes hlOpen { 50% { transform: translateY(-14px); } to { transform: translateY(-14px) rotate(-32deg); } }
+.hl-hole { fill: #3a0d1c; animation: hlGlow .6s ease 2.1s both; }
+@keyframes hlGlow { to { fill: #ffd27a; } }
+.hl-body { transform-origin: 80px 135px; animation: hlBeat 1.3s ease-in-out 2.7s infinite; }
+@keyframes hlBeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.06); } 30% { transform: scale(1); } 45% { transform: scale(1.03); } }
+.hl-key { position: absolute; left: 50%; top: 66%; font-size: 2.6rem; line-height: 1; margin: -1.3rem 0 0 -1.3rem; animation: hlKey 2.1s cubic-bezier(.4,0,.2,1) .3s both; filter: drop-shadow(0 4px 8px rgba(0,0,0,.5)); }
+@keyframes hlKey { 0% { opacity: 0; transform: translate(90px, 70px) rotate(40deg) scale(1.2); } 25% { opacity: 1; } 65% { transform: translate(0, 0) rotate(-45deg) scale(.7); opacity: 1; } 85% { transform: translate(0, 0) rotate(45deg) scale(.5); opacity: 1; } 100% { transform: translate(0, 0) rotate(45deg) scale(.2); opacity: 0; } }
 .rose { position: relative; width: 190px; height: 210px; }
 .rose .stem { position: absolute; left: 50%; bottom: 0; width: 6px; height: 0; margin-left: -3px; background: linear-gradient(90deg, #2f6b2a, #4a9a3c); border-radius: 3px; animation: grow 1.4s ease forwards; }
 @keyframes grow { to { height: 110px; } }
@@ -449,20 +459,27 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .read-hint-old { position: sticky; bottom: 6px; display: block; margin: .6rem auto 0; width: max-content; padding: .45rem .9rem; border-radius: 999px; background: rgba(20,10,24,.75); font: 500 .78rem/1 var(--f-ui); color: var(--muted); }
 .letter-end { display: grid; justify-items: center; gap: .9rem; margin-top: 1.6rem; }
 
-/* final: flores */
-/* final: su foto favorita con un ramo encima */
+/* final: su foto favorita y "Continuará…" */
 .fin-memory { position: relative; width: min(58vw, 12.5rem, 27vh); margin: .2rem 0 .4rem; }
-.fin-pol { width: 100%; --r: -4deg; padding-bottom: 2rem; }
+.fin-pol { box-sizing: border-box; width: 100%; margin: 0; --r: -4deg; padding-bottom: 2rem; }
 .fin-pol .ph { aspect-ratio: 1; }
 .fin-pol figcaption { font-size: 1.35rem; }
-.scene.on .fin-pol { animation: finPol 1.2s cubic-bezier(.2,.9,.3,1.1) .3s both; }
+#final.done .fin-pol { animation: finPol 1.2s cubic-bezier(.2,.9,.3,1.1) .2s both; }
+.fin-intro { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; transition: opacity .8s ease, visibility 0s linear .8s; cursor: pointer; }
+#final.done .fin-intro { opacity: 0; visibility: hidden; }
+.fin-line { margin: 0; max-width: 20rem; text-align: center; font: italic 500 clamp(1.6rem, 7vw, 2rem)/1.3 var(--f-serif); color: #ffe9ef; text-shadow: 0 0 18px rgba(255,143,171,.35); opacity: 0; transform: translateY(10px); transition: opacity 1s ease, transform 1s ease; }
+.fin-line.on { opacity: 1; transform: none; }
+.fin-main { visibility: hidden; }
+#final.done .fin-main { visibility: visible; }
+.fin-main > * { opacity: 0; transform: translateY(14px); }
+#final.done .fin-main > * { animation: up 1s cubic-bezier(.2,.8,.2,1) both; }
+#final.done .fin-main > :nth-child(1) { animation: none; opacity: 1; transform: none; }
+#final.done .fin-main > :nth-child(2) { animation-delay: 1.4s; } #final.done .fin-main > :nth-child(3) { animation-delay: 2s; }
+#final.done .fin-main > :nth-child(4) { animation-delay: 3.4s; } #final.done .fin-main > :nth-child(5) { animation-delay: 4.2s; }
+.fin-cont { margin: -.4rem 0 0; font: 400 clamp(2.8rem, 13vw, 3.6rem)/1.1 var(--f-script); color: #ffd27a; text-shadow: 0 0 16px rgba(255,200,100,.6), 0 0 40px rgba(255,92,138,.35); }
+#final.done .fin-cont { animation: up 1.4s cubic-bezier(.2,.8,.2,1) 2s both, contGlow 2.4s ease-in-out 3.4s infinite alternate; }
+@keyframes contGlow { to { text-shadow: 0 0 24px rgba(255,214,140,.9), 0 0 60px rgba(255,92,138,.55); } }
 @keyframes finPol { from { opacity: 0; transform: translateY(30px) rotate(-12deg) scale(.85); } to { opacity: 1; transform: rotate(-4deg); } }
-.fin-bouquet { position: absolute; right: -30%; bottom: 4%; display: grid; justify-items: center; transform: rotate(14deg); }
-.fb-flowers { font-size: 3.8rem; line-height: 1; filter: drop-shadow(0 10px 16px rgba(0,0,0,.5)); }
-.fb-tag { margin-top: -.6rem; padding: .2rem .55rem; border-radius: 6px; background: #fffaf0; color: #b3122f; font: 400 1rem/1 var(--f-script); box-shadow: 0 3px 8px rgba(0,0,0,.4); transform: rotate(-8deg); }
-.scene.on .fin-bouquet { animation: finBq 1.1s cubic-bezier(.3,1.5,.5,1) 1.1s both, finSway 3.6s ease-in-out 2.2s infinite alternate; }
-@keyframes finBq { from { opacity: 0; transform: translate(40px, 30px) rotate(40deg) scale(.4); } to { opacity: 1; transform: rotate(14deg); } }
-@keyframes finSway { from { transform: rotate(14deg); } to { transform: rotate(8deg) translateY(-3px); } }
 .fin-spark { position: absolute; width: 12px; height: 12px; background: #fff3c4; clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%); opacity: 0; animation: gTwinkle 2.2s ease-in-out infinite; filter: drop-shadow(0 0 6px #ffd27a); }
 #final .h-serif { font-size: clamp(1.6rem, 7vw, 2.1rem); }
 .flowers-final { font-size: 3.4rem; line-height: 1; letter-spacing: -.3rem; filter: drop-shadow(0 10px 20px rgba(0,0,0,.4)); }
@@ -830,17 +847,17 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 </section>
 <div class="warm" id="warm"></div>
 
-<!-- 9. Final -->
+<!-- 9. Final: primero unas últimas palabras, después "Continuará…" -->
 <section class="scene" id="final">
-  <div class="inner reveal">
-    <span class="eyebrow">Con todo mi amor</span>
+  <div class="fin-intro" id="finIntro" aria-live="polite"><p class="fin-line" id="finLine"></p></div>
+  <div class="inner fin-main" id="finMain">
     <div class="fin-memory" aria-hidden="true">
       <figure class="polaroid fin-pol"><div class="ph" data-foto="6">💗</div><figcaption>Tú y yo ♥</figcaption></figure>
-      <div class="fin-bouquet"><span class="fb-flowers">💐</span><span class="fb-tag">Para Maite</span></div>
-      <i class="fin-spark" style="left:6%;top:12%"></i><i class="fin-spark" style="left:88%;top:6%;animation-delay:.7s"></i><i class="fin-spark" style="left:92%;top:58%;animation-delay:1.3s"></i>
+      <i class="fin-spark" style="left:-8%;top:10%"></i><i class="fin-spark" style="left:100%;top:4%;animation-delay:.7s"></i><i class="fin-spark" style="left:104%;top:62%;animation-delay:1.3s"></i><i class="fin-spark" style="left:-12%;top:70%;animation-delay:1.9s"></i>
     </div>
-    <h2 class="h-serif">Las flores de verdad te las quiero dar en persona</h2>
-    <p class="lead">Así que avísame cuando termines de leer… y prepárate para un abrazo de esos largos.</p>
+    <span class="eyebrow">Fin del primer capítulo</span>
+    <p class="fin-cont">Continuará… ♥</p>
+    <p class="lead">Avísame cuando termines de leer… y prepárate para un abrazo de esos largos.</p>
     <div class="links" style="display:grid;gap:.7rem;justify-items:center">
       <p class="vale-tally" id="valeTally" hidden></p>
       <a class="btn" id="waBtn" href="https://api.whatsapp.com/send" target="_blank" rel="noopener" style="color:var(--night)">Ya leí tu carta 💌</a>
@@ -987,7 +1004,7 @@ function show(id) {
   if (id === "regalos") buildGifts();
   if (id === "buscar") startHunt();
   if (id === "carta") startLetter();
-  if (id === "final") { petals(9000, 320); Audio.swell(1); updateWaFinal(); }
+  if (id === "final") { updateWaFinal(); runFinal(); }
 }
 $$("[data-next]").forEach(b => b.addEventListener("click", () => { Audio.paper(); show(b.dataset.next); }));
 // bienvenida: un corazón de velitas que se encienden una por una, y pétalos cayendo
@@ -1179,11 +1196,12 @@ function runMap() {
 // un día cualquiera: el sol da la vuelta al reloj y a cada hora aparece un momento en que piensa en ella
 const DIA = [
   [7, "☀️", "Al despertar", "Abro los ojos y lo primero que aparece eres tú.", "dawn"],
-  [8, "☕", "Tomando desayuno", "Entre el pan y el café, te me cruzas por la cabeza.", "morning"],
+  [8, "🍳", "Tomando desayuno", "Mientras me hago mi huevito y mi leche con chocolate, pienso en ti.", "morning"],
   [13, "🍽️", "Almorzando", "A mediodía me pregunto qué estarás comiendo tú.", "noon"],
   [17, "⚽", "Jugando a la pelota", "Hasta entre pase y pase, apareces tú.", "after"],
   [20, "🌆", "Cuando cae la tarde", "Cuento las horas para volver a hablarte.", "dusk"],
   [23, "🌙", "En la noche", "Y antes de dormir, eres mi último pensamiento.", "night"],
+  [27, "💤", "Durmiendo", "Y hasta en mis sueños, apareces tú.", "night"],   // 27 = las 3 de la mañana del día siguiente
 ];
 let piensoRun = 0;
 function runPienso() {
@@ -1205,7 +1223,7 @@ function runPienso() {
       $$(".dsky i").forEach(x => x.classList.toggle("on", x.dataset.s === sky));
       const c = $("#dcenter"); c.textContent = ico; c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop");
       card.classList.remove("on"); void card.offsetWidth;
-      $("#dtime").textContent = String(h).padStart(2, "0") + ":00"; $("#dwhat").textContent = what; $("#dline").textContent = line; card.classList.add("on");
+      $("#dtime").textContent = String(h % 24).padStart(2, "0") + ":00"; $("#dwhat").textContent = what; $("#dline").textContent = line; card.classList.add("on");
       Audio.pop(); buzz(12);
       i++; setTimeout(step, reduced ? 0 : 2300);
     }, reduced ? 0 : 1300);
@@ -1248,7 +1266,7 @@ const GIFTS = [
   { id: "cancion", icon: "🎶", t: "Nuestra canción", c: "#7a4ab8" },
   { id: "frasco", icon: "🫙", t: "Un frasco", c: "#2f8a6a" },
   { id: "luna", icon: "🌙", t: "Una luna", c: "#3a5ab8" },
-  { id: "rosa", icon: "🌹", t: "Una rosa", c: "#c2183f" },
+  { id: "llave", icon: "🔑", t: "Una llave", c: "#b8862a" },
   { id: "abrazo", icon: "🤗", t: "Un secreto", c: "#e08a2a" },
 ];
 const opened = new Set();
@@ -1351,10 +1369,11 @@ function drawMoon(cv, info) {
   c.fillStyle = "rgba(160,140,110,.18)"; [[-.3, -.2, .16], [.25, .1, .12], [-.05, .35, .1], [.1, -.4, .07]].forEach(([x, y, r]) => { c.beginPath(); c.arc(cx + x * R, cy + y * R, r * R, 0, 7); c.fill(); });
   c.restore();
 }
-function rosaHTML() {
-  const ps = []; const rings = [[5, 46, 40, 16, .2], [5, 38, 34, 9, .9], [4, 30, 28, 3, 1.5], [3, 22, 22, 0, 2]];
-  rings.forEach(([n, w, h, t, d], ri) => { for (let i = 0; i < n; i++) ps.push(`<i class="petal" style="--w:${w}px;--h:${h}px;--a:${(i * 360 / n + ri * 30).toFixed(0)}deg;--t:-${t}px;--dl:${(1.4 + d * .5 + i * .08).toFixed(2)}s"></i>`); });
-  return `<div class="rose" aria-hidden="true"><i class="stem"></i><i class="leaf l"></i><i class="leaf r"></i><div class="bloom">${ps.join("")}</div></div>`;
+function llaveHTML() {   // un candado de corazón; la llave entra, gira y se abre
+  return `<div class="hlock" aria-hidden="true"><svg viewBox="0 0 160 190"><defs><linearGradient id="hlG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8fab"/><stop offset="1" stop-color="#c2183f"/></linearGradient></defs>
+    <path class="hl-shk" d="M52 96 V62 a28 28 0 0 1 56 0 V96" fill="none" stroke="#e9c46f" stroke-width="12" stroke-linecap="round"/>
+    <path class="hl-body" d="M80 182 C26 146 14 100 46 90 C62 85 74 94 80 106 C86 94 98 85 114 90 C146 100 134 146 80 182 Z" fill="url(#hlG)" stroke="#ffd27a" stroke-width="2"/>
+    <g class="hl-hole"><circle cx="80" cy="128" r="9"/><path d="M75 130 h10 l3 22 h-16 Z"/></g></svg><span class="hl-key">🗝️</span></div>`;
 }
 const VALES = [
   { ico: "💋", t: "Vale por besos", sub: "Los que quieras, cuando quieras · Ilimitados · Nunca vencen", uno: "beso", varios: "besos" },
@@ -1381,7 +1400,7 @@ function openGift(id) {
     <div class="jar-wrap"><button class="jar jar2" id="jar" aria-label="Sacar una razón"><i class="glass"><span class="papers" id="papers"></span></i><i class="cap"><i class="ribbon"></i></i><i class="tag">Razones por las<br>que te amo ♥</i></button></div>
     <div class="note note2" id="note"><span class="n-num" id="noteNum">Toca el frasco 💌</span><span class="n-txt" id="noteTxt"></span></div><p class="small jar-left" id="jarLeft"></p>`;
   if (id === "luna") { const info = moonInfo(new Date(D.pololeo)); html = `<h3>La luna de nuestro día</h3><canvas class="moon" id="moonCv" aria-label="${info.name}"></canvas><p>Así estaba la luna el <b>3 de octubre de 2026</b>, el día que empezamos.</p><p class="small">${info.name} · iluminada al ${Math.round(info.illum * 100)}%</p>`; }
-  if (id === "rosa") html = `<h3>Una rosa que no se marchita</h3>${rosaHTML()}<p>Esta te la regalo aquí, para que la tengas siempre.</p><p class="small">Las de verdad van en camino… 🌷</p>`;
+  if (id === "llave") html = `<h3>La llave de mi corazón</h3>${llaveHTML()}<p>Te la regalo. Es tuya, y es la única que existe.</p><p class="small">Nadie más la va a tener 🔐</p>`;
   if (id === "abrazo") html = `<h3>Un secreto</h3><p style="font-size:1.3rem">Siempre que alguien me habla de ti, se me escapa una sonrisa y me quedo pensando en lo increíble que eres.</p><p class="small">No se lo cuentes a nadie 🤫💗</p>`;
   card.innerHTML = html + `<button class="btn btn--ghost" id="closeCard">Cerrar</button>`;
   $("#modal").hidden = false; Audio.chime();
@@ -1393,7 +1412,7 @@ function openGift(id) {
     const r = b.getBoundingClientRect(); burst(40, r.left + r.width / 2, r.top); b.textContent = "Canjear otra vez " + VALES[k].ico;
   }));
   if (id === "frasco") { fillJar(false); $("#jar").addEventListener("click", drawReason); }
-  if (id === "rosa") setTimeout(() => { const r = $(".rose", card)?.getBoundingClientRect(); if (r) burst(40, r.left + r.width / 2, r.top + 30); }, reduced ? 0 : 3200);
+  if (id === "llave") setTimeout(() => { const r = $(".hlock", card)?.getBoundingClientRect(); if (r) { burst(50, r.left + r.width / 2, r.top + r.height * .6); Audio.chime(); buzz([20, 40, 20]); } }, reduced ? 0 : 2700);
   $("#closeCard").addEventListener("click", closeModal);
 }
 function closeModal() { $("#modal").hidden = true; }
@@ -1410,19 +1429,29 @@ function startHunt() {
   const sc = Math.min(W * .026, H * .0175), cx = W / 2, cy = H * .55;
   cHeart = Array.from({ length: 20 }, (_, i) => { const t = Math.PI + i / 20 * Math.PI * 2;
     return { x: cx + 16 * Math.sin(t) ** 3 * sc, y: cy - (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) * sc, r: 1.6 + Math.random() * .7, p: Math.random() * 6 }; });
-  // "Maıte" (con la i sin punto: el punto es la estrella)
-  const fs = Math.round(sc * 7.6), font = `700 ${fs}px "Cormorant Garamond", Georgia, serif`, cv = document.createElement("canvas"), g = cv.getContext("2d");
-  g.font = font; const parts = ["Ma", "ı", "te"], ws = parts.map(t => g.measureText(t).width), tw = ws.reduce((a, b) => a + b, 0) + 8, th = Math.ceil(fs * 1.4);
-  cv.width = Math.ceil(tw); cv.height = th; g.font = font; g.fillStyle = "#fff"; g.textBaseline = "alphabetic"; const base = Math.round(fs * 1.05); g.fillText("Maıte", 4, base);
-  const xh = g.measureText("x").actualBoundingBoxAscent || fs * .45;
-  const data = g.getImageData(0, 0, cv.width, th).data, step = Math.max(2, Math.round(fs / 22)), pts = [];
-  for (let y = 0; y < th; y += step) for (let x = 0; x < cv.width; x += step) if (data[(y * cv.width + x) * 4 + 3] > 150) pts.push([x, y]);
-  const ox = cx - tw / 2, oy = cy - sc * 1.6 - base + xh / 2;
-  cName = pts.filter((_, i) => i % Math.max(1, Math.ceil(pts.length / 520)) === 0).map(([x, y]) => ({ x: ox + x, y: oy + y, r: .9 + Math.random() * .6, p: Math.random() * 6, k: x / tw }));
-  target = { x: ox + 4 + ws[0] + ws[1] / 2, y: oy + base - xh - fs * .2, r: 3, p: 0 };
+  // "Maite" como una constelación de verdad: pocas estrellas unidas por líneas finas; el punto de la i es la estrella de la carta (suelta, sin línea)
+  const u = sc * 4.1, ox = cx - 5.35 * u / 2, base = cy - sc * 1.2 + .8 * u;
+  const L = (dx, pts) => pts.map(([x, y]) => [ox + (dx + x) * u, base + y * u]);
+  const strokes = [
+    L(0, [[0, 0], [.12, -1.6], [.75, -.55], [1.38, -1.6], [1.5, 0]]),                                        // M
+    L(1.85, [[.8, -.82], [.45, -1], [.1, -.74], [.05, -.24], [.4, 0], [.8, -.26]]), L(1.85, [[.84, -1], [.88, 0]]), // a
+    L(3.05, [[.1, -1], [.1, 0]]),                                                                             // ı
+    L(3.5, [[.3, -1.32], [.3, -.15], [.5, 0], [.72, -.12]]), L(3.5, [[.02, -1], [.62, -1]]),                  // t
+    L(4.45, [[.04, -.5], [.86, -.5], [.76, -.88], [.45, -1], [.1, -.8], [.02, -.38], [.22, -.05], [.56, 0], [.86, -.16]]), // e
+  ];
+  cName = strokes.map((pts, si) => ({ k: (pts[0][0] - ox) / (5.35 * u), pts: pts.map(([x, y], pi) => ({ x, y, r: (pi === 0 || pi === pts.length - 1 ? 1.6 : 1.15) + Math.random() * .5, p: Math.random() * 6 })) }));
+  target = { x: ox + 3.15 * u, y: base - 1.55 * u, r: 3, p: 0 };
   $("#hint").hidden = true; $("#huntSub").textContent = "Mira bien el cielo…";
   huntT0 = performance.now();
   requestAnimationFrame(drawSky);
+}
+// una estrella con brillo: núcleo, halo y (las más grandes) cuatro puntas
+function starDot(x, y, r, a, big) {
+  sg.globalAlpha = a; sg.shadowBlur = 0;
+  const gr = sg.createRadialGradient(x, y, 0, x, y, r * 5); gr.addColorStop(0, "rgba(255,236,200,.55)"); gr.addColorStop(1, "rgba(255,236,200,0)");
+  sg.fillStyle = gr; sg.beginPath(); sg.arc(x, y, r * 5, 0, 7); sg.fill();
+  if (r > 1.95 || big) { sg.strokeStyle = "rgba(255,246,224,.8)"; sg.lineWidth = .8; const R = r * (big ? 4.2 : 3.4); sg.beginPath(); sg.moveTo(x - R, y); sg.lineTo(x + R, y); sg.moveTo(x, y - R); sg.lineTo(x, y + R); sg.stroke(); }
+  sg.fillStyle = "#fffaf0"; sg.beginPath(); sg.arc(x, y, r, 0, 7); sg.fill();
 }
 function drawSky(t) {
   if (cur !== "buscar") { huntOn = false; return; }
@@ -1438,22 +1467,21 @@ function drawSky(t) {
   }
   sg.globalAlpha = 1; sg.stroke(); sg.shadowBlur = 0;
   cHeart.forEach((s, i) => { if (i > prog) return; const a = .7 + .3 * Math.sin(t / 600 + s.p); sg.globalAlpha = a; sg.fillStyle = "#ffe3ea"; sg.beginPath(); sg.arc(s.x, s.y, s.r, 0, 7); sg.fill(); });
-  // 2) su nombre aparece letra por letra (4 s → 6 s)
-  const nk = (e - 4) / 2;
-  if (nk > 0) { sg.shadowColor = "rgba(255,214,150,.95)"; sg.shadowBlur = 6; sg.fillStyle = "#fff6e0";
-    for (const s of cName) { if (s.k > nk) continue; const a = Math.min(1, (nk - s.k) * 4) * (.8 + .2 * Math.sin(t / 700 + s.p)); sg.globalAlpha = a; sg.beginPath(); sg.arc(s.x, s.y, s.r, 0, 7); sg.fill(); }
-    sg.shadowBlur = 0; }
-  // 3) el punto de la i: la estrella de la carta
-  if (e > 6.2 && !targetOn) { targetOn = true; const h = $("#hint"); h.textContent = "Toca la estrella de la i ✨"; h.hidden = false; $("#huntSub").textContent = "Escrito con estrellas, solo para ti"; Audio.chime(); }
-  if (target && !found && targetOn) {
-    const grow = Math.min(1, (e - 6.2) / .8), pulse = .5 + .5 * Math.sin(t / 380);
-    const gr = sg.createRadialGradient(target.x, target.y, 0, target.x, target.y, (14 + 18 * pulse) * grow);
-    gr.addColorStop(0, `rgba(255,226,160,${.7 + .3 * pulse})`); gr.addColorStop(1, "transparent"); sg.globalAlpha = 1; sg.fillStyle = gr; sg.beginPath(); sg.arc(target.x, target.y, 34 * grow, 0, 7); sg.fill();
-    // estrella de cuatro puntas
-    const R = (7 + 3 * pulse) * grow, r = R * .32; sg.fillStyle = "#fff3c4"; sg.beginPath();
-    for (let k = 0; k < 8; k++) { const ang = k * Math.PI / 4 - Math.PI / 2, rr = k % 2 ? r : R; sg[k ? "lineTo" : "moveTo"](target.x + Math.cos(ang) * rr, target.y + Math.sin(ang) * rr); }
-    sg.closePath(); sg.fill();
+  // 2) su nombre aparece de izquierda a derecha, como una constelación (4 s → 6.5 s)
+  const nk = (e - 4) / 2.5;
+  if (nk > 0) {
+    for (const st of cName) {
+      const f = Math.max(0, Math.min(1, (nk - st.k) * 3)); if (!f) continue; const m = st.pts.length - 1, upto = f * m;
+      sg.globalAlpha = .5; sg.strokeStyle = "rgba(255,214,160,.75)"; sg.lineWidth = 1; sg.shadowColor = "rgba(255,190,120,.8)"; sg.shadowBlur = 6; sg.beginPath();
+      for (let q = 0; q < Math.ceil(upto); q++) { const a = st.pts[q], b = st.pts[q + 1], ff = Math.min(1, upto - q); sg.moveTo(a.x, a.y); sg.lineTo(a.x + (b.x - a.x) * ff, a.y + (b.y - a.y) * ff); }
+      sg.stroke();
+      st.pts.forEach((s2, q) => { if (q > upto + .01) return; const tw = .75 + .25 * Math.sin(t / 650 + s2.p); starDot(s2.x, s2.y, s2.r, tw); });
+    }
+    sg.shadowBlur = 0;
   }
+  // 3) el punto de la i: una estrella más, sin pistas
+  if (e > 6.5 && !targetOn) { targetOn = true; $("#huntSub").textContent = "Escrito con estrellas, solo para ti"; Audio.chime(); }
+  if (target && !found && targetOn) { const grow = Math.min(1, (e - 6.5) / 1.2), tw = .7 + .3 * Math.sin(t / 520); starDot(target.x, target.y, 2.3 * grow, tw * grow, true); }
   if (shoot) { const k = Math.min(1, (t - shoot.t0) / 900); const x = shoot.x - k * 160, y = shoot.y + k * 90; const lg = sg.createLinearGradient(x, y, x + 120, y - 68); lg.addColorStop(0, "rgba(255,240,220,1)"); lg.addColorStop(1, "rgba(255,240,220,0)"); sg.globalAlpha = 1 - k; sg.strokeStyle = lg; sg.lineWidth = 2; sg.beginPath(); sg.moveTo(x, y); sg.lineTo(x + 120, y - 68); sg.stroke(); }
   sg.globalAlpha = 1;
   requestAnimationFrame(drawSky);
@@ -1478,8 +1506,8 @@ sf.addEventListener("click", async e => {
     return;
   }
   const W = Math.hypot(innerWidth, innerHeight), q = dist / W;
-  const msg = q < .08 ? "¡Casi! Es la estrellita sobre la i ✨" : "Busca el punto de la i en tu nombre 😉";
-  hint.textContent = msg; hint.classList.remove("bump"); void hint.offsetWidth; hint.classList.add("bump");
+  const msg = q < .08 ? "Muy cerquita… ✨" : q < .2 ? "Más cerca…" : "Sigue buscando…";
+  hint.textContent = msg; hint.hidden = false; hint.classList.remove("bump"); void hint.offsetWidth; hint.classList.add("bump");
   Audio.tick(q < .08 ? 88 : q < .16 ? 84 : q < .3 ? 79 : 72);
 });
 const envSVG = () => `<svg viewBox="0 0 120 80" width="120" height="80"><defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26306a"/><stop offset="1" stop-color="#121738"/></linearGradient></defs><rect x="2" y="2" width="116" height="76" rx="6" fill="url(#eg)" stroke="#e9c46f"/><path d="M2 6 L60 46 L118 6" fill="none" stroke="#e9c46f" stroke-width="1.5"/><circle cx="20" cy="62" r="1" fill="#fff"/><circle cx="96" cy="58" r="1.2" fill="#fff"/><circle cx="60" cy="44" r="12" fill="#e9c46f"/><path d="M60 35 L62.6 41.2 L69 41.5 L64 45.6 L65.7 52 L60 48.3 L54.3 52 L56 45.6 L51 41.5 L57.4 41.2 Z" fill="#121738"/></svg>`;
@@ -1548,6 +1576,21 @@ if (vozCarta) {
   });
 }
 // final
+// el final: unas últimas palabras, una por una (tocar adelanta), y después "Continuará…"
+const FIN = ["Esta carta se termina aquí…", "…pero lo que siento por ti no tiene final.", "Eres mi casualidad más bonita, Maite.", "Y cada vez que me extrañes, vuelve a abrir esta carta. ♥"];
+let finRun = 0, finK = 0, finT;
+function runFinal() {
+  const run = ++finRun, sc = $("#final"), line = $("#finLine"); sc.classList.remove("done"); finK = 0; clearTimeout(finT);
+  const next = () => {
+    if (run !== finRun || cur !== "final") return; clearTimeout(finT);
+    if (finK >= FIN.length) { line.classList.remove("on"); return setTimeout(() => { if (run !== finRun) return; sc.classList.add("done"); petals(9000, 320); Audio.swell(1); Audio.chime(); setTimeout(() => { if (run === finRun) burst(80, innerWidth / 2, innerHeight * .45); }, reduced ? 0 : 2200); }, reduced ? 0 : 700); }
+    line.classList.remove("on"); const k = finK++;
+    setTimeout(() => { if (run !== finRun) return; line.textContent = FIN[k]; line.classList.add("on"); Audio.tick?.(76 + k * 3); buzz(10); }, reduced ? 0 : (k ? 650 : 900));
+    finT = setTimeout(next, reduced ? 50 : (k ? 650 : 900) + 3400);
+  };
+  next.ok = true; runFinal.next = next; next();
+}
+$("#finIntro").addEventListener("click", () => { if (cur === "final" && !$("#final").classList.contains("done")) runFinal.next?.(); });
 function updateWaFinal() {
   const r = valesResumen();
   $("#waBtn").href = `https://api.whatsapp.com/send?phone=${D.whatsapp}&text=${encodeURIComponent("Ya leí tu carta 🥹💌\nTe amo, mi wawita ❤️" + (r.txt ? `\n\n🎟️ Mis vales: ${r.b} 💋 ${r.b === 1 ? "beso" : "besos"} y ${r.a} 🤗 ${r.a === 1 ? "abrazo" : "abrazos"}. Te toca cumplir 😌` : ""))}`;
