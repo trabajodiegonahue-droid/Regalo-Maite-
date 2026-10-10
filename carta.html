@@ -47,6 +47,8 @@ canvas#fx { position: fixed; inset: 0; z-index: 40; pointer-events: none; width:
 /* escenas */
 .scene { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px calc(env(safe-area-inset-bottom, 0px) + 20px); opacity: 0; visibility: hidden; transition: opacity .9s ease, visibility 0s linear .9s; }
 .scene.on { opacity: 1; visibility: visible; transition: opacity .9s ease .25s, visibility 0s; }
+.scene { overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; }
+.scene > .inner { align-self: start; margin-block: auto; }   /* si no cabe, se puede bajar y el botón nunca queda escondido */
 .inner { width: min(100%, 30rem); display: grid; justify-items: center; gap: 1.1rem; text-align: center; }
 .eyebrow { font: 500 .72rem/1 var(--f-ui); letter-spacing: .32em; text-transform: uppercase; color: var(--candle); }
 h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
@@ -325,7 +327,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .cr-end { min-height: 3.6rem; font: 400 clamp(1.7rem, 7.5vw, 2.1rem)/1.2 var(--f-script); color: #ffd27a; text-shadow: 0 0 14px rgba(255,200,100,.5); opacity: 0; transform: translateY(10px); transition: opacity 1.2s ease, transform 1.2s ease; }
 .cr-end.on { opacity: 1; transform: none; }
 /* nuestro mapa */
-.map { position: relative; width: min(100%, 21rem, calc(54vh * .727)); aspect-ratio: 320 / 440; }
+.map { position: relative; width: min(100%, 21rem, calc(46vh * .727)); aspect-ratio: 320 / 440; }
 .map svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .mp-lbl { font: italic 500 11px var(--f-serif); fill: rgba(255,255,255,.4); }
 .mp-city { font: 400 26px var(--f-script); fill: rgba(255,233,239,.75); }
@@ -1121,23 +1123,20 @@ tick(); setInterval(tick, 1000);
 const heartXY = u => { const t = u + Math.PI; return { x: 160 + 16 * Math.sin(t) ** 3 * 8.4, y: 222 - (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) * 10.6 }; };
 const LUGARES = {
   sofo: { u: 0, ico: "🇨🇱", n: "La Sofo", lado: "r" },
-  portal: { u: .95, ico: "🎬", n: "Portal Temuco", lado: "b" },
-  sushi: { u: 1.98, ico: "🍣", n: "Mr. Sushi", lado: "b" },
-  depa: { u: Math.PI, ico: "🏠", n: "Mi depa", lado: "b" },
-  helado: { u: 4.3, ico: "🍦", n: "El helado", lado: "b" },
-  casa: { u: 5.33, ico: "🏡", n: "Tu casa", lado: "b" },
+  portal: { u: 1.5, ico: "🎬", n: "Portal Temuco", lado: "b" },
+  si: { u: Math.PI, ico: "💘", n: "Nuestro sí", lado: "b" },
+  sushi: { u: 4.3, ico: "🍣", n: "Mr. Sushi", lado: "b" },
+  helado: { u: 5.33, ico: "🍦", n: "El helado", lado: "b" },
 };
 for (const l of Object.values(LUGARES)) Object.assign(l, heartXY(l.u));
-// el recorrido de ese día; "u" es hasta dónde avanza por el corazón (de vuelta = hacia atrás)
+// el recorrido; "u" es hasta dónde avanza por el corazón
 const RECORRIDO = [
   ["sofo", "18 de septiembre · En La Sofo te vi por primera vez.", 0],
-  ["portal", "Nuestra primera peli juntos, en el Portal Temuco 🎬", .95],
-  ["depa", "3 de octubre, 14:15 · En mi depa, en Los Pablos, me dijiste que sí ♥", Math.PI],
-  ["sushi", "Para celebrar, sushi en el Mr. Sushi de Avenida Alemania 🍣", 1.98],
-  ["depa", "De vuelta al depa, juntitos 🏠", Math.PI],
-  ["helado", "Tu papá nos pasó a buscar y fuimos por un helado 🍦", 4.3],
-  ["casa", "Y de ahí, a tu casa 🏡", 5.33],
-  ["depa", "Y yo me volví en Uber… con el corazón lleno 🚗", 2 * Math.PI + Math.PI],
+  ["portal", "Nuestra primera peli juntos, en el Portal Temuco 🎬", 1.5],
+  ["si", "3 de octubre, 14:15 · Aquí me dijiste que sí ♥", Math.PI],
+  ["sushi", "Para celebrar, sushi en el Mr. Sushi de Avenida Alemania 🍣", 4.3],
+  ["helado", "Y de postre, un heladito juntos 🍦", 5.33],
+  ["sofo", "Y todo me lleva de vuelta al día en que te conocí ✨", 2 * Math.PI],
 ];
 let mapRun = 0;
 function runMap() {
