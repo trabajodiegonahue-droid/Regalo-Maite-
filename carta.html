@@ -326,6 +326,56 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .cr-hint.off { opacity: 0; }
 .cr-end { min-height: 3.6rem; font: 400 clamp(1.7rem, 7.5vw, 2.1rem)/1.2 var(--f-script); color: #ffd27a; text-shadow: 0 0 14px rgba(255,200,100,.5); opacity: 0; transform: translateY(10px); transition: opacity 1.2s ease, transform 1.2s ease; }
 .cr-end.on { opacity: 1; transform: none; }
+/* raspa y gana */
+.scratch { position: relative; width: min(84vw, 20rem); aspect-ratio: 5 / 3.4; border-radius: 16px; overflow: hidden; box-shadow: 0 14px 34px rgba(0,0,0,.5); }
+.scratch-prize { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: .3rem; padding: 1rem; text-align: center; color: var(--ink);
+  background: radial-gradient(120% 90% at 50% 0%, #fffaf0, #f3e2c4); border: 2px solid #e9c46f; border-radius: 16px; }
+.sp-ico { font-size: 2.1rem; line-height: 1; }
+.scratch-prize small { font: 600 .66rem/1.2 var(--f-ui); letter-spacing: .22em; text-transform: uppercase; color: var(--rose-deep); }
+.scratch-prize b { font: 400 clamp(1.7rem, 7.6vw, 2.1rem)/1.05 var(--f-script); color: #b3122f; }
+.scratch-prize p { margin: 0; font: italic 500 1.02rem/1.3 var(--f-serif); color: var(--ink); }
+.scratch canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; transition: opacity .9s ease; }
+.scratch canvas.gone { opacity: 0; pointer-events: none; }
+.scratch.won { animation: wonGlow 1.6s ease-in-out infinite alternate; }
+@keyframes wonGlow { to { box-shadow: 0 0 0 3px #ffd27a, 0 0 34px rgba(255,210,122,.7), 0 14px 34px rgba(0,0,0,.5); } }
+.scratch-fine { min-height: 1.4rem; }
+/* pon tu dedo aquí */
+.huella { position: relative; width: min(46vw, 11rem, 26vh); aspect-ratio: 1; border: 0; background: none; padding: 0; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.huella svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.huella path { fill: none; stroke: rgba(255,143,171,.42); stroke-width: 1.7; stroke-linecap: round; transition: stroke .35s ease, filter .35s ease; }
+.huella path.on { stroke: #ffd27a; filter: drop-shadow(0 0 3px rgba(255,200,110,.9)); }
+.huella .hu-glow { position: absolute; inset: -18%; border-radius: 50%; background: radial-gradient(circle, rgba(255,92,138,.45), transparent 65%); opacity: 0; transition: opacity .5s ease; pointer-events: none; }
+.huella.holding .hu-glow { opacity: 1; animation: huBeat .85s ease-in-out infinite; }
+.huella.done .hu-glow { opacity: 1; background: radial-gradient(circle, rgba(255,210,122,.55), transparent 65%); animation: huBeat 1.3s ease-in-out infinite; }
+.huella.done svg { animation: huBeat 1.3s ease-in-out infinite; }
+@keyframes huBeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.07); } 30% { transform: scale(1); } 45% { transform: scale(1.04); } }
+.huella .hu-ring { position: absolute; inset: -6px; border-radius: 50%; border: 1px solid rgba(255,207,138,.4); animation: crRing 2.2s ease-out infinite; pointer-events: none; }
+.huella.holding .hu-ring, .huella.done .hu-ring { display: none; }
+.hu-msg { min-height: 5rem; }
+/* sobres "ábrelo cuando…" */
+.envs { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.1rem .7rem; width: min(100%, 24rem); }
+.env { width: calc(33.3% - .5rem); min-width: 6.4rem; border: 0; background: none; padding: 0; color: var(--text); display: grid; justify-items: center; gap: .35rem; }
+.env-b { position: relative; width: 100%; aspect-ratio: 3 / 2; border-radius: 6px; background: var(--c); background: linear-gradient(180deg, var(--c), color-mix(in srgb, var(--c) 70%, #000)); box-shadow: 0 8px 18px rgba(0,0,0,.45); perspective: 300px; }
+.env-b::before { content: ""; position: absolute; inset: 0; border-radius: 6px; background: linear-gradient(to top right, transparent 49%, rgba(0,0,0,.18) 50%, transparent 51%), linear-gradient(to top left, transparent 49%, rgba(0,0,0,.18) 50%, transparent 51%); }
+.env-flap { position: absolute; left: 0; right: 0; top: 0; height: 58%; background: rgba(255,255,255,.22); background: color-mix(in srgb, var(--c) 82%, #fff); clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: transform .5s ease; border-radius: 6px 6px 0 0; }
+.env-seal { position: absolute; left: 50%; top: 58%; width: 1.7rem; height: 1.7rem; margin: -.85rem 0 0 -.85rem; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ff6f8f, #a3102e); display: grid; place-items: center; font-size: .8rem; color: #ffd6df; box-shadow: 0 2px 5px rgba(0,0,0,.4); transition: transform .4s ease, opacity .4s ease; }
+.env-ico { position: absolute; right: .3rem; bottom: .2rem; font-size: 1rem; }
+.env small { white-space: nowrap; font: 500 .6rem/1 var(--f-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.env b { font: 400 1.15rem/1.05 var(--f-script); color: #ffe3ea; min-height: 2.2rem; }
+.env.open .env-flap { transform: rotateX(180deg); }
+.env.open .env-seal { transform: scale(0); opacity: 0; }
+.env.read small::after { content: " ♥"; color: var(--rose); }
+.scene.on .env { animation: up .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--dl); }
+.env { opacity: 0; transform: translateY(14px); }
+.sobre-paper { position: relative; display: grid; gap: .7rem; padding: 1.4rem 1.2rem 1.2rem; border-radius: 6px; background: var(--paper); color: var(--ink); text-align: left; box-shadow: 0 8px 18px rgba(0,0,0,.35); animation: noteIn .6s cubic-bezier(.3,1.4,.5,1); }
+.sobre-paper small { font: 600 .66rem/1 var(--f-ui); letter-spacing: .2em; text-transform: uppercase; color: var(--rose-deep); }
+.sobre-paper h4 { margin: -.3rem 0 .1rem; font: 400 2rem/1.05 var(--f-script); color: #b3122f; }
+.sobre-paper p { margin: 0; font: 500 1.1rem/1.45 var(--f-serif); color: var(--ink); }
+.sobre-paper .sl-sign { justify-self: end; font: 400 1.6rem/1 var(--f-script); color: var(--rose-deep); }
+/* su video */
+.vframe { width: min(78vw, 17rem, 36vh); padding: .55rem .55rem 2rem; background: #fffdf8; box-shadow: 0 18px 40px rgba(0,0,0,.55); transform: rotate(-2deg); position: relative; }
+.vframe video { display: block; width: 100%; aspect-ratio: 9 / 16; max-height: 52vh; object-fit: cover; background: #1c0d22; }
+.vframe::after { content: "Para ti ♥"; position: absolute; left: 0; right: 0; bottom: .45rem; text-align: center; font: 400 1.35rem/1 var(--f-script); color: var(--rose-deep); }
 /* nuestro mapa */
 .map { position: relative; width: min(100%, 21rem, calc(46vh * .727)); aspect-ratio: 320 / 440; }
 .map svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
@@ -608,6 +658,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
     <p class="intro-love">Hice esto pensando en cada parte de ti 💗</p>
     <p class="small">Busca un lugar tranquilo y, si puedes, ponte audífonos.</p>
     <button class="btn btn-love" id="startBtn">Empezar ♥</button>
+    <button class="btn btn--ghost" id="sobresBtn" hidden>Mis sobres 💌</button>
   </div>
 </section>
 
@@ -718,7 +769,22 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
     <div class="wall" id="wall"></div>
     <p class="phrase" id="phrase" aria-label="Maite, eres la mujer con la que quiero estar toda mi vida"></p>
     <p class="small">Toca una foto para verla de cerca.</p>
-    <button class="btn btn--ghost next" data-next="regalos">Seguir</button>
+    <button class="btn btn--ghost next" data-next="raspa">Seguir</button>
+  </div>
+</section>
+
+<!-- Raspa y gana -->
+<section class="scene" id="raspa">
+  <div class="inner">
+    <span class="eyebrow">Una tarjeta de la suerte</span>
+    <h2 class="h-serif">Raspa y descubre tu premio</h2>
+    <p class="small" id="raspaSub">Raspa con el dedo la parte plateada ✨</p>
+    <div class="scratch" id="scratch">
+      <div class="scratch-prize"><span class="sp-ico">🏆</span><small>Premio mayor</small><b>Mi corazón, para siempre</b><p>Ya era tuyo… pero ahora es oficial ♥</p></div>
+      <canvas id="scratchCv" aria-label="Tarjeta para raspar con el dedo"></canvas>
+    </div>
+    <p class="small scratch-fine" id="raspaFine"></p>
+    <button class="btn btn--ghost next" id="raspaNext" data-next="regalos">Seguir</button>
   </div>
 </section>
 
@@ -757,17 +823,29 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
         <div class="dcenter" id="dcenter">💭</div>
       </div>
       <div class="dfinal" id="dfinal">
-        <div class="dorbit" aria-hidden="true"><span>☀️</span><span>☕</span><span>🍽️</span><span>⚽</span><span>🌆</span><span>🌙</span></div>
+        <div class="dorbit" aria-hidden="true"><span>☀️</span><span>🍳</span><span>🍽️</span><span>⚽</span><span>🌙</span><span>💤</span></div>
         <div class="dheart" aria-hidden="true">❤️</div>
       </div>
     </div>
     <div class="dcard" id="dcard"><small id="dtime"></small><b id="dwhat"></b><p id="dline"></p></div>
     <div class="dlines" id="dlines"><p class="dsum">Todos los días, a cada hora, estás tú.</p><p>Pienso en cómo hacerte feliz.</p><p>En darte todo lo que te mereces.</p><p>Y en ser la mejor versión de mí, para ti.</p></div>
-    <button class="btn btn--ghost next" data-next="promesas">Seguir</button>
+    <button class="btn btn--ghost next" data-next="huella">Seguir</button>
   </div>
 </section>
 
 <!-- Promesas -->
+<!-- Pon tu dedo aquí -->
+<section class="scene" id="huella">
+  <div class="inner">
+    <span class="eyebrow">Tú y yo</span>
+    <h2 class="h-serif">Pon tu dedo aquí</h2>
+    <p class="small" id="huSub">Yo ya dejé mi huella. Pon la tuya encima y mantenla hasta que se encienda.</p>
+    <button class="huella" id="huBtn" aria-label="Mantén el dedo apretado aquí"><span class="hu-glow" aria-hidden="true"></span><span class="hu-ring" aria-hidden="true"></span><svg viewBox="-60 -60 120 120" id="huSvg" aria-hidden="true"></svg></button>
+    <div class="hu-msg"><p class="lead" id="huMsg"></p></div>
+    <button class="btn btn--ghost next" id="huNext" data-next="promesas">Seguir</button>
+  </div>
+</section>
+
 <section class="scene" id="promesas">
   <div class="inner">
     <span class="eyebrow">Mis promesas</span>
@@ -826,8 +904,29 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
           <span class="voz-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></button>
         <div class="voz-bar" aria-hidden="true"><i id="vozProg"></i></div>
       </div>
-      <button class="btn" data-next="abrazo">Una cosa más…</button>
+      <button class="btn" id="unaCosaMas" data-next="sobres">Una cosa más…</button>
     </div>
+  </div>
+</section>
+
+<!-- Su video (aparece solo si hay video) -->
+<section class="scene" id="video">
+  <div class="inner">
+    <span class="eyebrow">Una cosa más</span>
+    <h2 class="h-serif">Esto te lo quería decir mirándote</h2>
+    <div class="vframe"><video id="vid" playsinline preload="metadata" controls></video></div>
+    <button class="btn btn--ghost next" id="vidNext" data-next="sobres">Seguir</button>
+  </div>
+</section>
+
+<!-- Sobres "Ábrelo cuando…" -->
+<section class="scene" id="sobres">
+  <div class="inner">
+    <span class="eyebrow">Para después</span>
+    <h2 class="h-serif">Ábrelos cuando los necesites</h2>
+    <div class="envs" id="envs"></div>
+    <p class="small" id="sobresSub">No tienes que abrirlos todos ahora. Siempre van a estar aquí: al inicio de la carta vas a encontrar un botón para volver a ellos 💌</p>
+    <button class="btn btn--ghost next" id="sobresNext" data-next="abrazo">Seguir</button>
   </div>
 </section>
 
@@ -873,7 +972,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 /* ============ DATOS ============ */
 const D = {
   nombre: "Maite", firma: "Diego", apodo: "wawita", apodoElla: "mi wawita mosha",
-  pololeo: "2026-10-03T14:15:00", whatsapp: "56941089585", voz: "",
+  pololeo: "2026-10-03T14:15:00", whatsapp: "56941089585", voz: "", video: "",
   cancion: "Te Amo, Para Siempre", artista: "Noche de Brujas", youtube: "https://www.youtube.com/watch?v=xwBwzPWLYpE",
 };
 const FOTOS = ["__FOTO1__", "__FOTO2__", "__FOTO3__", "__FOTO4__", "__FOTO5__", "__FOTO6__", "__FOTO7__", "__FOTO8__", "__FOTO9__", "__FOTO10__", "__FOTO11__", "__FOTO12__"].map(f => f.startsWith("__") ? "" : f);
@@ -953,6 +1052,9 @@ const Audio = (() => {
     chime() { if (!ctx || !on) return; const t = ctx.currentTime; [84, 88, 91, 96].forEach((n, i) => tone(t + i * .09, n, 1.6, .05, "sine", sfx)); },
     pop() { if (!ctx || !on) return; const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.setValueAtTime(500, t); o.frequency.exponentialRampToValueAtTime(1100, t + .08); g.gain.setValueAtTime(.12, t); g.gain.exponentialRampToValueAtTime(.001, t + .15); o.connect(g); g.connect(sfx); o.start(t); o.stop(t + .2); },
     tick(k) { if (!ctx || !on) return; tone(ctx.currentTime, k, .25, .03, "sine", sfx); },
+    // un latido: dos golpecitos graves (se siente mejor con audífonos)
+    beat() { if (!ctx || !on) return; const t = ctx.currentTime; [0, .19].forEach((dt, i) => { const o = ctx.createOscillator(), g2 = ctx.createGain(); o.frequency.setValueAtTime(i ? 72 : 88, t + dt); o.frequency.exponentialRampToValueAtTime(42, t + dt + .14);
+      g2.gain.setValueAtTime(0, t + dt); g2.gain.linearRampToValueAtTime(i ? .22 : .32, t + dt + .015); g2.gain.exponentialRampToValueAtTime(.001, t + dt + .2); o.connect(g2); g2.connect(sfx); o.start(t + dt); o.stop(t + dt + .24); }); },
     paper() { if (!ctx || !on) return; const t = ctx.currentTime, b = ctx.createBuffer(1, ctx.sampleRate * .4, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length) * .3; const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(); f.type = "highpass"; f.frequency.value = 2500; s.buffer = b; s.connect(f); f.connect(sfx); s.start(t); },
   };
 })();
@@ -987,6 +1089,7 @@ function loop(now) {
 // ---------- navegación ----------
 let cur = "intro";
 function show(id) {
+  if (cur === "video" && id !== "video") { $("#vid").pause(); Audio.swell(1); }
   $("#" + cur).classList.remove("on"); cur = id; const sc = $("#" + id); sc.classList.add("on");
   $$(".next", sc).forEach(b => { b.classList.remove("show"); });
   const delay = { ch1: 6400, ch2: 3200, ch3: 3600, mapa: 26000, cuenta: 2800, fotos: 5600 }[id];
@@ -1001,6 +1104,10 @@ function show(id) {
   if (id === "mapa") runMap();
   if (id === "pienso") runPienso();
   if (id === "crece") runCrece();
+  if (id === "raspa") runRaspa();
+  if (id === "huella") runHuella();
+  if (id === "sobres") runSobres();
+  if (id === "video") runVideo();
   if (id === "regalos") buildGifts();
   if (id === "buscar") startHunt();
   if (id === "carta") startLetter();
@@ -1022,7 +1129,7 @@ $$("[data-next]").forEach(b => b.addEventListener("click", () => { Audio.paper()
   }).join(""));
   setTimeout(() => { if (cur === "intro") petals(16000, 260); }, reduced ? 0 : 1800);
 })();
-$("#startBtn").addEventListener("click", () => { Audio.start(); $("#soundBtn").hidden = false; show("prologo"); });
+$("#startBtn").addEventListener("click", () => { sobresFrom = ""; Audio.start(); $("#soundBtn").hidden = false; show("prologo"); });
 // prólogo
 let proT = [];
 function runPrologue() {
@@ -1105,6 +1212,141 @@ $("#crWord").addEventListener("click", () => {
   setTimeout(() => { if (cur !== "crece") return; $("#crEnd").innerHTML = "Y mañana te voy a amar<br>todavía más. ♥"; $("#crEnd").classList.add("on"); }, reduced ? 0 : 2200);
   setTimeout(() => { if (cur === "crece") $("#crNext").classList.add("show"); }, reduced ? 0 : 4200);
 });
+// ---------- raspa y gana: una tarjeta plateada que ella raspa con el dedo ----------
+let raspaDone = false, raspaRun = 0;
+function runRaspa() {
+  const run = ++raspaRun, cv = $("#scratchCv"), box = $("#scratch"), r = box.getBoundingClientRect(), d = devicePixelRatio || 1, W = r.width, H = r.height;
+  raspaDone = false; cv.classList.remove("gone"); box.classList.remove("won"); $("#raspaFine").textContent = ""; $("#raspaSub").textContent = "Raspa con el dedo la parte plateada ✨";
+  cv.width = Math.round(W * d); cv.height = Math.round(H * d);
+  const c = cv.getContext("2d"); c.setTransform(d, 0, 0, d, 0, 0); c.globalCompositeOperation = "source-over";
+  const gr = c.createLinearGradient(0, 0, W, H); gr.addColorStop(0, "#a9a9b6"); gr.addColorStop(.42, "#ececf3"); gr.addColorStop(.5, "#c4c4cf"); gr.addColorStop(.62, "#e6e6ee"); gr.addColorStop(1, "#9696a4");
+  c.fillStyle = gr; c.fillRect(0, 0, W, H);
+  c.fillStyle = "rgba(255,255,255,.55)"; for (let i = 0; i < 90; i++) c.fillRect(Math.random() * W, Math.random() * H, 1.4, 1.4);
+  c.strokeStyle = "rgba(90,90,110,.25)"; c.setLineDash([4, 5]); c.strokeRect(10, 10, W - 20, H - 20); c.setLineDash([]);
+  c.fillStyle = "#5f5f70"; c.textAlign = "center"; c.textBaseline = "middle";
+  c.font = `600 ${Math.round(W * .062)}px Jost, system-ui, sans-serif`; c.fillText("R A S P A   A Q U Í", W / 2, H * .44);
+  c.font = `400 ${Math.round(W * .05)}px Jost, system-ui, sans-serif`; c.fillText("♥  ♥  ♥", W / 2, H * .62);
+  setTimeout(() => { if (run === raspaRun && cur === "raspa") $("#raspaNext").classList.add("show"); }, reduced ? 0 : 30000);
+}
+function raspaCheck() {
+  const cv = $("#scratchCv"), data = cv.getContext("2d").getImageData(0, 0, cv.width, cv.height).data; let clear = 0, n = 0;
+  for (let i = 3; i < data.length; i += 4 * 37) { n++; if (data[i] < 40) clear++; }
+  if (clear / n > .4) raspaReveal();
+}
+function raspaReveal() {
+  if (raspaDone) return; raspaDone = true; const box = $("#scratch"), r = box.getBoundingClientRect();
+  $("#scratchCv").classList.add("gone"); box.classList.add("won"); burst(100, r.left + r.width / 2, r.top + r.height / 2); Audio.chime(); setTimeout(() => Audio.chime(), 400); buzz([30, 60, 30]);
+  $("#raspaSub").textContent = "¡Ganaste! 🎉"; $("#raspaFine").textContent = "Premio intransferible: no se lo puedes regalar a nadie 😌";
+  setTimeout(() => { if (cur === "raspa") $("#raspaNext").classList.add("show"); }, reduced ? 0 : 1600);
+}
+(() => {
+  const cv = $("#scratchCv"); let down = false, last = null, moves = 0;
+  const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  const scratch = (x, y) => {
+    const c = cv.getContext("2d"); c.globalCompositeOperation = "destination-out"; c.strokeStyle = "#000"; c.lineCap = "round"; c.lineJoin = "round"; c.lineWidth = 42;
+    c.beginPath(); if (last) { c.moveTo(last[0], last[1]); c.lineTo(x, y); } else { c.moveTo(x, y); c.lineTo(x + .1, y); } c.stroke(); last = [x, y];
+    if (++moves % 5 === 0) { raspaCheck(); buzz(4); } if (moves % 9 === 0) Audio.tick?.(66 + Math.floor(Math.random() * 6));
+  };
+  cv.addEventListener("pointerdown", e => { if (raspaDone) return; e.preventDefault(); down = true; last = null; try { cv.setPointerCapture(e.pointerId); } catch {} scratch(...pos(e)); });
+  cv.addEventListener("pointermove", e => { if (down && !raspaDone) scratch(...pos(e)); });
+  ["pointerup", "pointercancel", "lostpointercapture"].forEach(ev => cv.addEventListener(ev, () => { down = false; last = null; }));
+})();
+
+// ---------- pon tu dedo aquí: una huella con forma de corazón que se enciende con su dedo ----------
+const HU_MS = 3600;
+let huT = null, huP = 0, huDone = false, huBeatT = null;
+(() => {
+  // anillos de corazón uno dentro del otro, con cortecitos como las líneas de una huella
+  const hp = s => { let d = ""; for (let i = 0; i <= 72; i++) { const t = i / 72 * Math.PI * 2, x = 16 * Math.sin(t) ** 3 * s, y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) * s - 2.6 * s; d += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1); } return d; };
+  const N = 11; let html = "";
+  for (let i = 1; i <= N; i++) {
+    const s = 3.3 * i / N, g1 = 3 + (i * 7) % 5, a = 18 + (i * 13) % 30, b = 100 - a - g1 * 2 - 6;
+    html += `<path d="${hp(s)}" pathLength="100" stroke-dasharray="${a} ${g1} ${b} ${g1 + 3}" stroke-dashoffset="${(i * 17) % 100}" data-i="${i}"/>`;
+  }
+  $("#huSvg").innerHTML = html;
+})();
+function runHuella() {
+  huDone = false; huP = 0; cancelAnimationFrame(huT); huT = null; clearInterval(huBeatT);
+  $("#huBtn").classList.remove("holding", "done"); $$("#huSvg path").forEach(p => p.classList.remove("on"));
+  $("#huMsg").textContent = ""; $("#huSub").textContent = "Yo ya dejé mi huella. Pon la tuya encima y mantenla hasta que se encienda.";
+}
+function huPaint() { const n = $$("#huSvg path").length; $$("#huSvg path").forEach(p => p.classList.toggle("on", +p.dataset.i <= Math.ceil(huP * n))); }
+function huStep(t0, from) { return now => {
+  if (!huT) return; huP = Math.min(1, from + (now - t0) / HU_MS); huPaint();
+  if (huP >= 1) return huFinish();
+  huT = requestAnimationFrame(huStep(t0, from));
+}; }
+function huBeat() { Audio.beat?.(); buzz([45, 110, 45]); }
+function huStart(e) {
+  if (huDone) return; e.preventDefault(); $("#huBtn").classList.add("holding"); huT = requestAnimationFrame(huStep(performance.now(), huP));
+  huBeat(); clearInterval(huBeatT); huBeatT = setInterval(huBeat, 850);
+  $("#huMsg").textContent = "¿Lo sientes? Así late mi corazón cuando estás cerca.";
+}
+function huEnd() { if (huDone || !huT) return; cancelAnimationFrame(huT); huT = null; clearInterval(huBeatT); $("#huBtn").classList.remove("holding"); if (huP < 1) $("#huMsg").textContent = "Vuelve a ponerlo… ahí te estoy esperando."; }
+function huFinish() {
+  huDone = true; huT = null; clearInterval(huBeatT); const b = $("#huBtn"); b.classList.remove("holding"); b.classList.add("done"); huP = 1; huPaint();
+  const r = b.getBoundingClientRect(); burst(110, r.left + r.width / 2, r.top + r.height / 2); Audio.chime(); buzz([40, 80, 40, 80, 120]);
+  $("#huSub").textContent = "Tu huella y la mía, juntas.";
+  $("#huMsg").textContent = "Así se siente cuando me tomas la mano: todo se calma y mi corazón sabe que está en casa. ♥";
+  setTimeout(() => { if (cur === "huella") $("#huNext").classList.add("show"); }, reduced ? 0 : 2200);
+}
+$("#huBtn").addEventListener("pointerdown", huStart); ["pointerup", "pointerleave", "pointercancel"].forEach(ev => $("#huBtn").addEventListener(ev, huEnd));
+$("#huBtn").addEventListener("contextmenu", e => e.preventDefault());
+
+// ---------- sobres "Ábrelo cuando…": quedan guardados para que vuelva a abrirlos cuando quiera ----------
+const SOBRES = [
+  { k: "extranes", t: "me extrañes", ico: "🥺", c: "#c2385e", msg: [
+    "Cierra los ojos y acuérdate de la última vez que nos abrazamos. ¿Ya? Así de cerca te tengo siempre, aunque no me veas.",
+    "Lo más seguro es que yo también te esté extrañando justo ahora, porque eso me pasa apenas te vas.",
+    "Escríbeme, aunque sea un mensajito. O vuelve a leer la carta: cada palabra es para ti."] },
+  { k: "dormir", t: "no puedas dormir", ico: "🌙", c: "#3e4a9a", msg: [
+    "Si estás despierta a esta hora, imagina que estoy a tu lado haciéndote cariño en el pelo hasta que te dé sueño.",
+    "Respira lento conmigo… uno… dos… tres…",
+    "Mañana te espera un día bonito, y un buenos días mío esperándote en el celular. Duerme tranquila, mi wawita mosha."] },
+  { k: "reir", t: "necesites reírte", ico: "😂", c: "#d98a1e", msg: [
+    "Imagíname bailando… sí, así de mal. 🕺",
+    "Ahora imagíname cantándote nuestra canción, desafinado pero con todo el sentimiento.",
+    "¿Ves? Ya te reíste. Y si todavía no, escríbeme: tengo guardados los chistes más malos del mundo, solo para ti."] },
+  { k: "feliz", t: "estés muy feliz", ico: "✨", c: "#2f8a6a", msg: [
+    "¡Me encanta! En serio, verte feliz es de mis cosas favoritas en el mundo.",
+    "Ojalá esté ahí para ver esa sonrisa. Y si no, cuéntamelo todo, con lujo de detalles.",
+    "Celebra por los dos. Desde donde esté, voy a estar orgulloso de ti."] },
+  { k: "enojados", t: "estemos enojados", ico: "🤍", c: "#7a4ab8", msg: [
+    "Si estás leyendo esto, es porque discutimos. Y aunque ahora estés enojada conmigo (o yo contigo), quiero que sepas algo:",
+    "ninguna pelea va a ser más grande que lo que siento por ti.",
+    "Respiremos, hablemos tranquilos y arreglémoslo juntos. Siempre juntos."] },
+];
+let sobresFrom = "", sobresLeidos = [];
+try { const v = JSON.parse(localStorage.getItem("maite_sobres") || "[]"); if (Array.isArray(v)) sobresLeidos = v; } catch {}
+try { if (localStorage.getItem("maite_sobres_ok")) $("#sobresBtn").hidden = false; } catch {}
+function runSobres() {
+  try { localStorage.setItem("maite_sobres_ok", "1"); } catch {} $("#sobresBtn").hidden = false;
+  $("#envs").innerHTML = SOBRES.map((o, i) => `<button class="env${sobresLeidos.includes(o.k) ? " read" : ""}" data-s="${i}" style="--c:${o.c};--dl:${(.3 + i * .18).toFixed(2)}s" aria-label="Ábrelo cuando ${o.t}">
+    <span class="env-b"><i class="env-flap"></i><i class="env-seal">♥</i><i class="env-ico">${o.ico}</i></span><small>Ábrelo cuando…</small><b>${o.t}</b></button>`).join("");
+  $$("#envs .env").forEach(b => b.addEventListener("click", async () => {
+    const o = SOBRES[+b.dataset.s]; b.classList.add("open"); Audio.paper(); buzz(15); await sleep(reduced ? 0 : 550);
+    if (!sobresLeidos.includes(o.k)) { sobresLeidos.push(o.k); try { localStorage.setItem("maite_sobres", JSON.stringify(sobresLeidos)); } catch {} }
+    b.classList.add("read");
+    $("#card").innerHTML = `<div class="sobre-paper"><small>Ábrelo cuando…</small><h4>${o.t} ${o.ico}</h4>${o.msg.map(m => `<p>${m}</p>`).join("")}<span class="sl-sign">Diego ♥</span></div><button class="btn btn--ghost" id="closeCard">Cerrar</button>`;
+    $("#modal").hidden = false; Audio.chime(); $("#closeCard").addEventListener("click", () => { closeModal(); b.classList.remove("open"); });
+  }));
+  const nx = $("#sobresNext");
+  if (sobresFrom === "intro") { nx.textContent = "Volver al inicio"; nx.dataset.next = "intro"; $("#sobresSub").textContent = "Aquí siguen, esperándote. Abre el que necesites 💌"; }
+  else { nx.textContent = "Seguir"; nx.dataset.next = "abrazo"; $("#sobresSub").textContent = "No tienes que abrirlos todos ahora. Siempre van a estar aquí: al inicio de la carta vas a encontrar un botón para volver a ellos 💌"; }
+  setTimeout(() => { if (cur === "sobres") nx.classList.add("show"); }, reduced ? 0 : (sobresFrom === "intro" ? 600 : 3000));
+}
+$("#sobresBtn").addEventListener("click", () => { sobresFrom = "intro"; Audio.start(); $("#soundBtn").hidden = false; show("sobres"); });
+
+// ---------- su video: solo aparece si Diego lo agregó ----------
+const hayVideo = !!D.video && !D.video.startsWith("__");
+if (hayVideo) { $("#vid").src = D.video; $("#unaCosaMas").dataset.next = "video"; }
+function runVideo() {
+  const v = $("#vid"); try { v.currentTime = 0; } catch {}
+  v.onplay = () => Audio.swell(.12); v.onpause = () => Audio.swell(1);
+  v.onended = () => { Audio.swell(1); $("#vidNext").classList.add("show"); const r = v.getBoundingClientRect(); burst(70, r.left + r.width / 2, r.top + r.height / 2); };
+  setTimeout(() => { if (cur === "video") $("#vidNext").classList.add("show"); }, reduced ? 0 : 6000);
+}
+
 // abrazo: mantener presionado
 let hugT = null, hugP = 0, hugged = false;
 const HUG_MS = 4200;
@@ -1577,7 +1819,7 @@ if (vozCarta) {
 }
 // final
 // el final: unas últimas palabras, una por una (tocar adelanta), y después "Continuará…"
-const FIN = ["Esta carta se termina aquí…", "…pero lo que siento por ti no tiene final.", "Eres mi casualidad más bonita, Maite.", "Y cada vez que me extrañes, vuelve a abrir esta carta. ♥"];
+const FIN = ["Esta carta se termina aquí…", "…pero lo que siento por ti no tiene final.", "Eres mi casualidad más bonita, Maite.", "Y cada vez que me extrañes, ya sabes qué sobre abrir. ♥"];
 let finRun = 0, finK = 0, finT;
 function runFinal() {
   const run = ++finRun, sc = $("#final"), line = $("#finLine"); sc.classList.remove("done"); finK = 0; clearTimeout(finT);
