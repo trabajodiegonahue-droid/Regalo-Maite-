@@ -112,7 +112,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: dot 1s ease-in-out infinite; }
 .typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
 @keyframes dot { 50% { transform: translateY(-4px); opacity: .5; } }
-.polaroid { position: relative; width: min(68vw, 15rem); padding: .6rem .6rem 2.4rem; background: #fffdf8; box-shadow: 0 18px 40px rgba(0,0,0,.55); transform: rotate(var(--r, -3deg)); }
+.polaroid { position: relative; width: min(68vw, 15rem, 32vh); padding: .6rem .6rem 2.4rem; background: #fffdf8; box-shadow: 0 18px 40px rgba(0,0,0,.55); transform: rotate(var(--r, -3deg)); }
 .polaroid .ph { width: 100%; aspect-ratio: 4 / 5; background: #e9dfd2 center / cover no-repeat; display: grid; place-items: center; font-size: 3rem; }
 .polaroid figcaption { position: absolute; left: 0; right: 0; bottom: .55rem; font: 400 1.5rem/1 var(--f-script); color: var(--rose-deep); }
 .scene.on .reveal > .polaroid.drop { animation: drop 1.3s cubic-bezier(.2,.9,.3,1.1) 1s both; }
@@ -129,8 +129,8 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .count small { font: 500 .62rem/1 var(--f-ui); letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
 
 /* muro de fotos */
-.wall { position: relative; width: min(100%, 26rem); height: min(54vh, 30rem); }
-.wall .pol { position: absolute; width: 34%; padding: 5px 5px 18px; background: #fffdf8; box-shadow: 0 10px 22px rgba(0,0,0,.5); border: 0; transform: rotate(var(--r)); transition: transform .3s ease; }
+.wall { position: relative; width: min(100%, 26rem, 44vh); aspect-ratio: 10 / 13; }   /* alto según el ancho: las fotos nunca tapan la frase */
+.wall .pol { position: absolute; width: 30%; padding: 5px 5px 18px; background: #fffdf8; box-shadow: 0 10px 22px rgba(0,0,0,.5); border: 0; transform: rotate(var(--r)); transition: transform .3s ease; }
 .wall .pol .ph { width: 100%; aspect-ratio: 1; background: #e9dfd2 center / cover no-repeat; display: grid; place-items: center; font-size: 1.6rem; }
 .wall .pol span { position: absolute; left: 0; right: 0; bottom: 2px; font: 400 .9rem/1 var(--f-script); color: var(--rose-deep); }
 .scene.on .wall .pol { animation: scatter .9s cubic-bezier(.2,.9,.3,1.15) both; animation-delay: var(--dl); }
@@ -1243,7 +1243,7 @@ const WORDS = ["Maite,", "eres", "la", "mujer", "con", "la", "que", "quiero", "e
 const STEP = .36;
 function buildWall() {
   if (wallBuilt) return; wallBuilt = true;
-  const spots = [[2, 2], [34, 0], [66, 4], [0, 26], [33, 24], [64, 28], [4, 50], [35, 49], [65, 52], [1, 72], [33, 73], [64, 74]];
+  const spots = [[2, 2], [35, 1], [67, 3], [0, 25], [34, 23], [66, 27], [3, 48], [35, 47], [66, 50], [1, 69], [34, 70], [66, 70]];
   $("#wall").innerHTML = spots.map(([x, y], i) => {
     const n = WALL[i], f = FOTOS[n - 1], r = ((i * 37) % 13) - 6;
     return `<button class="pol${n === 6 ? " fav" : ""}" data-i="${i}" style="left:${x}%;top:${y}%;--r:${r}deg;--dl:${(i * STEP).toFixed(2)}s;--fx:${(i % 3 - 1) * 40}px" aria-label="Foto: ${WORDS[i]}"><div class="ph" style="${f ? `background-image:url('${f}')` : ""}">${f ? "" : "💗"}</div><span>${WORDS[i].replace(",", "")}</span></button>`;
