@@ -520,7 +520,7 @@ h1, h2 { margin: 0; font-weight: 400; text-wrap: balance; }
 .fin-line { margin: 0; max-width: 20rem; text-align: center; font: italic 500 clamp(1.6rem, 7vw, 2rem)/1.3 var(--f-serif); color: #ffe9ef; text-shadow: 0 0 18px rgba(255,143,171,.35); opacity: 0; transform: translateY(10px); transition: opacity 1s ease, transform 1s ease; }
 .fin-line.on { opacity: 1; transform: none; }
 .fin-main { visibility: hidden; }
-#final.done .fin-main { visibility: visible; }
+#final.done .fin-main { visibility: inherit; }   /* hereda: al salir del final se oculta junto con la escena y no tapa otros botones */
 .fin-main > * { opacity: 0; transform: translateY(14px); }
 #final.done .fin-main > * { animation: up 1s cubic-bezier(.2,.8,.2,1) both; }
 #final.done .fin-main > :nth-child(1) { animation: none; opacity: 1; transform: none; }
