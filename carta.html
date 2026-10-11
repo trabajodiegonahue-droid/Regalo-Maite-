@@ -1014,7 +1014,7 @@ $$("[data-foto]").forEach(el => { const f = FOTOS[+el.dataset.foto - 1]; if (f) 
 
 // ---------- música: una cajita de música suave, hecha en el navegador ----------
 const Audio = (() => {
-  let ctx, master, music, sfx, on = true, timer, step = 0, nextT = 0;
+  let ctx, master, music, dry, sfx, calmG, upG, upDrum, noise, on = true, timer, step = 0, upStep = 0, nextT = 0, song = "movida";
   const N = m => 440 * Math.pow(2, (m - 69) / 12);
   function init() {
     if (ctx) return; const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
@@ -1023,6 +1023,11 @@ const Audio = (() => {
     for (let c = 0; c < 2; c++) { const d = buf.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
     rev.buffer = buf; const wet = ctx.createGain(); wet.gain.value = .45; rev.connect(wet); wet.connect(master);
     music = ctx.createGain(); music.gain.value = 0; music.connect(master); music.connect(rev);
+    dry = ctx.createGain(); dry.gain.value = 0; dry.connect(master);   // la batería va sin eco
+    calmG = ctx.createGain(); calmG.gain.value = 0; calmG.connect(music);
+    upG = ctx.createGain(); upG.gain.value = UPV; upG.connect(music);
+    upDrum = ctx.createGain(); upDrum.gain.value = DRV; upDrum.connect(dry);
+    noise = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate); { const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
     sfx = ctx.createGain(); sfx.gain.value = .8; sfx.connect(master); sfx.connect(rev);
   }
   function tone(t, m, dur, vol, type = "sine", out = music) {
@@ -1033,23 +1038,62 @@ const Audio = (() => {
     g2.gain.setValueAtTime(0, t); g2.gain.linearRampToValueAtTime(vol * .25, t + .01); g2.gain.exponentialRampToValueAtTime(.0005, t + dur * .6);
     o2.connect(g2); g2.connect(out); o2.start(t); o2.stop(t + dur);
   }
-  // C – Am – F – G, arpegios lentos (melodía original)
+  // ---- canción tranquila: C – Am – F – G, arpegios lentos (melodía original). Suena mientras lee la carta ----
   const prog = [[48, 64, 67, 72, 76], [45, 64, 69, 72, 76], [41, 65, 69, 72, 77], [43, 62, 67, 71, 74]];
   const mel = [76, 79, 77, 76, 74, 76, 72, null, 74, 76, 77, 79, 76, null, 74, 72];
-  function schedule() {
+  function scheduleCalm() {
     const beat = 60 / 64 / 2;
     while (nextT < ctx.currentTime + .4) {
       const bar = Math.floor(step / 8) % 4, s = step % 8, ch = prog[bar];
-      if (s === 0) tone(nextT, ch[0] - 12, 3.2, .05, "triangle");
-      const arp = [1, 2, 3, 4, 3, 2, 3, 4][s]; tone(nextT, ch[arp], 1.6, .035);
-      if (s % 2 === 0) { const m = mel[(Math.floor(step / 2)) % mel.length]; if (m && step > 31) tone(nextT + .01, m + 12, 1.4, .03); }
+      if (s === 0) tone(nextT, ch[0] - 12, 3.2, .05, "triangle", calmG);
+      const arp = [1, 2, 3, 4, 3, 2, 3, 4][s]; tone(nextT, ch[arp], 1.6, .035, "sine", calmG);
+      if (s % 2 === 0) { const m = mel[(Math.floor(step / 2)) % mel.length]; if (m && step > 31) tone(nextT + .01, m + 12, 1.4, .03, "sine", calmG); }
       nextT += beat; step++;
     }
   }
+  // ---- canción movida (original): D – A – Bm – G a 104 pulsos, rasgueo tipo ukelele, bajo, batería suave y una melodía pegajosa ----
+  const SX = 60 / 104 / 4;   // una semicorchea
+  const UPV = .42, DRV = .38;   // volumen de la movida (instrumentos / batería), parejo con la tranquila
+  const UCH = [{ s: [62, 66, 69, 74], b: 50 }, { s: [61, 64, 69, 73], b: 45 }, { s: [62, 66, 71, 74], b: 47 }, { s: [62, 67, 71, 74], b: 43 }];
+  const STRUM = { 0: 1, 3: .6, 6: .75, 8: .85, 10: .5, 11: .65, 14: .75 };   // semicorchea del compás → fuerza del rasgueo
+  const BASS = { 0: 0, 6: 0, 8: 12, 11: 0, 14: 7 };                            // semicorchea → intervalo sobre la nota del acorde
+  // melodías de 4 compases: [semicorchea, nota, duración en semicorcheas]
+  const MEL_A = [[0, 78, 2], [2, 81, 2], [4, 81, 2], [6, 83, 2], [8, 81, 4], [12, 78, 4], [16, 76, 2], [18, 78, 2], [20, 76, 2], [22, 73, 2], [24, 76, 8],
+    [32, 74, 2], [34, 78, 2], [36, 83, 4], [40, 81, 2], [42, 78, 2], [44, 74, 4], [48, 76, 2], [50, 74, 2], [52, 71, 2], [54, 74, 2], [56, 76, 6]];
+  const MEL_B = [[0, 81, 3], [3, 78, 3], [6, 74, 2], [8, 78, 2], [10, 81, 2], [12, 86, 4], [16, 85, 4], [20, 81, 2], [22, 76, 2], [24, 81, 8],
+    [32, 83, 2], [34, 81, 2], [36, 78, 4], [40, 74, 2], [42, 78, 2], [44, 83, 4], [48, 81, 4], [52, 79, 2], [54, 78, 2], [56, 76, 4], [60, 74, 4]];
+  const melAt = (ph, k) => { const o = {}; ph.forEach(([st, m, l]) => { o[st] = [m, l]; }); return o[k]; };
+  function noiseHit(t, type, f, vol, dur, q = 1) {
+    const src = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), g = ctx.createGain(); src.buffer = noise; fl.type = type; fl.frequency.value = f; fl.Q.value = q;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0008, t + dur); src.connect(fl); fl.connect(g); g.connect(upDrum); src.start(t, Math.random() * .5); src.stop(t + dur + .02);
+  }
+  function kick(t) { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(48, t + .11);
+    g.gain.setValueAtTime(.5, t); g.gain.exponentialRampToValueAtTime(.001, t + .3); o.connect(g); g.connect(upDrum); o.start(t); o.stop(t + .32); }
+  function scheduleUp() {
+    while (nextT < ctx.currentTime + .4) {
+      const bar = Math.floor(upStep / 16), s = upStep % 16, sec = bar < 4 ? bar : 4 + ((bar - 4) % 12), ch = UCH[sec % 4], t = nextT;
+      const intro = sec < 4, drums = sec >= 2;   // la batería entra al tercer compás; la melodía, al quinto
+      if (STRUM[s] != null) ch.s.forEach((m, i) => tone(t + i * .013, m, .42, (intro ? .015 : .016) * STRUM[s], "triangle", upG));
+      if (BASS[s] != null && sec >= 1) tone(t, ch.b + BASS[s], .3, .075, "triangle", upG);
+      if (sec >= 1 && s % 2 === 0) noiseHit(t, "highpass", 8000, s % 4 === 2 ? .05 : .03, .035);
+      if (drums) { if (s === 0 || s === 8 || (s === 10 && bar % 2)) kick(t); if (s === 4 || s === 12) { noiseHit(t, "bandpass", 1500, .16, .14, .8); noiseHit(t + .012, "bandpass", 1900, .1, .1, .8); } }
+      if ((sec === 1 || sec === 3 || sec === 7 || sec === 11 || sec === 15) && s >= 12) noiseHit(t, "bandpass", 1700, .05 + (s - 12) * .025, .09, .8);   // redoble antes de cada parte
+      if (!intro) { const ph = sec >= 8 && sec < 12 ? MEL_B : MEL_A, n = melAt(ph, (sec % 4) * 16 + s);
+        if (n) { tone(t, n[0], Math.max(.28, n[1] * SX * 1.4), .034, "sine", upG); if (sec >= 12) tone(t, n[0] + 12, .5, .011, "sine", upG); } }
+      nextT += SX; upStep++;
+    }
+  }
+  function schedule() { if (song === "tranquila") scheduleCalm(); else scheduleUp(); }
   return {
-    start() { init(); if (!ctx) return; ctx.resume?.(); if (!timer) { nextT = ctx.currentTime + .1; timer = setInterval(schedule, 120); music.gain.setTargetAtTime(on ? 1 : 0, ctx.currentTime, 2); } },
+    start() { init(); if (!ctx) return; ctx.resume?.(); if (!timer) { nextT = ctx.currentTime + .1; timer = setInterval(schedule, 120); music.gain.setTargetAtTime(on ? 1 : 0, ctx.currentTime, 2); dry.gain.setTargetAtTime(on ? 1 : 0, ctx.currentTime, 2); } },
+    // cambia de canción con un fundido suave ("movida" o "tranquila")
+    song(name) {
+      if (!ctx || name === song) return; const t = ctx.currentTime; song = name;
+      const up = name === "movida"; [[upG, up ? UPV : 0], [upDrum, up ? DRV : 0], [calmG, up ? 0 : 1]].forEach(([g, v]) => { g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.setTargetAtTime(v, t + (v ? .5 : 0), v ? .4 : .5); });
+      nextT = Math.max(nextT, t + .05); if (up) upStep = 4 * 16; else step = 0;   // la movida vuelve directo a la parte con batería
+    },
     toggle() { on = !on; if (ctx) master.gain.setTargetAtTime(on ? .9 : 0, ctx.currentTime, .15); return on; },
-    swell(v) { if (ctx && on) music.gain.setTargetAtTime(v, ctx.currentTime, 1.5); },
+    swell(v) { if (ctx && on) { music.gain.setTargetAtTime(v, ctx.currentTime, 1.5); dry.gain.setTargetAtTime(v, ctx.currentTime, 1.5); } },
     chime() { if (!ctx || !on) return; const t = ctx.currentTime; [84, 88, 91, 96].forEach((n, i) => tone(t + i * .09, n, 1.6, .05, "sine", sfx)); },
     pop() { if (!ctx || !on) return; const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.setValueAtTime(500, t); o.frequency.exponentialRampToValueAtTime(1100, t + .08); g.gain.setValueAtTime(.12, t); g.gain.exponentialRampToValueAtTime(.001, t + .15); o.connect(g); g.connect(sfx); o.start(t); o.stop(t + .2); },
     tick(k) { if (!ctx || !on) return; tone(ctx.currentTime, k, .25, .03, "sine", sfx); },
@@ -1091,6 +1135,7 @@ function loop(now) {
 let cur = "intro";
 function show(id) {
   if (cur === "video" && id !== "video") { $("#vid").pause(); Audio.swell(1); }
+  Audio.song(id === "carta" ? "tranquila" : "movida");   // la tranquila solo mientras lee la carta
   $("#" + cur).classList.remove("on"); cur = id; const sc = $("#" + id); sc.classList.add("on");
   $$(".next", sc).forEach(b => { b.classList.remove("show"); });
   const delay = { ch1: 6400, ch2: 3200, ch3: 3600, mapa: 26000, cuenta: 2800, fotos: 5600 }[id];
