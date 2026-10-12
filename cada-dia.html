@@ -27,9 +27,9 @@
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; background: var(--blush); }
 body { margin: 0; min-height: 100%; color: var(--ink); font-family: var(--f-serif);
-  background: radial-gradient(90% 40% at 50% 0%, #ffd9e2, transparent 70%), linear-gradient(180deg, var(--blush), #fff3f1 60%, var(--blush-2)); background-attachment: fixed; -webkit-tap-highlight-color: transparent; }
+  background: radial-gradient(90% 900px at 50% 0%, #ffd9e2, transparent 70%), linear-gradient(180deg, var(--blush), #fff3f1 60%, var(--blush-2)); background-color: var(--blush); -webkit-tap-highlight-color: transparent; }
 button { font: inherit; color: inherit; cursor: pointer; }
 :focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
 .page { width: min(100%, 30rem); margin: 0 auto; padding-inline: 16px; padding-block: 22px 60px; display: grid; gap: 1.1rem; }
@@ -63,6 +63,50 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .env.open .flap { transform: rotateX(180deg); z-index: 0; }
 .env.open .paper { transform: translateY(-34%); }
 .envwrap:has(.env.open) { padding-top: 3.4rem; transition: padding .6s ease; }
+.envwrap { max-height: 320px; overflow: hidden; }   /* la tapa abierta no se sale de la tarjeta */
+.envwrap.done { animation: envGone .7s ease forwards; }   /* cuando sale la cartita, el sobre se recoge */
+@keyframes envGone { to { max-height: 0; opacity: 0; padding: 0; } }
+.envwrap.gone { display: none; }
+/* sobre de un día especial: dorado */
+.special .env .back, .special .env .front { background: linear-gradient(160deg, #f7e2a6, #e2bb5e); }
+.special .env .flap { background: linear-gradient(180deg, #efd28a, #d9ab48); }
+.special .env .seal { background: radial-gradient(circle at 38% 32%, #ffe08a, #c99a3e 55%, #8a6418); color: #fff8e1; }
+.special-tag { justify-self: center; padding: .3rem .8rem; border-radius: 999px; background: linear-gradient(180deg, #ffe7a3, #f2c45e); color: #6d4a0c; font: 600 .72rem/1 var(--f-ui); letter-spacing: .14em; text-transform: uppercase; box-shadow: 0 6px 14px rgba(201,154,62,.35); }
+/* nuestros números */
+.nums { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem; margin-top: .3rem; }
+.nums span { padding: .35rem .65rem; border-radius: 999px; background: rgba(255,255,255,.7); border: 1px solid var(--line); font: 500 .74rem/1 var(--f-ui); color: var(--ink-soft); }
+.nums b { color: var(--wine); font-variant-numeric: tabular-nums; }
+/* ¿cómo estás hoy? */
+.moods { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; }
+.mood { border: 1px solid var(--line); background: linear-gradient(180deg, #fff, #fff4f1); border-radius: 14px; padding: .7rem .3rem; display: grid; justify-items: center; gap: .3rem; transition: transform .15s ease, box-shadow .2s ease; }
+.mood:active { transform: scale(.95); }
+.mood span { font-size: 1.7rem; line-height: 1; }
+.mood b { font: 500 .78rem/1.1 var(--f-ui); color: var(--ink); }
+.mood.on { border-color: var(--rose); box-shadow: 0 0 0 2px var(--rose-soft); background: #fff; }
+.mood-reply { margin: 0; padding: .9rem 1rem; border-radius: 12px; background: var(--blush); font: italic 500 1.15rem/1.45 var(--f-serif); color: var(--ink); text-align: center; animation: noteIn .6s cubic-bezier(.2,.9,.3,1.1); }
+.mood-reply small { display: block; margin-top: .3rem; font: 400 1.3rem/1 "Homemade Apple", var(--f-script); color: #1d3a8a; text-align: right; font-style: normal; }
+.mood-wa { justify-self: center; }
+/* pregunta del día */
+.q { margin: 0; font: italic 500 1.35rem/1.35 var(--f-serif); color: var(--wine); text-align: center; text-wrap: balance; }
+.q::before, .q::after { content: "“"; color: var(--rose-soft); font-size: 1.6em; line-height: 0; vertical-align: -.35em; margin-right: .1em; }
+.q::after { content: "”"; margin: 0 0 0 .1em; }
+.q-wa { justify-self: center; }
+/* tus días conmigo: calendario y racha */
+.cal-head { display: flex; justify-content: space-between; align-items: baseline; }
+.cal-head b { font: 600 1.15rem/1 var(--f-serif); color: var(--wine); }
+.cal-head span { font: 500 .8rem/1 var(--f-ui); color: var(--ink-soft); }
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .3rem; text-align: center; }
+.cal i { font: 600 .62rem/1 var(--f-ui); letter-spacing: .08em; color: var(--ink-soft); font-style: normal; padding-bottom: .2rem; }
+.cal .c { position: relative; aspect-ratio: 1; display: grid; place-items: center; border-radius: 10px; font: 500 .8rem/1 var(--f-ui); color: var(--ink-soft); background: #fff; border: 1px solid var(--line); }
+.cal .c.fut { opacity: .4; background: transparent; }
+.cal .c.hit { color: transparent; background: none; border-color: transparent; }
+.cal .c.hit::before { content: "♥"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 1.5rem; color: var(--rose); text-shadow: 0 3px 6px rgba(216,67,110,.3); }
+.cal .c.hit.spc::before { color: var(--gold); }
+.cal .c.now { box-shadow: 0 0 0 2px var(--rose); }
+.cal .c.empty { visibility: hidden; }
+.streak { margin: 0; text-align: center; font: 500 1rem/1.4 var(--f-serif); color: var(--ink); }
+.streak b { color: var(--rose); font-size: 1.25em; }
+/* ventana para "ábrelo cuando" */
 .tapme { font: 500 .85rem/1 var(--f-ui); color: var(--ink-soft); }
 .note { margin: 0; padding: 1.1rem 1rem; border-radius: 12px; background: linear-gradient(180deg, #fff, #fff6f3); border: 1px solid var(--line); font: italic 500 1.32rem/1.45 var(--f-serif); color: var(--ink); text-align: center; text-wrap: pretty; }
 .note.in { animation: noteIn .9s cubic-bezier(.2,.9,.3,1.1); }
@@ -167,10 +211,12 @@ canvas#fx { position: fixed; inset: 0; z-index: 35; pointer-events: none; width:
     <h1 class="hello" id="hello">Hola, mi wawita mosha</h1>
     <p class="together" style="margin:0">Llevamos <b id="days">0</b> <span id="daysWord">días</span> juntos</p>
     <span class="milestone" id="milestone"></span>
+    <div class="nums" id="nums"></div>
   </header>
 
-  <section class="card" aria-labelledby="l-hoy">
+  <section class="card" id="cardHoy" aria-labelledby="l-hoy">
     <div class="label" id="l-hoy">Mensaje de hoy <small id="msgNum"></small></div>
+    <span class="special-tag" id="specialTag" hidden></span>
     <div class="envwrap">
       <button class="env" id="env" aria-label="Abrir el mensaje de hoy"><i class="back"></i><i class="paper"></i><i class="front"></i><i class="flap"></i><span class="seal">M</span></button>
     </div>
@@ -182,14 +228,21 @@ canvas#fx { position: fixed; inset: 0; z-index: 35; pointer-events: none; width:
     </div>
   </section>
 
+  <section class="card" aria-labelledby="l-animo">
+    <div class="label" id="l-animo">¿Cómo estás hoy?</div>
+    <div class="moods" id="moods"></div>
+    <div id="moodBox" hidden style="display:grid;gap:.7rem"><p class="mood-reply" id="moodReply"></p><a class="btn btn--soft mood-wa" id="moodWa" target="_blank" rel="noopener">Contárselo a Diego 💬</a></div>
+  </section>
+
   <section class="card" aria-labelledby="l-foto">
     <div class="label" id="l-foto">Foto del día</div>
     <figure class="photo"><div class="ph" id="photo">💗</div><figcaption id="photoCap">Nosotros</figcaption></figure>
   </section>
 
-  <section class="card" aria-labelledby="l-cuando">
-    <div class="label" id="l-cuando">Ábrelo cuando…</div>
-    <div class="when" id="when"></div>
+  <section class="card" aria-labelledby="l-preg">
+    <div class="label" id="l-preg">Pregunta del día</div>
+    <p class="q" id="q"></p>
+    <a class="btn q-wa" id="qWa" target="_blank" rel="noopener">Responderle a Diego 💬</a>
   </section>
 
   <section class="card" aria-labelledby="l-amo">
@@ -198,6 +251,13 @@ canvas#fx { position: fixed; inset: 0; z-index: 35; pointer-events: none; width:
       <button class="bigheart" id="bigheart" aria-label="Tocar el corazón"><svg viewBox="0 0 100 100"><defs><radialGradient id="hg" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#ff9ab8"/><stop offset=".6" stop-color="#d8436e"/><stop offset="1" stop-color="#8e0f2c"/></radialGradient></defs><path d="M50 88 C18 64 4 48 4 31 C4 16 16 6 30 6 C39 6 46 11 50 18 C54 11 61 6 70 6 C84 6 96 16 96 31 C96 48 82 64 50 88 Z" fill="url(#hg)"/><ellipse cx="30" cy="28" rx="9" ry="6" fill="#fff" opacity=".35" transform="rotate(-30 30 28)"/></svg></button>
       <p class="lovecount" id="lovecount" style="margin:0">Tócalo y te digo</p>
     </div>
+  </section>
+
+  <section class="card" aria-labelledby="l-dias">
+    <div class="label" id="l-dias">Tus días conmigo</div>
+    <div class="cal-head"><b id="calMes"></b><span>♥ = abriste tu sobre</span></div>
+    <div class="cal" id="cal"></div>
+    <p class="streak" id="streak"></p>
   </section>
 
   <section class="card" aria-labelledby="l-arch">
@@ -226,79 +286,143 @@ canvas#fx { position: fixed; inset: 0; z-index: 35; pointer-events: none; width:
 <script>
 /* ============ DATOS ============ */
 const D = { nombre: "Maite", firma: "Diego", apodoElla: "mi wawita mosha", pololeo: "2026-10-03T14:15:00", inicio: "2026-10-08", whatsapp: "56941089585",
+  primerMensaje: "2026-09-01", primeraVez: "2026-09-18", cumple: "",   // cumple: "MM-DD" (ej. "05-21") para su sobre de cumpleaños
   cancion: "Te Amo, Para Siempre", artista: "Noche de Brujas", youtube: "https://www.youtube.com/watch?v=xwBwzPWLYpE" };
 const FOTOS = ["__FOTO1__", "__FOTO2__", "__FOTO3__", "__FOTO4__", "__FOTO5__", "__FOTO6__", "__FOTO7__", "__FOTO8__", "__FOTO9__", "__FOTO10__", "__FOTO11__", "__FOTO12__"].map(f => f.startsWith("__") ? "" : f);
 const CAPS = ["El día del sí", "Tu sonrisa", "Nosotros", "Mi lugar favorito", "Tú y yo", "Mi favorita ♥", "Contigo", "Mi wawita", "Mi persona", "Te amo", "Mi felicidad", "Nuestra primera foto"];
-// un mensaje por día, en orden, a partir del día "inicio"
+// un mensaje por día, en orden, a partir del día "inicio" (los que hablan de una fecha no se repiten cuando la lista da la vuelta)
 const MSGS = [
   "Hoy empieza algo nuevo: cada día vas a tener aquí un mensajito mío. Para que nunca se te olvide lo mucho que te amo.",
   "Buenos días, mi wawita mosha. Si hoy se te complica algo, acuérdate de que hay alguien que piensa en ti todo el rato.",
   "Me gusta todo de ti. Pero tu risa… tu risa me gana siempre.",
   "No sé qué hice para tenerte, pero lo volvería a hacer mil veces.",
   "Hoy te quiero recordar algo simple: eres increíble. Y no lo digo porque seas mi polola, lo digo porque es verdad.",
-  "Si pudiera darte algo hoy, te daría un abrazo de esos largos, de los que no se sueltan.",
-  "Gracias por elegirme. Yo te elijo a ti, todos los días.",
-  "Una semana de mensajitos. Y todavía me quedan muchísimas cosas lindas por decirte.",
-  "Tus ojos tienen algo que me deja tonto. Sí, todavía me pasa.",
-  "Pase lo que pase hoy, aquí estoy. Para escucharte, para reírnos, para lo que sea.",
-  "Me encanta cómo dices mi nombre.",
-  "Cuando estoy contigo, el tiempo se pasa volando. Cuando no, te extraño al tiro.",
-  "Hoy toca recordarte que eres hermosa. Por dentro y por fuera.",
-  "Contigo aprendí que lo simple también puede ser lo más bonito.",
-  "Si estás leyendo esto, es porque te acordaste de mí. Y yo, seguro, también me estoy acordando de ti.",
-  "Eres mi lugar seguro, mi wawita.",
-  "Me haces querer ser mejor persona. Gracias por eso.",
-  "Un día más contigo es un día que vale la pena.",
-  "Me gusta imaginar todo lo que nos queda por vivir juntos.",
-  "Hoy no tengo nada especial que decirte… solo que te amo. Como ayer. Más que ayer.",
-  "Eres mi persona favorita en todo el mundo.",
-  "Me acuerdo del día que dijiste que sí y todavía sonrío solo.",
-  "Si hoy fue un mal día, mañana va a ser mejor. Y si fue un buen día, me alegro por ti, preciosa.",
-  "Tus abrazos arreglan cualquier cosa.",
-  "Gracias por tenerme paciencia. Y por quererme como soy.",
-  "Cada vez que suena nuestra canción, pienso en ti.",
-  "No te cambiaría por nada ni por nadie.",
-  "Quiero que sepas que me haces muy feliz. Así de simple.",
-  "Hoy te mando un beso. Bueno, varios. Muchos.",
-  "Pronto cumplimos un mes. Un mes que se siente como lo mejor de mi año.",
-  "Me gusta cómo me miras cuando crees que no me doy cuenta.",
-  "Eres tierna hasta cuando te enojas. Pero no te enojes mucho, porfa 😌",
-  "Si pudiera, te llevaría a todos los lugares lindos del mundo. Por ahora, partamos por el Ñielol.",
+  "¿Te acuerdas de la playa de tu historia? Todavía no sé si era La Serena o Coyhaique… pero gracias a esa foto te tengo a ti.",
+  "Hoy desayuné mi huevito con leche con chocolate y, obvio, pensando en ti.",
+  "Ya van más de diez días desde que dijiste que sí, y yo sigo igual de feliz que a las 14:15 de ese día.",
+  "Si hoy tienes que estudiar harto: tú puedes. Eres la más inteligente que conozco.",
+  "Me encanta lo buena hermana que eres. Tu familia tiene suerte de tenerte, y yo también.",
+  "Hoy en la pelota fallé un pase por estar pensando en ti. Valió la pena.",
+  "Tu voz es mi canción favorita. Mándame un audio hoy, porfa 🥺",
+  "Todavía me acuerdo de cuando nos tocamos las manos en La Sofo. Todo se pausó, y una parte de mí se quedó ahí para siempre.",
+  "Gracias por cada mensaje de buenos días. Me cambian el día entero.",
+  "Si hoy estás cansada, descansa sin culpa. El mundo puede esperar un ratito; yo te espero siempre.",
+  "Me gusta que lo nuestro sea así: sin apuro, pero con todo el corazón.",
+  "Ya quiero que llegue nuestra próxima peli. Esta vez tú eliges, y yo pongo las cabritas 🍿",
+  "Eres humilde aunque tienes todo para no serlo. Eso te hace todavía más linda.",
+  "Hoy miré tus fotos otra vez y sonreí como tontito. Ya sabes, lo de siempre 😌",
+  "Mi lugar favorito del mundo es donde estés tú.",
+  "Te debo un heladito. Y otro. Y todos los que quieras 🍦",
+  "Tus besos me hacen olvidar hasta dónde estoy. Comprobado.",
+  "Si alguien te dice hoy que no puedes, no le creas. Tú puedes con todo, mi wawita mosha.",
+  "Cuando te veo reír, me dan ganas de hacerte reír toda la vida.",
+  "Hoy te elijo otra vez. Mañana también.",
+  "Mañana cumplimos nuestro primer mes… y yo ando nervioso como el día de los globos 🎈",
+  "Un mes contigo y ya no me imagino mis días sin ti.",
+  "Ayer cumplimos un mes y hoy empieza el segundo. Vamos por muchos, muchos más.",
+  "Gracias por hacerme reír con tu humor. Nadie me hace reír como tú.",
+  "Hoy te mando un abrazo de los largos, de esos que arreglan cualquier día.",
+  "Me encanta tu forma de mirarme. Siento que todo va a estar bien.",
+  "Cuando me escribes se me nota en la cara. Mis amigos ya cachan 😅",
+  "Quiero conocer cada parte de ti, de a poquito y sin apuro.",
+  "Hoy acuérdate de comer rico, tomar agua y sonreír. Lo último es lo más importante.",
+  "Me inspiras, Maite. Verte esforzarte tanto en tus estudios me da ganas de ser mejor.",
+  "Ya estoy pensando en nuestro primer viaje juntos. ¿Playa de verdad esta vez? 🏖️ (y que no sea Coyhaique 😂)",
+  "Eres mi persona favorita para contarle todo.",
+  "No hay día en que no piense en ti. Ni uno.",
+  "Me encanta cuando me dices wawita. Suena más bonito cuando lo dices tú.",
+  "Si hoy fue un día pesado, ven, que aquí tienes un abrazo guardado.",
+  "Cocinar juntos un domingo está en mi lista. Aunque nos quede mal, va a ser lo más rico.",
+  "Tu sonrisa es mi felicidad favorita. Regálame una hoy.",
   "Contigo me siento en casa.",
-  "Te amo en los días buenos y en los días difíciles. En todos.",
-  "Me encantas, Maite. Completa.",
-  "Hoy te deseo un día tan bonito como tú.",
-  "Gracias por cada risa, cada conversación y cada momento juntos.",
-  "Lo mejor de mi día casi siempre tiene que ver contigo.",
-  "No se me ocurre un lugar donde prefiera estar que a tu lado.",
-  "Eres mi wawita mosha, y eso no lo cambia nada.",
+  "Gracias por tenerme paciencia y por quererme tal como soy.",
+  "Te amo más que ayer y menos que mañana.",
+  "Mi corazón tiene tu nombre, y no hay forma de borrarlo.",
+  "Te pienso cuando despierto, cuando almuerzo y cuando me acuesto. O sea, todo el día.",
+  "Eres hermosa por dentro y por fuera, aunque a veces no te lo creas.",
+  "Ojalá hoy te pase algo lindo. Y si no pasa, aquí estoy yo para inventarlo.",
   "Me gusta que seamos nosotros. Así, tal cual.",
-  "Hoy acuérdate de tomar agua, de comer rico y de que te amo.",
-  "Cada día contigo es mi película favorita.",
+  "Cada día contigo se siente como el primero, ese de La Sofo.",
+  "Hoy no tengo nada especial que decirte… solo que te amo. Mucho.",
+  "Quiero estar en tus días buenos y en los no tan buenos. En todos.",
+  "Si pudiera, te llevaría a todos los lugares lindos del mundo. Por ahora, partamos por el Ñielol.",
+  "Me encanta tu risa. Es de esas que contagian.",
+  "Mañana cumplimos dos meses. ¿Cachai lo rápido que se pasa el tiempo contigo?",
+  "Dos meses contigo, y cada día te quiero más.",
+  "Ya se viene el verano y yo solo pienso en todos los planes que quiero hacer contigo ☀️",
+  "Eres mi lugar seguro, mi wawita mosha.",
   "Gracias por existir. En serio.",
-  "Quiero seguir creando momentos contigo. Muchos. Para siempre.",
+  "Hoy te mando un beso. Bueno, varios. Muchos 😘",
+  "Me encantas completa, con todo lo que eres.",
   "Si alguna vez dudas de cuánto te amo, vuelve a leer todos estos mensajes.",
-  "Eres lo más lindo que me ha pasado.",
+  "Ya quiero vivir nuestra primera Navidad juntos 🎄",
+  "Lo mejor de mi día casi siempre tiene que ver contigo.",
+  "Quiero seguir creando momentos contigo. Muchos. Para siempre.",
+  "No te cambiaría por nada ni por nadie.",
   "Mi corazón es tuyo. Cuídalo, que es medio regalón.",
+  "Contigo hasta lo más simple se vuelve lo más bonito.",
   "Te amo hoy, mañana y todos los días que vengan.",
 ];
-const WHEN = [
-  { k: "extranes", e: "🥺", t: "me extrañes", h: "Para cuando me extrañes", p: ["Yo también te estoy extrañando, te lo aseguro.", "Cierra los ojos un ratito e imagina que te estoy abrazando. Eso es exactamente lo que haría si estuviera ahí.", "Y mándame un mensaje, que me encanta saber que te acordaste de mí."] },
-  { k: "triste", e: "🌧️", t: "estés triste", h: "Para cuando estés triste", p: ["Mi amor, está bien estar triste a veces. No tienes que hacerte la fuerte conmigo.", "Lo que sea que esté pasando, no estás sola. Me tienes a mí, siempre.", "Llámame si quieres hablar, o si no quieres hablar también. Yo te escucho y te acompaño."] },
-  { k: "dormir", e: "🌙", t: "no puedas dormir", h: "Para cuando no puedas dormir", p: ["Respira lento, mi wawita. Inhala… y bota todo.", "Piensa en algo lindo: en nosotros caminando, en un abrazo largo, en lo mucho que te amo.", "Que sueñes bonito. Mañana es otro día y yo voy a estar ahí."] },
-  { k: "reir", e: "😂", t: "necesites reírte", h: "Para cuando necesites reírte", p: ["Acuérdate de que el botón No de la invitación se escondió detrás del Sí porque sabía que no tenía ninguna oportunidad.", "Y que tu pololo te hizo una página entera porque está demasiado enamorado. Un poquito ridículo, pero tuyo.", "Ya, ahora sonríe. Así. Esa es la sonrisa que me encanta."] },
-  { k: "enojada", e: "😤", t: "estés enojada conmigo", h: "Para cuando estés enojada conmigo", p: ["Perdón, mi amor. Aunque no sepa todavía qué hice, perdón 😅", "En serio: si te molestó algo, dímelo. Prefiero conversarlo a que te quedes con eso.", "Y aunque estés enojada, te amo igual. No se me pasa ni un poquito."] },
-  { k: "amor", e: "💗", t: "quieras saber cuánto te amo", h: "Para cuando quieras saber cuánto te amo", p: ["Más de lo que puedo escribir aquí.", "Te amo en las cosas grandes y en las chiquititas: en un mensaje de buenos días, en una mirada, en un abrazo.", "Si algún día lo dudas, mírame a los ojos. Ahí está la respuesta."] },
+const FECHADOS = new Set([0, 7, 25, 26, 27, 55, 56, 57, 63]);
+// ¿cómo estás hoy? (ella elige; Diego le responde)
+const MOODS = [
+  { k: "feliz", e: "😊", t: "Feliz", r: "¡Qué lindo! Me encanta saber que estás feliz. Cuéntame qué pasó, quiero saberlo todo." },
+  { k: "cansada", e: "😴", t: "Cansada", r: "Descansa un ratito, mi amor. Tápate, toma algo calentito y recarga energías. Te mando un abrazo de esos que dan sueño." },
+  { k: "extrano", e: "🥺", t: "Te extraño", r: "Yo también te extraño, mucho. Cada día que pasa falta menos para volver a verte." },
+  { k: "estresada", e: "😵‍💫", t: "Estresada", r: "Respira, mi wawita. Una cosa a la vez. Tú puedes con todo, y si no, aquí estoy para ayudarte." },
+  { k: "enfermita", e: "🤒", t: "Enfermita", r: "Ay, mi amor. Abrígate, toma harta agua y descansa. Si pudiera, te llevaría sopita y te cuidaría todo el día." },
+  { k: "regalona", e: "🥰", t: "Regalona", r: "Ven para acá, que te hago cariño hasta que te aburras. Spoiler: yo nunca me aburro." },
 ];
+// una pregunta distinta cada día, para que se la responda por WhatsApp
+const PREGUNTAS = [
+  "¿Qué fue lo mejor de tu día hoy?", "¿Cuál es tu recuerdo favorito de nosotros hasta ahora?", "Si mañana pudiéramos viajar a cualquier parte, ¿adónde iríamos?",
+  "¿Qué canción te hace pensar en mí?", "¿Qué fue lo primero que pensaste de mí cuando me viste?", "¿Cómo sería nuestra cita perfecta?",
+  "¿Qué comida quieres que cocinemos juntos (aunque nos quede mal)?", "¿Qué es algo que te hace sonreír sin razón?", "¿Qué película vemos en nuestra próxima cita?",
+  "Si fuéramos un emoji, ¿cuál seríamos?", "¿Qué es lo que más te gusta de nosotros?", "¿Qué te gustaría que hiciéramos este fin de semana?",
+  "¿Cuál es tu antojo de hoy?", "¿Qué sueño tienes que todavía no me has contado?", "¿Qué apodo nuevo me pondrías?",
+  "¿Playa o montaña para nuestro primer viaje?", "¿Qué te gustaría aprender este año?", "¿Cuál es tu lugar favorito de Temuco?",
+  "¿Qué fue lo más chistoso que te pasó esta semana?", "¿Qué te gustaría que te dijera más seguido?", "¿Helado o sushi para la próxima cita?",
+  "¿Qué te hace sentir más querida?", "¿Cuál de nuestras fotos es tu favorita?", "¿Qué te gustaría que hiciéramos cuando cumplamos un año?",
+  "¿Qué canción has escuchado más últimamente?", "Describe nuestro día perfecto en tres palabras.", "¿Qué te gustaría hacer conmigo que nunca hayamos hecho?",
+  "¿A qué hora te gusta más hablar conmigo?", "¿Qué cosa chiquitita te alegra el día?", "¿Cómo te imaginas nuestra casita?",
+];
+// días especiales: el mensaje del día cambia por uno de celebración (sobre dorado)
+function especial(d) {
+  const m = d.getMonth() + 1, dd = d.getDate(), y = d.getFullYear(), ini = new Date(D.pololeo);
+  const meses = (y - ini.getFullYear()) * 12 + (d.getMonth() - ini.getMonth());
+  const juntos = Math.round((dayStart(d) - dayStart(ini)) / 864e5);
+  if (D.cumple && `${String(m).padStart(2, "0")}-${String(dd).padStart(2, "0")}` === D.cumple) return { tag: "🎂 Tu cumpleaños", m: "¡Feliz cumpleaños, mi wawita mosha! Hoy celebro que existas. Que este año te traiga todo lo lindo que te mereces… y yo me encargo de una buena parte. Te amo." };
+  if (dd === 3 && meses === 12) return { tag: "💍 Un año juntos", m: "Hoy hace un año, a las 14:15, me dijiste que sí. Un año entero contigo y todavía me tiemblan las manos cuando te veo. Feliz primer año, mi amor. Por todos los que vienen." };
+  if (dd === 3 && meses > 0) {
+    const t = meses === 1 ? "Hoy cumplimos nuestro primer mes. Un mes desde los globos dorados, desde tu sí, desde que mi vida se puso de colores. Feliz mes, mi wawita mosha 💗"
+      : meses === 2 ? "¡Dos meses! Dos meses de risas, de mensajes, de extrañarte y de quererte cada día un poquito más. Feliz mes, mi amor."
+      : meses === 3 ? "Tres meses juntos. Ya no me acuerdo cómo eran mis días antes de ti, y no quiero acordarme. Feliz mes, mi wawita."
+      : `Hoy cumplimos ${meses} meses. Y te lo digo como el primer día: me encanta que seamos nosotros. Feliz mes, mi amor.`;
+    return { tag: `🎉 ${meses === 1 ? "Nuestro primer mes" : meses + " meses juntos"}`, m: t };
+  }
+  if (juntos === 100) return { tag: "💯 100 días juntos", m: "¡Hoy cumplimos 100 días juntos! Cien días eligiéndote, y me quedan muchísimos más por delante. Gracias por cada uno, mi amor." };
+  if (m === 12 && dd === 24) return { tag: "🎄 Nochebuena", m: "Feliz Nochebuena, mi amor. Este año mi mejor regalo no cabe debajo del árbol: eres tú." };
+  if (m === 12 && dd === 25) return { tag: "🎄 Navidad", m: "Feliz Navidad, mi wawita mosha. Que tengas un día lleno de cariño… y de comida rica 😌" };
+  if (m === 12 && dd === 31) return { tag: "🥂 Último día del año", m: "Último día del año, y fue el más lindo de todos porque llegaste tú. Gracias por este año, mi amor." };
+  if (m === 1 && dd === 1) return { tag: "🎆 Año nuevo", m: "¡Feliz año nuevo, mi amor! Que este año esté lleno de nosotros: viajes, risas, abrazos y todo lo que soñamos." };
+  if (m === 2 && dd === 14) return { tag: "💘 San Valentín", m: "Feliz día de los enamorados, mi wawita mosha. Nuestro primer 14 de febrero juntos… y yo cada día más enamorado de ti." };
+  if (m === 9 && dd === 1 && y > 2026) return { tag: "💬 Un año desde el primer mensaje", m: "Hoy hace un año te pregunté \"¿y eso dónde? como para ir\". Fue la mejor pregunta de mi vida." };
+  if (m === 9 && dd === 18 && y > 2026) return { tag: "🇨🇱 Un año desde que te vi", m: "Hoy hace un año te vi por primera vez en La Sofo. Feliz dieciocho, mi amor. Ese día cambió todo." };
+  return null;
+}
 const LOVE = ["Te amo", "Te amo más", "Más que ayer", "Hasta la luna", "Y de vuelta", "Más que las estrellas", "Infinito", "Infinito × 2", "Más que todo", "No hay número", "Siempre", "Para siempre ♥"];
 /* ======================================================= */
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const store = { get(k, d) { try { const v = localStorage.getItem("maite-" + k); return v == null ? d : JSON.parse(v); } catch { return d; } }, set(k, v) { try { localStorage.setItem("maite-" + k, JSON.stringify(v)); } catch {} } };
 const dayStart = d => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
-const now = new Date(), today0 = dayStart(now);
+const now = window.__FECHA ? new Date(window.__FECHA) : new Date(), today0 = dayStart(now);   // __FECHA solo para pruebas
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 const idx = Math.max(0, Math.round((today0 - dayStart(new Date(D.inicio + "T00:00:00"))) / 864e5));   // 0 = primer día
-const msgFor = i => MSGS[i % MSGS.length];
+const SIEMPRE = MSGS.map((m, i) => i).filter(i => i > 0 && !FECHADOS.has(i));
+const msgFor = i => { const d = new Date(dayStart(new Date(D.inicio + "T00:00:00")).getTime() + i * 864e5), e = especial(d); if (e) return e.m;
+  return i < MSGS.length ? MSGS[i] : MSGS[SIEMPRE[(i - MSGS.length) % SIEMPRE.length]]; };
+const hoyEsp = especial(now);
 const fmt = (d, o) => d.toLocaleDateString("es-CL", o);
 const wa = t => `https://api.whatsapp.com/send?phone=${D.whatsapp}&text=${encodeURIComponent(t)}`;
 
@@ -308,6 +432,8 @@ $("#today").textContent = fmt(now, { weekday: "long", day: "numeric", month: "lo
 $("#hello").textContent = (h < 6 ? "Hola, trasnochadora" : h < 12 ? "Buenos días" : h < 20 ? "Buenas tardes" : "Buenas noches") + `, ${D.apodoElla}`;
 const since = Math.floor((now - new Date(D.pololeo)) / 864e5);
 $("#days").textContent = since; $("#daysWord").textContent = since === 1 ? "día" : "días";
+const diasDesde = f => Math.round((today0 - dayStart(new Date(f + "T00:00:00"))) / 864e5);
+$("#nums").innerHTML = `<span>💬 <b>${diasDesde(D.primerMensaje)}</b> días desde el primer mensaje</span><span>👀 <b>${diasDesde(D.primeraVez)}</b> desde que te vi</span>`;
 (() => {
   const start = new Date(D.pololeo); let m = 1, next;
   while (true) { next = new Date(start); next.setMonth(start.getMonth() + m); if (next > now) break; m++; }
@@ -318,6 +444,7 @@ $("#days").textContent = since; $("#daysWord").textContent = since === 1 ? "día
 
 // sobre del día
 $("#msgNum").textContent = `N.º ${idx + 1}`;
+if (hoyEsp) { $("#cardHoy").classList.add("special"); $("#specialTag").textContent = hoyEsp.tag; $("#specialTag").hidden = false; $("#l-hoy").firstChild.textContent = "Mensaje especial "; }
 $("#note").dataset.n = String(idx + 1).padStart(3, "0");
 // ---------- máquina de escribir: letra por letra con su sonido ----------
 let actx = null;
@@ -348,15 +475,17 @@ function typeInto(el, text, speed = 42) {
     step();
   });
 }
-const openedToday = store.get("abierto", "") === today0.toISOString().slice(0, 10);
+const dias = new Set(store.get("dias", [])); { const a = store.get("abierto", ""); if (a) dias.add(a); }   // días en que abrió su sobre
+const openedToday = dias.has(ymd(today0));
 function openEnv(anim) {
   $("#env").classList.add("open"); $("#tapme").hidden = true;
+  const ew = $(".envwrap"); if (anim && !reduced) setTimeout(() => ew.classList.add("done"), 1500); else ew.classList.add("gone");
   setTimeout(async () => {
     $("#noteBox").hidden = false; const n = $("#note"); n.classList.remove("in"); void n.offsetWidth; n.classList.add("in");
-    if (anim) { burst(30, $("#env")); await typeInto(n, msgFor(idx)); } else n.textContent = msgFor(idx);
+    if (anim) { burst(hoyEsp ? 90 : 30, $("#env")); if (hoyEsp) setTimeout(() => burst(60, $("#specialTag")), 400); await typeInto(n, msgFor(idx)); } else n.textContent = msgFor(idx);
     $("#noteSign").classList.add("on"); setTimeout(() => { $("#noteStamp").classList.add("on"); if (anim) burst(20, $("#noteStamp")); }, anim ? 700 : 0);
   }, anim && !reduced ? 900 : 0);
-  store.set("abierto", today0.toISOString().slice(0, 10));
+  store.set("abierto", ymd(today0)); dias.add(ymd(today0)); store.set("dias", [...dias]); renderCal();
 }
 if (openedToday) openEnv(false);
 $("#env").addEventListener("click", () => { if (!$("#env").classList.contains("open")) openEnv(true); });
@@ -365,15 +494,34 @@ $("#env").addEventListener("click", () => { if (!$("#env").classList.contains("o
 (() => { const list = FOTOS.map((f, i) => [f, CAPS[i]]).filter(([f]) => f), [f, c] = list.length ? list[idx % list.length] : ["", CAPS[idx % CAPS.length]];
   if (f) { $("#photo").style.backgroundImage = `url('${f}')`; $("#photo").textContent = ""; } $("#photoCap").textContent = c; })();
 
-// ábrelo cuando
-$("#when").innerHTML = WHEN.map(w => `<button class="wbtn" data-k="${w.k}"><span aria-hidden="true">${w.e}</span><b>Cuando ${w.t}</b></button>`).join("");
-$$(".wbtn").forEach(b => b.addEventListener("click", () => {
-  const w = WHEN.find(x => x.k === b.dataset.k);
-  $("#letter").innerHTML = `<h3>${w.h}</h3>${w.p.map(() => `<p></p>`).join("")}<div class="s">— Diego</div><button class="btn btn--soft" id="close">Cerrar</button>`;
-  $("#modal").hidden = false; $("#close").addEventListener("click", () => { $("#modal").hidden = true; });
-  (async () => { const ps = $$("#letter p"); for (let i = 0; i < ps.length; i++) { if ($("#modal").hidden) return; await typeInto(ps[i], w.p[i], 30); } $("#letter .s")?.classList.add("on"); })();
-}));
-$("#modal").addEventListener("click", e => { if (e.target.id === "modal") $("#modal").hidden = true; });
+// ¿cómo estás hoy?
+$("#moods").innerHTML = MOODS.map(m => `<button class="mood" data-k="${m.k}"><span aria-hidden="true">${m.e}</span><b>${m.t}</b></button>`).join("");
+function showMood(k, anim) {
+  const m = MOODS.find(x => x.k === k); if (!m) return;
+  $$(".mood").forEach(b => b.classList.toggle("on", b.dataset.k === k));
+  $("#moodBox").hidden = false; const r = $("#moodReply"); r.innerHTML = `${m.r}<small>— Diego</small>`; r.style.animation = "none"; void r.offsetWidth; r.style.animation = "";
+  $("#moodWa").href = wa(`Hoy estoy ${m.t.toLowerCase()} ${m.e}`); if (anim) burst(14, $(`.mood[data-k="${k}"]`));
+}
+{ const a = store.get("animo", null); if (a && a.d === ymd(today0)) showMood(a.k, false); }
+$$(".mood").forEach(b => b.addEventListener("click", () => { store.set("animo", { d: ymd(today0), k: b.dataset.k }); showMood(b.dataset.k, true); try { navigator.vibrate?.(12); } catch {} }));
+
+// pregunta del día
+{ const qq = PREGUNTAS[idx % PREGUNTAS.length]; $("#q").textContent = qq; $("#qWa").href = wa(`Pregunta del día: ${qq}\nMi respuesta: `); }
+
+// tus días conmigo: el mes actual, con un corazón por cada sobre abierto
+function renderCal() {
+  const y = today0.getFullYear(), mo = today0.getMonth(), first = new Date(y, mo, 1), nd = new Date(y, mo + 1, 0).getDate(), pad = (first.getDay() + 6) % 7;
+  { const t = fmt(first, { month: "long", year: "numeric" }); $("#calMes").textContent = t[0].toUpperCase() + t.slice(1); }
+  let h = ["L", "M", "M", "J", "V", "S", "D"].map(x => `<i>${x}</i>`).join("") + Array.from({ length: pad }, () => `<span class="c empty"></span>`).join("");
+  for (let d = 1; d <= nd; d++) { const dt = new Date(y, mo, d), k = ymd(dt), cls = ["c"];
+    if (dias.has(k)) cls.push("hit"); if (especial(dt)) cls.push("spc"); if (dt > today0) cls.push("fut"); if (+dt === +today0) cls.push("now");
+    h += `<span class="${cls.join(" ")}" aria-label="${d}${dias.has(k) ? ", abriste tu sobre" : ""}">${d}</span>`; }
+  $("#cal").innerHTML = h;
+  let racha = 0; for (let d = new Date(today0); dias.has(ymd(d)); d.setDate(d.getDate() - 1)) racha++;
+  const total = dias.size;
+  $("#streak").innerHTML = racha > 1 ? `🔥 Llevas <b>${racha}</b> días seguidos abriendo tu sobre` : total ? `Has abierto <b>${total}</b> ${total === 1 ? "sobre" : "sobres"} 💌 ¡Vuelve mañana por otro!` : "Abre tu sobre de hoy y aquí aparece tu primer corazón ♥";
+}
+renderCal();
 
 // corazón
 let loves = store.get("teamos", 0);
