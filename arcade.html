@@ -258,7 +258,7 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
         <canvas id="cv2" aria-label="Juego: toca para volar y esquivar obstáculos"></canvas>
         <div class="over" id="vOver">
           <p class="press">VUELA HASTA DIEGO</p>
-          <p class="hint">Toca la pantalla para volar.<br>Esquiva 15 obstáculos y llegas hasta mí.</p>
+          <p class="hint">Toca la pantalla para volar.<br>Esquiva 15 obstáculos y llegas a mis brazos.</p>
           <div class="legend"><span>📚 Pruebas</span><span>⏰ Despertador</span><span>🍸 Turnos de bartender</span><span>🌧️ Lluvia de Temuco</span></div>
           <button class="btn" id="vStart">¡A VOLAR!</button>
         </div>
@@ -635,7 +635,7 @@ const V = { W: 0, H: 0, y: 0, vy: 0, pipes: [], passed: 0, playing: false, start
 const EMO = '"Apple Color Emoji", "Noto Color Emoji", system-ui, sans-serif';
 function sizeV() { const r = $("#stage2").getBoundingClientRect(), d = devicePixelRatio || 1; V.W = r.width; V.H = r.height; cv2.width = Math.round(V.W * d); cv2.height = Math.round(V.H * d); vx.setTransform(d, 0, 0, d, 0, 0); }
 addEventListener("resize", () => { if (cur === "vuela") { sizeV(); if (!V.playing) vDraw(); } });
-function vReset() { V.y = V.H * .45; V.vy = 0; V.pipes = []; V.passed = 0; V.t = 0; V.diego = null; V.started = false; $("#vScore").textContent = 0; }
+function vReset() { V.y = V.H * .45; V.mx = V.W * .28; V.hugT = 0; V.vy = 0; V.pipes = []; V.passed = 0; V.t = 0; V.diego = null; V.started = false; $("#vScore").textContent = 0; }
 function bindVuelaStart() { $("#vStart")?.addEventListener("click", startVuela); }
 function startVuela() { S8.coin(); sizeV(); vReset(); $("#vOver").hidden = true; V.playing = true; V.last = performance.now(); cancelAnimationFrame(V.raf); V.raf = requestAnimationFrame(vFrame); }
 function stopVuela() { V.playing = false; cancelAnimationFrame(V.raf); }
@@ -645,34 +645,135 @@ addEventListener("keydown", e => { if (cur === "vuela" && V.playing && (e.key ==
 const GROUND = 26, PW = 54, HX = () => V.W * .28;
 function vSpawn() {
   const gap = Math.max(165, V.H * .34), min = gap / 2 + 36, max = V.H - GROUND - gap / 2 - 36, c = min + Math.random() * Math.max(0, max - min);
-  const ks = Object.keys(OBST); V.pipes.push({ x: V.W + 10, top: c - gap / 2, bot: c + gap / 2, e: ks[Math.floor(Math.random() * ks.length)], done: false });
+  const ks = Object.keys(OBST); V.pipes.push({ x: V.W + 10, top: c - gap / 2, bot: c + gap / 2, e: ks[Math.floor(Math.random() * ks.length)], done: false, sd: Math.random() * 1000 });
+}
+// ---- ella y él, en pixeles, con la ropa de la foto de chiquititos ----
+const MAITE = [   // gorro morado con lunares, traje de baño rosado con mangas de lunares, brazos abiertos
+  "......HHHHH.......",
+  ".....HHhHHhH......",
+  "....HhHHHHHHH.....",
+  "..HHHHHhHHHhHHH...",
+  "...KKSSSSSSSKK....",
+  "...KSSESSSESSK....",
+  "...KSSSSSSSSSK....",
+  "...KSSSMMMSSSK....",
+  "....KSSSSSSSK.....",
+  "SSPWPWPPPPPPWPWPSS",
+  "....PPPPPPPPPP....",
+  "....PPPWFFPPPP....",
+  "....PPFFFFFPPP....",
+  "....PPPPPPPPPP....",
+  "....PPPPPPPPPP....",
+  "....PWPWP.PWPWP...",
+  ".....SS....SS.....",
+  ".....SS....SS.....",
+  ".....SS....SS.....",
+  "....sSS....SSs....",
+];
+const MAITE_PAL = { H: "#8e6bc9", h: "#f2ecff", K: "#3a2418", S: "#f2c4a0", s: "#d9a27e", E: "#2a1a10", M: "#d81b6a", P: "#ff3d8b", W: "#ffffff", F: "#59c7ff" };
+const DIEGO = [   // pelo negro, lentes de sol, polera gris con dibujo rojo, jeans y zapatillas; brazos abiertos esperándola
+  "......KKKKKK......",
+  ".....KKKKKKKK.....",
+  "....KKKKKKKKKK....",
+  "....KKSSSSSSKK....",
+  "....KGGGSSGGGK....",
+  "....SGgGGGGgGS....",
+  "....SSSSSSSSSS....",
+  ".....SSSMMSSS.....",
+  "SS....SSSSSS....SS",
+  ".TT..TTTTTTTT..TT.",
+  "..TTTTTTTTTTTTTT..",
+  "....TTRRRRYRTT....",
+  "....TTRRYRRRTT....",
+  "....TTTTRRTTTT....",
+  "....TTTTTTTTTT....",
+  "....JJJJJJJJJJ....",
+  "....JJJJjJJJJJ....",
+  "....JJJJ..JJJJ....",
+  "....JJJJ..JJJJ....",
+  "....JJJ....JJJ....",
+  "...BBwB....BwBB...",
+  "...BBBB....BBBB...",
+];
+const DIEGO_PAL = { K: "#1a1a22", S: "#e8b48e", G: "#0d0d12", g: "#5a5a6e", M: "#9a3b2b", T: "#5b5f73", R: "#d62828", Y: "#ffd84d", J: "#5b84c4", j: "#3f66a8", B: "#2c3e66", w: "#e9eef5" };
+const vu = () => V.H >= 480 ? 3 : 2;   // tamaño de cada pixel de los personajes
+function sprite(k, rows, pal, cx, cy, u, rot = 0) {
+  const w = rows[0].length, h = rows.length; k.save(); k.translate(Math.round(cx), Math.round(cy)); if (rot) k.rotate(rot);
+  rows.forEach((row, j) => { for (let i = 0; i < w; i++) { const ch = row[i]; if (ch === ".") continue; k.fillStyle = pal[ch]; k.fillRect(Math.round((i - w / 2) * u), Math.round((j - h / 2) * u), Math.ceil(u), Math.ceil(u)); } });
+  k.restore();
+}
+// ---- los pilares: cada obstáculo tiene su propia torre, con enredaderas y florcitas ----
+const rnd = (s, i) => { const x = Math.sin(s * 12.9898 + i * 78.233) * 43758.5453; return x - Math.floor(x); };
+const PT = { "📚": "libros", "⏰": "reloj", "🍸": "bar", "🌧️": "lluvia" };
+function pBody(p, y0, y1, top) {
+  if (y1 <= y0) return; const x = p.x, w = PW, t = PT[p.e];
+  vx.save(); vx.beginPath(); vx.rect(x - 6, y0, w + 12, y1 - y0); vx.clip();
+  if (t === "libros") {   // una torre de libros de colores
+    const C = ["#ff6f91", "#ffd84d", "#59c7ff", "#4df0c0", "#a07cf2", "#ff9f45"]; let y = top ? y1 : y0, i = 0;
+    while (top ? y > y0 : y < y1) { const h = 10 + Math.floor(rnd(p.sd, i) * 6), off = Math.round((rnd(p.sd, i + 50) - .5) * 8), yy = top ? y - h : y;
+      vx.fillStyle = C[Math.floor(rnd(p.sd, i + 99) * C.length)]; vx.fillRect(x + off, yy, w, h);
+      vx.fillStyle = "rgba(0,0,0,.22)"; vx.fillRect(x + off, yy + h - 2, w, 2); vx.fillStyle = "rgba(255,255,255,.6)"; vx.fillRect(x + off + 9, yy + Math.floor(h / 2) - 1, 16, 2); vx.fillStyle = "rgba(255,255,255,.25)"; vx.fillRect(x + off, yy, 3, h);
+      y += top ? -h : h; i++; }
+  } else if (t === "reloj") {   // torre de ladrillos rosados
+    vx.fillStyle = "#e66fa8"; vx.fillRect(x, y0, w, y1 - y0); vx.fillStyle = "#c4508a";
+    for (let yy = Math.floor(y0 / 10) * 10, row = 0; yy < y1; yy += 10, row++) { vx.fillRect(x, yy, w, 2); for (let xx = (Math.abs(Math.floor(yy / 10)) % 2) * 9; xx < w; xx += 18) vx.fillRect(x + xx, yy, 2, 10); }
+    vx.fillStyle = "rgba(255,255,255,.18)"; vx.fillRect(x + 4, y0, 4, y1 - y0);
+  } else if (t === "bar") {   // mueble de bar con botellas
+    vx.fillStyle = "#8b5a3c"; vx.fillRect(x, y0, w, y1 - y0); vx.fillStyle = "#6f452c"; for (let xx = 9; xx < w; xx += 11) vx.fillRect(x + xx, y0, 2, y1 - y0);
+    const BC = ["#4df0c0", "#ffd84d", "#ff6f91", "#59c7ff"];
+    for (let yy = top ? y1 - 44 : y0 + 50, k = 0; top ? yy > y0 + 20 : yy < y1; yy += top ? -46 : 46, k++) { vx.fillStyle = "#5a3722"; vx.fillRect(x - 2, yy, w + 4, 4);
+      for (let b = 0; b < 3; b++) { const bx = x + 7 + b * 16; vx.fillStyle = BC[Math.floor(rnd(p.sd, k * 3 + b) * 4)]; vx.fillRect(bx, yy - 14, 8, 14); vx.fillRect(bx + 2, yy - 20, 4, 6); vx.fillStyle = "rgba(255,255,255,.5)"; vx.fillRect(bx + 1, yy - 12, 2, 8); } }
+  } else {   // columna de lluvia
+    vx.fillStyle = "#9fb4e6"; vx.fillRect(x, y0, w, y1 - y0); vx.fillStyle = "#6e86c7";
+    for (let yy = Math.floor(y0 / 14) * 14 - 14, row = 0; yy < y1; yy += 14, row++) for (let xx = 4 + (Math.abs(Math.floor(yy / 14)) % 2) * 9; xx < w - 2; xx += 18) vx.fillRect(x + xx, yy + ((V.t * 1.5) % 14), 3, 6);
+    vx.fillStyle = "rgba(255,255,255,.25)"; vx.fillRect(x + 4, y0, 4, y1 - y0);
+  }
+  const ex = x + (rnd(p.sd, 7) < .5 ? 2 : w - 5);   // enredadera
+  for (let yy = y0, i = 0; yy < y1; yy += 4, i++) { const wx = ex + Math.round(Math.sin(yy / 9 + p.sd) * 2); vx.fillStyle = "#3fbf6f"; vx.fillRect(wx, yy, 3, 4);
+    if (i % 4 === 0) { vx.fillStyle = "#2f9e58"; vx.fillRect(wx + (i % 8 ? 3 : -4), yy, 4, 3); }
+    if (i % 11 === 5) { vx.fillStyle = "#ff8fb8"; vx.fillRect(wx - 2, yy - 2, 7, 7); vx.fillStyle = "#ffd84d"; vx.fillRect(wx, yy, 3, 3); } }
+  vx.restore();
+}
+function pIcon(t, x, y) {   // el dibujito de cada obstáculo, en una plaquita
+  vx.fillStyle = "rgba(255,244,251,.96)"; vx.beginPath(); vx.arc(x, y, 16, 0, 7); vx.fill(); vx.lineWidth = 2; vx.strokeStyle = "rgba(46,26,87,.45)"; vx.stroke();
+  if (t === "libros") { vx.fillStyle = "#fff"; vx.fillRect(x - 8, y - 10, 16, 20); vx.strokeStyle = "#7a5aa8"; vx.lineWidth = 1; vx.strokeRect(x - 8.5, y - 10.5, 17, 21); vx.fillStyle = "#b9a8d8"; for (let i = 0; i < 3; i++) vx.fillRect(x - 6, y - 7 + i * 4, 8, 2);
+    vx.fillStyle = "#e53950"; vx.font = '9px "Press Start 2P", monospace'; vx.fillText("7", x + 3, y + 5); }   // una prueba con un 7 😌
+  else if (t === "reloj") { vx.fillStyle = "#ff4f9a"; vx.beginPath(); vx.arc(x - 7, y - 9, 4, 0, 7); vx.arc(x + 7, y - 9, 4, 0, 7); vx.fill(); vx.fillStyle = "#fff"; vx.beginPath(); vx.arc(x, y + 1, 9, 0, 7); vx.fill(); vx.strokeStyle = "#ff4f9a"; vx.lineWidth = 3; vx.stroke();
+    vx.strokeStyle = "#2e1a57"; vx.lineWidth = 2; vx.beginPath(); vx.moveTo(x, y + 1); vx.lineTo(x, y - 5); vx.moveTo(x, y + 1); vx.lineTo(x + 4, y + 3); vx.stroke(); }
+  else if (t === "bar") { vx.fillStyle = "#59c7ff"; vx.beginPath(); vx.moveTo(x - 10, y - 8); vx.lineTo(x + 10, y - 8); vx.lineTo(x, y + 3); vx.closePath(); vx.fill(); vx.fillStyle = "#7a8bb0"; vx.fillRect(x - 1, y + 3, 2, 6); vx.fillRect(x - 6, y + 9, 12, 2);
+    vx.fillStyle = "#3fbf6f"; vx.beginPath(); vx.arc(x + 3, y - 5, 2.6, 0, 7); vx.fill(); vx.fillStyle = "#2e1a57"; vx.fillRect(x + 3, y - 12, 1, 7); }
+  else { vx.fillStyle = "#b8c7ee"; vx.beginPath(); vx.arc(x - 6, y - 2, 6, 0, 7); vx.arc(x + 1, y - 5, 7, 0, 7); vx.arc(x + 7, y - 1, 5, 0, 7); vx.fill(); vx.fillRect(x - 12, y - 2, 24, 6);
+    vx.fillStyle = "#59c7ff"; [[-7, 7], [0, 9], [6, 7]].forEach(([dx, dy]) => vx.fillRect(x + dx, y + dy, 2, 5)); }
+}
+function pCap(p, y, top) {
+  const x = p.x, w = PW, t = PT[p.e], cc = { libros: "#ffd84d", reloj: "#ffd1e6", bar: "#a8724d", lluvia: "#e8eeff" }[t];
+  vx.fillStyle = cc; vx.fillRect(x - 5, y, w + 10, 16); vx.fillStyle = "rgba(0,0,0,.2)"; vx.fillRect(x - 5, top ? y + 13 : y, w + 10, 3); vx.fillStyle = "rgba(255,255,255,.55)"; vx.fillRect(x - 5, top ? y : y + 13, w + 10, 2);
+  pIcon(t, x + w / 2, top ? y - 22 : y + 38);
 }
 function vDraw() {
   const { W, H } = V; vx.clearRect(0, 0, W, H);
   vx.fillStyle = "rgba(255,255,255,.25)"; for (let i = 0; i < 34; i++) { const x = ((i * 89.7) - V.t * 0.6 * (1 + (i % 3))) % W; vx.fillRect(Math.round(x < 0 ? x + W : x), Math.round((i * 47.3) % (H - GROUND)), 2, 2); }
   vx.textAlign = "center"; vx.textBaseline = "middle";
-  for (const p of V.pipes) {
-    vx.fillStyle = "#7b4fe0"; vx.fillRect(p.x, 0, PW, p.top); vx.fillRect(p.x, p.bot, PW, H - GROUND - p.bot);
-    vx.fillStyle = "#a07cf2"; vx.fillRect(p.x - 5, p.top - 18, PW + 10, 18); vx.fillRect(p.x - 5, p.bot, PW + 10, 18);
-    vx.fillStyle = "rgba(255,255,255,.22)"; vx.fillRect(p.x + 6, 0, 6, p.top - 18); vx.fillRect(p.x + 6, p.bot + 18, 6, H - GROUND - p.bot - 18);
-    vx.fillStyle = "rgba(0,0,0,.18)"; vx.fillRect(p.x + PW - 10, 0, 10, p.top - 18); vx.fillRect(p.x + PW - 10, p.bot + 18, 10, H - GROUND - p.bot - 18);
-    // el obstáculo, en una plaquita clara para que se vea bien
-    for (const yy of [p.top - 40, p.bot + 40]) { vx.fillStyle = "#fff4fb"; vx.beginPath(); vx.arc(p.x + PW / 2, yy, 17, 0, 7); vx.fill(); vx.font = `22px ${EMO}`; vx.fillText(p.e, p.x + PW / 2, yy + 1); }
-  }
-  // suelo de pixeles
-  for (let x = -((V.t * 2.4) % 16); x < W; x += 16) { vx.fillStyle = "#3b2270"; vx.fillRect(x, H - GROUND, 8, GROUND); vx.fillStyle = "#2e1a57"; vx.fillRect(x + 8, H - GROUND, 8, GROUND); }
-  vx.fillStyle = "#ff4f9a"; vx.fillRect(0, H - GROUND, W, 3);
-  if (V.diego) { vx.font = `44px ${EMO}`; vx.fillText("😎", V.diego.x, V.diego.y); vx.font = '9px "Press Start 2P", monospace'; vx.fillStyle = "#ffd84d"; vx.fillText("DIEGO", V.diego.x, V.diego.y + 34); }
-  const bob = V.started ? 0 : Math.sin(V.t / 9) * 6;
-  pixHeart(vx, HX(), V.y + bob, 30, "#ff4f9a", "#ffd1e6");
+  for (const p of V.pipes) { pBody(p, 0, p.top - 16, true); pCap(p, p.top - 16, true); pBody(p, p.bot + 16, H - GROUND, false); pCap(p, p.bot, false); }
+  // pasto de pixeles
+  for (let x = -((V.t * 2.4) % 16); x < W; x += 16) { vx.fillStyle = "#2f8f55"; vx.fillRect(x, H - GROUND, 8, GROUND); vx.fillStyle = "#287a49"; vx.fillRect(x + 8, H - GROUND, 8, GROUND); vx.fillStyle = "#4dc77d"; vx.fillRect(x + 3, H - GROUND - 3, 2, 3); vx.fillRect(x + 11, H - GROUND - 4, 2, 4); }
+  vx.fillStyle = "#5fe08f"; vx.fillRect(0, H - GROUND, W, 3);
+  const D2 = V.diego, u = vu();
+  if (D2) { sprite(vx, DIEGO, DIEGO_PAL, D2.x, D2.y + (D2.x <= D2.tx ? Math.round(Math.sin(V.t / 8)) : 0), u); vx.font = '8px "Press Start 2P", monospace'; vx.fillStyle = "#ffd84d"; vx.fillText("DIEGO", D2.x + 2 * u, D2.y - 11 * u - 12); }
+  const bob = V.started ? 0 : Math.sin(V.t / 9) * 6, rot = D2 ? 0 : Math.max(-.35, Math.min(.5, V.vy * .05));
+  sprite(vx, MAITE, MAITE_PAL, V.mx, V.y + bob, u, rot);
+  if (V.hugT) { const k = Math.min(1, (V.t - V.hugT) / 70); pixHeart(vx, (V.mx + D2.x) / 2, D2.y - 12 * u - 26 - k * 26, 18 + k * 24, "#ff4f9a", "#ffd1e6"); }
   if (V.playing && !V.started) { vx.font = '10px "Press Start 2P", monospace'; vx.fillStyle = "#ffd84d"; vx.fillText("TOCA PARA VOLAR", W / 2, H * .72); }
 }
 function vFrame(t) {
   if (!V.playing) return; const dt = Math.min(2.5, (t - V.last) / 16.67); V.last = t; V.t += dt;
-  const { W, H } = V, hx = HX(), r = 12;
-  if (V.diego) {   // ya pasó todo: el corazón vuela solito hasta Diego
-    V.y += (H * .45 - V.y) * .08 * dt; V.diego.x -= 3 * dt;
-    if (V.diego.x - hx < 40) { vDraw(); return vEnd(true); }
+  const { W, H } = V, hx = HX(), r = vu() === 3 ? 16 : 12;
+  if (V.diego) {   // pasó todo: Diego llega caminando y ella vuela solita a sus brazos
+    const D2 = V.diego, u = vu(); if (D2.x > D2.tx) D2.x = Math.max(D2.tx, D2.x - 3 * dt);
+    const gx = D2.x - 13 * u, gy = D2.y + u;   // aterriza a su lado, abrazados
+    V.y += (gy - V.y) * .06 * dt; V.mx += (gx - V.mx) * .05 * dt;
+    if (!V.hugT && D2.x <= D2.tx && Math.hypot(V.mx - gx, V.y - gy) < 6) { V.hugT = V.t; S8.match(); buzz([30, 50, 30]); const rc = cv2.getBoundingClientRect(); burst(60, rc.left + D2.x - 14, rc.top + D2.y - 30); }
+    if (V.hugT && V.t - V.hugT > 75) { vDraw(); return vEnd(true); }
   } else if (V.started) {
     V.vy = Math.min(V.H * .017, V.vy + V.H * .00058 * dt); V.y += V.vy * dt; if (V.y < r) { V.y = r; V.vy = 0; }
     const sp = (2.3 + Math.min(.8, V.passed * .04)) * dt;
@@ -684,7 +785,7 @@ function vFrame(t) {
     V.pipes = V.pipes.filter(p => p.x > -PW - 20);
     const spawned = V.passed + V.pipes.filter(p => !p.done).length;
     if (spawned < V_META && (!V.pipes.length || V.pipes[V.pipes.length - 1].x < W - 215 - Math.random() * 30)) vSpawn();
-    if (V.passed >= V_META && !V.pipes.some(p => p.x > hx - 40)) V.diego = { x: W + 40, y: H * .45 };
+    if (V.passed >= V_META && !V.pipes.some(p => p.x > hx - 40)) { const u = vu(); V.diego = { x: W + 30, tx: W * .74, y: H - GROUND - 11 * u }; }
     if (V.y + r > H - GROUND) { V.y = H - GROUND - r; vDraw(); return vEnd(false, "el suelo"); }
   }
   vDraw(); V.raf = requestAnimationFrame(vFrame);
@@ -693,7 +794,7 @@ function vEnd(win, que) {
   V.playing = false; save.best.vuela = Math.max(save.best.vuela, V.passed); const first = win && giveCoin("vuela"); persist();
   const o = $("#vOver"); o.hidden = false;
   o.innerHTML = win
-    ? `<p class="press">¡LLEGASTE! 💗</p><p class="rank">Esquivaste 15 obstáculos para llegar a mí… yo esquivaría todos los del mundo por llegar a ti.</p>${coinHTML(first)}<div class="row"><button class="btn btn--ghost" id="vStart">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div>`
+    ? `<p class="press">¡LLEGASTE! 💗</p><p class="rank">Esquivaste 15 obstáculos para llegar a mis brazos… yo esquivaría todos los del mundo por llegar a ti.</p>${coinHTML(first)}<div class="row"><button class="btn btn--ghost" id="vStart">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div>`
     : `<span class="score-big">${V.passed}/15</span><p class="rank">¡Chocaste con ${que}! 😂</p><p class="hint">Pasa 15 obstáculos para llegar hasta Diego.</p><div class="row"><button class="btn" id="vStart">OTRA VEZ</button></div>`;
   bindVuelaStart(); $("[data-home2]", o)?.addEventListener("click", () => { S8.blip(); go("home"); });
   if (win) { S8.win(); burst(140); buzz([40, 60, 40]); } else { S8.hurt(); buzz([60, 40, 60]); }
