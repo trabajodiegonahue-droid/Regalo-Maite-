@@ -131,7 +131,20 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .diploma { position: relative; padding: 14px 14px 12px; border-radius: 10px; color: #3a2414; text-align: center; display: grid; gap: 6px;
   background: radial-gradient(120% 80% at 50% 0%, #fffaf0, #f6e6c4); border: 6px double #c9973a; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
 .diploma .kicker { font: 400 .55rem/1.6 var(--f-pixel); color: #9a6a16; letter-spacing: .06em; }
-.diploma h2 { margin: 0; font: 700 1.4rem/1.1 var(--f-body); color: #b3122f; text-wrap: balance; }
+.diploma h2 { margin: -2px 0 0; font: 700 2rem/1 var(--f-body); color: #b3122f; letter-spacing: .02em; }
+.dip-pre { margin: 0; font: 500 .85rem/1.2 var(--f-body); color: #7a5a3a; }
+.diploma .amor { display: inline-block; margin-top: 2px; font: 700 1.25rem/1.2 var(--f-body); color: #b3122f; }
+.meter { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; align-items: center; padding: 6px 2px 2px; font: 400 .5rem/1 var(--f-pixel); color: #9a6a16; text-align: left; }
+.meter .pct { color: #b3122f; font-size: .62rem; }
+.meter i { grid-column: 1 / -1; height: 12px; border-radius: 6px; background: #ead7b0; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,.15); }
+.meter i b { display: block; height: 100%; width: 0; border-radius: inherit; background: repeating-linear-gradient(90deg, #ff4f9a 0 8px, #ff79b3 8px 16px); transition: width 1.6s cubic-bezier(.3,.8,.3,1); }
+.valid { display: grid; justify-items: end; gap: 2px; }
+.valid small { font: 400 .45rem/1 var(--f-pixel); color: #9a6a16; }
+.valid b { font: 400 .55rem/1 var(--f-pixel); color: #b3122f; }
+.stamp { position: absolute; right: 2px; top: 50px; padding: 6px 7px; border: 3px solid #c8102e; border-radius: 8px; color: #c8102e; font: 400 .55rem/1.35 var(--f-pixel); text-align: center; letter-spacing: .04em;
+  background: rgba(255,255,255,.35); transform: rotate(-14deg) scale(2.6); opacity: 0; pointer-events: none; mix-blend-mode: multiply; }
+.stamp.go { animation: stampIn .38s cubic-bezier(.3,1.6,.5,1) forwards; }
+@keyframes stampIn { to { transform: rotate(-14deg) scale(1); opacity: .9; } }
 .diploma .who { margin: 0; font: 500 .95rem/1.35 var(--f-body); }
 .diploma .who b { font-size: 1.25em; color: #b3122f; }
 .diploma ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; font: 500 .84rem/1.3 var(--f-body); text-align: left; }
@@ -218,12 +231,15 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
     <section class="scr" id="s-prize">
       <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>🏆 PREMIO</span></div>
       <div class="diploma" id="diploma">
-        <span class="kicker">DIPLOMA OFICIAL · MAITE ARCADE</span>
+        <span class="kicker">CERTIFICADO OFICIAL · N.º 0310-1415</span>
         <div class="dip-photo" id="dipPhoto"></div>
-        <h2>Polola del Año 2026</h2>
-        <p class="who">Se certifica que <b>Maite</b> le ganó a todos los juegos y al corazón de Diego.</p>
+        <p class="dip-pre">Por medio del presente se certifica que</p>
+        <h2>Maite</h2>
+        <p class="who">conoce a Diego como nadie y es, sin ninguna duda,<br><b class="amor">el amor de su vida</b></p>
+        <div class="meter" aria-label="Nivel de amor: 100 por ciento"><span>NIVEL DE AMOR</span><span class="pct" id="pct">0%</span><i><b id="meterFill"></b></i></div>
         <ul id="dipList"></ul>
-        <div class="dip-sign"><div><span class="sig">Diego</span><small>Presidente de tu club de fans</small></div><span class="seal">100%<br>TUYO</span></div>
+        <div class="dip-sign"><div><span class="sig">Diego</span><small>Tu wawita, que te ama</small></div><div class="valid"><small>VÁLIDO</small><b>PARA SIEMPRE</b></div></div>
+        <span class="stamp" id="stamp" aria-hidden="true">100%<br>CERTIFICADO</span>
       </div>
       <div class="claim"><small>CÓMO COBRAR TU PREMIO</small><p>Muéstrale esta pantalla a Diego y cobra: 🍦 un heladito + 🤗 un abrazo de un minuto entero (cronometrado).</p></div>
       <a class="btn btn--gold" id="waWin" target="_blank" rel="noopener" style="text-align:center;text-decoration:none">AVISARLE A DIEGO 🏆</a>
@@ -298,6 +314,8 @@ const S8 = (() => {
     flip() { seq([79], .04, .04, "triangle"); }, match() { seq([79, 86], .08, .07); },
     catch(k) { seq([76 + Math.min(k, 12)], .05, .05); }, gold() { seq([84, 88, 91], .05, .06); }, hurt() { if (!ctx) return; note(ctx.currentTime, 40, .35, .1, "sawtooth"); },
     win() { seq([72, 72, 72, 76, 79, 0, 76, 79, 84], .11, .08); },
+    stamp() { if (!ctx) return; const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain(); o.type = "square"; o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(40, t + .15);
+      g.gain.setValueAtTime(.16, t); g.gain.exponentialRampToValueAtTime(.001, t + .25); o.connect(g); g.connect(out); o.start(t); o.stop(t + .3); setTimeout(() => seq([84, 88, 91, 96], .07, .06), 180); },
   };
 })();
 $("#muteBtn").addEventListener("click", () => { S8.start(); S8.mute(!save.mute); $("#muteBtn").style.opacity = save.mute ? .4 : 1; });
@@ -487,12 +505,20 @@ function endCatch(win) {
 }
 
 /* ---------- premio ---------- */
+let prizeRun = 0;
 function showPrize() {
-  const f = FOTOS[5]; if (f) $("#dipPhoto").style.backgroundImage = `url('${f}')`;
-  const b = save.best;
-  $("#dipList").innerHTML = `<li>Respondió ${b.trivia} de 12 preguntas sobre Diego</li><li>Encontró todos nuestros pares de fotos en ${b.memo} movimientos</li><li>Atrapó ${b.catch} corazones (y el de Diego hace rato)</li>`;
-  $("#waWin").href = wa(`¡Gané el Maite Arcade! 🏆\nTrivia: ${b.trivia}/12 · Memorice: ${b.memo} movimientos · Corazones: ${b.catch}\nVengo a cobrar mi heladito y mi abrazo de un minuto 😌`);
-  setTimeout(() => { burstAt($("#diploma"), 140); buzz([40, 60, 40, 60, 120]); }, reduced ? 0 : 300);
+  const run = ++prizeRun, f = FOTOS[5]; if (f) $("#dipPhoto").style.backgroundImage = `url('${f}')`;
+  const b = save.best, n = TRIVIA.length;
+  $("#dipList").innerHTML = `<li>Conoce a Diego: ${b.trivia} de ${n} respuestas buenas</li><li>Se sabe nuestras fotos de memoria: ${b.memo} movimientos</li><li>Atrapó ${b.catch} corazones (y el de Diego, hace rato)</li>`;
+  $("#waWin").href = wa(`¡Gané el Maite Arcade! 🏆 Soy el amor de tu vida, 100% certificado 💘\nConozco a Diego: ${b.trivia}/${n} · Memorice: ${b.memo} movimientos · Corazones: ${b.catch}\nVengo a cobrar mi heladito y mi abrazo de un minuto 😌`);
+  // la barra de amor se llena, y cae el timbre
+  const fill = $("#meterFill"), pct = $("#pct"), st = $("#stamp");
+  fill.style.transition = "none"; fill.style.width = "0"; void fill.offsetWidth; fill.style.transition = ""; st.classList.remove("go"); pct.textContent = "0%";
+  setTimeout(() => { if (run !== prizeRun) return; fill.style.width = "100%"; const t0 = performance.now();
+    const up = t => { if (run !== prizeRun) return; const k = Math.min(1, (t - t0) / 1600); pct.textContent = Math.round(100 * (1 - Math.pow(1 - k, 3))) + "%"; if (k < 1) requestAnimationFrame(up); else pct.textContent = "100% ✓"; };
+    requestAnimationFrame(up); }, reduced ? 0 : 500);
+  setTimeout(() => { if (run !== prizeRun) return; st.classList.add("go"); S8.stamp(); buzz([60, 40, 120]); burstAt(st, 90); }, reduced ? 0 : 2300);
+  setTimeout(() => { if (run === prizeRun) burstAt($("#diploma"), 140); }, reduced ? 0 : 2700);
 }
 
 renderMenu();
