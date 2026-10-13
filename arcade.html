@@ -60,15 +60,15 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .press { font: 400 .78rem/1.6 var(--f-pixel); color: var(--butter); }
 .meta { font: 400 .55rem/2 var(--f-pixel); color: var(--dim); letter-spacing: .04em; }
 .menu-h { margin: 4px 0 0; font: 400 .8rem/1.4 var(--f-pixel); color: var(--butter); text-align: center; }
-.games { display: grid; gap: 10px; }
-.game { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 12px; padding: 12px; border-radius: 16px; border: 2px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); text-align: left; transition: transform .12s ease; }
+.games { display: grid; gap: 8px; }
+.game { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 16px; border: 2px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); text-align: left; transition: transform .12s ease; }
 .game:active { transform: scale(.97); }
-.game .gi { width: 52px; height: 52px; border-radius: 12px; display: grid; place-items: center; font-size: 1.7rem; background: var(--gc); box-shadow: inset 0 -5px 0 rgba(0,0,0,.25); }
-.game b { display: block; font: 600 1.05rem/1.2 var(--f-body); color: #fff; }
-.game small { display: block; margin-top: 3px; font: 400 .85rem/1.25 var(--f-body); color: var(--dim); }
+.game .gi { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 1.45rem; background: var(--gc); box-shadow: inset 0 -5px 0 rgba(0,0,0,.25); }
+.game b { display: block; font: 600 1rem/1.2 var(--f-body); color: #fff; }
+.game small { display: block; margin-top: 2px; font: 400 .8rem/1.2 var(--f-body); color: var(--dim); }
 .coin { width: 26px; height: 26px; border-radius: 50%; border: 2px dashed rgba(255,216,77,.4); display: grid; place-items: center; font: 400 .55rem/1 var(--f-pixel); color: transparent; }
 .coin.got { border: 0; color: #6b4a00; background: radial-gradient(circle at 35% 30%, #fff3b0, var(--butter) 45%, #d99a00); box-shadow: 0 0 12px rgba(255,216,77,.7); }
-.coins-row { display: flex; align-items: center; justify-content: center; gap: 10px; font: 400 .6rem/1 var(--f-pixel); color: var(--dim); }
+.coins-row { display: flex; align-items: center; justify-content: center; gap: 8px; font: 400 .6rem/1 var(--f-pixel); color: var(--dim); }
 .prize-btn { margin-top: auto; padding: 16px; border-radius: 16px; border: 2px dashed rgba(255,216,77,.45); background: rgba(255,216,77,.06); font: 400 .72rem/1.6 var(--f-pixel); color: var(--dim); }
 .prize-btn.open { border: 0; color: #3a2600; background: linear-gradient(180deg, #fff0a0, var(--butter)); box-shadow: 0 0 24px rgba(255,216,77,.6), inset 0 -6px 0 rgba(0,0,0,.18); animation: glow 1.2s ease-in-out infinite alternate; }
 @keyframes glow { to { box-shadow: 0 0 40px rgba(255,216,77,.9), inset 0 -6px 0 rgba(0,0,0,.18); } }
@@ -131,6 +131,22 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 14px; font: 500 .95rem/1.3 var(--f-body); text-align: left; }
 .legend span { white-space: nowrap; }
 
+/* vuela hasta Diego */
+#s-vuela { padding: 0; gap: 0; }
+#s-vuela .bar { padding: 12px 16px 8px; }
+/* arma nuestra foto */
+.pz-wrap { flex: 1; min-height: 0; display: grid; place-items: center; }
+.pz { position: relative; border-radius: 10px; overflow: hidden; background: #120a2c; box-shadow: 0 0 0 3px #2e1a57, 0 10px 24px rgba(0,0,0,.5); }
+.pz .t { position: absolute; width: 33.333%; height: 33.333%; padding: 2px; border: 0; background: none; transition: left .16s ease, top .16s ease; }
+.pz .t i { display: block; width: 100%; height: 100%; border-radius: 6px; background-repeat: no-repeat; background-size: 300% 300%; box-shadow: inset 0 0 0 2px rgba(255,255,255,.55); }
+.pz .t.last { opacity: 0; transition: opacity .6s ease; }
+.pz.solved .t.last { opacity: 1; }
+.pz.solved .t i { box-shadow: none; border-radius: 0; }
+.pz.solved .t { padding: 0; }
+.pz.solved { box-shadow: 0 0 0 3px var(--mint), 0 0 30px rgba(77,240,192,.6); }
+.pz .peek { position: absolute; inset: 0; background: center / cover no-repeat; opacity: 0; transition: opacity .25s ease; pointer-events: none; }
+.pz.peeking .peek { opacity: 1; }
+.pz-tools { display: flex; justify-content: center; gap: 10px; }
 /* diploma */
 .diploma { position: relative; padding: 14px 14px 12px; border-radius: 10px; color: #3a2414; text-align: center; display: grid; gap: 6px;
   background: radial-gradient(120% 80% at 50% 0%, #fffaf0, #f6e6c4); border: 6px double #c9973a; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
@@ -189,9 +205,11 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
           <button class="game" data-go="trivia" style="--gc:#ff4f9a"><span class="gi" aria-hidden="true">🧠</span><span><b>¿Cuánto conoces a Diego?</b><small id="st-trivia">18 preguntas sobre mí. Saca 10 para ganar la ficha.</small></span><span class="coin" id="c-trivia">✓</span></button>
           <button class="game" data-go="memo" style="--gc:#59c7ff"><span class="gi" aria-hidden="true">📸</span><span><b>Memorice de nosotros</b><small id="st-memo">Encuentra los 6 pares de fotos.</small></span><span class="coin" id="c-memo">✓</span></button>
           <button class="game" data-go="catch" style="--gc:#4df0c0"><span class="gi" aria-hidden="true">🧺</span><span><b>Atrapa los corazones</b><small id="st-catch">Junta 25 corazones sin perder tus 3 vidas.</small></span><span class="coin" id="c-catch">✓</span></button>
+          <button class="game" data-go="vuela" style="--gc:#ffd84d"><span class="gi" aria-hidden="true">🕊️</span><span><b>Vuela hasta Diego</b><small id="st-vuela">Esquiva 15 obstáculos para llegar a mí.</small></span><span class="coin" id="c-vuela">✓</span></button>
+          <button class="game" data-go="puzzle" style="--gc:#ff7a59"><span class="gi" aria-hidden="true">🧩</span><span><b>Arma nuestra foto</b><small id="st-puzzle">Desliza las piezas hasta armarla.</small></span><span class="coin" id="c-puzzle">✓</span></button>
         </div>
-        <div class="coins-row"><span>FICHAS</span><span class="coin" id="k1"></span><span class="coin" id="k2"></span><span class="coin" id="k3"></span></div>
-        <button class="prize-btn" id="prizeBtn">🔒 PREMIO FINAL<br>GANA LAS 3 FICHAS</button>
+        <div class="coins-row"><span>FICHAS</span><span class="coin" id="k1"></span><span class="coin" id="k2"></span><span class="coin" id="k3"></span><span class="coin" id="k4"></span><span class="coin" id="k5"></span></div>
+        <button class="prize-btn" id="prizeBtn">🔒 PREMIO FINAL<br>GANA LAS 5 FICHAS</button>
       </div>
     </section>
 
@@ -229,6 +247,29 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
           <button class="btn" id="cStart">¡A JUGAR!</button>
         </div>
       </div>
+    </section>
+
+    <!-- vuela hasta Diego -->
+    <section class="scr" id="s-vuela">
+      <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>OBSTÁCULOS <b id="vScore">0</b>/15</span></div>
+      <div class="stage" id="stage2">
+        <canvas id="cv2" aria-label="Juego: toca para volar y esquivar obstáculos"></canvas>
+        <div class="over" id="vOver">
+          <p class="press">VUELA HASTA DIEGO</p>
+          <p class="hint">Toca la pantalla para volar.<br>Esquiva 15 obstáculos y llegas hasta mí.</p>
+          <div class="legend"><span>📚 Pruebas</span><span>⏰ Despertador</span><span>🍸 Turnos de bartender</span><span>🌧️ Lluvia de Temuco</span></div>
+          <button class="btn" id="vStart">¡A VOLAR!</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- arma nuestra foto -->
+    <section class="scr" id="s-puzzle">
+      <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>MOVIMIENTOS <b id="pzMoves">0</b></span></div>
+      <p class="toast" id="pzToast">Toca una pieza que esté al lado del hueco</p>
+      <div class="pz-wrap" id="pzWrap"><div class="pz" id="pz"></div></div>
+      <div class="pz-tools" id="pzTools"><button class="btn btn--ghost" id="pzPeek">👀 VER FOTO</button><button class="btn btn--ghost" id="pzMix">🔀 MEZCLAR</button></div>
+      <div class="result" id="pzEnd" hidden></div>
     </section>
 
     <!-- premio -->
@@ -364,7 +405,8 @@ const buzz = p => { try { navigator.vibrate?.(p); } catch {} };
 const shuffle = a => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
 const wa = t => `https://api.whatsapp.com/send?phone=${D.whatsapp}&text=${encodeURIComponent(t)}`;
 // lo que se guarda en su celular: fichas y récords
-let save = { f: { trivia: false, memo: false, catch: false }, best: { trivia: 0, memo: 0, catch: 0 }, mute: false };
+let save = { f: { trivia: false, memo: false, catch: false, vuela: false, puzzle: false }, best: { trivia: 0, memo: 0, catch: 0, vuela: 0, puzzle: 0 }, mute: false };
+const GAMES = ["trivia", "memo", "catch", "vuela", "puzzle"];
 try { const v = JSON.parse(localStorage.getItem("maite_arcade") || "null"); if (v && v.f) save = { ...save, ...v, f: { ...save.f, ...v.f }, best: { ...save.best, ...v.best } }; } catch {}
 const persist = () => { try { localStorage.setItem("maite_arcade", JSON.stringify(save)); } catch {} };
 if (save.tv !== 2) { save.tv = 2; save.f.trivia = false; save.best.trivia = 0; persist(); }   // trivia nueva (sobre Diego)
@@ -387,7 +429,7 @@ const S8 = (() => {
     coin() { seq([83, 88], .08, .08); }, blip() { seq([84], .05, .05); },
     ok() { seq([72, 76, 79, 84], .07, .07); }, no() { if (!ctx) return; const t = ctx.currentTime; note(t, 52, .25, .08, "sawtooth"); note(t + .12, 47, .3, .08, "sawtooth"); },
     flip() { seq([79], .04, .04, "triangle"); }, match() { seq([79, 86], .08, .07); },
-    catch(k) { seq([76 + Math.min(k, 12)], .05, .05); }, gold() { seq([84, 88, 91], .05, .06); }, hurt() { if (!ctx) return; note(ctx.currentTime, 40, .35, .1, "sawtooth"); },
+    catch(k) { seq([76 + Math.min(k, 12)], .05, .05); }, flap() { seq([74, 79], .03, .035, "triangle"); }, slide() { seq([67], .04, .04, "triangle"); }, gold() { seq([84, 88, 91], .05, .06); }, hurt() { if (!ctx) return; note(ctx.currentTime, 40, .35, .1, "sawtooth"); },
     win() { seq([72, 72, 72, 76, 79, 0, 76, 79, 84], .11, .08); },
     stamp() { if (!ctx) return; const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain(); o.type = "square"; o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(40, t + .15);
       g.gain.setValueAtTime(.16, t); g.gain.exponentialRampToValueAtTime(.001, t + .25); o.connect(g); g.connect(out); o.start(t); o.stop(t + .3); setTimeout(() => seq([84, 88, 91, 96], .07, .06), 180); },
@@ -427,22 +469,27 @@ function go(id) {
   if (id === "trivia") startTrivia();
   if (id === "memo") startMemo();
   if (id === "catch") { stopCatch(); $("#cOver").hidden = false; $("#cOver").innerHTML = $("#cOver").dataset.intro || $("#cOver").innerHTML; bindCatchStart(); sizeStage(); drawIdle(); }
+  if (id === "vuela") { stopVuela(); $("#vOver").hidden = false; $("#vOver").innerHTML = $("#vOver").dataset.intro; bindVuelaStart(); sizeV(); vReset(); vDraw(); }
+  if (id === "puzzle") startPuzzle();
   if (id === "prize") showPrize();
 }
+$("#vOver").dataset.intro = $("#vOver").innerHTML;
 $("#cOver").dataset.intro = $("#cOver").innerHTML;
-$$("[data-home]").forEach(b => b.addEventListener("click", () => { S8.blip(); stopCatch(); go("home"); }));
+$$("[data-home]").forEach(b => b.addEventListener("click", () => { S8.blip(); stopCatch(); stopVuela(); go("home"); }));
 $("#attract").addEventListener("click", () => { S8.start(); S8.coin(); buzz(20); $("#attract").hidden = true; $("#menu").hidden = false; renderMenu(); });
 $$(".game").forEach(b => b.addEventListener("click", () => { S8.start(); S8.coin(); buzz(15); go(b.dataset.go); }));
-$("#prizeBtn").addEventListener("click", () => { const all = save.f.trivia && save.f.memo && save.f.catch; if (all) { S8.win(); go("prize"); } else { S8.no(); $("#prizeBtn").animate([{ transform: "translateX(-6px)" }, { transform: "translateX(6px)" }, { transform: "none" }], { duration: 300 }); } });
+$("#prizeBtn").addEventListener("click", () => { const all = GAMES.every(k => save.f[k]); if (all) { S8.win(); go("prize"); } else { S8.no(); $("#prizeBtn").animate([{ transform: "translateX(-6px)" }, { transform: "translateX(6px)" }, { transform: "none" }], { duration: 300 }); } });
 function renderMenu() {
-  const f = save.f, n = [f.trivia, f.memo, f.catch].filter(Boolean).length;
-  ["trivia", "memo", "catch"].forEach(k => $("#c-" + k).classList.toggle("got", f[k]));
-  ["k1", "k2", "k3"].forEach((k, i) => $("#" + k).classList.toggle("got", i < n));
+  const f = save.f, n = GAMES.filter(k => f[k]).length, T = GAMES.length;
+  GAMES.forEach(k => $("#c-" + k).classList.toggle("got", f[k]));
+  GAMES.forEach((_, i) => $("#k" + (i + 1)).classList.toggle("got", i < n));
+  if (save.best.vuela) $("#st-vuela").textContent = `Récord: ${save.best.vuela} obstáculos${f.vuela ? " · ficha ganada" : " · pasa 15 para la ficha"}`;
+  if (save.best.puzzle) $("#st-puzzle").textContent = `Récord: ${save.best.puzzle} movimientos · ficha ganada`;
   if (save.best.trivia) $("#st-trivia").textContent = `Récord: ${save.best.trivia}/${TRIVIA.length}${f.trivia ? " · ficha ganada" : ` · saca ${PARA_FICHA} para la ficha`}`;
   if (save.best.memo) $("#st-memo").textContent = `Récord: ${save.best.memo} movimientos · ficha ganada`;
   if (save.best.catch) $("#st-catch").textContent = `Récord: ${save.best.catch} ♥${f.catch ? " · ficha ganada" : " · junta 25 para la ficha"}`;
-  const pb = $("#prizeBtn"); pb.classList.toggle("open", n === 3);
-  pb.innerHTML = n === 3 ? "🏆 ¡PREMIO DESBLOQUEADO!<br>TÓCALO" : `🔒 PREMIO FINAL<br>TE ${n === 2 ? "FALTA 1 FICHA" : `FALTAN ${3 - n} FICHAS`}`;
+  const pb = $("#prizeBtn"); pb.classList.toggle("open", n === T);
+  pb.innerHTML = n === T ? "🏆 ¡PREMIO DESBLOQUEADO!<br>TÓCALO" : `🔒 PREMIO FINAL<br>TE ${n === T - 1 ? "FALTA 1 FICHA" : `FALTAN ${T - n} FICHAS`}`;
 }
 function giveCoin(k) { const first = !save.f[k]; save.f[k] = true; persist(); return first; }
 const coinHTML = first => `<div class="won"><span class="coin got">✓</span>${first ? "¡GANASTE UNA FICHA!" : "FICHA YA GANADA"}</div>`;
@@ -534,7 +581,7 @@ function drawScene() {
   cx.fillStyle = "rgba(255,255,255,.25)"; for (let i = 0; i < 30; i++) { const x = (i * 97.3) % W, y = (i * 53.7 + elapsed * 6) % H; cx.fillRect(Math.round(x), Math.round(y), 2, 2); }
   cx.textAlign = "center"; cx.textBaseline = "middle";
   for (const it of items) {
-    if (!it.bad) { pixHeart(it.x, it.y, 30, it.c, it.h); continue; }
+    if (!it.bad) { pixHeart(cx, it.x, it.y, 30, it.c, it.h); continue; }
     cx.save(); cx.translate(it.x, it.y); cx.rotate(it.a); cx.fillStyle = "rgba(255,122,89,.18)"; cx.beginPath(); cx.arc(0, 0, 21, 0, 7); cx.fill();
     cx.font = '32px system-ui, "Apple Color Emoji", "Noto Color Emoji", sans-serif'; cx.fillText(it.e, 0, 1); cx.restore(); }
   // la canasta
@@ -543,11 +590,11 @@ function drawScene() {
   cx.globalAlpha = 1;
 }
 // corazón de pixeles (el mismo del inicio), con brillo
-function pixHeart(x, y, size, c, h) {
+function pixHeart(k, x, y, size, c, h) {
   const u = size / 9, x0 = Math.round(x - size / 2), y0 = Math.round(y - size * 4 / 9);
-  cx.shadowColor = c; cx.shadowBlur = 10;
-  HEART.forEach((r, j) => [...r].forEach((v, i) => { if (v === "1") { cx.fillStyle = (i === 1 || i === 2) && j === 1 ? h : c; cx.fillRect(x0 + i * u, y0 + j * u, Math.ceil(u), Math.ceil(u)); } }));
-  cx.shadowBlur = 0;
+  k.shadowColor = c; k.shadowBlur = 10;
+  HEART.forEach((r, j) => [...r].forEach((v, i) => { if (v === "1") { k.fillStyle = (i === 1 || i === 2) && j === 1 ? h : c; k.fillRect(x0 + i * u, y0 + j * u, Math.ceil(u), Math.ceil(u)); } }));
+  k.shadowBlur = 0;
 }
 function drawIdle() { items = []; floats = []; drawScene(); }
 function frame(t) {
@@ -579,13 +626,126 @@ function endCatch(win) {
   if (win) { S8.win(); burst(120); buzz([40, 60, 40]); } else S8.no();
 }
 
+/* ---------- 4. vuela hasta Diego ---------- */
+const cv2 = $("#cv2"), vx = cv2.getContext("2d"), V_META = 15;
+const OBST = { "📚": "las pruebas", "⏰": "el despertador", "🍸": "un turno de bartender", "🌧️": "la lluvia de Temuco" };
+const V = { W: 0, H: 0, y: 0, vy: 0, pipes: [], passed: 0, playing: false, started: false, raf: 0, last: 0, t: 0, diego: null };
+const EMO = '"Apple Color Emoji", "Noto Color Emoji", system-ui, sans-serif';
+function sizeV() { const r = $("#stage2").getBoundingClientRect(), d = devicePixelRatio || 1; V.W = r.width; V.H = r.height; cv2.width = Math.round(V.W * d); cv2.height = Math.round(V.H * d); vx.setTransform(d, 0, 0, d, 0, 0); }
+addEventListener("resize", () => { if (cur === "vuela") { sizeV(); if (!V.playing) vDraw(); } });
+function vReset() { V.y = V.H * .45; V.vy = 0; V.pipes = []; V.passed = 0; V.t = 0; V.diego = null; V.started = false; $("#vScore").textContent = 0; }
+function bindVuelaStart() { $("#vStart")?.addEventListener("click", startVuela); }
+function startVuela() { S8.coin(); sizeV(); vReset(); $("#vOver").hidden = true; V.playing = true; V.last = performance.now(); cancelAnimationFrame(V.raf); V.raf = requestAnimationFrame(vFrame); }
+function stopVuela() { V.playing = false; cancelAnimationFrame(V.raf); }
+function flap() { if (!V.playing || V.diego) return; V.started = true; V.vy = -V.H * .0112; S8.flap(); }
+$("#stage2").addEventListener("pointerdown", e => { if (V.playing) { e.preventDefault(); flap(); } });
+addEventListener("keydown", e => { if (cur === "vuela" && V.playing && (e.key === " " || e.key === "ArrowUp")) { e.preventDefault(); flap(); } });
+const GROUND = 26, PW = 54, HX = () => V.W * .28;
+function vSpawn() {
+  const gap = Math.max(165, V.H * .34), min = gap / 2 + 36, max = V.H - GROUND - gap / 2 - 36, c = min + Math.random() * Math.max(0, max - min);
+  const ks = Object.keys(OBST); V.pipes.push({ x: V.W + 10, top: c - gap / 2, bot: c + gap / 2, e: ks[Math.floor(Math.random() * ks.length)], done: false });
+}
+function vDraw() {
+  const { W, H } = V; vx.clearRect(0, 0, W, H);
+  vx.fillStyle = "rgba(255,255,255,.25)"; for (let i = 0; i < 34; i++) { const x = ((i * 89.7) - V.t * 0.6 * (1 + (i % 3))) % W; vx.fillRect(Math.round(x < 0 ? x + W : x), Math.round((i * 47.3) % (H - GROUND)), 2, 2); }
+  vx.textAlign = "center"; vx.textBaseline = "middle";
+  for (const p of V.pipes) {
+    vx.fillStyle = "#7b4fe0"; vx.fillRect(p.x, 0, PW, p.top); vx.fillRect(p.x, p.bot, PW, H - GROUND - p.bot);
+    vx.fillStyle = "#a07cf2"; vx.fillRect(p.x - 5, p.top - 18, PW + 10, 18); vx.fillRect(p.x - 5, p.bot, PW + 10, 18);
+    vx.fillStyle = "rgba(255,255,255,.22)"; vx.fillRect(p.x + 6, 0, 6, p.top - 18); vx.fillRect(p.x + 6, p.bot + 18, 6, H - GROUND - p.bot - 18);
+    vx.fillStyle = "rgba(0,0,0,.18)"; vx.fillRect(p.x + PW - 10, 0, 10, p.top - 18); vx.fillRect(p.x + PW - 10, p.bot + 18, 10, H - GROUND - p.bot - 18);
+    // el obstáculo, en una plaquita clara para que se vea bien
+    for (const yy of [p.top - 40, p.bot + 40]) { vx.fillStyle = "#fff4fb"; vx.beginPath(); vx.arc(p.x + PW / 2, yy, 17, 0, 7); vx.fill(); vx.font = `22px ${EMO}`; vx.fillText(p.e, p.x + PW / 2, yy + 1); }
+  }
+  // suelo de pixeles
+  for (let x = -((V.t * 2.4) % 16); x < W; x += 16) { vx.fillStyle = "#3b2270"; vx.fillRect(x, H - GROUND, 8, GROUND); vx.fillStyle = "#2e1a57"; vx.fillRect(x + 8, H - GROUND, 8, GROUND); }
+  vx.fillStyle = "#ff4f9a"; vx.fillRect(0, H - GROUND, W, 3);
+  if (V.diego) { vx.font = `44px ${EMO}`; vx.fillText("😎", V.diego.x, V.diego.y); vx.font = '9px "Press Start 2P", monospace'; vx.fillStyle = "#ffd84d"; vx.fillText("DIEGO", V.diego.x, V.diego.y + 34); }
+  const bob = V.started ? 0 : Math.sin(V.t / 9) * 6;
+  pixHeart(vx, HX(), V.y + bob, 30, "#ff4f9a", "#ffd1e6");
+  if (V.playing && !V.started) { vx.font = '10px "Press Start 2P", monospace'; vx.fillStyle = "#ffd84d"; vx.fillText("TOCA PARA VOLAR", W / 2, H * .72); }
+}
+function vFrame(t) {
+  if (!V.playing) return; const dt = Math.min(2.5, (t - V.last) / 16.67); V.last = t; V.t += dt;
+  const { W, H } = V, hx = HX(), r = 12;
+  if (V.diego) {   // ya pasó todo: el corazón vuela solito hasta Diego
+    V.y += (H * .45 - V.y) * .08 * dt; V.diego.x -= 3 * dt;
+    if (V.diego.x - hx < 40) { vDraw(); return vEnd(true); }
+  } else if (V.started) {
+    V.vy = Math.min(V.H * .017, V.vy + V.H * .00058 * dt); V.y += V.vy * dt; if (V.y < r) { V.y = r; V.vy = 0; }
+    const sp = (2.3 + Math.min(.8, V.passed * .04)) * dt;
+    for (const p of V.pipes) {
+      p.x -= sp;
+      if (!p.done && p.x + PW < hx - r) { p.done = true; V.passed++; $("#vScore").textContent = V.passed; S8.catch(V.passed); buzz(8); }
+      if (hx + r > p.x - 5 && hx - r < p.x + PW + 5 && (V.y - r < p.top || V.y + r > p.bot)) { vDraw(); return vEnd(false, OBST[p.e]); }
+    }
+    V.pipes = V.pipes.filter(p => p.x > -PW - 20);
+    const spawned = V.passed + V.pipes.filter(p => !p.done).length;
+    if (spawned < V_META && (!V.pipes.length || V.pipes[V.pipes.length - 1].x < W - 215 - Math.random() * 30)) vSpawn();
+    if (V.passed >= V_META && !V.pipes.some(p => p.x > hx - 40)) V.diego = { x: W + 40, y: H * .45 };
+    if (V.y + r > H - GROUND) { V.y = H - GROUND - r; vDraw(); return vEnd(false, "el suelo"); }
+  }
+  vDraw(); V.raf = requestAnimationFrame(vFrame);
+}
+function vEnd(win, que) {
+  V.playing = false; save.best.vuela = Math.max(save.best.vuela, V.passed); const first = win && giveCoin("vuela"); persist();
+  const o = $("#vOver"); o.hidden = false;
+  o.innerHTML = win
+    ? `<p class="press">¡LLEGASTE! 💗</p><p class="rank">Esquivaste 15 obstáculos para llegar a mí… yo esquivaría todos los del mundo por llegar a ti.</p>${coinHTML(first)}<div class="row"><button class="btn btn--ghost" id="vStart">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div>`
+    : `<span class="score-big">${V.passed}/15</span><p class="rank">¡Chocaste con ${que}! 😂</p><p class="hint">Pasa 15 obstáculos para llegar hasta Diego.</p><div class="row"><button class="btn" id="vStart">OTRA VEZ</button></div>`;
+  bindVuelaStart(); $("[data-home2]", o)?.addEventListener("click", () => { S8.blip(); go("home"); });
+  if (win) { S8.win(); burst(140); buzz([40, 60, 40]); } else { S8.hurt(); buzz([60, 40, 60]); }
+}
+
+/* ---------- 5. arma nuestra foto (rompecabezas deslizante 3×3) ---------- */
+const PZ_FOTO = 5;   // n.º de la foto que se arma
+let pz = { cells: [], moves: 0, done: false };
+const pzNb = i => { const r = Math.floor(i / 3), c = i % 3, n = []; if (r > 0) n.push(i - 3); if (r < 2) n.push(i + 3); if (c > 0) n.push(i - 1); if (c < 2) n.push(i + 1); return n; };
+function pzSize() { const w = $("#pzWrap").getBoundingClientRect(), W = Math.floor(Math.min(w.width, w.height * .75)); $("#pz").style.width = W + "px"; $("#pz").style.height = Math.floor(W / .75) + "px"; }
+addEventListener("resize", () => { if (cur === "puzzle") pzSize(); });
+function startPuzzle() {
+  let c, tries = 0;
+  do { c = [0, 1, 2, 3, 4, 5, 6, 7, 8]; let e = 8, prev = -1;   // se desordena con movidas válidas, así siempre tiene solución
+    for (let k = 0; k < 80; k++) { const nb = pzNb(e).filter(n => n !== prev), n = nb[Math.floor(Math.random() * nb.length)]; [c[e], c[n]] = [c[n], c[e]]; prev = e; e = n; }
+  } while (c.every((v, i) => v === i) && ++tries < 5);
+  pz = { cells: c, moves: 0, done: false }; $("#pzMoves").textContent = 0; $("#pzToast").textContent = "Toca una pieza que esté al lado del hueco";
+  $("#pzEnd").hidden = true; $("#pzWrap").hidden = false; $("#pzTools").hidden = false; $("#pz").classList.remove("solved"); $("#pzWrap").style.flex = ""; $("#pzWrap").style.height = "";
+  const f = FOTOS[PZ_FOTO - 1];
+  $("#pz").innerHTML = `<span class="peek" style="${f ? `background-image:url('${f}')` : ""}"></span>` + Array.from({ length: 9 }, (_, k) =>
+    `<button class="t${k === 8 ? " last" : ""}" data-k="${k}" aria-label="Pieza ${k + 1}"><i style="${f ? `background-image:url('${f}');` : "background:#3b1a6e;"}background-position:${(k % 3) * 50}% ${Math.floor(k / 3) * 50}%"></i></button>`).join("");
+  $$("#pz .t").forEach(b => b.addEventListener("click", () => pzTap(+b.dataset.k)));
+  pzSize(); pzPlace();
+}
+function pzPlace() { pz.cells.forEach((k, pos) => { const b = $(`#pz .t[data-k="${k}"]`); b.style.left = (pos % 3) * 33.333 + "%"; b.style.top = Math.floor(pos / 3) * 33.333 + "%"; }); }
+function pzTap(k) {
+  if (pz.done || k === 8) return; const pos = pz.cells.indexOf(k), e = pz.cells.indexOf(8);
+  if (!pzNb(e).includes(pos)) { S8.blip(); return; }
+  [pz.cells[pos], pz.cells[e]] = [pz.cells[e], pz.cells[pos]]; pz.moves++; $("#pzMoves").textContent = pz.moves; S8.slide(); buzz(6); pzPlace();
+  if (pz.cells.every((v, i) => v === i)) pzWin();
+}
+function pzWin() {
+  pz.done = true; $("#pz").classList.add("solved"); $("#pzToast").textContent = "¡La armaste! 🧩💗"; S8.match(); burstAt($("#pz"), 120);
+  save.best.puzzle = save.best.puzzle ? Math.min(save.best.puzzle, pz.moves) : pz.moves; const first = giveCoin("puzzle"); persist();
+  setTimeout(() => {
+    if (cur !== "puzzle") return; $("#pzTools").hidden = true;
+    const w = $("#pzWrap"), h = w.getBoundingClientRect().height; w.style.flex = "0 0 auto"; w.style.height = Math.max(150, h - 205) + "px"; pzSize();   // la foto armada se achica para que quepa el resultado
+    const e = $("#pzEnd"); e.hidden = false; e.style.flex = "0 0 auto";
+    e.innerHTML = `<p class="rank">Así de bien encajamos tú y yo 🧩💗</p><p class="hint">${pz.moves} movimientos</p>${coinHTML(first)}<div class="row"><button class="btn btn--ghost" id="pzAgain">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div>`;
+    $("#pzAgain").addEventListener("click", () => { S8.coin(); startPuzzle(); }); $("[data-home2]", e).addEventListener("click", () => { S8.blip(); go("home"); });
+    S8.win(); buzz([40, 60, 40]);
+  }, reduced ? 0 : 1600);
+}
+$("#pzPeek").addEventListener("click", () => { const b = $("#pz"); b.classList.add("peeking"); S8.blip(); clearTimeout(pzPeek.t); pzPeek.t = setTimeout(() => b.classList.remove("peeking"), 1600); });
+function pzPeek() {}
+$("#pzMix").addEventListener("click", () => { S8.coin(); startPuzzle(); });
+
 /* ---------- premio ---------- */
 let prizeRun = 0;
 function showPrize() {
   const run = ++prizeRun, f = FOTOS[5]; if (f) $("#dipPhoto").style.backgroundImage = `url('${f}')`;
   const b = save.best, n = TRIVIA.length;
-  $("#dipList").innerHTML = `<li>Conoce a Diego: ${b.trivia} de ${n} respuestas buenas</li><li>Se sabe nuestras fotos de memoria: ${b.memo} movimientos</li><li>Atrapó ${b.catch} corazones (y el de Diego, hace rato)</li>`;
-  $("#waWin").href = wa(`¡Gané el Maite Arcade! 🏆 Soy el amor de tu vida, 100% certificado 💘\nConozco a Diego: ${b.trivia}/${n} · Memorice: ${b.memo} movimientos · Corazones: ${b.catch}\nVengo a cobrar mi heladito y mi abrazo de un minuto 😌`);
+  $("#dipList").innerHTML = `<li>Conoce a Diego: ${b.trivia} de ${n} respuestas buenas</li><li>Memorice de nuestras fotos: ${b.memo} movimientos</li><li>Atrapó ${b.catch} corazones (y el de Diego, hace rato)</li><li>Voló hasta Diego esquivando ${Math.max(15, b.vuela)} obstáculos</li><li>Armó nuestra foto en ${b.puzzle} movimientos</li>`;
+  $("#waWin").href = wa(`¡Gané el Maite Arcade! 🏆 Soy el amor de tu vida, 100% certificado 💘\nConozco a Diego: ${b.trivia}/${n} · Memorice: ${b.memo} mov. · Corazones: ${b.catch} · Vuelo: ${Math.max(15, b.vuela)} · Rompecabezas: ${b.puzzle} mov.\nVengo a cobrar mi heladito y mi abrazo de un minuto 😌`);
   // la barra de amor se llena, y cae el timbre
   const fill = $("#meterFill"), pct = $("#pct"), st = $("#stamp");
   fill.style.transition = "none"; fill.style.width = "0"; void fill.offsetWidth; fill.style.transition = ""; st.classList.remove("go"); pct.textContent = "0%";
