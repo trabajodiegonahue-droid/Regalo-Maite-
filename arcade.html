@@ -144,7 +144,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .pz.solved .t i { box-shadow: none; border-radius: 0; }
 .pz.solved .t { padding: 0; }
 .pz.solved { box-shadow: 0 0 0 3px var(--mint), 0 0 30px rgba(77,240,192,.6); }
-.pz .peek { position: absolute; inset: 0; background: center / cover no-repeat; opacity: 0; transition: opacity .25s ease; pointer-events: none; }
+.pz .peek { position: absolute; inset: 0; z-index: 2; background: center / cover no-repeat; opacity: 0; transition: opacity .25s ease; pointer-events: none; }
 .pz.peeking .peek { opacity: 1; }
 .pz-tools { display: flex; justify-content: center; gap: 10px; }
 /* diploma */
@@ -698,7 +698,7 @@ function vEnd(win, que) {
 }
 
 /* ---------- 5. arma nuestra foto (rompecabezas deslizante 3×3) ---------- */
-const PZ_FOTO = 5;   // n.º de la foto que se arma
+const PZ_IMG = ["__PZFOTO__"].map(f => f.startsWith("__") ? "" : f)[0];   // la foto favorita, en buena calidad
 let pz = { cells: [], moves: 0, done: false };
 const pzNb = i => { const r = Math.floor(i / 3), c = i % 3, n = []; if (r > 0) n.push(i - 3); if (r < 2) n.push(i + 3); if (c > 0) n.push(i - 1); if (c < 2) n.push(i + 1); return n; };
 function pzSize() { const w = $("#pzWrap").getBoundingClientRect(), W = Math.floor(Math.min(w.width, w.height * .75)); $("#pz").style.width = W + "px"; $("#pz").style.height = Math.floor(W / .75) + "px"; }
@@ -710,7 +710,7 @@ function startPuzzle() {
   } while (c.every((v, i) => v === i) && ++tries < 5);
   pz = { cells: c, moves: 0, done: false }; $("#pzMoves").textContent = 0; $("#pzToast").textContent = "Toca una pieza que esté al lado del hueco";
   $("#pzEnd").hidden = true; $("#pzWrap").hidden = false; $("#pzTools").hidden = false; $("#pz").classList.remove("solved"); $("#pzWrap").style.flex = ""; $("#pzWrap").style.height = "";
-  const f = FOTOS[PZ_FOTO - 1];
+  const f = PZ_IMG || FOTOS[5];
   $("#pz").innerHTML = `<span class="peek" style="${f ? `background-image:url('${f}')` : ""}"></span>` + Array.from({ length: 9 }, (_, k) =>
     `<button class="t${k === 8 ? " last" : ""}" data-k="${k}" aria-label="Pieza ${k + 1}"><i style="${f ? `background-image:url('${f}');` : "background:#3b1a6e;"}background-position:${(k % 3) * 50}% ${Math.floor(k / 3) * 50}%"></i></button>`).join("");
   $$("#pz .t").forEach(b => b.addEventListener("click", () => pzTap(+b.dataset.k)));
