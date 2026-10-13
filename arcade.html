@@ -90,6 +90,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .opt { padding: 14px 14px; border-radius: 14px; border: 2px solid var(--line); background: rgba(255,255,255,.05); text-align: left; font: 500 1.05rem/1.3 var(--f-body); transition: transform .12s ease, background .2s ease, border-color .2s ease; }
 .opt:active { transform: scale(.98); }
 .opt.ok { border-color: var(--mint); background: rgba(77,240,192,.14); }
+.opt.meh { border-color: var(--butter); background: rgba(255,216,77,.12); }
+.say--top { background: rgba(77,240,192,.12); border-color: rgba(77,240,192,.45); }
+.say--top small, .say--ok small { color: var(--mint); }
+.say--meh small { color: var(--butter); } .say--no small { color: var(--coral); }
 .opt.no { border-color: var(--coral); background: rgba(255,122,89,.14); animation: shake .35s ease; }
 .opt:disabled { cursor: default; }
 @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
@@ -182,7 +186,7 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
       <div id="menu" hidden style="display:flex;flex-direction:column;gap:12px;flex:1">
         <p class="menu-h">ELIGE TU JUEGO</p>
         <div class="games">
-          <button class="game" data-go="trivia" style="--gc:#ff4f9a"><span class="gi" aria-hidden="true">🧠</span><span><b>¿Cuánto sabes de nosotros?</b><small id="st-trivia">12 preguntas. Saca 6 para ganar la ficha.</small></span><span class="coin" id="c-trivia">✓</span></button>
+          <button class="game" data-go="trivia" style="--gc:#ff4f9a"><span class="gi" aria-hidden="true">🧠</span><span><b>¿Cuánto conoces a Diego?</b><small id="st-trivia">18 preguntas sobre mí. Saca 10 para ganar la ficha.</small></span><span class="coin" id="c-trivia">✓</span></button>
           <button class="game" data-go="memo" style="--gc:#59c7ff"><span class="gi" aria-hidden="true">📸</span><span><b>Memorice de nosotros</b><small id="st-memo">Encuentra los 6 pares de fotos.</small></span><span class="coin" id="c-memo">✓</span></button>
           <button class="game" data-go="catch" style="--gc:#4df0c0"><span class="gi" aria-hidden="true">🧺</span><span><b>Atrapa los corazones</b><small id="st-catch">Junta 25 corazones sin perder tus 3 vidas.</small></span><span class="coin" id="c-catch">✓</span></button>
         </div>
@@ -254,34 +258,104 @@ const D = { whatsapp: "56941089585" };
 const FOTOS = ["__FOTO1__", "__FOTO2__", "__FOTO3__", "__FOTO4__", "__FOTO5__", "__FOTO6__", "__FOTO7__", "__FOTO8__", "__FOTO9__", "__FOTO10__", "__FOTO11__", "__FOTO12__"].map(f => f.startsWith("__") ? "" : f);
 // los pares del memorice: [n.º de foto, lo que aparece al encontrarlo]
 const MEMO = [[12, "¡Nuestra primera foto! 📸"], [1, "¡El día del sí! 🎈"], [6, "¡Mi favorita! ⭐"], [2, "¡Tu sonrisa! 😍"], [3, "¡Nosotros! 💑"], [7, "¡Contigo! 💗"]];
-// trivia: la primera opción es la correcta; "todas" = cualquiera vale
+// trivia "¿Cuánto conoces a Diego?": las opciones y respuestas son de Diego.
+// nivel de cada opción: "top" correctísima y "ok" correcta (suman punto); "meh" más o menos y "no" incorrecta (no suman)
 const TRIVIA = [
-  { q: "¿Dónde era la playa de la historia con la que empezó todo?", o: ["En La Serena… parece", "En Coyhaique 😂", "Ni idea, pero gracias a esa foto te hablé"], todas: true,
-    ok: "Cualquiera vale. Nunca supimos bien, pero esa foto me trajo hasta ti 😌" },
-  { q: "¿Dónde nos vimos por primera vez?", o: ["En La Sofo", "En el Portal Temuco", "En mis sueños (antes de conocerte)"],
-    ok: "¡Sí! El 18 de septiembre, en La Sofo. Ese día me enamoré al tiro.", no: "Fue en La Sofo, el 18 de septiembre. (Aunque en mis sueños también, técnicamente.)" },
-  { q: "¿Qué pasó cuando nos tocamos las manos por primera vez?", o: ["Todo se pausó", "Me dio la corriente ⚡", "Me sudaron las manos"],
-    ok: "Todo se pausó y solo estábamos tú y yo. (Lo de las manos sudadas también pasó, pero no le cuentes a nadie.)", no: "Bueno, sí me sudaron un poquito… pero lo importante es que todo se pausó." },
-  { q: "¿Dónde vimos nuestra primera peli juntos?", o: ["En el Portal Temuco", "En Netflix, en el sillón", "En un autocine imaginario"],
-    ok: "¡Exacto! Y yo más pendiente de ti que de la película 🍿", no: "Fue en el Portal Temuco. Yo tampoco me acuerdo mucho de la peli: estaba mirándote a ti." },
-  { q: "¿A qué hora me dijiste que sí?", o: ["A las 14:15", "A las 13:00", "A las 3 de la mañana"],
-    ok: "14:15 del 3 de octubre. Esa hora la tengo grabada en el corazón.", no: "Fue a las 14:15. Anótalo, que va a ser pregunta de examen todos los años 😌" },
-  { q: "¿Qué decían los globos dorados?", o: ["¿Quieres ser mi polola?", "Feliz cumpleaños (eran los que quedaban)", "Se arrienda"],
-    ok: "¡Sí! Y tú dijiste que sí, que era lo importante 🎈", no: "Decían «¿Quieres ser mi polola?». Los de feliz cumpleaños los guardé para otro día 😂" },
-  { q: "¿Cómo celebramos el sí?", o: ["Sushi y después heladito", "Completos en la plaza", "Con una fonda entera"],
-    ok: "Sushi y después heladito. El menú oficial del amor 🍣🍦", no: "Fue sushi y después heladito. Pero si quieres completos, ese es nuestro próximo panorama." },
-  { q: "¿Qué desayuna Diego mientras piensa en ti?", o: ["Huevito con leche con chocolate", "Palta con pan", "Nada, solo piensa en ti"],
-    ok: "¡Exacto! Huevito y leche con chocolate. Desayuno de campeón enamorado 🍳", no: "Huevito con leche con chocolate. Lo de pensar en ti también es verdad, igual." },
-  { q: "¿Qué hace Diego cuando está aburrido?", o: ["Mira tus fotos y sonríe como tontito", "Estudia (mentira)", "Cuenta ovejas"],
-    ok: "Culpable. Me pillaste 🙈", no: "Mira tus fotos y sonríe como tontito. Ahora ya lo sabes, no hay vuelta atrás 🙈" },
-  { q: "¿Qué abraza Diego en las noches para poder dormir?", o: ["Una almohada, pensando que eres tú", "Un peluche de dinosaurio", "El celular, esperando tu mensaje"],
-    ok: "Sí… una almohada que se llama Maite (no oficialmente) 🥺", no: "Abraza una almohada pensando que eres tú. Lo del celular también pasa, a veces 😅" },
-  { q: "¿Cómo te dice Diego?", o: ["Mi wawita mosha", "Señorita Maite", "Mi polola favorita (y la única)"],
-    ok: "¡Mi wawita mosha! La única, la original 💗", no: "¡Mi wawita mosha! Aunque lo de la única también es verdad." },
-  { q: "¿Quién aparece en los sueños de Diego?", o: ["Tú, siempre", "Un examen sorpresa", "Un perro con sombrero"],
-    ok: "Siempre tú. El perro con sombrero apareció una sola vez y no volvió 🐶🎩", no: "Siempre tú. Lo del perro con sombrero fue una sola vez, lo juro 🐶🎩" },
+  { q: "¿Cuál es mi comida favorita?", o: [
+    ["Sushi", "ok", "Bien… el sushi me encanta. Pero hay una respuesta todavía más correcta 😏"],
+    ["Maite", "top", "Mi plato favorito eres tú 😏"],
+    ["Hamburguesa", "no", "Rica, pero no. Mi favorita es otra… (pista: está leyendo esto 😏)"],
+    ["Pan con huevo", "no", "El pan con huevo es de campeones, pero no es mi favorita 😂"]] },
+  { q: "¿Cuál es mi color favorito?", o: [
+    ["Rojo", "ok", "¡Sí! El rojo me encanta… pero no es el único."],
+    ["Negro", "ok", "El negro va con todo. Pero hay más…"],
+    ["Blanco", "ok", "El blanco también. Ya te diste cuenta de que me cuesta elegir 😅"],
+    ["Todas las anteriores", "top", "Rojo, negro y blanco. No me hagas elegir 😂"]] },
+  { q: "¿Cuándo es mi cumpleaños?", o: [
+    ["17 de mayo", "no", "Te pasaste por diez días 😂 Es el 7 de mayo 🎂"],
+    ["10 de mayo", "no", "Casi, pero no. Es el 7 de mayo. Anótalo, que va a haber torta 🎂"],
+    ["7 de mayo", "ok", "7 de mayo. Ya sabes: la torta corre por tu cuenta 🎂😌"],
+    ["5 de mayo", "no", "Uy, por dos días. Es el 7 de mayo 🎂"]] },
+  { q: "¿Cuántos hermanos tengo?", o: [
+    ["5: Dominga, Joaquín, Julián, Vicente y Alberto", "no", "¿Alberto? ¿Quién es Alberto? 😂 Son 4: Joaquín, Dominga, Julián y Vicente."],
+    ["4: Joaquín, Dominga, Julián y Vicente", "ok", "Los cuatro. Ya estás lista para el almuerzo familiar 😅"],
+    ["3: Joaquín, Dominga y Julián", "no", "¡Te faltó Vicente! Se va a sentir 😂 Son 4."],
+    ["2: Joaquín y Dominga", "no", "Faltan dos… Julián y Vicente están ofendidos 😂"],
+    ["1: Joaquín", "no", "¿Y los otros tres? 😂 Son 4: Joaquín, Dominga, Julián y Vicente."]] },
+  { q: "¿De qué equipo de fútbol soy?", o: [
+    ["Colo-Colo", "no", "Nada de albo 😂"],
+    ["U de Chile", "no", "Tampoco. Ni azul ni nada 😅"],
+    ["Deportes Temuco", "no", "Buen intento por lo local, pero no."],
+    ["Ninguna de las anteriores", "ok", "No soy de ningún equipo. Yo juego, no veo 😎⚽"]] },
+  { q: "¿En qué posición juego a la pelota?", o: [
+    ["Mediocampo", "ok", "Mediocampista: el que reparte el juego… y el amor 😎"],
+    ["Delantero", "no", "No, aunque los goles los celebro igual 😂 Soy mediocampista."],
+    ["Defensa", "no", "Soy mediocampista. A ti sí te defiendo, eso sí 😌"],
+    ["Extremo", "no", "Tampoco. El mediocampo es mi lugar en la cancha."]] },
+  { q: "¿A qué me dedico?", o: [
+    ["Estudio ingeniería comercial", "no", "Nop, lo mío es otra cosa 😎 Soy bartender y garzón."],
+    ["Soy bartender y garzón", "ok", "Bartender y garzón. Si quieres un traguito, ya sabes a quién pedirle 🍹"],
+    ["Soy atleta", "no", "Me encantaría, pero no 😂 Soy bartender y garzón."],
+    ["Soy futbolista pagado", "no", "Ojalá 😂 Por ahora juego gratis. Soy bartender y garzón."]] },
+  { q: "¿Cuál es mi bebida favorita?", o: [
+    ["Agua", "ok", "Agüita, lo más sano 💧 Pero hay una que me gusta todavía más…"],
+    ["Sprite", "no", "Nada de Sprite."],
+    ["Coca-Cola", "no", "Coca-Cola no es."],
+    ["Jugo de frambuesa", "top", "Jugo de frambuesa, lo mejor que existe 🍓"]] },
+  { q: "¿Cuál es mi cantante favorito?", o: [
+    ["Canserbero", "top", "Canserbero, el mejor de todos 🎤"],
+    ["Duki", "ok", "Duki me gusta harto… pero hay uno que me gusta más."],
+    ["Santa Feria", "meh", "Me gusta, pero no es mi favorito."],
+    ["Chystemc", "no", "No es él 😅"]] },
+  { q: "¿Cuál es mi película favorita?", o: [
+    ["Cars", "top", "Cars. Ka-chow ⚡🚗"],
+    ["Son como niños", "ok", "Me encanta… pero Cars gana 🚗"],
+    ["Ted", "meh", "No es mi favorita, pero es muy buena 🧸"],
+    ["Ninguna de las anteriores", "no", "¡Sí está en las opciones! 😂"]] },
+  { q: "¿Qué mañita tengo?", o: [
+    ["No me puedo quedar quieto: siempre tengo que estar haciendo algo", "ok", "No me puedo quedar quieto ni un ratito 😅"],
+    ["Me muerdo las uñas de los pies", "no", "¿¡Qué!? No, eso no 🤢😂"],
+    ["Duermo con los ojos abiertos", "no", "No… aunque sería medio tenebroso 😂"],
+    ["Me gusta inhalar azúcar", "no", "¿Quéee? No 😂"]] },
+  { q: "¿Qué me carga?", o: [
+    ["La gente que cree que lo sabe todo", "ok", "Me carga la gente que se cree sabelotodo."],
+    ["La gente que se cree mejor que yo", "no", "No tanto… lo que me carga es la gente que cree que lo sabe todo."],
+    ["La gente egocéntrica", "meh", "No me encanta, pero no es lo que más me carga."],
+    ["Todas las anteriores", "no", "No todas. Lo que me carga es la gente que cree que lo sabe todo."]] },
+  { q: "¿A qué le tengo miedo?", o: [
+    ["Al fracaso", "ok", "Me da miedo fracasar… pero contigo al lado me siento capaz de todo."],
+    ["A la muerte", "no", "A eso no le tengo miedo."],
+    ["A que me pegues", "top", "Eso es lo que más miedo me da 😂 No me pegues, porfa."],
+    ["Todas las anteriores", "no", "No todas 😅"]] },
+  { q: "¿Cuál sería mi día libre perfecto?", o: [
+    ["Jugar a la pelota y estar contigo", "ok", "Una pichanga y después tú. Día perfecto ⚽💗"],
+    ["Jugar a la pelota todo el día", "no", "Casi… pero falta lo más importante: tú."],
+    ["Salir de fiesta todo el fin de semana", "no", "No, no 😂 Mi día perfecto es más tranquilo, y contigo."],
+    ["Pasar todo el día con mis amigos", "no", "No… mi día perfecto es contigo (y una pichanga)."]] },
+  { q: "¿Qué es lo que más me gusta hacer contigo?", o: [
+    ["Pasar el tiempo", "ok", "Cualquier rato contigo es mi rato favorito."],
+    ["Estar contigo", "ok", "Solo estar contigo ya me tiene feliz."],
+    ["Olerte", "ok", "Tu olor es mi favorito 😌"],
+    ["Todo y más", "top", "Todo y más, obvio 💗"]] },
+  { q: "¿Cuál es mi lugar favorito de Temuco?", o: [
+    ["Mi casa", "no", "Mi casa no."],
+    ["Tú", "ok", "Mi lugar favorito eres tú 💗 (sé que no eres un lugar, pero igual)"],
+    ["Tu casa", "meh", "Sí… pero no. Más que tu casa, eres tú."],
+    ["Todas", "meh", "Sí, pero no 😅 Mi lugar favorito eres tú."]] },
+  { q: "¿Qué haría si me gano el Loto?", o: [
+    ["Ya me lo gané: contigo", "ok", "El Loto ya me lo gané el día que me dijiste que sí 🎰💗"],
+    ["Me voy a otro país y me compro casa y auto", "no", "Sin ti no me voy a ninguna parte."],
+    ["Me caso contigo y recorremos el mundo", "meh", "Sí… pero no. Eso lo voy a hacer igual, con o sin Loto 😌"],
+    ["Todo al rojo 🎰", "ok", "¡También! Todo al rojo y que sea lo que Dios quiera 😂"]] },
+  { q: "¿Qué fue lo primero que me gustó de ti?", o: [
+    ["Todo", "ok", "Me gustó todo, de una. No hubo primero ni segundo 💗"],
+    ["Tu cara", "meh", "Sí… pero no solo eso. Me gustó todo."],
+    ["Tu sonrisa", "meh", "Tu sonrisa sí… pero no solo eso. Me gustó TODO."],
+    ["Tu forma de ser", "meh", "Sí, pero no solo eso. Me gustó todo de ti."]] },
 ];
-const RANKS = [[12, "¡Perfecto! Experta nivel dios en Diego 🏆"], [9, "¡Polola certificada! Me conoces demasiado ✨"], [6, "¡Bien! Pero te falta estudiar un poquito más a tu pololo 📚"], [0, "¿Segura que me conoces? 😂 Inténtalo otra vez"]];
+const PARA_FICHA = 10;   // respuestas buenas para ganar la ficha
+const RANKS = [[18, "¡Perfecto! Me conoces mejor que yo mismo 🏆"], [15, "¡Polola certificada! Me conoces demasiado ✨"], [PARA_FICHA, "¡Bien! Pero te falta conocerme un poquito más 😏"], [0, "¿Segura que me conoces? 😂 Inténtalo otra vez"]];
+const LABEL = { top: "¡CORRECTÍSIMO!", ok: "¡CORRECTO!", meh: "MÁS O MENOS…", no: "¡NOOO!" };
 const META = 25;   // corazones para ganar la ficha
 /* ======================================================= */
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -293,6 +367,7 @@ const wa = t => `https://api.whatsapp.com/send?phone=${D.whatsapp}&text=${encode
 let save = { f: { trivia: false, memo: false, catch: false }, best: { trivia: 0, memo: 0, catch: 0 }, mute: false };
 try { const v = JSON.parse(localStorage.getItem("maite_arcade") || "null"); if (v && v.f) save = { ...save, ...v, f: { ...save.f, ...v.f }, best: { ...save.best, ...v.best } }; } catch {}
 const persist = () => { try { localStorage.setItem("maite_arcade", JSON.stringify(save)); } catch {} };
+if (save.tv !== 2) { save.tv = 2; save.f.trivia = false; save.best.trivia = 0; persist(); }   // trivia nueva (sobre Diego)
 
 /* ---------- sonido 8-bit ---------- */
 const S8 = (() => {
@@ -363,7 +438,7 @@ function renderMenu() {
   const f = save.f, n = [f.trivia, f.memo, f.catch].filter(Boolean).length;
   ["trivia", "memo", "catch"].forEach(k => $("#c-" + k).classList.toggle("got", f[k]));
   ["k1", "k2", "k3"].forEach((k, i) => $("#" + k).classList.toggle("got", i < n));
-  if (save.best.trivia) $("#st-trivia").textContent = `Récord: ${save.best.trivia}/12${f.trivia ? " · ficha ganada" : " · saca 6 para la ficha"}`;
+  if (save.best.trivia) $("#st-trivia").textContent = `Récord: ${save.best.trivia}/${TRIVIA.length}${f.trivia ? " · ficha ganada" : ` · saca ${PARA_FICHA} para la ficha`}`;
   if (save.best.memo) $("#st-memo").textContent = `Récord: ${save.best.memo} movimientos · ficha ganada`;
   if (save.best.catch) $("#st-catch").textContent = `Récord: ${save.best.catch} ♥${f.catch ? " · ficha ganada" : " · junta 25 para la ficha"}`;
   const pb = $("#prizeBtn"); pb.classList.toggle("open", n === 3);
@@ -375,7 +450,7 @@ const coinHTML = first => `<div class="won"><span class="coin got">✓</span>${f
 /* ---------- 1. trivia ---------- */
 let tI = 0, tPts = 0, tList = [];
 function startTrivia() {
-  tI = 0; tPts = 0; tList = TRIVIA.map(x => ({ ...x, mix: shuffle(x.o.map((t, i) => ({ t, ok: x.todas || i === 0 }))) }));
+  tI = 0; tPts = 0; tList = TRIVIA.map(x => ({ ...x, mix: x.o.map(([t, lv, c]) => ({ t, lv, c, ok: lv === "top" || lv === "ok" })) }));
   $("#tPlay").hidden = false; $("#tEnd").hidden = true; $("#tScore").textContent = 0; showQ();
 }
 function showQ() {
@@ -385,19 +460,19 @@ function showQ() {
 }
 function answer(i, b) {
   const x = tList[tI], o = x.mix[i]; $$("#tOpts .opt").forEach(e => e.disabled = true);
-  if (o.ok) { tPts++; b.classList.add("ok"); S8.ok(); buzz(15); burstAt(b, 18); } else { b.classList.add("no"); S8.no(); buzz([30, 40, 30]); $$("#tOpts .opt").forEach((e, k) => { if (x.mix[k].ok) e.classList.add("ok"); }); }
-  if (x.todas) $$("#tOpts .opt").forEach(e => e.classList.add("ok"));
+  if (o.ok) { tPts++; b.classList.add("ok"); o.lv === "top" ? S8.win() : S8.ok(); buzz(15); burstAt(b, o.lv === "top" ? 40 : 18); }
+  else { b.classList.add(o.lv === "meh" ? "meh" : "no"); S8.no(); buzz([30, 40, 30]); $$("#tOpts .opt").forEach((e, k) => { if (x.mix[k].lv === "top" || (x.mix[k].ok && !x.mix.some(m => m.lv === "top"))) e.classList.add("ok"); }); }
   $("#tScore").textContent = tPts;
-  $("#tSay").innerHTML = `<div class="say"><span class="av" aria-hidden="true">😎</span><div><small>DIEGO DICE</small><p>${o.ok ? x.ok : x.no}</p></div></div>`;
+  $("#tSay").innerHTML = `<div class="say say--${o.lv}"><span class="av" aria-hidden="true">😎</span><div><small>DIEGO DICE · ${LABEL[o.lv]}</small><p>${o.c}</p></div></div>`;
   $("#tNext").hidden = false; $("#tNext").textContent = tI < tList.length - 1 ? "SIGUIENTE ▶" : "VER RESULTADO ▶";
   $("#tNext").scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
 }
 $("#tNext").addEventListener("click", () => { S8.blip(); if (++tI < tList.length) { showQ(); $("#s-trivia").scrollTop = 0; } else endTrivia(); });
 function endTrivia() {
   save.best.trivia = Math.max(save.best.trivia, tPts); persist();
-  const rank = RANKS.find(([min]) => tPts >= min)[1], win = tPts >= 6, first = win && giveCoin("trivia");
+  const rank = RANKS.find(([min]) => tPts >= min)[1], win = tPts >= PARA_FICHA, first = win && giveCoin("trivia");
   $("#tPlay").hidden = true; const e = $("#tEnd"); e.hidden = false;
-  e.innerHTML = `<span class="score-big">${tPts}/12</span><p class="rank">${rank}</p>${win ? coinHTML(first) : `<p class="hint">Necesitas 6 respuestas buenas para la ficha.</p>`}
+  e.innerHTML = `<span class="score-big">${tPts}/${tList.length}</span><p class="rank">${rank}</p>${win ? coinHTML(first) : `<p class="hint">Necesitas ${PARA_FICHA} respuestas buenas para la ficha.</p>`}
     <div class="row"><button class="btn${win ? " btn--ghost" : ""}" id="tAgain">OTRA VEZ</button>${win ? `<button class="btn" data-home2>MENÚ ▶</button>` : ""}</div>`;
   $("#tAgain").addEventListener("click", () => { S8.coin(); startTrivia(); });
   $("[data-home2]", e)?.addEventListener("click", () => { S8.blip(); go("home"); });
