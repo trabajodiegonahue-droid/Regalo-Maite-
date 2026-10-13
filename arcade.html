@@ -134,20 +134,22 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* vuela hasta Diego */
 #s-vuela { padding: 0; gap: 0; }
 #s-vuela .bar { padding: 12px 16px 8px; }
-/* arma nuestra foto */
-.pz-wrap { flex: 1; min-height: 0; display: grid; place-items: center; }
-.pz { position: relative; border-radius: 10px; overflow: hidden; background: #120a2c; box-shadow: 0 0 0 3px #2e1a57, 0 10px 24px rgba(0,0,0,.5); }
-.pz .t { position: absolute; width: 33.333%; height: 33.333%; padding: 2px; border: 0; background: none; transition: left .16s ease, top .16s ease; }
-.pz .t i { display: block; width: 100%; height: 100%; border-radius: 6px; background-repeat: no-repeat; background-size: 300% 300%; box-shadow: inset 0 0 0 2px rgba(255,255,255,.55); }
-.pz .t.last { opacity: 0; transition: opacity .6s ease; }
-.pz.solved .t.last { opacity: 1; }
-.pz.solved .t i { box-shadow: none; border-radius: 0; }
-.pz.solved .t { padding: 0; }
-.pz.solved { box-shadow: 0 0 0 3px var(--mint), 0 0 30px rgba(77,240,192,.6); }
-.pz .peek { position: absolute; inset: 0; z-index: 2; background: center / cover no-repeat; opacity: 0; transition: opacity .25s ease; pointer-events: none; }
-.pz.peeking .peek { opacity: 1; }
-.pz-tools { display: flex; justify-content: center; gap: 10px; }
-/* diploma */
+/* arma nuestra foto: rompecabezas de piezas que se arrastran */
+#s-puzzle { gap: 10px; }
+.jz-board { position: relative; align-self: center; flex: 0 0 auto; border-radius: 6px; background: #120a2c; box-shadow: 0 0 0 3px #2e1a57, 0 10px 24px rgba(0,0,0,.5); }
+.jz-board canvas.guide { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 6px; }
+.jz-board .full { position: absolute; inset: 0; z-index: 5; border-radius: 6px; background: center / cover no-repeat; opacity: 0; transition: opacity .5s ease; pointer-events: none; }
+.jz-board.peeking .full, .jz-board.solved .full { opacity: 1; }
+.jz-board.solved { box-shadow: 0 0 0 3px var(--mint), 0 0 34px rgba(77,240,192,.6); }
+.jz-tray { flex: 0 0 auto; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 4px; padding: 6px; border-radius: 12px; background: rgba(255,255,255,.05); border: 2px dashed var(--line); }
+.jz-p { display: block; touch-action: none; cursor: grab; filter: drop-shadow(0 3px 4px rgba(0,0,0,.5)); }
+.jz-p.drag { position: fixed; z-index: 60; cursor: grabbing; filter: drop-shadow(0 10px 14px rgba(0,0,0,.6)); }
+.jz-p.snap { transition: left .14s ease, top .14s ease; }
+.jz-p.placed { position: absolute; z-index: 2; pointer-events: none; filter: none; }
+.jz-p.back { animation: shake .3s ease; }
+.jz-tools { display: flex; gap: 8px; }
+.jz-tools .back { color: var(--butter); }
+/* diploma *//* diploma */
 .diploma { position: relative; padding: 14px 14px 12px; border-radius: 10px; color: #3a2414; text-align: center; display: grid; gap: 6px;
   background: radial-gradient(120% 80% at 50% 0%, #fffaf0, #f6e6c4); border: 6px double #c9973a; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
 .diploma .kicker { font: 400 .55rem/1.6 var(--f-pixel); color: #9a6a16; letter-spacing: .06em; }
@@ -206,7 +208,7 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
           <button class="game" data-go="memo" style="--gc:#59c7ff"><span class="gi" aria-hidden="true">📸</span><span><b>Memorice de nosotros</b><small id="st-memo">Encuentra los 6 pares de fotos.</small></span><span class="coin" id="c-memo">✓</span></button>
           <button class="game" data-go="catch" style="--gc:#4df0c0"><span class="gi" aria-hidden="true">🧺</span><span><b>Atrapa los corazones</b><small id="st-catch">Junta 25 corazones sin perder tus 3 vidas.</small></span><span class="coin" id="c-catch">✓</span></button>
           <button class="game" data-go="vuela" style="--gc:#ffd84d"><span class="gi" aria-hidden="true">🕊️</span><span><b>Vuela hasta Diego</b><small id="st-vuela">Esquiva 15 obstáculos para llegar a mí.</small></span><span class="coin" id="c-vuela">✓</span></button>
-          <button class="game" data-go="puzzle" style="--gc:#ff7a59"><span class="gi" aria-hidden="true">🧩</span><span><b>Arma nuestra foto</b><small id="st-puzzle">Desliza las piezas hasta armarla.</small></span><span class="coin" id="c-puzzle">✓</span></button>
+          <button class="game" data-go="puzzle" style="--gc:#ff7a59"><span class="gi" aria-hidden="true">🧩</span><span><b>Arma nuestra foto</b><small id="st-puzzle">16 piezas: arrástralas hasta su lugar.</small></span><span class="coin" id="c-puzzle">✓</span></button>
         </div>
         <div class="coins-row"><span>FICHAS</span><span class="coin" id="k1"></span><span class="coin" id="k2"></span><span class="coin" id="k3"></span><span class="coin" id="k4"></span><span class="coin" id="k5"></span></div>
         <button class="prize-btn" id="prizeBtn">🔒 PREMIO FINAL<br>GANA LAS 5 FICHAS</button>
@@ -265,10 +267,9 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
 
     <!-- arma nuestra foto -->
     <section class="scr" id="s-puzzle">
-      <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>MOVIMIENTOS <b id="pzMoves">0</b></span></div>
-      <p class="toast" id="pzToast">Toca una pieza que esté al lado del hueco</p>
-      <div class="pz-wrap" id="pzWrap"><div class="pz" id="pz"></div></div>
-      <div class="pz-tools" id="pzTools"><button class="btn btn--ghost" id="pzPeek">👀 VER FOTO</button><button class="btn btn--ghost" id="pzMix">🔀 MEZCLAR</button></div>
+      <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>PIEZAS <b id="jzCount">0/16</b></span><span class="jz-tools"><button class="back" id="jzPeek">👀 VER</button><button class="back" id="jzMix">🔀</button></span></div>
+      <div class="jz-board" id="jzBoard"><canvas class="guide" id="jzGuide"></canvas><span class="full" id="jzFull"></span></div>
+      <div class="jz-tray" id="jzTray" aria-label="Piezas del rompecabezas: arrástralas hasta su lugar"></div>
       <div class="result" id="pzEnd" hidden></div>
     </section>
 
@@ -410,6 +411,7 @@ const GAMES = ["trivia", "memo", "catch", "vuela", "puzzle"];
 try { const v = JSON.parse(localStorage.getItem("maite_arcade") || "null"); if (v && v.f) save = { ...save, ...v, f: { ...save.f, ...v.f }, best: { ...save.best, ...v.best } }; } catch {}
 const persist = () => { try { localStorage.setItem("maite_arcade", JSON.stringify(save)); } catch {} };
 if (save.tv !== 2) { save.tv = 2; save.f.trivia = false; save.best.trivia = 0; persist(); }   // trivia nueva (sobre Diego)
+if (save.pv !== 2) { save.pv = 2; save.f.puzzle = false; save.best.puzzle = 0; persist(); }   // rompecabezas nuevo (ahora se mide en tiempo)
 
 /* ---------- sonido 8-bit ---------- */
 const S8 = (() => {
@@ -484,7 +486,7 @@ function renderMenu() {
   GAMES.forEach(k => $("#c-" + k).classList.toggle("got", f[k]));
   GAMES.forEach((_, i) => $("#k" + (i + 1)).classList.toggle("got", i < n));
   if (save.best.vuela) $("#st-vuela").textContent = `Récord: ${save.best.vuela} obstáculos${f.vuela ? " · ficha ganada" : " · pasa 15 para la ficha"}`;
-  if (save.best.puzzle) $("#st-puzzle").textContent = `Récord: ${save.best.puzzle} movimientos · ficha ganada`;
+  if (save.best.puzzle) $("#st-puzzle").textContent = `Récord: ${jzTime(save.best.puzzle)} · ficha ganada`;
   if (save.best.trivia) $("#st-trivia").textContent = `Récord: ${save.best.trivia}/${TRIVIA.length}${f.trivia ? " · ficha ganada" : ` · saca ${PARA_FICHA} para la ficha`}`;
   if (save.best.memo) $("#st-memo").textContent = `Récord: ${save.best.memo} movimientos · ficha ganada`;
   if (save.best.catch) $("#st-catch").textContent = `Récord: ${save.best.catch} ♥${f.catch ? " · ficha ganada" : " · junta 25 para la ficha"}`;
@@ -697,55 +699,119 @@ function vEnd(win, que) {
   if (win) { S8.win(); burst(140); buzz([40, 60, 40]); } else { S8.hurt(); buzz([60, 40, 60]); }
 }
 
-/* ---------- 5. arma nuestra foto (rompecabezas deslizante 3×3) ---------- */
-const PZ_IMG = ["__PZFOTO__"].map(f => f.startsWith("__") ? "" : f)[0];   // la foto favorita, en buena calidad
-let pz = { cells: [], moves: 0, done: false };
-const pzNb = i => { const r = Math.floor(i / 3), c = i % 3, n = []; if (r > 0) n.push(i - 3); if (r < 2) n.push(i + 3); if (c > 0) n.push(i - 1); if (c < 2) n.push(i + 1); return n; };
-function pzSize() { const w = $("#pzWrap").getBoundingClientRect(), W = Math.floor(Math.min(w.width, w.height * .75)); $("#pz").style.width = W + "px"; $("#pz").style.height = Math.floor(W / .75) + "px"; }
-addEventListener("resize", () => { if (cur === "puzzle") pzSize(); });
+/* ---------- 5. arma nuestra foto: 16 piezas de verdad que se arrastran desde abajo ---------- */
+const JZ_IMG = ["__KIDSFOTO__"].map(f => f.startsWith("__") ? "" : f)[0] || FOTOS[5];   // los dos de chiquititos
+const JN = 4, JPAD = .26;   // 4×4 piezas; espacio extra para las pestañas
+let jz = { img: null, H: [], V: [], order: [], placed: new Set(), B: 0, t0: 0, done: false };
+const jzImg = new Image(); if (JZ_IMG) jzImg.src = JZ_IMG;
+// borde de una pieza: recto o con pestaña hacia afuera (s = 1) o hacia adentro (s = -1)
+function jzEdge(g, x0, y0, x1, y1, s) {
+  if (!s) return g.lineTo(x1, y1);
+  const dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy), nx = dy / L, ny = -dx / L, P = (u, v) => [x0 + dx * u + nx * v * L * s, y0 + dy * u + ny * v * L * s];
+  g.lineTo(...P(.36, 0)); g.bezierCurveTo(...P(.42, 0), ...P(.30, .2), ...P(.5, .22)); g.bezierCurveTo(...P(.70, .2), ...P(.58, 0), ...P(.64, 0)); g.lineTo(x1, y1);
+}
+function jzPath(g, r, c, cs, o) {   // o = dónde empieza la celda dentro del dibujo
+  const top = r > 0 ? -jz.H[r - 1][c] : 0, bot = r < JN - 1 ? jz.H[r][c] : 0, lef = c > 0 ? -jz.V[r][c - 1] : 0, rig = c < JN - 1 ? jz.V[r][c] : 0;
+  g.beginPath(); g.moveTo(o, o);
+  jzEdge(g, o, o, o + cs, o, top); jzEdge(g, o + cs, o, o + cs, o + cs, rig); jzEdge(g, o + cs, o + cs, o, o + cs, bot); jzEdge(g, o, o + cs, o, o, lef); g.closePath();
+}
+function jzLayout() {   // tamaños según la pantalla
+  const sc = $("#s-puzzle"), W = sc.clientWidth - 32, Hs = sc.clientHeight - 32, tp = Math.floor((W - 16 - 5 * 4) / 6) - 1, trayH = 3 * tp + 2 * 4 + 16;
+  const left = JN * JN - jz.placed.size, rows = Math.ceil(left / 6);
+  jz.B = Math.floor(Math.min(W, Hs - 30 - 20 - (left ? trayH : 0), 360)); jz.tp = tp;
+  const bd = $("#jzBoard"); bd.style.width = bd.style.height = jz.B + "px";
+  $("#jzTray").style.minHeight = (left ? (rows * tp + (rows - 1) * 4 + 16) : 0) + "px";
+}
+function jzDrawGuide() {
+  const cv = $("#jzGuide"), d = devicePixelRatio || 1, B = jz.B, cs = B / JN; cv.width = Math.round(B * d); cv.height = Math.round(B * d); const g = cv.getContext("2d"); g.setTransform(d, 0, 0, d, 0, 0);
+  if (jzImg.complete && jzImg.naturalWidth) { g.globalAlpha = .16; g.drawImage(jzImg, 0, 0, B, B); g.globalAlpha = 1; }
+  g.strokeStyle = "rgba(255,255,255,.28)"; g.lineWidth = 1;
+  for (let r = 0; r < JN; r++) for (let c = 0; c < JN; c++) { g.save(); g.translate(c * cs, r * cs); jzPath(g, r, c, cs, 0); g.stroke(); g.restore(); }
+}
+function jzPiece(k) {   // dibuja la pieza k (fila r, columna c) en su propio canvas
+  const r = Math.floor(k / JN), c = k % JN, B = jz.B, cs = B / JN, pad = cs * JPAD, full = cs + 2 * pad, d = devicePixelRatio || 1;
+  const cv = document.createElement("canvas"); cv.className = "jz-p"; cv.dataset.k = k; cv.width = Math.round(full * d); cv.height = Math.round(full * d); cv.setAttribute("aria-label", `Pieza ${k + 1}`);
+  const g = cv.getContext("2d"); g.setTransform(d, 0, 0, d, 0, 0); jzPath(g, r, c, cs, pad); g.save(); g.clip();
+  if (jzImg.naturalWidth) g.drawImage(jzImg, pad - c * cs, pad - r * cs, B, B); else { g.fillStyle = "#3b1a6e"; g.fillRect(0, 0, full, full); }
+  g.restore(); g.strokeStyle = "rgba(255,255,255,.75)"; g.lineWidth = 1.4; jzPath(g, r, c, cs, pad); g.stroke();
+  cv._full = full; cv._pad = pad; return cv;
+}
+function jzSizeTray(cv) { cv.style.width = cv.style.height = jz.tp + "px"; }
+function jzRender() {   // arma el tablero y la bandeja con el estado actual
+  jzLayout(); jzDrawGuide(); $("#jzFull").style.backgroundImage = JZ_IMG ? `url('${JZ_IMG}')` : "";
+  $$("#jzBoard .jz-p").forEach(e => e.remove()); $("#jzTray").innerHTML = "";
+  const cs = jz.B / JN;
+  for (const k of jz.order) {
+    const cv = jzPiece(k);
+    if (jz.placed.has(k)) { const r = Math.floor(k / JN), c = k % JN; cv.classList.add("placed"); cv.style.width = cv.style.height = cv._full + "px"; cv.style.left = (c * cs - cv._pad) + "px"; cv.style.top = (r * cs - cv._pad) + "px"; $("#jzBoard").append(cv); }
+    else { jzSizeTray(cv); $("#jzTray").append(cv); cv.addEventListener("pointerdown", jzDown); }
+  }
+  $("#jzCount").textContent = `${jz.placed.size}/${JN * JN}`; $("#jzTray").hidden = jz.placed.size === JN * JN;
+}
 function startPuzzle() {
-  let c, tries = 0;
-  do { c = [0, 1, 2, 3, 4, 5, 6, 7, 8]; let e = 8, prev = -1;   // se desordena con movidas válidas, así siempre tiene solución
-    for (let k = 0; k < 80; k++) { const nb = pzNb(e).filter(n => n !== prev), n = nb[Math.floor(Math.random() * nb.length)]; [c[e], c[n]] = [c[n], c[e]]; prev = e; e = n; }
-  } while (c.every((v, i) => v === i) && ++tries < 5);
-  pz = { cells: c, moves: 0, done: false }; $("#pzMoves").textContent = 0; $("#pzToast").textContent = "Toca una pieza que esté al lado del hueco";
-  $("#pzEnd").hidden = true; $("#pzWrap").hidden = false; $("#pzTools").hidden = false; $("#pz").classList.remove("solved"); $("#pzWrap").style.flex = ""; $("#pzWrap").style.height = "";
-  const f = PZ_IMG || FOTOS[5];
-  $("#pz").innerHTML = `<span class="peek" style="${f ? `background-image:url('${f}')` : ""}"></span>` + Array.from({ length: 9 }, (_, k) =>
-    `<button class="t${k === 8 ? " last" : ""}" data-k="${k}" aria-label="Pieza ${k + 1}"><i style="${f ? `background-image:url('${f}');` : "background:#3b1a6e;"}background-position:${(k % 3) * 50}% ${Math.floor(k / 3) * 50}%"></i></button>`).join("");
-  $$("#pz .t").forEach(b => b.addEventListener("click", () => pzTap(+b.dataset.k)));
-  pzSize(); pzPlace();
+  jz.H = Array.from({ length: JN - 1 }, () => Array.from({ length: JN }, () => Math.random() < .5 ? 1 : -1));
+  jz.V = Array.from({ length: JN }, () => Array.from({ length: JN - 1 }, () => Math.random() < .5 ? 1 : -1));
+  jz.order = shuffle([...Array(JN * JN).keys()]); jz.placed = new Set(); jz.t0 = 0; jz.done = false;
+  $("#pzEnd").hidden = true; $("#jzBoard").classList.remove("solved", "peeking"); $("#jzTray").hidden = false;
+  const go2 = () => { if (cur === "puzzle") jzRender(); };
+  if (JZ_IMG && !jzImg.complete) jzImg.onload = go2; else requestAnimationFrame(go2);
 }
-function pzPlace() { pz.cells.forEach((k, pos) => { const b = $(`#pz .t[data-k="${k}"]`); b.style.left = (pos % 3) * 33.333 + "%"; b.style.top = Math.floor(pos / 3) * 33.333 + "%"; }); }
-function pzTap(k) {
-  if (pz.done || k === 8) return; const pos = pz.cells.indexOf(k), e = pz.cells.indexOf(8);
-  if (!pzNb(e).includes(pos)) { S8.blip(); return; }
-  [pz.cells[pos], pz.cells[e]] = [pz.cells[e], pz.cells[pos]]; pz.moves++; $("#pzMoves").textContent = pz.moves; S8.slide(); buzz(6); pzPlace();
-  if (pz.cells.every((v, i) => v === i)) pzWin();
+addEventListener("resize", () => { if (cur === "puzzle" && !jz.drag) jzRender(); });
+// arrastrar: la pieza sale de la bandeja a tamaño real y sigue el dedo
+function jzDown(e) {
+  const cv = e.currentTarget; if (jz.done || jz.drag) return; e.preventDefault();
+  const r = cv.getBoundingClientRect(), fx2 = (e.clientX - r.left) / r.width, fy2 = (e.clientY - r.top) / r.height;
+  if (!jz.t0) jz.t0 = performance.now();
+  jz.drag = { cv, ox: fx2 * cv._full, oy: fy2 * cv._full, id: e.pointerId };
+  cv.classList.remove("back"); cv.classList.add("drag"); cv.style.width = cv.style.height = cv._full + "px"; jzMove(e);
+  try { cv.setPointerCapture(e.pointerId); } catch {}
+  cv.addEventListener("pointermove", jzMove); cv.addEventListener("pointerup", jzUp); cv.addEventListener("pointercancel", jzUp);
+  S8.slide(); buzz(6);
 }
-function pzWin() {
-  pz.done = true; $("#pz").classList.add("solved"); $("#pzToast").textContent = "¡La armaste! 🧩💗"; S8.match(); burstAt($("#pz"), 120);
-  save.best.puzzle = save.best.puzzle ? Math.min(save.best.puzzle, pz.moves) : pz.moves; const first = giveCoin("puzzle"); persist();
+function jzMove(e) { const d = jz.drag; if (!d || e.pointerId !== d.id) return; d.cv.style.left = (e.clientX - d.ox) + "px"; d.cv.style.top = (e.clientY - d.oy - 18) + "px"; }   // un poquito arriba del dedo para verla
+function jzUp(e) {
+  const d = jz.drag; if (!d || e.pointerId !== d.id) return; jz.drag = null; const cv = d.cv;
+  cv.removeEventListener("pointermove", jzMove); cv.removeEventListener("pointerup", jzUp); cv.removeEventListener("pointercancel", jzUp);
+  const k = +cv.dataset.k, r = Math.floor(k / JN), c = k % JN, cs = jz.B / JN, br = $("#jzBoard").getBoundingClientRect();
+  const tx = br.left + c * cs - cv._pad, ty = br.top + r * cs - cv._pad, cx2 = parseFloat(cv.style.left), cy2 = parseFloat(cv.style.top);
+  if (Math.hypot(cx2 - tx, cy2 - ty) < cs * .45) {   // ¡calzó!
+    cv.classList.add("snap"); cv.style.left = tx + "px"; cv.style.top = ty + "px";
+    setTimeout(() => {
+      cv.classList.remove("snap", "drag"); cv.classList.add("placed"); cv.removeEventListener("pointerdown", jzDown);
+      cv.style.left = (c * cs - cv._pad) + "px"; cv.style.top = (r * cs - cv._pad) + "px"; $("#jzBoard").append(cv);
+      jz.placed.add(k); $("#jzCount").textContent = `${jz.placed.size}/${JN * JN}`; S8.match(); buzz(15);
+      const rr = cv.getBoundingClientRect(); burst(10, rr.left + rr.width / 2, rr.top + rr.height / 2);
+      if (jz.placed.size === JN * JN) jzWin(); else if (jz.placed.size % 4 === 0) jzLayout();
+    }, 150);
+  } else {   // no era ahí: vuelve a la bandeja
+    cv.classList.remove("drag"); cv.style.left = cv.style.top = ""; jzSizeTray(cv); void cv.offsetWidth; cv.classList.add("back"); S8.no(); buzz([20, 30, 20]);
+  }
+}
+function jzWin() {
+  jz.done = true; const secs = Math.round((performance.now() - (jz.t0 || performance.now())) / 1000);
+  $("#jzTray").hidden = true; $("#jzBoard").classList.add("solved"); burstAt($("#jzBoard"), 140); S8.win(); buzz([40, 60, 40]);
+  save.best.puzzle = save.best.puzzle ? Math.min(save.best.puzzle, secs) : secs; const first = giveCoin("puzzle"); persist();
   setTimeout(() => {
-    if (cur !== "puzzle") return; $("#pzTools").hidden = true;
-    const w = $("#pzWrap"), h = w.getBoundingClientRect().height; w.style.flex = "0 0 auto"; w.style.height = Math.max(150, h - 205) + "px"; pzSize();   // la foto armada se achica para que quepa el resultado
+    if (cur !== "puzzle") return; jzLayout(); jzDrawGuide();
     const e = $("#pzEnd"); e.hidden = false; e.style.flex = "0 0 auto";
-    e.innerHTML = `<p class="rank">Así de bien encajamos tú y yo 🧩💗</p><p class="hint">${pz.moves} movimientos</p>${coinHTML(first)}<div class="row"><button class="btn btn--ghost" id="pzAgain">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div>`;
+    e.innerHTML = `<p class="rank">¡Lo armaste! Desde chiquititos ya estábamos hechos el uno para el otro 🧩💗</p><p class="hint">Tiempo: ${jzTime(secs)}</p>${coinHTML(first)}<div class="row"><button class="btn btn--ghost" id="pzAgain">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div>`;
     $("#pzAgain").addEventListener("click", () => { S8.coin(); startPuzzle(); }); $("[data-home2]", e).addEventListener("click", () => { S8.blip(); go("home"); });
-    S8.win(); buzz([40, 60, 40]);
-  }, reduced ? 0 : 1600);
+    const B = Math.max(170, Math.min(jz.B, $("#s-puzzle").clientHeight - 32 - 30 - e.getBoundingClientRect().height - 24)); $("#jzBoard").style.width = $("#jzBoard").style.height = B + "px";
+    $$("#jzBoard .jz-p").forEach(p => p.style.display = "none");   // ya se ve la foto entera
+  }, reduced ? 0 : 1400);
 }
-$("#pzPeek").addEventListener("click", () => { const b = $("#pz"); b.classList.add("peeking"); S8.blip(); clearTimeout(pzPeek.t); pzPeek.t = setTimeout(() => b.classList.remove("peeking"), 1600); });
-function pzPeek() {}
-$("#pzMix").addEventListener("click", () => { S8.coin(); startPuzzle(); });
+const jzTime = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+$("#jzPeek").addEventListener("click", () => { const b = $("#jzBoard"); b.classList.add("peeking"); S8.blip(); clearTimeout(jzPeekT); jzPeekT = setTimeout(() => b.classList.remove("peeking"), 1600); });
+let jzPeekT = 0;
+$("#jzMix").addEventListener("click", () => { S8.coin(); startPuzzle(); });
 
 /* ---------- premio ---------- */
 let prizeRun = 0;
 function showPrize() {
   const run = ++prizeRun, f = FOTOS[5]; if (f) $("#dipPhoto").style.backgroundImage = `url('${f}')`;
   const b = save.best, n = TRIVIA.length;
-  $("#dipList").innerHTML = `<li>Conoce a Diego: ${b.trivia} de ${n} respuestas buenas</li><li>Memorice de nuestras fotos: ${b.memo} movimientos</li><li>Atrapó ${b.catch} corazones (y el de Diego, hace rato)</li><li>Voló hasta Diego esquivando ${Math.max(15, b.vuela)} obstáculos</li><li>Armó nuestra foto en ${b.puzzle} movimientos</li>`;
-  $("#waWin").href = wa(`¡Gané el Maite Arcade! 🏆 Soy el amor de tu vida, 100% certificado 💘\nConozco a Diego: ${b.trivia}/${n} · Memorice: ${b.memo} mov. · Corazones: ${b.catch} · Vuelo: ${Math.max(15, b.vuela)} · Rompecabezas: ${b.puzzle} mov.\nVengo a cobrar mi heladito y mi abrazo de un minuto 😌`);
+  $("#dipList").innerHTML = `<li>Conoce a Diego: ${b.trivia} de ${n} respuestas buenas</li><li>Memorice de nuestras fotos: ${b.memo} movimientos</li><li>Atrapó ${b.catch} corazones (y el de Diego, hace rato)</li><li>Voló hasta Diego esquivando ${Math.max(15, b.vuela)} obstáculos</li><li>Armó nuestra foto de chiquititos en ${jzTime(b.puzzle)}</li>`;
+  $("#waWin").href = wa(`¡Gané el Maite Arcade! 🏆 Soy el amor de tu vida, 100% certificado 💘\nConozco a Diego: ${b.trivia}/${n} · Memorice: ${b.memo} mov. · Corazones: ${b.catch} · Vuelo: ${Math.max(15, b.vuela)} · Rompecabezas: ${jzTime(b.puzzle)}\nVengo a cobrar mi heladito y mi abrazo de un minuto 😌`);
   // la barra de amor se llena, y cae el timbre
   const fill = $("#meterFill"), pct = $("#pct"), st = $("#stamp");
   fill.style.transition = "none"; fill.style.width = "0"; void fill.offsetWidth; fill.style.transition = ""; st.classList.remove("go"); pct.textContent = "0%";
