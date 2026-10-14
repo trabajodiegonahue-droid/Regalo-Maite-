@@ -739,7 +739,7 @@ function flap() { if (!V.playing || V.diego) return; V.started = true; V.vy = -V
 $("#stage2").addEventListener("pointerdown", e => { if (V.playing) { e.preventDefault(); flap(); } });
 addEventListener("keydown", e => { if (cur === "vuela" && V.playing && (e.key === " " || e.key === "ArrowUp")) { e.preventDefault(); flap(); } });
 const GROUND = 26, PW = 54, HX = () => V.W * .28;
-const vSp = () => 2.4 + Math.min(1.9, V.passed * .08);   // velocidad: sube con cada columna (de 2,4 a 4,3)
+const vSp = () => 3.1 + Math.min(2.5, V.passed * .1);   // velocidad: sube con cada columna (de 3,1 a 5,6)
 function vSpawn() {
   const gap = Math.max(150, V.H * .29), min = gap / 2 + 36, max = V.H - GROUND - gap / 2 - 36, prev = V.pipes[V.pipes.length - 1];
   let lo = min, hi = Math.max(min, max);
