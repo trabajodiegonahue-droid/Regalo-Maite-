@@ -258,8 +258,7 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
         <canvas id="cv2" aria-label="Juego: toca para volar y esquivar obstáculos"></canvas>
         <div class="over" id="vOver">
           <p class="press">VUELA HASTA DIEGO</p>
-          <p class="hint">Toca la pantalla para volar.<br>Esquiva 15 obstáculos y llegas a mis brazos.</p>
-          <div class="legend"><span>📚 Pruebas</span><span>⏰ Despertador</span><span>🍸 Turnos de bartender</span><span>🌧️ Lluvia de Temuco</span></div>
+          <p class="hint">Toca la pantalla para volar entre las columnas del jardín de rosas 🌹<br>Pasa 15 sin chocar y llegas a mis brazos.</p>
           <button class="btn" id="vStart">¡A VOLAR!</button>
         </div>
       </div>
@@ -630,7 +629,7 @@ function endCatch(win) {
 
 /* ---------- 4. vuela hasta Diego ---------- */
 const cv2 = $("#cv2"), vx = cv2.getContext("2d"), V_META = 15;
-const OBST = { "📚": "las pruebas", "⏰": "el despertador", "🍸": "un turno de bartender", "🌧️": "la lluvia de Temuco" };
+const CRASH = ["¡Chocaste con un rosal! Las espinas no perdonan 😂", "¡Te enredaste en las flores! 🌸", "¡Uy! Te comiste una columna 😂", "¡Chocaste! Hasta las mariposas se rieron 🦋"];
 const V = { W: 0, H: 0, y: 0, vy: 0, pipes: [], passed: 0, playing: false, started: false, raf: 0, last: 0, t: 0, diego: null };
 const EMO = '"Apple Color Emoji", "Noto Color Emoji", system-ui, sans-serif';
 function sizeV() { const r = $("#stage2").getBoundingClientRect(), d = devicePixelRatio || 1; V.W = r.width; V.H = r.height; cv2.width = Math.round(V.W * d); cv2.height = Math.round(V.H * d); vx.setTransform(d, 0, 0, d, 0, 0); }
@@ -645,7 +644,7 @@ addEventListener("keydown", e => { if (cur === "vuela" && V.playing && (e.key ==
 const GROUND = 26, PW = 54, HX = () => V.W * .28;
 function vSpawn() {
   const gap = Math.max(165, V.H * .34), min = gap / 2 + 36, max = V.H - GROUND - gap / 2 - 36, c = min + Math.random() * Math.max(0, max - min);
-  const ks = Object.keys(OBST); V.pipes.push({ x: V.W + 10, top: c - gap / 2, bot: c + gap / 2, e: ks[Math.floor(Math.random() * ks.length)], done: false, sd: Math.random() * 1000 });
+  V.pipes.push({ x: V.W + 10, top: c - gap / 2, bot: c + gap / 2, done: false, sd: Math.random() * 1000 });
 }
 // ---- ella y él, en pixeles, con la ropa de la foto de chiquititos ----
 const MAITE = [   // gorro morado con lunares, traje de baño rosado con mangas de lunares, brazos abiertos
@@ -702,59 +701,57 @@ function sprite(k, rows, pal, cx, cy, u, rot = 0) {
   rows.forEach((row, j) => { for (let i = 0; i < w; i++) { const ch = row[i]; if (ch === ".") continue; k.fillStyle = pal[ch]; k.fillRect(Math.round((i - w / 2) * u), Math.round((j - h / 2) * u), Math.ceil(u), Math.ceil(u)); } });
   k.restore();
 }
-// ---- los pilares: cada obstáculo tiene su propia torre, con enredaderas y florcitas ----
+// ---- los pilares: columnas de piedra de un jardín de rosas, con enredaderas, mariposas y lucecitas ----
 const rnd = (s, i) => { const x = Math.sin(s * 12.9898 + i * 78.233) * 43758.5453; return x - Math.floor(x); };
-const PT = { "📚": "libros", "⏰": "reloj", "🍸": "bar", "🌧️": "lluvia" };
+const ROSE = [".rrr.", "rRrrr", "rrRrr", ".rrr.", "..g.."];   // una rosa de pixeles
+function rose(x, y, pink) { const C = pink ? { r: "#ff7fa8", R: "#e05587" } : { r: "#e53950", R: "#a8122f" }; C.g = "#2f9e58";
+  ROSE.forEach((row, j) => [...row].forEach((ch, i) => { if (ch === ".") return; vx.fillStyle = C[ch]; vx.fillRect(Math.round(x + (i - 2.5) * 2), Math.round(y + (j - 2.5) * 2), 2, 2); })); }
 function pBody(p, y0, y1, top) {
-  if (y1 <= y0) return; const x = p.x, w = PW, t = PT[p.e];
-  vx.save(); vx.beginPath(); vx.rect(x - 6, y0, w + 12, y1 - y0); vx.clip();
-  if (t === "libros") {   // una torre de libros de colores
-    const C = ["#ff6f91", "#ffd84d", "#59c7ff", "#4df0c0", "#a07cf2", "#ff9f45"]; let y = top ? y1 : y0, i = 0;
-    while (top ? y > y0 : y < y1) { const h = 10 + Math.floor(rnd(p.sd, i) * 6), off = Math.round((rnd(p.sd, i + 50) - .5) * 8), yy = top ? y - h : y;
-      vx.fillStyle = C[Math.floor(rnd(p.sd, i + 99) * C.length)]; vx.fillRect(x + off, yy, w, h);
-      vx.fillStyle = "rgba(0,0,0,.22)"; vx.fillRect(x + off, yy + h - 2, w, 2); vx.fillStyle = "rgba(255,255,255,.6)"; vx.fillRect(x + off + 9, yy + Math.floor(h / 2) - 1, 16, 2); vx.fillStyle = "rgba(255,255,255,.25)"; vx.fillRect(x + off, yy, 3, h);
-      y += top ? -h : h; i++; }
-  } else if (t === "reloj") {   // torre de ladrillos rosados
-    vx.fillStyle = "#e66fa8"; vx.fillRect(x, y0, w, y1 - y0); vx.fillStyle = "#c4508a";
-    for (let yy = Math.floor(y0 / 10) * 10, row = 0; yy < y1; yy += 10, row++) { vx.fillRect(x, yy, w, 2); for (let xx = (Math.abs(Math.floor(yy / 10)) % 2) * 9; xx < w; xx += 18) vx.fillRect(x + xx, yy, 2, 10); }
-    vx.fillStyle = "rgba(255,255,255,.18)"; vx.fillRect(x + 4, y0, 4, y1 - y0);
-  } else if (t === "bar") {   // mueble de bar con botellas
-    vx.fillStyle = "#8b5a3c"; vx.fillRect(x, y0, w, y1 - y0); vx.fillStyle = "#6f452c"; for (let xx = 9; xx < w; xx += 11) vx.fillRect(x + xx, y0, 2, y1 - y0);
-    const BC = ["#4df0c0", "#ffd84d", "#ff6f91", "#59c7ff"];
-    for (let yy = top ? y1 - 44 : y0 + 50, k = 0; top ? yy > y0 + 20 : yy < y1; yy += top ? -46 : 46, k++) { vx.fillStyle = "#5a3722"; vx.fillRect(x - 2, yy, w + 4, 4);
-      for (let b = 0; b < 3; b++) { const bx = x + 7 + b * 16; vx.fillStyle = BC[Math.floor(rnd(p.sd, k * 3 + b) * 4)]; vx.fillRect(bx, yy - 14, 8, 14); vx.fillRect(bx + 2, yy - 20, 4, 6); vx.fillStyle = "rgba(255,255,255,.5)"; vx.fillRect(bx + 1, yy - 12, 2, 8); } }
-  } else {   // columna de lluvia
-    vx.fillStyle = "#9fb4e6"; vx.fillRect(x, y0, w, y1 - y0); vx.fillStyle = "#6e86c7";
-    for (let yy = Math.floor(y0 / 14) * 14 - 14, row = 0; yy < y1; yy += 14, row++) for (let xx = 4 + (Math.abs(Math.floor(yy / 14)) % 2) * 9; xx < w - 2; xx += 18) vx.fillRect(x + xx, yy + ((V.t * 1.5) % 14), 3, 6);
-    vx.fillStyle = "rgba(255,255,255,.25)"; vx.fillRect(x + 4, y0, 4, y1 - y0);
+  if (y1 <= y0) return; const x = p.x, w = PW;
+  vx.save(); vx.beginPath(); vx.rect(x - 8, y0, w + 16, y1 - y0); vx.clip();
+  // piedra clara con bloques, y sombra a los lados para que se vea redonda
+  vx.fillStyle = "#efe3f0"; vx.fillRect(x, y0, w, y1 - y0);
+  vx.fillStyle = "#fbf5fb"; vx.fillRect(x + 6, y0, 9, y1 - y0); vx.fillStyle = "#d9c6df"; vx.fillRect(x + w - 11, y0, 11, y1 - y0); vx.fillStyle = "#c7b0cf"; vx.fillRect(x + w - 4, y0, 4, y1 - y0);
+  vx.fillStyle = "rgba(150,110,165,.35)";
+  for (let yy = Math.floor(y0 / 16) * 16; yy < y1; yy += 16) { vx.fillRect(x, yy, w, 2); const j = Math.abs(Math.floor(yy / 16)) % 2 ? 18 : 34; vx.fillRect(x + j, yy, 2, 16); }
+  // dos enredaderas que suben en espiral, llenas de rosas
+  for (let v = 0; v < 2; v++) {
+    const ph = p.sd + v * 3.1;
+    for (let yy = y0 - 4, i = 0; yy < y1 + 4; yy += 3, i++) {
+      const wx = x + w / 2 + Math.sin(yy / 22 + ph) * (w / 2 + 2);
+      vx.fillStyle = "#3fbf6f"; vx.fillRect(Math.round(wx) - 1, yy, 3, 3);
+      if (i % 5 === 0) { vx.fillStyle = "#2f9e58"; vx.fillRect(Math.round(wx) + (i % 10 ? 2 : -5), yy - 1, 4, 3); }
+      if (i % 9 === 4) rose(wx, yy, rnd(p.sd, i + v * 40) < .45);
+    }
   }
-  const ex = x + (rnd(p.sd, 7) < .5 ? 2 : w - 5);   // enredadera
-  for (let yy = y0, i = 0; yy < y1; yy += 4, i++) { const wx = ex + Math.round(Math.sin(yy / 9 + p.sd) * 2); vx.fillStyle = "#3fbf6f"; vx.fillRect(wx, yy, 3, 4);
-    if (i % 4 === 0) { vx.fillStyle = "#2f9e58"; vx.fillRect(wx + (i % 8 ? 3 : -4), yy, 4, 3); }
-    if (i % 11 === 5) { vx.fillStyle = "#ff8fb8"; vx.fillRect(wx - 2, yy - 2, 7, 7); vx.fillStyle = "#ffd84d"; vx.fillRect(wx, yy, 3, 3); } }
   vx.restore();
 }
-function pIcon(t, x, y) {   // el dibujito de cada obstáculo, en una plaquita
-  vx.fillStyle = "rgba(255,244,251,.96)"; vx.beginPath(); vx.arc(x, y, 16, 0, 7); vx.fill(); vx.lineWidth = 2; vx.strokeStyle = "rgba(46,26,87,.45)"; vx.stroke();
-  if (t === "libros") { vx.fillStyle = "#fff"; vx.fillRect(x - 8, y - 10, 16, 20); vx.strokeStyle = "#7a5aa8"; vx.lineWidth = 1; vx.strokeRect(x - 8.5, y - 10.5, 17, 21); vx.fillStyle = "#b9a8d8"; for (let i = 0; i < 3; i++) vx.fillRect(x - 6, y - 7 + i * 4, 8, 2);
-    vx.fillStyle = "#e53950"; vx.font = '9px "Press Start 2P", monospace'; vx.fillText("7", x + 3, y + 5); }   // una prueba con un 7 😌
-  else if (t === "reloj") { vx.fillStyle = "#ff4f9a"; vx.beginPath(); vx.arc(x - 7, y - 9, 4, 0, 7); vx.arc(x + 7, y - 9, 4, 0, 7); vx.fill(); vx.fillStyle = "#fff"; vx.beginPath(); vx.arc(x, y + 1, 9, 0, 7); vx.fill(); vx.strokeStyle = "#ff4f9a"; vx.lineWidth = 3; vx.stroke();
-    vx.strokeStyle = "#2e1a57"; vx.lineWidth = 2; vx.beginPath(); vx.moveTo(x, y + 1); vx.lineTo(x, y - 5); vx.moveTo(x, y + 1); vx.lineTo(x + 4, y + 3); vx.stroke(); }
-  else if (t === "bar") { vx.fillStyle = "#59c7ff"; vx.beginPath(); vx.moveTo(x - 10, y - 8); vx.lineTo(x + 10, y - 8); vx.lineTo(x, y + 3); vx.closePath(); vx.fill(); vx.fillStyle = "#7a8bb0"; vx.fillRect(x - 1, y + 3, 2, 6); vx.fillRect(x - 6, y + 9, 12, 2);
-    vx.fillStyle = "#3fbf6f"; vx.beginPath(); vx.arc(x + 3, y - 5, 2.6, 0, 7); vx.fill(); vx.fillStyle = "#2e1a57"; vx.fillRect(x + 3, y - 12, 1, 7); }
-  else { vx.fillStyle = "#b8c7ee"; vx.beginPath(); vx.arc(x - 6, y - 2, 6, 0, 7); vx.arc(x + 1, y - 5, 7, 0, 7); vx.arc(x + 7, y - 1, 5, 0, 7); vx.fill(); vx.fillRect(x - 12, y - 2, 24, 6);
-    vx.fillStyle = "#59c7ff"; [[-7, 7], [0, 9], [6, 7]].forEach(([dx, dy]) => vx.fillRect(x + dx, y + dy, 2, 5)); }
+function lights(x0, x1, y) {   // una guirnalda de lucecitas que cuelga
+  const n = 6; vx.strokeStyle = "rgba(255,240,200,.55)"; vx.lineWidth = 1; vx.beginPath();
+  for (let i = 0; i <= 20; i++) { const u = i / 20, xx = x0 + (x1 - x0) * u, yy = y + Math.sin(u * Math.PI) * 10; i ? vx.lineTo(xx, yy) : vx.moveTo(xx, yy); } vx.stroke();
+  for (let i = 1; i < n; i++) { const u = i / n, xx = x0 + (x1 - x0) * u, yy = y + Math.sin(u * Math.PI) * 10 + 3, on = (Math.floor(V.t / 12) + i) % 3 !== 0;
+    vx.fillStyle = on ? ["#ffd84d", "#ff8fb8", "#fff3b0"][i % 3] : "rgba(255,255,255,.35)"; vx.shadowColor = vx.fillStyle; vx.shadowBlur = on ? 8 : 0; vx.fillRect(Math.round(xx) - 2, Math.round(yy) - 2, 4, 5); vx.shadowBlur = 0; }
 }
-function pCap(p, y, top) {
-  const x = p.x, w = PW, t = PT[p.e], cc = { libros: "#ffd84d", reloj: "#ffd1e6", bar: "#a8724d", lluvia: "#e8eeff" }[t];
-  vx.fillStyle = cc; vx.fillRect(x - 5, y, w + 10, 16); vx.fillStyle = "rgba(0,0,0,.2)"; vx.fillRect(x - 5, top ? y + 13 : y, w + 10, 3); vx.fillStyle = "rgba(255,255,255,.55)"; vx.fillRect(x - 5, top ? y : y + 13, w + 10, 2);
-  pIcon(t, x + w / 2, top ? y - 22 : y + 38);
+const BFLY = [["cc...cc", "cCc.cCc", "cccbccc", ".ccbcc.", "..c.c.."], [".......", ".ccbcc.", "cCcbcCc", ".c.b.c.", "......."]];   // alas abiertas / cerradas
+function butterfly(x, y, c) {   // aletea
+  const f = BFLY[Math.floor(V.t / 6) % 2], C = { c, C: "#ffffff", b: "#2e1a57" };
+  f.forEach((row, j) => [...row].forEach((ch, i) => { if (ch === ".") return; vx.fillStyle = C[ch]; vx.fillRect(x + (i - 3.5) * 3, y + (j - 2.5) * 3, 3, 3); }));
+}
+function pCap(p, y, top) {   // el capitel de la columna
+  const x = p.x, w = PW;
+  vx.fillStyle = "#f7eef8"; vx.fillRect(x - 6, y, w + 12, 16); vx.fillStyle = "#d9c6df"; vx.fillRect(x - 6, top ? y + 12 : y, w + 12, 4); vx.fillStyle = "#ffffff"; vx.fillRect(x - 6, top ? y + 2 : y + 10, w + 12, 2);
+  vx.fillStyle = "#c7b0cf"; vx.fillRect(x + w + 2, y, 4, 16);
+  if (top) lights(x - 4, x + w + 4, y + 16);
+  else { for (let i = 0; i < 4; i++) rose(x + 6 + i * 14, y - 3, (i + Math.floor(p.sd)) % 2 === 0); vx.fillStyle = "#3fbf6f"; vx.fillRect(x - 2, y - 1, w + 4, 2); }
+  const bx = x + w / 2 + Math.sin(V.t / 30 + p.sd) * 34, by = (top ? y + 40 : y - 30) + Math.sin(V.t / 11 + p.sd) * 8;   // una mariposa revoloteando
+  butterfly(Math.round(bx), Math.round(by), ["#ff8fb8", "#59c7ff", "#ffd84d"][Math.floor(p.sd) % 3]);
 }
 function vDraw() {
   const { W, H } = V; vx.clearRect(0, 0, W, H);
   vx.fillStyle = "rgba(255,255,255,.25)"; for (let i = 0; i < 34; i++) { const x = ((i * 89.7) - V.t * 0.6 * (1 + (i % 3))) % W; vx.fillRect(Math.round(x < 0 ? x + W : x), Math.round((i * 47.3) % (H - GROUND)), 2, 2); }
   vx.textAlign = "center"; vx.textBaseline = "middle";
-  for (const p of V.pipes) { pBody(p, 0, p.top - 16, true); pCap(p, p.top - 16, true); pBody(p, p.bot + 16, H - GROUND, false); pCap(p, p.bot, false); }
+  for (const p of V.pipes) { pBody(p, 0, p.top - 16, true); pBody(p, p.bot + 16, H - GROUND, false); }
+  for (const p of V.pipes) { pCap(p, p.top - 16, true); pCap(p, p.bot, false); }
   // pasto de pixeles
   for (let x = -((V.t * 2.4) % 16); x < W; x += 16) { vx.fillStyle = "#2f8f55"; vx.fillRect(x, H - GROUND, 8, GROUND); vx.fillStyle = "#287a49"; vx.fillRect(x + 8, H - GROUND, 8, GROUND); vx.fillStyle = "#4dc77d"; vx.fillRect(x + 3, H - GROUND - 3, 2, 3); vx.fillRect(x + 11, H - GROUND - 4, 2, 4); }
   vx.fillStyle = "#5fe08f"; vx.fillRect(0, H - GROUND, W, 3);
@@ -780,13 +777,13 @@ function vFrame(t) {
     for (const p of V.pipes) {
       p.x -= sp;
       if (!p.done && p.x + PW < hx - r) { p.done = true; V.passed++; $("#vScore").textContent = V.passed; S8.catch(V.passed); buzz(8); }
-      if (hx + r > p.x - 5 && hx - r < p.x + PW + 5 && (V.y - r < p.top || V.y + r > p.bot)) { vDraw(); return vEnd(false, OBST[p.e]); }
+      if (hx + r > p.x - 5 && hx - r < p.x + PW + 5 && (V.y - r < p.top || V.y + r > p.bot)) { vDraw(); return vEnd(false, CRASH[Math.floor(Math.random() * CRASH.length)]); }
     }
     V.pipes = V.pipes.filter(p => p.x > -PW - 20);
     const spawned = V.passed + V.pipes.filter(p => !p.done).length;
     if (spawned < V_META && (!V.pipes.length || V.pipes[V.pipes.length - 1].x < W - 215 - Math.random() * 30)) vSpawn();
     if (V.passed >= V_META && !V.pipes.some(p => p.x > hx - 40)) { const u = vu(); V.diego = { x: W + 30, tx: W * .74, y: H - GROUND - 11 * u }; }
-    if (V.y + r > H - GROUND) { V.y = H - GROUND - r; vDraw(); return vEnd(false, "el suelo"); }
+    if (V.y + r > H - GROUND) { V.y = H - GROUND - r; vDraw(); return vEnd(false, "¡Te caíste al pasto! 😂"); }
   }
   vDraw(); V.raf = requestAnimationFrame(vFrame);
 }
@@ -795,7 +792,7 @@ function vEnd(win, que) {
   const o = $("#vOver"); o.hidden = false;
   o.innerHTML = win
     ? `<p class="press">¡LLEGASTE! 💗</p><p class="rank">Esquivaste 15 obstáculos para llegar a mis brazos… yo esquivaría todos los del mundo por llegar a ti.</p>${coinHTML(first)}<div class="row"><button class="btn btn--ghost" id="vStart">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div>`
-    : `<span class="score-big">${V.passed}/15</span><p class="rank">¡Chocaste con ${que}! 😂</p><p class="hint">Pasa 15 obstáculos para llegar hasta Diego.</p><div class="row"><button class="btn" id="vStart">OTRA VEZ</button></div>`;
+    : `<span class="score-big">${V.passed}/15</span><p class="rank">${que}</p><p class="hint">Pasa 15 obstáculos para llegar hasta Diego.</p><div class="row"><button class="btn" id="vStart">OTRA VEZ</button></div>`;
   bindVuelaStart(); $("[data-home2]", o)?.addEventListener("click", () => { S8.blip(); go("home"); });
   if (win) { S8.win(); burst(140); buzz([40, 60, 40]); } else { S8.hurt(); buzz([60, 40, 60]); }
 }
