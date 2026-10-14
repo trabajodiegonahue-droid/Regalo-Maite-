@@ -99,6 +99,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* trivia */
 .qnum { font: 400 .6rem/1 var(--f-pixel); color: var(--sky); }
+.qrow { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.qsec { font: 400 .7rem/1 var(--f-pixel); color: var(--mint); font-variant-numeric: tabular-nums; }
+.qsec.hurry { color: var(--coral); }
 .tbar { height: 8px; border-radius: 4px; background: rgba(255,255,255,.1); overflow: hidden; }
 .tbar i { display: block; height: 100%; width: 100%; background: var(--mint); border-radius: inherit; }
 .tbar i.hurry { background: var(--coral); }
@@ -221,10 +224,10 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
       <div id="menu" hidden style="display:flex;flex-direction:column;gap:12px;flex:1">
         <p class="menu-h">ELIGE TU JUEGO</p>
         <div class="games">
-          <button class="game" data-go="trivia" style="--gc:#ff4f9a"><span class="gi" aria-hidden="true">🧠</span><span><b>¿Cuánto conoces a Diego?</b><small id="st-trivia">18 preguntas a contrarreloj. Saca 13 para la ficha.</small></span><span class="coin" id="c-trivia">✓</span></button>
+          <button class="game" data-go="trivia" style="--gc:#ff4f9a"><span class="gi" aria-hidden="true">🧠</span><span><b>¿Cuánto conoces a Diego?</b><small id="st-trivia">Cada pregunta con menos tiempo. Saca 13 de 18.</small></span><span class="coin" id="c-trivia">✓</span></button>
           <button class="game" data-go="memo" style="--gc:#59c7ff"><span class="gi" aria-hidden="true">📸</span><span><b>Memorice de nosotros</b><small id="st-memo">8 pares. Termínalo en 26 movimientos o menos.</small></span><span class="coin" id="c-memo">✓</span></button>
           <button class="game" data-go="catch" style="--gc:#4df0c0"><span class="gi" aria-hidden="true">💗</span><span><b>Atrapa los corazones</b><small id="st-catch">Junta 40 corazones sin perder tus 3 vidas.</small></span><span class="coin" id="c-catch">✓</span></button>
-          <button class="game" data-go="vuela" style="--gc:#ffd84d"><span class="gi" aria-hidden="true">🕊️</span><span><b>Vuela hasta Diego</b><small id="st-vuela">Pasa 25 columnas sin chocar para llegar a mí.</small></span><span class="coin" id="c-vuela">✓</span></button>
+          <button class="game" data-go="vuela" style="--gc:#ffd84d"><span class="gi" aria-hidden="true">🕊️</span><span><b>Vuela hasta Diego</b><small id="st-vuela">Cada vez más rápido. Pasa 25 columnas y llega a mí.</small></span><span class="coin" id="c-vuela">✓</span></button>
           <button class="game" data-go="puzzle" style="--gc:#ff7a59"><span class="gi" aria-hidden="true">🧩</span><span><b>Arma nuestra foto</b><small id="st-puzzle">25 piezas y solo 3 vistazos a la foto.</small></span><span class="coin" id="c-puzzle">✓</span></button>
         </div>
         <div class="who-row"><button class="chip" id="whoBtn">JUEGA: <b id="whoName">MAITE</b> ⇄</button><button class="chip" id="dueloBtn">🏆 DUELO</button></div>
@@ -237,7 +240,7 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
     <section class="scr" id="s-trivia">
       <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>PUNTOS <b id="tScore">0</b></span></div>
       <div id="tPlay" style="display:flex;flex-direction:column;gap:12px">
-        <span class="qnum" id="tNum"></span>
+        <div class="qrow"><span class="qnum" id="tNum"></span><span class="qsec" id="tSec"></span></div>
         <div class="tbar" aria-hidden="true"><i id="tBar"></i></div>
         <p class="q" id="tQ"></p>
         <div class="opts" id="tOpts"></div>
@@ -423,7 +426,10 @@ const TRIVIA = [
     ["Tu sonrisa", "meh", "Tu sonrisa sí… pero no solo eso. Me gustó TODO."],
     ["Tu forma de ser", "meh", "Sí, pero no solo eso. Me gustó todo de ti."]] },
 ];
-const PARA_FICHA = 13, T_SEG = 12;   // respuestas buenas para ganar la ficha · segundos por pregunta
+const PARA_FICHA = 13;   // respuestas buenas para ganar la ficha
+// segundos de cada pregunta: lo justo para leerla con sus opciones y pinchar la buena; cada pregunta tiene un poco menos que la anterior
+const tSecs = (x, i, n) => { const chars = x.q.length + x.o.reduce((s, o) => s + o[0].length, 0), f = 1.2 - .45 * i / Math.max(1, n - 1); return Math.max(4.5, Math.round((2.5 + chars / 15) * f * 2) / 2); };
+const PIN = /anteriores|^Todas$/;   // "Todas las anteriores" y parecidas siempre van al final
 const RANKS = [[18, "¡Perfecto! Me conoces mejor que yo mismo 🏆"], [16, "¡Polola certificada! Me conoces demasiado ✨"], [PARA_FICHA, "¡Bien! Pero te falta conocerme un poquito más 😏"], [0, "¿Segura que me conoces? 😂 Inténtalo otra vez"]];
 const LABEL = { top: "¡CORRECTÍSIMO!", ok: "¡CORRECTO!", meh: "MÁS O MENOS…", no: "¡NOOO!", time: "¡TIEMPO!" };
 const META = 40;   // corazones para ganar la ficha
@@ -564,7 +570,9 @@ const coinHTML = first => `<div class="won"><span class="coin got">✓</span>${f
 /* ---------- 1. trivia ---------- */
 let tI = 0, tPts = 0, tList = [];
 function startTrivia() {
-  tI = 0; tPts = 0; tList = TRIVIA.map(x => ({ ...x, mix: x.o.map(([t, lv, c]) => ({ t, lv, c, ok: lv === "top" || lv === "ok" })) }));
+  tI = 0; tPts = 0;
+  tList = shuffle(TRIVIA).map(x => ({ ...x, mix: shuffle(x.o.filter(o => !PIN.test(o[0]))).concat(x.o.filter(o => PIN.test(o[0]))).map(([t, lv, c]) => ({ t, lv, c, ok: lv === "top" || lv === "ok" })) }));
+  tList.forEach((x, i) => x.secs = tSecs(x, i, tList.length));
   $("#tPlay").hidden = false; $("#tEnd").hidden = true; $("#tScore").textContent = 0; showQ();
 }
 function showQ() {
@@ -572,9 +580,9 @@ function showQ() {
   $("#tOpts").innerHTML = x.mix.map((o, i) => `<button class="opt" data-i="${i}">${o.t}</button>`).join("");
   $$("#tOpts .opt").forEach(b => b.addEventListener("click", () => answer(+b.dataset.i, b)));
   // la cuenta regresiva
-  clearInterval(tTimer); const t0 = performance.now(), bar = $("#tBar"); bar.classList.remove("hurry");
-  tTimer = setInterval(() => { if (cur !== "trivia") return clearInterval(tTimer); const left = 1 - (performance.now() - t0) / (T_SEG * 1000);
-    bar.style.width = Math.max(0, left * 100) + "%"; bar.classList.toggle("hurry", left < .34); if (left <= 0) { clearInterval(tTimer); answer(-1); } }, 80);
+  clearInterval(tTimer); const t0 = performance.now(), bar = $("#tBar"), sec = $("#tSec"); bar.classList.remove("hurry"); sec.classList.remove("hurry"); bar.style.width = "100%"; sec.textContent = `⏱ ${Math.ceil(x.secs)}`;
+  tTimer = setInterval(() => { if (cur !== "trivia") return clearInterval(tTimer); const left = 1 - (performance.now() - t0) / (x.secs * 1000);
+    bar.style.width = Math.max(0, left * 100) + "%"; bar.classList.toggle("hurry", left < .34); sec.classList.toggle("hurry", left < .34); sec.textContent = `⏱ ${Math.max(0, Math.ceil(left * x.secs))}`; if (left <= 0) { clearInterval(tTimer); answer(-1); } }, 80);
 }
 let tTimer = 0;
 function answer(i, b) {
@@ -723,7 +731,7 @@ const V = { W: 0, H: 0, y: 0, vy: 0, pipes: [], passed: 0, playing: false, start
 const EMO = '"Apple Color Emoji", "Noto Color Emoji", system-ui, sans-serif';
 function sizeV() { const r = $("#stage2").getBoundingClientRect(), d = devicePixelRatio || 1; V.W = r.width; V.H = r.height; cv2.width = Math.round(V.W * d); cv2.height = Math.round(V.H * d); vx.setTransform(d, 0, 0, d, 0, 0); }
 addEventListener("resize", () => { if (cur === "vuela") { sizeV(); if (!V.playing) vDraw(); } });
-function vReset() { V.y = V.H * .45; V.mx = V.W * .28; V.hugT = 0; V.vy = 0; V.pipes = []; V.passed = 0; V.t = 0; V.diego = null; V.started = false; $("#vScore").textContent = 0; }
+function vReset() { V.y = V.H * .45; V.mx = V.W * .28; V.hugT = 0; V.vy = 0; V.pipes = []; V.passed = 0; V.t = 0; V.gx = 0; V.msg = ""; V.msgT = -999; V.diego = null; V.started = false; $("#vScore").textContent = 0; }
 function bindVuelaStart() { $("#vStart")?.addEventListener("click", startVuela); }
 function startVuela() { S8.coin(); sizeV(); vReset(); $("#vOver").hidden = true; V.playing = true; V.last = performance.now(); cancelAnimationFrame(V.raf); V.raf = requestAnimationFrame(vFrame); }
 function stopVuela() { V.playing = false; cancelAnimationFrame(V.raf); }
@@ -731,8 +739,15 @@ function flap() { if (!V.playing || V.diego) return; V.started = true; V.vy = -V
 $("#stage2").addEventListener("pointerdown", e => { if (V.playing) { e.preventDefault(); flap(); } });
 addEventListener("keydown", e => { if (cur === "vuela" && V.playing && (e.key === " " || e.key === "ArrowUp")) { e.preventDefault(); flap(); } });
 const GROUND = 26, PW = 54, HX = () => V.W * .28;
+const vSp = () => 2.4 + Math.min(1.9, V.passed * .08);   // velocidad: sube con cada columna (de 2,4 a 4,3)
 function vSpawn() {
-  const gap = Math.max(150, V.H * .29), min = gap / 2 + 36, max = V.H - GROUND - gap / 2 - 36, c = min + Math.random() * Math.max(0, max - min);
+  const gap = Math.max(150, V.H * .29), min = gap / 2 + 36, max = V.H - GROUND - gap / 2 - 36, prev = V.pipes[V.pipes.length - 1];
+  let lo = min, hi = Math.max(min, max);
+  if (prev) {   // que siempre se pueda: el próximo hueco nunca queda más arriba o más abajo de lo que alcanza a subir o bajar a esa velocidad
+    const pc = (prev.top + prev.bot) / 2, fr = Math.max(10, (V.W + 10 - prev.x - PW - 32) / vSp());
+    lo = Math.max(lo, pc - gap * .3 - V.H * .0057 * fr); hi = Math.min(hi, pc + gap * .3 + V.H * .009 * fr);
+  }
+  const c = lo + Math.random() * Math.max(0, hi - lo);
   V.pipes.push({ x: V.W + 10, top: c - gap / 2, bot: c + gap / 2, done: false, sd: Math.random() * 1000 });
 }
 // ---- ella y él, en pixeles, con la ropa de la foto de chiquititos ----
@@ -843,7 +858,7 @@ function vDraw() {
   for (const p of V.pipes) { pBody(p, 0, p.top - 16, true); pBody(p, p.bot + 16, H - GROUND, false); }
   for (const p of V.pipes) { pCap(p, p.top - 16, true); pCap(p, p.bot, false); }
   // pasto de pixeles
-  for (let x = -((V.t * 2.4) % 16); x < W; x += 16) { vx.fillStyle = "#2f8f55"; vx.fillRect(x, H - GROUND, 8, GROUND); vx.fillStyle = "#287a49"; vx.fillRect(x + 8, H - GROUND, 8, GROUND); vx.fillStyle = "#4dc77d"; vx.fillRect(x + 3, H - GROUND - 3, 2, 3); vx.fillRect(x + 11, H - GROUND - 4, 2, 4); }
+  for (let x = -(((V.started ? V.gx : V.t * 2.4) || 0) % 16); x < W; x += 16) { vx.fillStyle = "#2f8f55"; vx.fillRect(x, H - GROUND, 8, GROUND); vx.fillStyle = "#287a49"; vx.fillRect(x + 8, H - GROUND, 8, GROUND); vx.fillStyle = "#4dc77d"; vx.fillRect(x + 3, H - GROUND - 3, 2, 3); vx.fillRect(x + 11, H - GROUND - 4, 2, 4); }
   vx.fillStyle = "#5fe08f"; vx.fillRect(0, H - GROUND, W, 3);
   const D2 = V.diego, u = vu();
   if (D2) { sprite(vx, DIEGO, DIEGO_PAL, D2.x, D2.y + (D2.x <= D2.tx ? Math.round(Math.sin(V.t / 8)) : 0), u); vx.font = '8px "Press Start 2P", monospace'; vx.fillStyle = "#ffd84d"; vx.fillText("DIEGO", D2.x + 2 * u, D2.y - 11 * u - 12); }
@@ -851,6 +866,7 @@ function vDraw() {
   sprite(vx, MAITE, MAITE_PAL, V.mx, V.y + bob, u, rot);
   if (V.hugT) { const k = Math.min(1, (V.t - V.hugT) / 70); pixHeart(vx, (V.mx + D2.x) / 2, D2.y - 12 * u - 26 - k * 26, 18 + k * 24, "#ff4f9a", "#ffd1e6"); }
   if (V.playing && !V.started) { vx.font = '10px "Press Start 2P", monospace'; vx.fillStyle = "#ffd84d"; vx.fillText("TOCA PARA VOLAR", W / 2, H * .72); }
+  if (V.msg && V.t - V.msgT < 80) { vx.globalAlpha = Math.min(1, (80 - (V.t - V.msgT)) / 20); vx.font = '13px "Press Start 2P", monospace'; vx.fillStyle = "#3a1060"; vx.fillText(V.msg, W / 2 + 2, H * .16 + 2); vx.fillStyle = "#ffd84d"; vx.fillText(V.msg, W / 2, H * .16); vx.globalAlpha = 1; }   // aviso de que ahora va más rápido
 }
 function vFrame(t) {
   if (!V.playing) return; const dt = Math.min(2.5, (t - V.last) / 16.67); V.last = t; V.t += dt;
@@ -863,10 +879,10 @@ function vFrame(t) {
     if (V.hugT && V.t - V.hugT > 75) { vDraw(); return vEnd(true); }
   } else if (V.started) {
     V.vy = Math.min(V.H * .017, V.vy + V.H * .00058 * dt); V.y += V.vy * dt; if (V.y < r) { V.y = r; V.vy = 0; }
-    const sp = (2.5 + Math.min(1.4, V.passed * .06)) * dt;
+    const sp = vSp() * dt; V.gx += sp;
     for (const p of V.pipes) {
       p.x -= sp;
-      if (!p.done && p.x + PW < hx - r) { p.done = true; V.passed++; $("#vScore").textContent = V.passed; S8.catch(V.passed); buzz(8); }
+      if (!p.done && p.x + PW < hx - r) { p.done = true; V.passed++; $("#vScore").textContent = V.passed; S8.catch(V.passed); buzz(8); if (V.passed % 5 === 0 && V.passed < V_META) { V.msg = "¡MÁS RÁPIDO!"; V.msgT = V.t; S8.gold(); } }
       if (hx + r > p.x - 5 && hx - r < p.x + PW + 5 && (V.y - r < p.top || V.y + r > p.bot)) { vDraw(); return vEnd(false, CRASH[Math.floor(Math.random() * CRASH.length)]); }
     }
     V.pipes = V.pipes.filter(p => p.x > -PW - 20);
