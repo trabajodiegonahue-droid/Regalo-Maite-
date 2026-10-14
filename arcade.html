@@ -69,6 +69,20 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .coin { width: 26px; height: 26px; border-radius: 50%; border: 2px dashed rgba(255,216,77,.4); display: grid; place-items: center; font: 400 .55rem/1 var(--f-pixel); color: transparent; }
 .coin.got { border: 0; color: #6b4a00; background: radial-gradient(circle at 35% 30%, #fff3b0, var(--butter) 45%, #d99a00); box-shadow: 0 0 12px rgba(255,216,77,.7); }
 .coins-row { display: flex; align-items: center; justify-content: center; gap: 8px; font: 400 .6rem/1 var(--f-pixel); color: var(--dim); }
+.who-row { display: flex; justify-content: center; gap: 8px; }
+.chip { border: 2px solid var(--line); background: rgba(255,255,255,.06); border-radius: 999px; padding: 7px 12px; font: 400 .55rem/1 var(--f-pixel); color: var(--sky); }
+.chip b { font-weight: 400; color: var(--butter); }
+.duel { display: grid; gap: 8px; }
+.duel-row { display: grid; grid-template-columns: 1fr auto auto; gap: 4px 10px; align-items: center; padding: 10px 12px; border-radius: 14px; border: 2px solid var(--line); background: rgba(255,255,255,.05); }
+.duel-row b { font: 600 .95rem/1.2 var(--f-body); color: #fff; grid-column: 1 / -1; }
+.duel-row span { font: 500 .88rem/1.2 var(--f-body); color: var(--dim); }
+.duel-row span.lead { color: var(--butter); }
+.duel-row small { grid-column: 1 / -1; font: 400 .8rem/1.3 var(--f-body); color: var(--mint); }
+.duel-line { margin: 0; text-align: center; font: 500 .85rem/1.45 var(--f-body); color: var(--dim); }
+.duel-line b { color: var(--butter); font-weight: 600; }
+@media (max-height: 760px) {   /* iPhone 13 dentro de la app: que el menú quepa entero sin hacer scroll */
+  #menu { gap: 8px !important; } .games { gap: 6px; } .game { padding: 6px 10px; } .game .gi { width: 40px; height: 40px; } .prize-btn { padding: 11px 16px !important; }
+}
 .prize-btn { margin-top: auto; padding: 16px; border-radius: 16px; border: 2px dashed rgba(255,216,77,.45); background: rgba(255,216,77,.06); font: 400 .72rem/1.6 var(--f-pixel); color: var(--dim); }
 .prize-btn.open { border: 0; color: #3a2600; background: linear-gradient(180deg, #fff0a0, var(--butter)); box-shadow: 0 0 24px rgba(255,216,77,.6), inset 0 -6px 0 rgba(0,0,0,.18); animation: glow 1.2s ease-in-out infinite alternate; }
 @keyframes glow { to { box-shadow: 0 0 40px rgba(255,216,77,.9), inset 0 -6px 0 rgba(0,0,0,.18); } }
@@ -85,6 +99,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* trivia */
 .qnum { font: 400 .6rem/1 var(--f-pixel); color: var(--sky); }
+.tbar { height: 8px; border-radius: 4px; background: rgba(255,255,255,.1); overflow: hidden; }
+.tbar i { display: block; height: 100%; width: 100%; background: var(--mint); border-radius: inherit; }
+.tbar i.hurry { background: var(--coral); }
 .q { margin: 0; font: 600 clamp(1.25rem, 5.6vw, 1.5rem)/1.3 var(--f-body); color: #fff; text-wrap: balance; }
 .opts { display: grid; gap: 10px; }
 .opt { padding: 14px 14px; border-radius: 14px; border: 2px solid var(--line); background: rgba(255,255,255,.05); text-align: left; font: 500 1.05rem/1.3 var(--f-body); transition: transform .12s ease, background .2s ease, border-color .2s ease; }
@@ -93,7 +110,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .opt.meh { border-color: var(--butter); background: rgba(255,216,77,.12); }
 .say--top { background: rgba(77,240,192,.12); border-color: rgba(77,240,192,.45); }
 .say--top small, .say--ok small { color: var(--mint); }
-.say--meh small { color: var(--butter); } .say--no small { color: var(--coral); }
+.say--meh small { color: var(--butter); } .say--no small, .say--time small { color: var(--coral); }
 .opt.no { border-color: var(--coral); background: rgba(255,122,89,.14); animation: shake .35s ease; }
 .opt:disabled { cursor: default; }
 @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
@@ -111,7 +128,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .hint { margin: 0; font: 400 .95rem/1.4 var(--f-body); color: var(--dim); text-align: center; }
 
 /* memorice */
-.board { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.board { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .card { position: relative; border: 0; padding: 0; background: none; perspective: 600px; min-height: 0; }
 .card .in { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .45s cubic-bezier(.3,1.3,.5,1); }
 .card.up .in { transform: rotateY(180deg); }
@@ -204,12 +221,13 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
       <div id="menu" hidden style="display:flex;flex-direction:column;gap:12px;flex:1">
         <p class="menu-h">ELIGE TU JUEGO</p>
         <div class="games">
-          <button class="game" data-go="trivia" style="--gc:#ff4f9a"><span class="gi" aria-hidden="true">🧠</span><span><b>¿Cuánto conoces a Diego?</b><small id="st-trivia">18 preguntas sobre mí. Saca 10 para ganar la ficha.</small></span><span class="coin" id="c-trivia">✓</span></button>
-          <button class="game" data-go="memo" style="--gc:#59c7ff"><span class="gi" aria-hidden="true">📸</span><span><b>Memorice de nosotros</b><small id="st-memo">Encuentra los 6 pares de fotos.</small></span><span class="coin" id="c-memo">✓</span></button>
-          <button class="game" data-go="catch" style="--gc:#4df0c0"><span class="gi" aria-hidden="true">🧺</span><span><b>Atrapa los corazones</b><small id="st-catch">Junta 25 corazones sin perder tus 3 vidas.</small></span><span class="coin" id="c-catch">✓</span></button>
-          <button class="game" data-go="vuela" style="--gc:#ffd84d"><span class="gi" aria-hidden="true">🕊️</span><span><b>Vuela hasta Diego</b><small id="st-vuela">Esquiva 15 obstáculos para llegar a mí.</small></span><span class="coin" id="c-vuela">✓</span></button>
-          <button class="game" data-go="puzzle" style="--gc:#ff7a59"><span class="gi" aria-hidden="true">🧩</span><span><b>Arma nuestra foto</b><small id="st-puzzle">16 piezas: arrástralas hasta su lugar.</small></span><span class="coin" id="c-puzzle">✓</span></button>
+          <button class="game" data-go="trivia" style="--gc:#ff4f9a"><span class="gi" aria-hidden="true">🧠</span><span><b>¿Cuánto conoces a Diego?</b><small id="st-trivia">18 preguntas a contrarreloj. Saca 13 para la ficha.</small></span><span class="coin" id="c-trivia">✓</span></button>
+          <button class="game" data-go="memo" style="--gc:#59c7ff"><span class="gi" aria-hidden="true">📸</span><span><b>Memorice de nosotros</b><small id="st-memo">8 pares. Termínalo en 26 movimientos o menos.</small></span><span class="coin" id="c-memo">✓</span></button>
+          <button class="game" data-go="catch" style="--gc:#4df0c0"><span class="gi" aria-hidden="true">💗</span><span><b>Atrapa los corazones</b><small id="st-catch">Junta 40 corazones sin perder tus 3 vidas.</small></span><span class="coin" id="c-catch">✓</span></button>
+          <button class="game" data-go="vuela" style="--gc:#ffd84d"><span class="gi" aria-hidden="true">🕊️</span><span><b>Vuela hasta Diego</b><small id="st-vuela">Pasa 25 columnas sin chocar para llegar a mí.</small></span><span class="coin" id="c-vuela">✓</span></button>
+          <button class="game" data-go="puzzle" style="--gc:#ff7a59"><span class="gi" aria-hidden="true">🧩</span><span><b>Arma nuestra foto</b><small id="st-puzzle">25 piezas y solo 3 vistazos a la foto.</small></span><span class="coin" id="c-puzzle">✓</span></button>
         </div>
+        <div class="who-row"><button class="chip" id="whoBtn">JUEGA: <b id="whoName">MAITE</b> ⇄</button><button class="chip" id="dueloBtn">🏆 DUELO</button></div>
         <div class="coins-row"><span>FICHAS</span><span class="coin" id="k1"></span><span class="coin" id="k2"></span><span class="coin" id="k3"></span><span class="coin" id="k4"></span><span class="coin" id="k5"></span></div>
         <button class="prize-btn" id="prizeBtn">🔒 PREMIO FINAL<br>GANA LAS 5 FICHAS</button>
       </div>
@@ -220,6 +238,7 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
       <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>PUNTOS <b id="tScore">0</b></span></div>
       <div id="tPlay" style="display:flex;flex-direction:column;gap:12px">
         <span class="qnum" id="tNum"></span>
+        <div class="tbar" aria-hidden="true"><i id="tBar"></i></div>
         <p class="q" id="tQ"></p>
         <div class="opts" id="tOpts"></div>
         <div id="tSay"></div>
@@ -238,12 +257,12 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
 
     <!-- atrapa los corazones -->
     <section class="scr" id="s-catch">
-      <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>♥ <b id="cScore">0</b>/25</span><span id="cLives">❤️❤️❤️</span></div>
+      <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>♥ <b id="cScore">0</b>/40</span><span id="cLives">❤️❤️❤️</span></div>
       <div class="stage" id="stage">
         <canvas id="cv" aria-label="Juego: atrapa los corazones moviendo la canasta"></canvas>
         <div class="over" id="cOver">
           <p class="press">ATRAPA LOS CORAZONES</p>
-          <p class="hint">Mueve la canasta con el dedo.<br>Junta 25 y gana la ficha.</p>
+          <p class="hint">Muévete con el dedo y abraza cada corazón 💋<br>Junta 40 y gana la ficha.</p>
           <div class="legend"><span>💗 +1</span><span>💛 +3</span><span>📚 Pruebas</span><span>⏰ Despertador</span><span>🥦 Brócoli</span><span>🌧️ Lluvia de Temuco</span></div>
           <p class="hint">Si atrapas lo malo, pierdes una vida.</p>
           <button class="btn" id="cStart">¡A JUGAR!</button>
@@ -253,12 +272,12 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
 
     <!-- vuela hasta Diego -->
     <section class="scr" id="s-vuela">
-      <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>OBSTÁCULOS <b id="vScore">0</b>/15</span></div>
+      <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>OBSTÁCULOS <b id="vScore">0</b>/25</span></div>
       <div class="stage" id="stage2">
         <canvas id="cv2" aria-label="Juego: toca para volar y esquivar obstáculos"></canvas>
         <div class="over" id="vOver">
           <p class="press">VUELA HASTA DIEGO</p>
-          <p class="hint">Toca la pantalla para volar entre las columnas del jardín de rosas 🌹<br>Pasa 15 sin chocar y llegas a mis brazos.</p>
+          <p class="hint">Toca la pantalla para volar entre las columnas del jardín de rosas 🌹<br>Pasa 25 sin chocar y llegas a mis brazos.</p>
           <button class="btn" id="vStart">¡A VOLAR!</button>
         </div>
       </div>
@@ -266,10 +285,19 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
 
     <!-- arma nuestra foto -->
     <section class="scr" id="s-puzzle">
-      <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>PIEZAS <b id="jzCount">0/16</b></span><span class="jz-tools"><button class="back" id="jzPeek">👀 VER</button><button class="back" id="jzMix">🔀</button></span></div>
+      <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>PIEZAS <b id="jzCount">0/25</b></span><span class="jz-tools"><button class="back" id="jzPeek">👀 3</button><button class="back" id="jzMix">🔀</button></span></div>
       <div class="jz-board" id="jzBoard"><canvas class="guide" id="jzGuide"></canvas><span class="full" id="jzFull"></span></div>
       <div class="jz-tray" id="jzTray" aria-label="Piezas del rompecabezas: arrástralas hasta su lugar"></div>
       <div class="result" id="pzEnd" hidden></div>
+    </section>
+
+    <!-- duelo -->
+    <section class="scr" id="s-duelo">
+      <div class="bar"><button class="back" data-home>◀ MENÚ</button><span>🏆 DUELO</span></div>
+      <p class="menu-h">MAITE VS DIEGO</p>
+      <div class="duel" id="duelTable"></div>
+      <p class="hint" style="font-size:.85rem">Los récords se guardan en este celular. Si juegan en celulares distintos, mándense el resultado con "RETAR" al terminar cada juego.</p>
+      <a class="btn btn--gold" id="duelWa" target="_blank" rel="noopener" style="text-align:center;text-decoration:none">MANDAR EL DUELO 💬</a>
     </section>
 
     <!-- premio -->
@@ -286,7 +314,7 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
         <div class="dip-sign"><div><span class="sig">Diego</span><small>Tu wawita, que te ama</small></div><div class="valid"><small>VÁLIDO</small><b>PARA SIEMPRE</b></div></div>
         <span class="stamp" id="stamp" aria-hidden="true">100%<br>CERTIFICADO</span>
       </div>
-      <div class="claim"><small>CÓMO COBRAR TU PREMIO</small><p>Muéstrale esta pantalla a Diego y cobra: 🍦 un heladito + 🤗 un abrazo de un minuto entero (cronometrado).</p></div>
+      <div class="claim"><small>CÓMO COBRAR TU PREMIO</small><p>Muéstrale esta pantalla a Diego y cobra: 🍦 un heladito + 💋 mil besos (contados uno por uno).</p></div>
       <a class="btn btn--gold" id="waWin" target="_blank" rel="noopener" style="text-align:center;text-decoration:none">AVISARLE A DIEGO 🏆</a>
     </section>
   </main>
@@ -298,7 +326,8 @@ canvas#fx { position: fixed; inset: 0; z-index: 50; pointer-events: none; width:
 const D = { whatsapp: "56941089585" };
 const FOTOS = ["__FOTO1__", "__FOTO2__", "__FOTO3__", "__FOTO4__", "__FOTO5__", "__FOTO6__", "__FOTO7__", "__FOTO8__", "__FOTO9__", "__FOTO10__", "__FOTO11__", "__FOTO12__"].map(f => f.startsWith("__") ? "" : f);
 // los pares del memorice: [n.º de foto, lo que aparece al encontrarlo]
-const MEMO = [[12, "¡Nuestra primera foto! 📸"], [1, "¡El día del sí! 🎈"], [6, "¡Mi favorita! ⭐"], [2, "¡Tu sonrisa! 😍"], [3, "¡Nosotros! 💑"], [7, "¡Contigo! 💗"]];
+const MEMO = [[12, "¡Nuestra primera foto! 📸"], [1, "¡El día del sí! 🎈"], [6, "¡Mi favorita! ⭐"], [2, "¡Tu sonrisa! 😍"], [3, "¡Nosotros! 💑"], [7, "¡Contigo! 💗"], [4, "¡Mi lugar favorito! 🏡"], [5, "¡Tú y yo! 💞"]];
+const MEMO_MAX = 26;   // movimientos máximos para ganar la ficha
 // trivia "¿Cuánto conoces a Diego?": las opciones y respuestas son de Diego.
 // nivel de cada opción: "top" correctísima y "ok" correcta (suman punto); "meh" más o menos y "no" incorrecta (no suman)
 const TRIVIA = [
@@ -394,10 +423,10 @@ const TRIVIA = [
     ["Tu sonrisa", "meh", "Tu sonrisa sí… pero no solo eso. Me gustó TODO."],
     ["Tu forma de ser", "meh", "Sí, pero no solo eso. Me gustó todo de ti."]] },
 ];
-const PARA_FICHA = 10;   // respuestas buenas para ganar la ficha
-const RANKS = [[18, "¡Perfecto! Me conoces mejor que yo mismo 🏆"], [15, "¡Polola certificada! Me conoces demasiado ✨"], [PARA_FICHA, "¡Bien! Pero te falta conocerme un poquito más 😏"], [0, "¿Segura que me conoces? 😂 Inténtalo otra vez"]];
-const LABEL = { top: "¡CORRECTÍSIMO!", ok: "¡CORRECTO!", meh: "MÁS O MENOS…", no: "¡NOOO!" };
-const META = 25;   // corazones para ganar la ficha
+const PARA_FICHA = 13, T_SEG = 12;   // respuestas buenas para ganar la ficha · segundos por pregunta
+const RANKS = [[18, "¡Perfecto! Me conoces mejor que yo mismo 🏆"], [16, "¡Polola certificada! Me conoces demasiado ✨"], [PARA_FICHA, "¡Bien! Pero te falta conocerme un poquito más 😏"], [0, "¿Segura que me conoces? 😂 Inténtalo otra vez"]];
+const LABEL = { top: "¡CORRECTÍSIMO!", ok: "¡CORRECTO!", meh: "MÁS O MENOS…", no: "¡NOOO!", time: "¡TIEMPO!" };
+const META = 40;   // corazones para ganar la ficha
 /* ======================================================= */
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -411,6 +440,12 @@ try { const v = JSON.parse(localStorage.getItem("maite_arcade") || "null"); if (
 const persist = () => { try { localStorage.setItem("maite_arcade", JSON.stringify(save)); } catch {} };
 if (save.tv !== 2) { save.tv = 2; save.f.trivia = false; save.best.trivia = 0; persist(); }   // trivia nueva (sobre Diego)
 if (save.pv !== 2) { save.pv = 2; save.f.puzzle = false; save.best.puzzle = 0; persist(); }   // rompecabezas nuevo (ahora se mide en tiempo)
+// v3: juegos más difíciles y duelo. Cada jugador tiene sus fichas y récords; "first" guarda quién ganó primero cada juego
+const EMPTY = () => ({ f: { trivia: false, memo: false, catch: false, vuela: false, puzzle: false }, best: { trivia: 0, memo: 0, catch: 0, vuela: 0, puzzle: 0 } });
+if (save.dv !== 3) { Object.assign(save, EMPTY()); save.diego = EMPTY(); save.first = {}; save.who = "maite"; save.dv = 3; persist(); }
+save.diego = save.diego || EMPTY(); save.first = save.first || {}; save.who = save.who === "diego" ? "diego" : "maite";
+const P = () => save.who === "diego" ? save.diego : save;   // el jugador de ahora
+const WHO = { maite: "Maite", diego: "Diego" };
 
 /* ---------- sonido 8-bit ---------- */
 const S8 = (() => {
@@ -430,7 +465,12 @@ const S8 = (() => {
     coin() { seq([83, 88], .08, .08); }, blip() { seq([84], .05, .05); },
     ok() { seq([72, 76, 79, 84], .07, .07); }, no() { if (!ctx) return; const t = ctx.currentTime; note(t, 52, .25, .08, "sawtooth"); note(t + .12, 47, .3, .08, "sawtooth"); },
     flip() { seq([79], .04, .04, "triangle"); }, match() { seq([79, 86], .08, .07); },
-    catch(k) { seq([76 + Math.min(k, 12)], .05, .05); }, flap() { seq([74, 79], .03, .035, "triangle"); }, slide() { seq([67], .04, .04, "triangle"); }, gold() { seq([84, 88, 91], .05, .06); }, hurt() { if (!ctx) return; note(ctx.currentTime, 40, .35, .1, "sawtooth"); },
+    catch(k) { seq([76 + Math.min(k, 12)], .05, .05); },
+    // "muak": un besito
+    kiss() { if (!ctx) return; const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine"; o.frequency.setValueAtTime(320, t); o.frequency.exponentialRampToValueAtTime(1300, t + .11);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.2, t + .025); g.gain.exponentialRampToValueAtTime(.001, t + .16); o.connect(g); g.connect(out); o.start(t); o.stop(t + .18);
+      const n = ctx.createBufferSource(), b = ctx.createBuffer(1, ctx.sampleRate * .04, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+      const f = ctx.createBiquadFilter(), g2 = ctx.createGain(); f.type = "bandpass"; f.frequency.value = 2600; g2.gain.value = .5; n.buffer = b; n.connect(f); f.connect(g2); g2.connect(out); n.start(t + .1); }, flap() { seq([74, 79], .03, .035, "triangle"); }, slide() { seq([67], .04, .04, "triangle"); }, gold() { seq([84, 88, 91], .05, .06); }, hurt() { if (!ctx) return; note(ctx.currentTime, 40, .35, .1, "sawtooth"); },
     win() { seq([72, 72, 72, 76, 79, 0, 76, 79, 84], .11, .08); },
     stamp() { if (!ctx) return; const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain(); o.type = "square"; o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(40, t + .15);
       g.gain.setValueAtTime(.16, t); g.gain.exponentialRampToValueAtTime(.001, t + .25); o.connect(g); g.connect(out); o.start(t); o.stop(t + .3); setTimeout(() => seq([84, 88, 91, 96], .07, .06), 180); },
@@ -473,26 +513,52 @@ function go(id) {
   if (id === "vuela") { stopVuela(); $("#vOver").hidden = false; $("#vOver").innerHTML = $("#vOver").dataset.intro; bindVuelaStart(); sizeV(); vReset(); vDraw(); }
   if (id === "puzzle") startPuzzle();
   if (id === "prize") showPrize();
+  if (id === "duelo") showDuel();
 }
 $("#vOver").dataset.intro = $("#vOver").innerHTML;
 $("#cOver").dataset.intro = $("#cOver").innerHTML;
 $$("[data-home]").forEach(b => b.addEventListener("click", () => { S8.blip(); stopCatch(); stopVuela(); go("home"); }));
 $("#attract").addEventListener("click", () => { S8.start(); S8.coin(); buzz(20); $("#attract").hidden = true; $("#menu").hidden = false; renderMenu(); });
 $$(".game").forEach(b => b.addEventListener("click", () => { S8.start(); S8.coin(); buzz(15); go(b.dataset.go); }));
-$("#prizeBtn").addEventListener("click", () => { const all = GAMES.every(k => save.f[k]); if (all) { S8.win(); go("prize"); } else { S8.no(); $("#prizeBtn").animate([{ transform: "translateX(-6px)" }, { transform: "translateX(6px)" }, { transform: "none" }], { duration: 300 }); } });
+$("#prizeBtn").addEventListener("click", () => { if (save.who === "diego" && GAMES.every(k => P().f[k])) { S8.blip(); $("#prizeBtn").innerHTML = "😌 EL PREMIO ES SOLO PARA MAITE<br>(PERO BIEN JUGADO)"; return; } const all = GAMES.every(k => P().f[k]); if (all) { S8.win(); go("prize"); } else { S8.no(); $("#prizeBtn").animate([{ transform: "translateX(-6px)" }, { transform: "translateX(6px)" }, { transform: "none" }], { duration: 300 }); } });
+$("#whoBtn").addEventListener("click", () => { save.who = save.who === "maite" ? "diego" : "maite"; persist(); S8.coin(); renderMenu(); });
+$("#dueloBtn").addEventListener("click", () => { S8.blip(); go("duelo"); });
+function showDuel() {
+  $("#duelTable").innerHTML = GAMES.map(k => { const ld = leader(k), fz = save.first[k];
+    return `<div class="duel-row"><b>${GNAME[k]}</b><span class="${ld === "maite" ? "lead" : ""}">👧 ${fmtBest(k, save.best[k])}${ld === "maite" ? " 👑" : ""}</span><span class="${ld === "diego" ? "lead" : ""}">👦 ${fmtBest(k, save.diego.best[k])}${ld === "diego" ? " 👑" : ""}</span>${fz ? `<small>🥇 Primero en ganarlo: ${WHO[fz.who]} · ${fmtWhen(fz.at)}</small>` : ""}</div>`; }).join("");
+  const lines = GAMES.map(k => `${GNAME[k]}: Maite ${fmtBest(k, save.best[k])} · Diego ${fmtBest(k, save.diego.best[k])}`).join("\n");
+  $("#duelWa").href = `https://api.whatsapp.com/send?text=${encodeURIComponent("🏆 DUELO MAITE ARCADE\n" + lines)}`;
+}
 function renderMenu() {
-  const f = save.f, n = GAMES.filter(k => f[k]).length, T = GAMES.length;
+  $("#whoName").textContent = WHO[save.who].toUpperCase();
+  const f = P().f, n = GAMES.filter(k => f[k]).length, T = GAMES.length;
   GAMES.forEach(k => $("#c-" + k).classList.toggle("got", f[k]));
+  GAMES.forEach(k => { const e = $("#st-" + k); e.dataset.def = e.dataset.def || e.textContent; e.textContent = e.dataset.def; });   // texto base (cambia al jugador que no tiene récord)
   GAMES.forEach((_, i) => $("#k" + (i + 1)).classList.toggle("got", i < n));
-  if (save.best.vuela) $("#st-vuela").textContent = `Récord: ${save.best.vuela} obstáculos${f.vuela ? " · ficha ganada" : " · pasa 15 para la ficha"}`;
-  if (save.best.puzzle) $("#st-puzzle").textContent = `Récord: ${jzTime(save.best.puzzle)} · ficha ganada`;
-  if (save.best.trivia) $("#st-trivia").textContent = `Récord: ${save.best.trivia}/${TRIVIA.length}${f.trivia ? " · ficha ganada" : ` · saca ${PARA_FICHA} para la ficha`}`;
-  if (save.best.memo) $("#st-memo").textContent = `Récord: ${save.best.memo} movimientos · ficha ganada`;
-  if (save.best.catch) $("#st-catch").textContent = `Récord: ${save.best.catch} ♥${f.catch ? " · ficha ganada" : " · junta 25 para la ficha"}`;
+  if (P().best.vuela) $("#st-vuela").textContent = `Récord: ${P().best.vuela} obstáculos${f.vuela ? " · ficha ganada" : " · pasa 25 para la ficha"}`;
+  if (P().best.puzzle) $("#st-puzzle").textContent = `Récord: ${jzTime(P().best.puzzle)} · ficha ganada`;
+  if (P().best.trivia) $("#st-trivia").textContent = `Récord: ${P().best.trivia}/${TRIVIA.length}${f.trivia ? " · ficha ganada" : ` · saca ${PARA_FICHA} para la ficha`}`;
+  if (P().best.memo) $("#st-memo").textContent = `Récord: ${P().best.memo} movimientos · ficha ganada`;
+  if (P().best.catch) $("#st-catch").textContent = `Récord: ${P().best.catch} ♥${f.catch ? " · ficha ganada" : " · junta 40 para la ficha"}`;
   const pb = $("#prizeBtn"); pb.classList.toggle("open", n === T);
   pb.innerHTML = n === T ? "🏆 ¡PREMIO DESBLOQUEADO!<br>TÓCALO" : `🔒 PREMIO FINAL<br>TE ${n === T - 1 ? "FALTA 1 FICHA" : `FALTAN ${T - n} FICHAS`}`;
 }
-function giveCoin(k) { const first = !save.f[k]; save.f[k] = true; persist(); return first; }
+function giveCoin(k) { const first = !P().f[k]; P().f[k] = true; if (!save.first[k]) save.first[k] = { who: save.who, at: Date.now() }; persist(); return first; }
+// el duelo: récords de los dos, quién va ganando y quién lo ganó primero
+const GNAME = { trivia: "¿Cuánto conoces a Diego?", memo: "Memorice", catch: "Atrapa los corazones", vuela: "Vuela hasta Diego", puzzle: "Arma nuestra foto" };
+const LOWER = { memo: true, puzzle: true };   // en estos gana el número más chico
+const fmtBest = (k, v) => !v ? "—" : k === "trivia" ? `${v}/${TRIVIA.length}` : k === "memo" ? `${v} mov.` : k === "catch" ? `${v} ♥` : k === "vuela" ? `${v} obst.` : jzTime(v);
+function leader(k) { const a = save.best[k], b = save.diego.best[k]; if (!a && !b) return ""; if (!b) return "maite"; if (!a) return "diego"; if (a === b) return "empate"; return (LOWER[k] ? a < b : a > b) ? "maite" : "diego"; }
+const fmtWhen = t => new Date(t).toLocaleString("es-CL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+function duelLine(k) {
+  const fz = save.first[k], ld = leader(k);
+  return `<p class="duel-line">👧 Maite: <b>${fmtBest(k, save.best[k])}</b> · 👦 Diego: <b>${fmtBest(k, save.diego.best[k])}</b>${ld && ld !== "empate" ? ` · 👑 va ganando ${WHO[ld]}` : ""}${fz ? `<br>🥇 Lo ganó primero: <b>${WHO[fz.who]}</b> (${fmtWhen(fz.at)})` : ""}</p>`;
+}
+function shareHTML(k, txt) {
+  const to = save.who === "maite" ? D.whatsapp : "", other = save.who === "maite" ? "Diego" : "Maite";
+  const msg = `🕹️ MAITE ARCADE · ${GNAME[k]}\n${WHO[save.who]}: ${txt}\n¿Me ganas, ${other}? 😏`;
+  return `<a class="btn btn--ghost" href="https://api.whatsapp.com/send?${to ? `phone=${to}&` : ""}text=${encodeURIComponent(msg)}" target="_blank" rel="noopener" style="text-decoration:none">RETAR A ${other.toUpperCase()} 💬</a>`;
+}
 const coinHTML = first => `<div class="won"><span class="coin got">✓</span>${first ? "¡GANASTE UNA FICHA!" : "FICHA YA GANADA"}</div>`;
 
 /* ---------- 1. trivia ---------- */
@@ -505,11 +571,18 @@ function showQ() {
   const x = tList[tI]; $("#tNum").textContent = `PREGUNTA ${tI + 1} DE ${tList.length}`; $("#tQ").textContent = x.q; $("#tSay").innerHTML = ""; $("#tNext").hidden = true;
   $("#tOpts").innerHTML = x.mix.map((o, i) => `<button class="opt" data-i="${i}">${o.t}</button>`).join("");
   $$("#tOpts .opt").forEach(b => b.addEventListener("click", () => answer(+b.dataset.i, b)));
+  // la cuenta regresiva
+  clearInterval(tTimer); const t0 = performance.now(), bar = $("#tBar"); bar.classList.remove("hurry");
+  tTimer = setInterval(() => { if (cur !== "trivia") return clearInterval(tTimer); const left = 1 - (performance.now() - t0) / (T_SEG * 1000);
+    bar.style.width = Math.max(0, left * 100) + "%"; bar.classList.toggle("hurry", left < .34); if (left <= 0) { clearInterval(tTimer); answer(-1); } }, 80);
 }
+let tTimer = 0;
 function answer(i, b) {
-  const x = tList[tI], o = x.mix[i]; $$("#tOpts .opt").forEach(e => e.disabled = true);
+  clearInterval(tTimer); const x = tList[tI]; if (x.done) return; x.done = true;
+  const o = i >= 0 ? x.mix[i] : { ok: false, lv: "time", c: `Se te acabó el tiempo ⏰ La buena era: ${(x.mix.find(m => m.lv === "top") || x.mix.find(m => m.ok)).t}` };
+  $$("#tOpts .opt").forEach(e => e.disabled = true);
   if (o.ok) { tPts++; b.classList.add("ok"); o.lv === "top" ? S8.win() : S8.ok(); buzz(15); burstAt(b, o.lv === "top" ? 40 : 18); }
-  else { b.classList.add(o.lv === "meh" ? "meh" : "no"); S8.no(); buzz([30, 40, 30]); $$("#tOpts .opt").forEach((e, k) => { if (x.mix[k].lv === "top" || (x.mix[k].ok && !x.mix.some(m => m.lv === "top"))) e.classList.add("ok"); }); }
+  else { b?.classList.add(o.lv === "meh" ? "meh" : "no"); S8.no(); buzz([30, 40, 30]); $$("#tOpts .opt").forEach((e, k) => { if (x.mix[k].lv === "top" || (x.mix[k].ok && !x.mix.some(m => m.lv === "top"))) e.classList.add("ok"); }); }
   $("#tScore").textContent = tPts;
   $("#tSay").innerHTML = `<div class="say say--${o.lv}"><span class="av" aria-hidden="true">😎</span><div><small>DIEGO DICE · ${LABEL[o.lv]}</small><p>${o.c}</p></div></div>`;
   $("#tNext").hidden = false; $("#tNext").textContent = tI < tList.length - 1 ? "SIGUIENTE ▶" : "VER RESULTADO ▶";
@@ -517,11 +590,11 @@ function answer(i, b) {
 }
 $("#tNext").addEventListener("click", () => { S8.blip(); if (++tI < tList.length) { showQ(); $("#s-trivia").scrollTop = 0; } else endTrivia(); });
 function endTrivia() {
-  save.best.trivia = Math.max(save.best.trivia, tPts); persist();
+  P().best.trivia = Math.max(P().best.trivia, tPts); persist();
   const rank = RANKS.find(([min]) => tPts >= min)[1], win = tPts >= PARA_FICHA, first = win && giveCoin("trivia");
   $("#tPlay").hidden = true; const e = $("#tEnd"); e.hidden = false;
-  e.innerHTML = `<span class="score-big">${tPts}/${tList.length}</span><p class="rank">${rank}</p>${win ? coinHTML(first) : `<p class="hint">Necesitas ${PARA_FICHA} respuestas buenas para la ficha.</p>`}
-    <div class="row"><button class="btn${win ? " btn--ghost" : ""}" id="tAgain">OTRA VEZ</button>${win ? `<button class="btn" data-home2>MENÚ ▶</button>` : ""}</div>`;
+  e.innerHTML = `<span class="score-big">${tPts}/${tList.length}</span><p class="rank">${rank}</p>${win ? coinHTML(first) : `<p class="hint">Necesitas ${PARA_FICHA} respuestas buenas para la ficha.</p>`}${duelLine("trivia")}
+    <div class="row"><button class="btn${win ? " btn--ghost" : ""}" id="tAgain">OTRA VEZ</button>${win ? `<button class="btn" data-home2>MENÚ ▶</button>` : ""}</div><div class="row">${shareHTML("trivia", `${tPts}/${tList.length} respuestas buenas`)}</div>`;
   $("#tAgain").addEventListener("click", () => { S8.coin(); startTrivia(); });
   $("[data-home2]", e)?.addEventListener("click", () => { S8.blip(); go("home"); });
   if (win) { S8.win(); burst(120); buzz([40, 60, 40]); } else S8.no();
@@ -530,7 +603,7 @@ function endTrivia() {
 /* ---------- 2. memorice ---------- */
 let mOpen = [], mMoves = 0, mDone = 0, mLock = false;
 function startMemo() {
-  mOpen = []; mMoves = 0; mDone = 0; mLock = false; $("#mMoves").textContent = 0; $("#mToast").textContent = "Da vuelta dos cartas iguales"; $("#mEnd").hidden = true; $("#board").hidden = false;
+  mOpen = []; mMoves = 0; mDone = 0; mLock = false; $("#mMoves").textContent = `0/${MEMO_MAX}`; $("#mToast").textContent = "Da vuelta dos cartas iguales"; $("#mEnd").hidden = true; $("#board").hidden = false;
   const deck = shuffle([...MEMO.keys(), ...MEMO.keys()]);
   $("#board").innerHTML = deck.map(k => { const f = FOTOS[MEMO[k][0] - 1];
     return `<button class="card" data-k="${k}" aria-label="Carta"><span class="in"><span class="f"><svg viewBox="0 0 9 8" aria-hidden="true">${heartSVG("#ff4f9a", "#ffd1e6")}</svg></span><span class="b" style="${f ? `background-image:url('${f}')` : ""}">${f ? "" : MEMO[k][1]}</span></span></button>`; }).join("");
@@ -539,30 +612,31 @@ function startMemo() {
 function flip(c) {
   if (mLock || c.classList.contains("up")) return; c.classList.add("up"); S8.flip(); mOpen.push(c);
   if (mOpen.length < 2) return;
-  mMoves++; $("#mMoves").textContent = mMoves; const [a, b] = mOpen; mOpen = [];
+  mMoves++; $("#mMoves").textContent = `${mMoves}/${MEMO_MAX}`; const [a, b] = mOpen; mOpen = [];
   if (a.dataset.k === b.dataset.k) {
     a.classList.add("done"); b.classList.add("done"); mDone++; S8.match(); buzz(20); burstAt(b, 24); $("#mToast").textContent = MEMO[+a.dataset.k][1];
     if (mDone === MEMO.length) setTimeout(endMemo, 900);
-  } else { mLock = true; setTimeout(() => { a.classList.remove("up"); b.classList.remove("up"); mLock = false; }, 850); }
+  } else { mLock = true; setTimeout(() => { a.classList.remove("up"); b.classList.remove("up"); mLock = false; }, 650); }
 }
 function endMemo() {
-  save.best.memo = save.best.memo ? Math.min(save.best.memo, mMoves) : mMoves; const first = giveCoin("memo"); persist();
+  const win = mMoves <= MEMO_MAX; if (win) P().best.memo = P().best.memo ? Math.min(P().best.memo, mMoves) : mMoves; const first = win && giveCoin("memo"); persist();
   $("#board").hidden = true; $("#mToast").textContent = ""; const e = $("#mEnd"); e.hidden = false;
-  const msg = mMoves <= 8 ? "¡Memoria de elefante! 🐘 Te acuerdas de todo lo nuestro." : mMoves <= 12 ? "¡Muy bien! Se nota que te sabes nuestras fotos de memoria 💗" : "¡Lo lograste! Y de paso viste todas nuestras fotos 😌";
-  e.innerHTML = `<span class="score-big">${mMoves}</span><p class="hint">movimientos</p><p class="rank">${msg}</p>${coinHTML(first)}<div class="row"><button class="btn btn--ghost" id="mAgain">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div>`;
-  $("#mAgain").addEventListener("click", () => { S8.coin(); startMemo(); }); $("[data-home2]", e).addEventListener("click", () => { S8.blip(); go("home"); });
-  S8.win(); burst(120); buzz([40, 60, 40]);
+  const msg = !win ? `Te pasaste: ${mMoves} movimientos 😏 Hazlo en ${MEMO_MAX} o menos para la ficha.` : mMoves <= 14 ? "¡Memoria de elefante! 🐘 Te acuerdas de todo lo nuestro." : mMoves <= 20 ? "¡Muy bien! Se nota que te sabes nuestras fotos de memoria 💗" : "¡Justito! Lo lograste 😌";
+  e.innerHTML = `<span class="score-big">${mMoves}</span><p class="hint">movimientos</p><p class="rank">${msg}</p>${win ? coinHTML(first) : ""}${duelLine("memo")}<div class="row"><button class="btn${win ? " btn--ghost" : ""}" id="mAgain">OTRA VEZ</button>${win ? `<button class="btn" data-home2>MENÚ ▶</button>` : ""}</div>${win ? `<div class="row">${shareHTML("memo", `${mMoves} movimientos`)}</div>` : ""}`;
+  $("#mAgain").addEventListener("click", () => { S8.coin(); startMemo(); }); $("[data-home2]", e)?.addEventListener("click", () => { S8.blip(); go("home"); });
+  if (win) { S8.win(); burst(120); buzz([40, 60, 40]); } else S8.no();
 }
 
 /* ---------- 3. atrapa los corazones ---------- */
 const cv = $("#cv"), cx = cv.getContext("2d");
 const GOOD = [{ c: "#ff4f9a", h: "#ffd1e6", p: 1 }, { c: "#ffd84d", h: "#fff6c2", p: 3 }], BAD = ["📚", "⏰", "🥦", "🌧️"];
-let W = 0, H = 0, basket = { x: 0, w: 64 }, items = [], score = 0, lives = 3, playing = false, raf = 0, lastC = 0, spawnT = 0, elapsed = 0, floats = [];
+let W = 0, H = 0, basket = { x: 0, w: 54 }, items = [], score = 0, lives = 3, playing = false, raf = 0, lastC = 0, spawnT = 0, elapsed = 0, floats = [], hugAt = -1e9, flyers = [], bagHit = -1e9, ouchAt = -1e9;
+const cu = () => H >= 480 ? 3 : 2;   // tamaño de cada pixel de ella
 function sizeStage() { const r = $("#stage").getBoundingClientRect(), d = devicePixelRatio || 1; W = r.width; H = r.height; cv.width = Math.round(W * d); cv.height = Math.round(H * d); cx.setTransform(d, 0, 0, d, 0, 0); if (!basket.x) basket.x = W / 2; }
 addEventListener("resize", () => { if (cur === "catch") { sizeStage(); if (!playing) drawIdle(); } });
 function bindCatchStart() { $("#cStart")?.addEventListener("click", startCatch); }
 function startCatch() {
-  S8.coin(); sizeStage(); $("#cOver").hidden = true; items = []; floats = []; score = 0; lives = 3; elapsed = 0; spawnT = 0; basket.x = W / 2; hud();
+  S8.coin(); sizeStage(); $("#cOver").hidden = true; items = []; floats = []; flyers = []; score = 0; lives = 3; elapsed = 0; spawnT = 0; basket.x = W / 2; basket.w = 18 * cu(); hud();
   playing = true; lastC = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
 }
 function stopCatch() { playing = false; cancelAnimationFrame(raf); }
@@ -572,7 +646,7 @@ $("#stage").addEventListener("pointerdown", e => { if (playing) { e.preventDefau
 $("#stage").addEventListener("pointermove", e => { if (playing) move(e); });
 addEventListener("keydown", e => { if (!playing) return; if (e.key === "ArrowLeft") basket.x = Math.max(basket.w / 2, basket.x - 28); if (e.key === "ArrowRight") basket.x = Math.min(W - basket.w / 2, basket.x + 28); });
 function spawn() {
-  const bad = Math.random() < Math.min(.42, .22 + elapsed / 90), sp = 2.2 + Math.min(3.4, elapsed / 14) + Math.random() * 1.2;
+  const bad = Math.random() < Math.min(.5, .28 + elapsed / 70), sp = 2.6 + Math.min(4.2, elapsed / 10) + Math.random() * 1.4;
   if (bad) items.push({ e: BAD[Math.floor(Math.random() * BAD.length)], bad: true, x: 20 + Math.random() * (W - 40), y: -30, v: sp, r: (Math.random() - .5) * .04, a: 0 });
   else { const gd = Math.random() < .14 ? GOOD[1] : GOOD[0]; items.push({ c: gd.c, h: gd.h, p: gd.p, x: 20 + Math.random() * (W - 40), y: -30, v: sp * .95, r: (Math.random() - .5) * .04, a: 0 }); }
 }
@@ -585,8 +659,17 @@ function drawScene() {
     if (!it.bad) { pixHeart(cx, it.x, it.y, 30, it.c, it.h); continue; }
     cx.save(); cx.translate(it.x, it.y); cx.rotate(it.a); cx.fillStyle = "rgba(255,122,89,.18)"; cx.beginPath(); cx.arc(0, 0, 21, 0, 7); cx.fill();
     cx.font = '32px system-ui, "Apple Color Emoji", "Noto Color Emoji", sans-serif'; cx.fillText(it.e, 0, 1); cx.restore(); }
-  // la canasta
-  const by = H - 44; cx.font = "54px system-ui, \"Apple Color Emoji\", \"Noto Color Emoji\", sans-serif"; cx.fillText("🧺", basket.x, by);
+  // ella, con su mochila en la espalda donde guarda los corazones
+  const u = cu(), now = performance.now(), my = H - 10 * u - 8, mx = basket.x, hugging = now - hugAt < 260;
+  for (const f of flyers) if (now >= f.t0 && (now - f.t0) / 420 > .62) drawFlyer(f, now);   // los que ya van entrando a la mochila, detrás de ella
+  const bb = now - bagHit < 200 ? Math.sin((now - bagHit) / 200 * Math.PI) * 3 : 0;
+  cx.fillStyle = "#7d4fd0"; cx.fillRect(Math.round(mx - 7 * u), Math.round(my - 3 * u - bb), 14 * u, 9 * u + bb);   // la mochila (morada, como su gorro)
+  cx.fillStyle = "#a57cf0"; cx.fillRect(Math.round(mx - 7 * u), Math.round(my - 3 * u - bb), 14 * u, 2 * u);
+  const rot = now - ouchAt < 300 ? Math.sin((now - ouchAt) / 30) * .12 : 0;
+  sprite(cx, hugging ? MAITE_HUG : MAITE, MAITE_PAL, mx, my, u, rot);
+  if (!rot) { cx.fillStyle = "#5a3399"; cx.fillRect(Math.round(mx - 4 * u), Math.round(my), u, 3 * u); cx.fillRect(Math.round(mx + 3 * u), Math.round(my), u, 3 * u); }   // tirantes de la mochila
+  if (hugging) pixHeart(cx, mx, my + u, 7 * u, "#ff4f9a", "#ffd1e6");   // abraza el corazón
+  for (const f of flyers) if (now >= f.t0 && (now - f.t0) / 420 <= .62) drawFlyer(f, now);
   for (const f of floats) { cx.globalAlpha = Math.max(0, 1 - f.t / 40); cx.font = '12px "Press Start 2P", monospace'; cx.fillStyle = f.c; cx.fillText(f.s, f.x, f.y - f.t); }
   cx.globalAlpha = 1;
 }
@@ -597,38 +680,44 @@ function pixHeart(k, x, y, size, c, h) {
   HEART.forEach((r, j) => [...r].forEach((v, i) => { if (v === "1") { k.fillStyle = (i === 1 || i === 2) && j === 1 ? h : c; k.fillRect(x0 + i * u, y0 + j * u, Math.ceil(u), Math.ceil(u)); } }));
   k.shadowBlur = 0;
 }
-function drawIdle() { items = []; floats = []; drawScene(); }
+function drawFlyer(f, now) {   // el corazón sube por encima de su cabeza y baja a la mochila
+  const k = Math.min(1, (now - f.t0) / 420), u = cu(), mx = basket.x, my = H - 10 * u - 8, x0 = mx, y0 = my + u, x1 = mx + 4 * u, y1 = my - 3 * u, hy = my - 16 * u;
+  const x = x0 + (x1 - x0) * k, y = (1 - k) * (1 - k) * y0 + 2 * (1 - k) * k * hy + k * k * y1; pixHeart(cx, x, y, (7 - 3 * k) * u, f.c, f.h);
+}
+function drawIdle() { items = []; floats = []; flyers = []; basket.w = 18 * cu(); drawScene(); }
 function frame(t) {
   if (!playing) return; const dt = Math.min(2.5, (t - lastC) / 16.67); lastC = t; elapsed += dt / 60;
-  spawnT -= dt; if (spawnT <= 0) { spawn(); spawnT = Math.max(16, 42 - elapsed * 1.1) * (.7 + Math.random() * .6); }
-  const by = H - 44, half = basket.w / 2;
+  spawnT -= dt; if (spawnT <= 0) { spawn(); spawnT = Math.max(12, 36 - elapsed * 1.3) * (.7 + Math.random() * .6); }
+  const u = cu(), by = H - 10 * u - 8, half = 8 * u, now = performance.now();
+  for (const f of flyers) if (!f.in && now - f.t0 > 400) { f.in = true; bagHit = now; }
   for (const it of items) {
     it.y += it.v * dt; it.a += it.r * dt;
-    if (!it.hit && it.y > by - 26 && it.y < by + 10 && Math.abs(it.x - basket.x) < half) {
+    if (!it.hit && it.y > by - 11 * u && it.y < by + 2 * u && Math.abs(it.x - basket.x) < half) {
       it.hit = true;
-      if (it.bad) { lives--; S8.hurt(); buzz([60, 40, 60]); floats.push({ s: "OUCH", x: it.x, y: by - 30, t: 0, c: "#ff7a59" }); cv.animate([{ transform: "translateX(-6px)" }, { transform: "translateX(6px)" }, { transform: "none" }], { duration: 250 }); }
-      else { score += it.p; it.p > 1 ? S8.gold() : S8.catch(score % 12); buzz(8); floats.push({ s: "+" + it.p, x: it.x, y: by - 30, t: 0, c: it.p > 1 ? "#ffd84d" : "#ff4f9a" }); }
+      if (it.bad) { lives--; ouchAt = now; S8.hurt(); buzz([60, 40, 60]); floats.push({ s: "OUCH", x: it.x, y: by - 12 * u, t: 0, c: "#ff7a59" }); cv.animate([{ transform: "translateX(-6px)" }, { transform: "translateX(6px)" }, { transform: "none" }], { duration: 250 }); }
+      else { score += it.p; S8.kiss(); if (it.p > 1) S8.gold(); buzz(10); hugAt = now; flyers.push({ t0: now + 260, c: it.c, h: it.h }); floats.push({ s: it.p > 1 ? "MUAK +3" : "MUAK", x: basket.x, y: by - 12 * u, t: 0, c: it.p > 1 ? "#ffd84d" : "#ff4f9a" }); }
       hud();
     }
   }
   items = items.filter(it => !it.hit && it.y < H + 40); floats.forEach(f => f.t += dt); floats = floats.filter(f => f.t < 40);
+  flyers = flyers.filter(f => now - f.t0 < 420 || f.t0 > now);
   drawScene();
   if (lives <= 0) return endCatch(false);
   if (score >= META) return endCatch(true);
   raf = requestAnimationFrame(frame);
 }
 function endCatch(win) {
-  playing = false; save.best.catch = Math.max(save.best.catch, score); const first = win && giveCoin("catch"); persist();
+  playing = false; P().best.catch = Math.max(P().best.catch, score); const first = win && giveCoin("catch"); persist();
   const o = $("#cOver"); o.hidden = false;
   o.innerHTML = win
-    ? `<span class="score-big">${score} ♥</span><p class="rank">¡Atrapaste todos los corazones! Igual que el mío 💗</p>${coinHTML(first)}<div class="row"><button class="btn btn--ghost" id="cStart">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div>`
-    : `<span class="score-big">${score} ♥</span><p class="rank">${score >= 15 ? "¡Uf, casi! Ese brócoli te la jugó 🥦" : "Las pruebas y el despertador ganaron esta vez 😂"}</p><p class="hint">Junta ${META} corazones para ganar la ficha.</p><div class="row"><button class="btn" id="cStart">OTRA VEZ</button></div>`;
+    ? `<span class="score-big">${score} ♥</span><p class="rank">¡Atrapaste todos los corazones! Igual que el mío 💗</p>${coinHTML(first)}${duelLine("catch")}<div class="row"><button class="btn btn--ghost" id="cStart">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div><div class="row">${shareHTML("catch", `${score} corazones`)}</div>`
+    : `<span class="score-big">${score} ♥</span><p class="rank">${score >= 25 ? "¡Uf, casi! Ese brócoli te la jugó 🥦" : "Las pruebas y el despertador ganaron esta vez 😂"}</p><p class="hint">Junta ${META} corazones para ganar la ficha.</p>${duelLine("catch")}<div class="row"><button class="btn" id="cStart">OTRA VEZ</button></div>`;
   bindCatchStart(); $("[data-home2]", o)?.addEventListener("click", () => { S8.blip(); go("home"); });
   if (win) { S8.win(); burst(120); buzz([40, 60, 40]); } else S8.no();
 }
 
 /* ---------- 4. vuela hasta Diego ---------- */
-const cv2 = $("#cv2"), vx = cv2.getContext("2d"), V_META = 15;
+const cv2 = $("#cv2"), vx = cv2.getContext("2d"), V_META = 25;
 const CRASH = ["¡Chocaste con un rosal! Las espinas no perdonan 😂", "¡Te enredaste en las flores! 🌸", "¡Uy! Te comiste una columna 😂", "¡Chocaste! Hasta las mariposas se rieron 🦋"];
 const V = { W: 0, H: 0, y: 0, vy: 0, pipes: [], passed: 0, playing: false, started: false, raf: 0, last: 0, t: 0, diego: null };
 const EMO = '"Apple Color Emoji", "Noto Color Emoji", system-ui, sans-serif';
@@ -643,7 +732,7 @@ $("#stage2").addEventListener("pointerdown", e => { if (V.playing) { e.preventDe
 addEventListener("keydown", e => { if (cur === "vuela" && V.playing && (e.key === " " || e.key === "ArrowUp")) { e.preventDefault(); flap(); } });
 const GROUND = 26, PW = 54, HX = () => V.W * .28;
 function vSpawn() {
-  const gap = Math.max(165, V.H * .34), min = gap / 2 + 36, max = V.H - GROUND - gap / 2 - 36, c = min + Math.random() * Math.max(0, max - min);
+  const gap = Math.max(150, V.H * .29), min = gap / 2 + 36, max = V.H - GROUND - gap / 2 - 36, c = min + Math.random() * Math.max(0, max - min);
   V.pipes.push({ x: V.W + 10, top: c - gap / 2, bot: c + gap / 2, done: false, sd: Math.random() * 1000 });
 }
 // ---- ella y él, en pixeles, con la ropa de la foto de chiquititos ----
@@ -669,6 +758,7 @@ const MAITE = [   // gorro morado con lunares, traje de baño rosado con mangas 
   ".....SS....SS.....",
   "....sSS....SSs....",
 ];
+const MAITE_HUG = MAITE.map((r, j) => j === 9 ? "....WPWPPPPWPW...." : (j === 11 || j === 12) ? r.slice(0, 4) + "S" + r.slice(5, 13) + "S" + r.slice(14) : r);
 const MAITE_PAL = { H: "#8e6bc9", h: "#f2ecff", K: "#3a2418", S: "#f2c4a0", s: "#d9a27e", E: "#2a1a10", M: "#d81b6a", P: "#ff3d8b", W: "#ffffff", F: "#59c7ff" };
 const DIEGO = [   // pelo negro, lentes de sol, polera gris con dibujo rojo, jeans y zapatillas; brazos abiertos esperándola
   "......KKKKKK......",
@@ -773,7 +863,7 @@ function vFrame(t) {
     if (V.hugT && V.t - V.hugT > 75) { vDraw(); return vEnd(true); }
   } else if (V.started) {
     V.vy = Math.min(V.H * .017, V.vy + V.H * .00058 * dt); V.y += V.vy * dt; if (V.y < r) { V.y = r; V.vy = 0; }
-    const sp = (2.3 + Math.min(.8, V.passed * .04)) * dt;
+    const sp = (2.5 + Math.min(1.4, V.passed * .06)) * dt;
     for (const p of V.pipes) {
       p.x -= sp;
       if (!p.done && p.x + PW < hx - r) { p.done = true; V.passed++; $("#vScore").textContent = V.passed; S8.catch(V.passed); buzz(8); }
@@ -788,18 +878,19 @@ function vFrame(t) {
   vDraw(); V.raf = requestAnimationFrame(vFrame);
 }
 function vEnd(win, que) {
-  V.playing = false; save.best.vuela = Math.max(save.best.vuela, V.passed); const first = win && giveCoin("vuela"); persist();
+  V.playing = false; P().best.vuela = Math.max(P().best.vuela, V.passed); const first = win && giveCoin("vuela"); persist();
   const o = $("#vOver"); o.hidden = false;
   o.innerHTML = win
-    ? `<p class="press">¡LLEGASTE! 💗</p><p class="rank">Esquivaste 15 obstáculos para llegar a mis brazos… yo esquivaría todos los del mundo por llegar a ti.</p>${coinHTML(first)}<div class="row"><button class="btn btn--ghost" id="vStart">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div>`
-    : `<span class="score-big">${V.passed}/15</span><p class="rank">${que}</p><p class="hint">Pasa 15 obstáculos para llegar hasta Diego.</p><div class="row"><button class="btn" id="vStart">OTRA VEZ</button></div>`;
+    ? `<p class="press">¡LLEGASTE! 💗</p><p class="rank">Pasaste 25 columnas para llegar a mis brazos… yo esquivaría todos los obstáculos del mundo por llegar a ti.</p>${coinHTML(first)}${duelLine("vuela")}<div class="row"><button class="btn btn--ghost" id="vStart">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div><div class="row">${shareHTML("vuela", "llegué volando a tus brazos 🕊️")}</div>`
+    : `<span class="score-big">${V.passed}/25</span><p class="rank">${que}</p><p class="hint">Pasa 25 columnas para llegar hasta Diego.</p>${duelLine("vuela")}<div class="row"><button class="btn" id="vStart">OTRA VEZ</button></div>`;
   bindVuelaStart(); $("[data-home2]", o)?.addEventListener("click", () => { S8.blip(); go("home"); });
   if (win) { S8.win(); burst(140); buzz([40, 60, 40]); } else { S8.hurt(); buzz([60, 40, 60]); }
 }
 
 /* ---------- 5. arma nuestra foto: 16 piezas de verdad que se arrastran desde abajo ---------- */
 const JZ_IMG = ["__KIDSFOTO__"].map(f => f.startsWith("__") ? "" : f)[0] || FOTOS[5];   // los dos de chiquititos
-const JN = 4, JPAD = .26;   // 4×4 piezas; espacio extra para las pestañas
+const JN = 5, JPAD = .26;   // 5×5 piezas; espacio extra para las pestañas
+let jzPeeks = 3;
 let jz = { img: null, H: [], V: [], order: [], placed: new Set(), B: 0, t0: 0, done: false };
 const jzImg = new Image(); if (JZ_IMG) jzImg.src = JZ_IMG;
 // borde de una pieza: recto o con pestaña hacia afuera (s = 1) o hacia adentro (s = -1)
@@ -814,15 +905,14 @@ function jzPath(g, r, c, cs, o) {   // o = dónde empieza la celda dentro del di
   jzEdge(g, o, o, o + cs, o, top); jzEdge(g, o + cs, o, o + cs, o + cs, rig); jzEdge(g, o + cs, o + cs, o, o + cs, bot); jzEdge(g, o, o + cs, o, o, lef); g.closePath();
 }
 function jzLayout() {   // tamaños según la pantalla
-  const sc = $("#s-puzzle"), W = sc.clientWidth - 32, Hs = sc.clientHeight - 32, tp = Math.floor((W - 16 - 5 * 4) / 6) - 1, trayH = 3 * tp + 2 * 4 + 16;
-  const left = JN * JN - jz.placed.size, rows = Math.ceil(left / 6);
+  const sc = $("#s-puzzle"), W = sc.clientWidth - 32, Hs = sc.clientHeight - 32, tp = Math.floor((W - 16 - 6 * 4) / 7) - 1, trayH = 4 * tp + 3 * 4 + 16;
+  const left = JN * JN - jz.placed.size, rows = Math.ceil(left / 7);
   jz.B = Math.floor(Math.min(W, Hs - 30 - 20 - (left ? trayH : 0), 360)); jz.tp = tp;
   const bd = $("#jzBoard"); bd.style.width = bd.style.height = jz.B + "px";
   $("#jzTray").style.minHeight = (left ? (rows * tp + (rows - 1) * 4 + 16) : 0) + "px";
 }
 function jzDrawGuide() {
   const cv = $("#jzGuide"), d = devicePixelRatio || 1, B = jz.B, cs = B / JN; cv.width = Math.round(B * d); cv.height = Math.round(B * d); const g = cv.getContext("2d"); g.setTransform(d, 0, 0, d, 0, 0);
-  if (jzImg.complete && jzImg.naturalWidth) { g.globalAlpha = .16; g.drawImage(jzImg, 0, 0, B, B); g.globalAlpha = 1; }
   g.strokeStyle = "rgba(255,255,255,.28)"; g.lineWidth = 1;
   for (let r = 0; r < JN; r++) for (let c = 0; c < JN; c++) { g.save(); g.translate(c * cs, r * cs); jzPath(g, r, c, cs, 0); g.stroke(); g.restore(); }
 }
@@ -849,7 +939,7 @@ function jzRender() {   // arma el tablero y la bandeja con el estado actual
 function startPuzzle() {
   jz.H = Array.from({ length: JN - 1 }, () => Array.from({ length: JN }, () => Math.random() < .5 ? 1 : -1));
   jz.V = Array.from({ length: JN }, () => Array.from({ length: JN - 1 }, () => Math.random() < .5 ? 1 : -1));
-  jz.order = shuffle([...Array(JN * JN).keys()]); jz.placed = new Set(); jz.t0 = 0; jz.done = false;
+  jz.order = shuffle([...Array(JN * JN).keys()]); jz.placed = new Set(); jz.t0 = 0; jz.done = false; jzPeeks = 3; $("#jzPeek").textContent = "👀 3";
   $("#pzEnd").hidden = true; $("#jzBoard").classList.remove("solved", "peeking"); $("#jzTray").hidden = false;
   const go2 = () => { if (cur === "puzzle") jzRender(); };
   if (JZ_IMG && !jzImg.complete) jzImg.onload = go2; else requestAnimationFrame(go2);
@@ -888,18 +978,18 @@ function jzUp(e) {
 function jzWin() {
   jz.done = true; const secs = Math.round((performance.now() - (jz.t0 || performance.now())) / 1000);
   $("#jzTray").hidden = true; $("#jzBoard").classList.add("solved"); burstAt($("#jzBoard"), 140); S8.win(); buzz([40, 60, 40]);
-  save.best.puzzle = save.best.puzzle ? Math.min(save.best.puzzle, secs) : secs; const first = giveCoin("puzzle"); persist();
+  P().best.puzzle = P().best.puzzle ? Math.min(P().best.puzzle, secs) : secs; const first = giveCoin("puzzle"); persist();
   setTimeout(() => {
     if (cur !== "puzzle") return; jzLayout(); jzDrawGuide();
     const e = $("#pzEnd"); e.hidden = false; e.style.flex = "0 0 auto";
-    e.innerHTML = `<p class="rank">¡Lo armaste! Desde chiquititos ya estábamos hechos el uno para el otro 🧩💗</p><p class="hint">Tiempo: ${jzTime(secs)}</p>${coinHTML(first)}<div class="row"><button class="btn btn--ghost" id="pzAgain">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div>`;
+    e.innerHTML = `<p class="rank">¡Lo armaste! Desde chiquititos ya estábamos hechos el uno para el otro 🧩💗</p><p class="hint">Tiempo: ${jzTime(secs)}</p>${coinHTML(first)}${duelLine("puzzle")}<div class="row"><button class="btn btn--ghost" id="pzAgain">OTRA VEZ</button><button class="btn" data-home2>MENÚ ▶</button></div><div class="row">${shareHTML("puzzle", `armé la foto en ${jzTime(secs)}`)}</div>`;
     $("#pzAgain").addEventListener("click", () => { S8.coin(); startPuzzle(); }); $("[data-home2]", e).addEventListener("click", () => { S8.blip(); go("home"); });
     const B = Math.max(170, Math.min(jz.B, $("#s-puzzle").clientHeight - 32 - 30 - e.getBoundingClientRect().height - 24)); $("#jzBoard").style.width = $("#jzBoard").style.height = B + "px";
     $$("#jzBoard .jz-p").forEach(p => p.style.display = "none");   // ya se ve la foto entera
   }, reduced ? 0 : 1400);
 }
 const jzTime = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-$("#jzPeek").addEventListener("click", () => { const b = $("#jzBoard"); b.classList.add("peeking"); S8.blip(); clearTimeout(jzPeekT); jzPeekT = setTimeout(() => b.classList.remove("peeking"), 1600); });
+$("#jzPeek").addEventListener("click", () => { if (jz.done || jzPeeks <= 0) { S8.no(); return; } jzPeeks--; $("#jzPeek").textContent = `👀 ${jzPeeks}`; const b = $("#jzBoard"); b.classList.add("peeking"); S8.blip(); clearTimeout(jzPeekT); jzPeekT = setTimeout(() => b.classList.remove("peeking"), 1600); });
 let jzPeekT = 0;
 $("#jzMix").addEventListener("click", () => { S8.coin(); startPuzzle(); });
 
@@ -907,9 +997,9 @@ $("#jzMix").addEventListener("click", () => { S8.coin(); startPuzzle(); });
 let prizeRun = 0;
 function showPrize() {
   const run = ++prizeRun, f = FOTOS[5]; if (f) $("#dipPhoto").style.backgroundImage = `url('${f}')`;
-  const b = save.best, n = TRIVIA.length;
-  $("#dipList").innerHTML = `<li>Conoce a Diego: ${b.trivia} de ${n} respuestas buenas</li><li>Memorice de nuestras fotos: ${b.memo} movimientos</li><li>Atrapó ${b.catch} corazones (y el de Diego, hace rato)</li><li>Voló hasta Diego esquivando ${Math.max(15, b.vuela)} obstáculos</li><li>Armó nuestra foto de chiquititos en ${jzTime(b.puzzle)}</li>`;
-  $("#waWin").href = wa(`¡Gané el Maite Arcade! 🏆 Soy el amor de tu vida, 100% certificado 💘\nConozco a Diego: ${b.trivia}/${n} · Memorice: ${b.memo} mov. · Corazones: ${b.catch} · Vuelo: ${Math.max(15, b.vuela)} · Rompecabezas: ${jzTime(b.puzzle)}\nVengo a cobrar mi heladito y mi abrazo de un minuto 😌`);
+  const b = P().best, n = TRIVIA.length;
+  $("#dipList").innerHTML = `<li>Conoce a Diego: ${b.trivia} de ${n} respuestas buenas</li><li>Memorice de nuestras fotos: ${b.memo} movimientos</li><li>Atrapó ${b.catch} corazones (y el de Diego, hace rato)</li><li>Voló hasta los brazos de Diego pasando ${Math.max(V_META, b.vuela)} columnas</li><li>Armó nuestra foto de chiquititos en ${jzTime(b.puzzle)}</li>`;
+  $("#waWin").href = wa(`¡Gané el Maite Arcade! 🏆 Soy el amor de tu vida, 100% certificado 💘\nConozco a Diego: ${b.trivia}/${n} · Memorice: ${b.memo} mov. · Corazones: ${b.catch} · Vuelo: ${Math.max(V_META, b.vuela)} · Rompecabezas: ${jzTime(b.puzzle)}\nVengo a cobrar mi heladito y mis mil besos 😌💋`);
   // la barra de amor se llena, y cae el timbre
   const fill = $("#meterFill"), pct = $("#pct"), st = $("#stamp");
   fill.style.transition = "none"; fill.style.width = "0"; void fill.offsetWidth; fill.style.transition = ""; st.classList.remove("go"); pct.textContent = "0%";
