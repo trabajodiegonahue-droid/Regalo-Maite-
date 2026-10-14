@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mini Diego</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&display=swap">
+<style>
+/* Layout: una consolita rosada tipo Tamagotchi al centro (pantalla con mini Diego, globo de diálogo y 4 botones); abajo, sus estrellas y vales */
+:root {
+  --bg: #fde6f0; --bg-dot: #f8d0e2; --text: #3b1838; --muted: #8a5a7f; --card: #fff7fb; --card-line: #f0bfd6;
+  --shell: #ff6fae; --shell-dk: #d64a8a; --shell-lt: #ffa8cf; --plum: #3b1838; --paper: #fffafc; --paper-ink: #3b1838; --paper-dim: #9a6b8e;
+  --rose: #ff5c98; --rose-dk: #c92e68; --sun: #ffc93d; --sun-dk: #d99a12; --mint: #3fd4a6; --mint-dk: #1f9a78; --lav: #bba6ff; --lav-dk: #8a70e0;
+  --gold: #e8a400;
+  --f-pix: "Silkscreen", "Courier New", monospace;
+  --f-body: "Pixelify Sans", "Trebuchet MS", system-ui, sans-serif;
+  --p: 3px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #1f0f22; --bg-dot: #2c1631; --text: #fde3f0; --muted: #c99bbd; --card: #2b1631; --card-line: #4d2855; --gold: #ffd166; color-scheme: dark; } }
+:root[data-theme="dark"] { --bg: #1f0f22; --bg-dot: #2c1631; --text: #fde3f0; --muted: #c99bbd; --card: #2b1631; --card-line: #4d2855; --gold: #ffd166; color-scheme: dark; }
+
+[hidden] { display: none !important; }
+html, body { min-height: 100%; }
+body { background-color: var(--bg); background-image: radial-gradient(var(--bg-dot) 1.6px, transparent 1.7px); background-size: 14px 14px;
+  color: var(--text); font-family: var(--f-body); font-size: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 12px 28px;
+  -webkit-tap-highlight-color: transparent; }
+.wrap { max-width: 400px; margin: 0 auto; display: grid; gap: 12px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline-offset: 4px; }
+
+/* cabecera */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { display: grid; gap: 2px; min-width: 0; }
+.logo { font: 700 1.15rem/1 var(--f-pix); letter-spacing: .04em; color: var(--rose); text-shadow: 2px 2px 0 var(--plum); }
+.sub { font: 500 .95rem/1.2 var(--f-body); color: var(--muted); }
+.icon { width: 40px; height: 40px; border: 0; background: var(--card); color: var(--text); font: 700 .8rem/1 var(--f-pix);
+  box-shadow: 0 calc(var(--p) * -1) 0 0 var(--card-line), 0 var(--p) 0 0 var(--card-line), calc(var(--p) * -1) 0 0 0 var(--card-line), var(--p) 0 0 0 var(--card-line); }
+.icon[aria-pressed="true"] { opacity: .45; }
+
+/* la consolita */
+.device { background: var(--shell); border-radius: 30px 30px 44px 44px; padding: 10px 12px 18px; display: grid; gap: 10px;
+  box-shadow: inset 0 -9px 0 var(--shell-dk), inset 0 6px 0 var(--shell-lt), 0 12px 0 -4px rgba(59,24,56,.22); user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.dev-top { display: flex; align-items: center; justify-content: space-between; padding: 0 6px; }
+.dev-name { font: 700 .7rem/1 var(--f-pix); letter-spacing: .18em; color: var(--shell-dk); text-shadow: 0 1px 0 var(--shell-lt); }
+.led { width: 9px; height: 9px; background: #fff; box-shadow: 0 0 8px #fff; animation: led 1.6s steps(2) infinite; }
+@keyframes led { 50% { background: var(--shell-lt); box-shadow: none; } }
+.grill { display: grid; grid-template-columns: repeat(4, 4px); gap: 3px; }
+.grill i { width: 4px; height: 4px; background: var(--shell-dk); }
+.bezel { position: relative; background: var(--plum); border-radius: 16px; padding: 8px; display: grid; place-items: center; }
+#scene { display: block; width: 100%; image-rendering: pixelated; border-radius: 6px; touch-action: manipulation; }
+.hud { position: absolute; top: 14px; left: 15px; right: 15px; display: flex; justify-content: space-between; pointer-events: none;
+  font: 700 .62rem/1 var(--f-pix); color: #fff; text-shadow: 1px 1px 0 var(--plum), -1px 0 0 var(--plum), 0 -1px 0 var(--plum); letter-spacing: .06em; }
+
+/* globo de diálogo */
+.bubble { position: relative; background: var(--paper); color: var(--paper-ink); padding: 10px 13px 11px; min-height: 8.6em; display: grid; align-content: start; gap: 6px;
+  box-shadow: 0 calc(var(--p) * -1) 0 0 var(--plum), 0 var(--p) 0 0 var(--plum), calc(var(--p) * -1) 0 0 0 var(--plum), var(--p) 0 0 0 var(--plum), inset 0 -4px 0 #f6dbe8; cursor: pointer; }
+.bubble::before { content: ""; position: absolute; left: 50%; top: -12px; width: 12px; height: 9px; transform: translateX(-50%); background: var(--plum);
+  clip-path: polygon(33% 0, 66% 0, 66% 33%, 100% 33%, 100% 100%, 0 100%, 0 33%, 33% 33%); }
+.who { font: 700 .62rem/1 var(--f-pix); letter-spacing: .12em; color: var(--rose-dk); }
+.greet { margin: 0; font: 600 .9rem/1.28 var(--f-body); color: var(--paper-dim); }
+.say { margin: 0; font: 500 1.06rem/1.34 var(--f-body); text-wrap: pretty; min-height: 2.7em; }
+.say b { color: var(--rose-dk); font-weight: 700; }
+.say .caret { display: inline-block; width: .5em; height: 1em; vertical-align: -2px; background: var(--rose); animation: caret .6s steps(2) infinite; margin-left: 2px; }
+@keyframes caret { 50% { opacity: 0; } }
+.more { justify-self: end; border: 0; background: none; padding: 2px 4px; font: 700 .62rem/1 var(--f-pix); color: var(--rose-dk); animation: nudge .7s steps(2) infinite; }
+@keyframes nudge { 50% { transform: translateY(2px); } }
+.wa { justify-self: start; display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; text-decoration: none; background: var(--mint); color: var(--plum); font: 700 .66rem/1 var(--f-pix); letter-spacing: .04em;
+  box-shadow: 0 -2px 0 0 var(--plum), 0 2px 0 0 var(--plum), -2px 0 0 0 var(--plum), 2px 0 0 0 var(--plum), inset 0 -3px 0 var(--mint-dk); }
+
+/* botones de la consolita */
+.pad { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; padding: 4px 3px 2px; }
+.key { --c: var(--rose); --c-dk: var(--rose-dk); position: relative; overflow: hidden; display: grid; grid-template-columns: 28px 1fr; align-items: center; gap: 8px; min-height: 54px;
+  padding: 8px 10px 12px; border: 0; background: var(--c); color: var(--plum); text-align: left; font: 600 1rem/1.1 var(--f-body);
+  box-shadow: 0 calc(var(--p) * -1) 0 0 var(--plum), 0 var(--p) 0 0 var(--plum), calc(var(--p) * -1) 0 0 0 var(--plum), var(--p) 0 0 0 var(--plum), inset 0 -5px 0 var(--c-dk), inset 0 3px 0 rgba(255,255,255,.45);
+  transition: transform .06s; touch-action: manipulation; }
+.key:active, .key.held { transform: translateY(3px); box-shadow: 0 calc(var(--p) * -1) 0 0 var(--plum), 0 var(--p) 0 0 var(--plum), calc(var(--p) * -1) 0 0 0 var(--plum), var(--p) 0 0 0 var(--plum), inset 0 -2px 0 var(--c-dk), inset 0 3px 0 rgba(255,255,255,.45); }
+.key small { display: block; margin-top: 3px; font: 400 .55rem/1.1 var(--f-pix); letter-spacing: .03em; opacity: .75; }
+.key .ic { width: 28px; height: 28px; display: block; image-rendering: pixelated; position: relative; z-index: 1; }
+.key > span { position: relative; z-index: 1; }
+.key--sun { --c: var(--sun); --c-dk: var(--sun-dk); }
+.key--mint { --c: var(--mint); --c-dk: var(--mint-dk); }
+.key--lav { --c: var(--lav); --c-dk: var(--lav-dk); }
+.key--wide { grid-column: 1 / -1; }
+.key--ghost { --c: var(--shell-lt); --c-dk: var(--shell-dk); grid-template-columns: 1fr; text-align: center; min-height: 46px; font-size: .95rem; }
+.fill { position: absolute; left: 0; bottom: 0; top: 0; width: 0; background: repeating-linear-gradient(90deg, #fff6 0 6px, #fff3 6px 12px); z-index: 0; }
+
+/* rutina de 5 minutos */
+.routine { display: grid; gap: 10px; padding: 0 3px; }
+.rt-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; color: var(--plum); }
+.rt-step { font: 700 .66rem/1.2 var(--f-pix); letter-spacing: .06em; }
+.rt-time { font: 700 1.6rem/1 var(--f-pix); font-variant-numeric: tabular-nums; }
+.rt-bar { height: 12px; background: var(--shell-dk); box-shadow: 0 -2px 0 0 var(--plum), 0 2px 0 0 var(--plum), -2px 0 0 0 var(--plum), 2px 0 0 0 var(--plum); }
+.rt-bar i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(90deg, var(--mint) 0 6px, #7ff0cb 6px 8px); }
+.rt-bar.rest i { background: repeating-linear-gradient(90deg, var(--lav) 0 6px, #ddd2ff 6px 8px); }
+.rt-dots { display: flex; gap: 6px; justify-content: center; }
+.rt-dots i { width: 10px; height: 10px; background: var(--shell-lt); box-shadow: inset 0 0 0 2px var(--shell-dk); }
+.rt-dots i.done { background: var(--mint); box-shadow: inset 0 0 0 2px var(--plum); }
+.rt-dots i.now { background: var(--sun); box-shadow: inset 0 0 0 2px var(--plum); }
+.rt-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.rt-btns .key { grid-template-columns: 1fr; text-align: center; min-height: 44px; padding: 8px 6px 11px; font: 700 .62rem/1.1 var(--f-pix); }
+
+/* estrellas */
+.card { background: var(--card); padding: 16px; display: grid; gap: 12px;
+  box-shadow: 0 calc(var(--p) * -1) 0 0 var(--card-line), 0 var(--p) 0 0 var(--card-line), calc(var(--p) * -1) 0 0 0 var(--card-line), var(--p) 0 0 0 var(--card-line); }
+.card h2 { margin: 0; font: 700 .85rem/1.2 var(--f-pix); letter-spacing: .06em; color: var(--rose); text-wrap: balance; }
+.card p { margin: 0; color: var(--muted); font-size: .98rem; line-height: 1.4; }
+.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.day { display: grid; justify-items: center; gap: 4px; padding: 6px 0 7px; font: 700 .58rem/1 var(--f-pix); color: var(--muted); }
+.day.today { color: var(--text); background: var(--bg); box-shadow: 0 -2px 0 0 var(--rose), 0 2px 0 0 var(--rose), -2px 0 0 0 var(--rose), 2px 0 0 0 var(--rose); }
+.day canvas { width: 18px; height: 18px; image-rendering: pixelated; }
+.next { display: grid; gap: 6px; }
+.next-row { display: flex; justify-content: space-between; gap: 10px; font: 600 .95rem/1.3 var(--f-body); }
+.next-row b { font: 700 .75rem/1.3 var(--f-pix); color: var(--gold); white-space: nowrap; }
+.meter { height: 12px; background: var(--bg); box-shadow: 0 -2px 0 0 var(--card-line), 0 2px 0 0 var(--card-line), -2px 0 0 0 var(--card-line), 2px 0 0 0 var(--card-line); }
+.meter i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(90deg, var(--sun) 0 6px, #ffe08a 6px 8px); transition: width .6s steps(8); }
+.vales { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.vale { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 10px; padding: 8px 10px; background: var(--bg); min-width: 0; }
+.vale .n { font: 700 .72rem/1 var(--f-pix); color: var(--gold); text-align: center; }
+.vale .t { font: 500 .98rem/1.3 var(--f-body); min-width: 0; }
+.vale.locked .t { color: var(--muted); }
+.vale .st { font: 700 .55rem/1.2 var(--f-pix); color: var(--muted); text-align: right; }
+.vale a { font: 700 .58rem/1 var(--f-pix); text-decoration: none; color: var(--plum); background: var(--sun); padding: 7px 8px; box-shadow: 0 -2px 0 0 var(--plum), 0 2px 0 0 var(--plum), -2px 0 0 0 var(--plum), 2px 0 0 0 var(--plum); white-space: nowrap; }
+.foot { margin: 0; text-align: center; font: 500 .95rem/1.4 var(--f-body); color: var(--muted); }
+.foot b { font: 700 .7rem/1 var(--f-pix); color: var(--rose); }
+
+@media (prefers-reduced-motion: reduce) { .led, .more, .say .caret { animation: none; } }
+@media (max-width: 360px) { .key { font-size: .92rem; grid-template-columns: 24px 1fr; gap: 6px; } .key .ic { width: 24px; height: 24px; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><span class="logo">MINI DIEGO</span><span class="sub" id="fecha"></span></div>
+    <button class="icon" id="muteBtn" aria-label="Silenciar sonidos" aria-pressed="false">♪</button>
+  </header>
+
+  <section class="device" aria-label="Mini Diego, tu entrenador de bolsillo">
+    <div class="dev-top"><span class="led" aria-hidden="true"></span><span class="dev-name">MINI·DIEGO</span><span class="grill" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
+    <div class="bezel">
+      <canvas id="scene" width="300" height="216" aria-label="Mini Diego en pixeles. Tócalo y reacciona."></canvas>
+      <div class="hud" aria-hidden="true"><span id="hudDay">DÍA 1</span><span id="hudStars">★ 0</span></div>
+    </div>
+
+    <div class="bubble" id="bubble" aria-live="polite">
+      <span class="who">MINI DIEGO</span>
+      <p class="greet" id="greet"></p>
+      <p class="say" id="say"></p>
+      <a class="wa" id="waLink" href="#" target="_blank" rel="noopener" hidden>AVISARLE A DIEGO 💬</a>
+      <button class="more" id="more" hidden>SIGUIENTE ▼</button>
+    </div>
+
+    <div class="pad" id="pad">
+      <button class="key" id="bAnimo"><canvas class="ic" data-ic="heart" width="8" height="8"></canvas><span>Dame ánimo</span></button>
+      <button class="key key--sun" id="bCarga"><i class="fill" id="cargaFill"></i><canvas class="ic" data-ic="bolt" width="8" height="8"></canvas><span>Pásame energía<small>Mantén apretado</small></span></button>
+      <button class="key key--mint" id="bVoy"><canvas class="ic" data-ic="shoe" width="8" height="8"></canvas><span>¡Voy al gym!</span></button>
+      <button class="key key--lav" id="bNo"><canvas class="ic" data-ic="moon" width="8" height="8"></canvas><span>No tengo ganas</span></button>
+    </div>
+
+    <div class="pad" id="padNo" hidden>
+      <button class="key key--mint key--wide" id="bMini"><canvas class="ic" data-ic="clock" width="8" height="8"></canvas><span>5 minutos contigo<small>Aquí mismo, sin ir al gym</small></span></button>
+      <button class="key key--lav" id="bRest"><canvas class="ic" data-ic="moon" width="8" height="8"></canvas><span>Necesito descansar</span></button>
+      <button class="key key--ghost" id="bBack1">◀ VOLVER</button>
+    </div>
+
+    <div class="pad" id="padDone" hidden>
+      <button class="key key--mint key--wide" id="bVoy2"><canvas class="ic" data-ic="shoe" width="8" height="8"></canvas><span>¡Ahora sí voy al gym!</span></button>
+      <button class="key key--ghost key--wide" id="bBack2">LISTO POR HOY ♥</button>
+    </div>
+
+    <div class="routine" id="routine" hidden>
+      <div class="rt-head"><span class="rt-step" id="rtStep">EJERCICIO 1 DE 5</span><span class="rt-time" id="rtTime">0:45</span></div>
+      <div class="rt-bar" id="rtBarBox"><i id="rtBar"></i></div>
+      <div class="rt-dots" id="rtDots" aria-hidden="true"></div>
+      <div class="rt-btns">
+        <button class="key key--sun" id="rtPause">PAUSA</button>
+        <button class="key key--mint" id="rtNext">SIGUIENTE</button>
+        <button class="key key--ghost" id="rtExit">SALIR</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="stTitle">
+    <h2 id="stTitle">TUS ESTRELLAS</h2>
+    <p>Ganas una por cada día que vas al gym o haces los 5 minutos con mini Diego. Con las estrellas se desbloquean vales para cobrarle al Diego de verdad.</p>
+    <div class="week" id="week" aria-label="Esta semana"></div>
+    <div class="next">
+      <div class="next-row"><span id="nextTxt"></span><b id="nextNum"></b></div>
+      <div class="meter" aria-hidden="true"><i id="meter"></i></div>
+    </div>
+    <ul class="vales" id="vales"></ul>
+  </section>
+
+  <p class="foot" id="foot"></p>
+</div>
+
+<script>
+/* ====================== lo que dice mini Diego ====================== */
+// un mensaje distinto cada día (60 días sin repetir)
+const MSGS = [
+  "Sé que hoy la cama está más rica que nunca. Pero tú eres más fuerte que tu cama, y yo voy a estar aquí orgulloso de ti cuando vuelvas.",
+  "No tienes que tener ganas, solo tienes que empezar. Las ganas llegan después del calentamiento, te lo prometo.",
+  "Cada vez que vas aunque no quieras, te demuestras lo increíble que eres. Yo lo sé hace rato.",
+  "Hoy no te pido que lo hagas perfecto. Te pido que lo hagas. Lo demás lo celebramos juntos.",
+  "Imagínate saliendo del gym con la música a todo volumen y esa sensación de “lo logré”. Eso te está esperando.",
+  "Mi wawita mosha: no vas por obligación, vas porque te quieres. Y yo te quiero todavía más.",
+  "Un día flojo lo tiene cualquiera. Lo que te hace distinta es que igual te pones las zapatillas.",
+  "Si pudiera, te acompañaría a cada serie y te contaría las repeticiones con besos.",
+  "Tu yo de mañana te va a dar las gracias por lo que hagas hoy. Y yo también, con un abrazo apretado.",
+  "No se trata de ser la más rápida ni la más fuerte. Se trata de no rendirse, y en eso eres campeona.",
+  "Ponte esa playlist que te hace sentir protagonista de película. Hoy la protagonista eres tú.",
+  "Me encanta verte motivada: te brillan los ojos. Vamos a buscar ese brillo.",
+  "Hoy cuesta, sí. Pero mira todo lo que ya has logrado: nada de eso llegó fácil y aquí estás.",
+  "Te prometo que después del gym te vas a sentir liviana, feliz y con energía. Y si no, te debo un helado.",
+  "El cansancio de hoy es la fuerza de mañana. Y tu fuerza me encanta.",
+  "Eres la persona más valiente que conozco. Un par de pesas no van a poder contigo.",
+  "Respira hondo, amárrate el pelo y sal. Yo te espero con el corazón lleno de orgullo.",
+  "Hasta los días grises se ven mejor con endorfinas. Anda a buscar las tuyas.",
+  "No tienes que hacerlo todo hoy. Solo un poquito más que nada. Eso ya es ganar.",
+  "Cuando quieras rendirte, acuérdate de por qué empezaste. Y de que hay alguien que cree en ti a ciegas.",
+  "Preciosa, el gym no sabe lo que se le viene hoy.",
+  "Te amo cuando ganas, te amo cuando te cuesta, y te amo mucho más cuando lo intentas igual.",
+  "Que la flojera no te gane el partido. Yo juego de mediocampo y te paso la pelota: ahora te toca a ti.",
+  "Cada gota de sudor es una prueba de lo constante que eres. Y tu constancia es de lo más bonito que tienes, después de tu sonrisa.",
+  "Hoy entrena por ti, por tu salud y por esa versión tuya que sonríe más. Esa versión me tiene loco.",
+  "Si hoy vas lento, igual vas. Y eso vale muchísimo.",
+  "Tu cuerpo hace cosas increíbles por ti todos los días. Hoy devuélvele el cariño moviéndolo un rato.",
+  "No pienses en la hora completa. Piensa solo en llegar. Llegar ya es la mitad del entrenamiento.",
+  "Te imagino levantando pesas con cara seria y me da una ternura que no te imaginas.",
+  "Algún día vamos a entrenar juntos y te voy a dejar ganar. Mentira, vas a ganar sola. Anda a practicar.",
+  "La disciplina es quererte incluso cuando no tienes ganas. Y tú te mereces todo ese cariño.",
+  "Hoy es un buen día para sentirte fuerte. Mañana también, pero partamos por hoy.",
+  "No necesito que seas perfecta: me encantas tal como eres. El gym es para que tú te sientas increíble.",
+  "Vamos, mi amor. Una hora para ti, sin celular y sin preocupaciones. Te la mereces.",
+  "Las ganas son como el wifi: a veces se caen. Tú conéctate igual y ya van a volver.",
+  "Cuando termines, mándame una foto de tu cara de satisfacción. Es mi foto favorita.",
+  "Eres mi persona favorita en todo el mundo. Y mi persona favorita no se rinde.",
+  "Piensa en lo rico que vas a dormir hoy después de entrenar. Ese sueño te lo ganas en el gym.",
+  "Si pudiera, te cargaría todo el entrenamiento en la espalda. Como no puedo, te mando toda mi energía desde aquí.",
+  "Pasitos chicos, todos los días. Así se construyen las cosas grandes, como lo nuestro.",
+  "No te compares con nadie. Tu única competencia es la Maite de ayer, y esa ya era increíble.",
+  "Hoy tu única tarea es moverte un rato y sonreír. Lo segundo te sale perfecto; vamos con lo primero.",
+  "Sé que estás cansada. Por eso mismo te admiro tanto cuando decides ir igual.",
+  "Aunque todavía no lo veas, cada entrenamiento suma. Yo sí lo veo: estás cada día más fuerte.",
+  "La flojera dice “mañana”. Tú y yo decimos “hoy”. Somos equipo.",
+  "Cuando entrenas también entrenas la cabeza: aprendes que puedes con todo. Y puedes.",
+  "Anda, ponte linda, aunque ya lo eres, y ve a romperla.",
+  "Te mando un beso en la frente para que te acompañe en cada repetición.",
+  "No cuentes los minutos que faltan. Haz que cada minuto cuente.",
+  "Mi parte favorita de tu día es cuando me cuentas que lo hiciste. Quiero escucharla hoy también.",
+  "Los días que no quieres ir son justo los que más te hacen crecer. Hoy es uno de esos días.",
+  "Eres fuego, preciosa. Que se note en el gym.",
+  "Haz una sentadilla por cada vez que te he dicho que te amo. Mejor no, no te alcanzaría la vida. Con una rutina basta.",
+  "Tu salud es lo más importante para mí. Cuidarte es la forma más linda de quererte.",
+  "Hoy no busques motivación: busca empezar. La motivación siempre llega tarde, pero llega.",
+  "Te admiro por mil cosas, y una es que nunca te rindes del todo. Hoy tampoco.",
+  "Si el día está pesado, el gym es el lugar perfecto para soltarlo. Deja ahí lo malo y vuelve liviana.",
+  "El ejercicio más difícil es salir por la puerta. Después de eso, todo es más fácil.",
+  "Te quiero sana, feliz y fuerte. Las tres cosas se entrenan, y tú eres buenísima entrenando.",
+  "Vamos, mi wawita mosha. Hoy también te voy a estar esperando con un “bien hecho” y muchos besos.",
+];
+// frases cortas del botón "Dame ánimo" (5 distintas cada día)
+const BOOSTS = [
+  "¡Vamos, preciosa! Tú puedes con todo.", "Una serie más y te ganas un beso.", "Eres más fuerte que la flojera. Lo sé, lo he visto.",
+  "¡Dale que se puede! Yo te hago barra desde aquí.", "Cinco minutos. Solo empieza cinco minutos.", "Tu sonrisa después del gym es mi cosa favorita.",
+  "¡Mira esos brazos! Ya, ya, anda a entrenarlos.", "Te amo. Ahora a mover ese cuerpecito.", "La Maite de mañana te está aplaudiendo.",
+  "¡Nadie levanta pesas como tú!", "Respira. Amárrate las zapatillas. Sal. Así de simple.", "Te mando un abrazo de energía: ¡fiuuum!",
+  "Hoy entrenas tú, mañana presumo yo.", "Eres mi atleta favorita del mundo mundial.", "¡Arriba, arriba! El sillón te va a esperar.",
+  "Una gotita de sudor, mil besos de premio.", "¡Campeona! Bueno, casi: falta que vayas.", "Si te cansas, descansas. Pero no te rindes.",
+  "Hoy es tu día. Todos lo son, pero hoy más.", "Tienes más fuerza de la que crees. Mucha más.", "Ponte tu polera favorita y ¡vamos!",
+  "Yo creo en ti incluso los días que tú no.", "Mientras más te cuesta, más orgulloso estoy.", "Primero las zapatillas. Lo demás viene solo.",
+  "¡Grrr! Modo bestia activado.", "Te pienso y me dan ganas de hacer flexiones. Mentira, me dan ganas de verte.", "Una hora de gym y veintitrés de regaloneo. Buen trato.",
+  "¡Ponle una canción fuerte y que tiemble el gym!", "Eres constante, fuerte y preciosa. En ese orden hoy.", "No hay día malo que una buena sudada no arregle.",
+  "Te espero al otro lado del entrenamiento con un abrazo.", "Agüita, toalla, música y actitud. ¡Lista!", "Tú no te rindes: tú descansas y vuelves.",
+  "¡Eso! Así me gusta, decidida.", "Un pasito a la vez. Pero hoy dalo.", "Si yo aguanto una pichanga entera, tú puedes con una rutina.",
+  "Que la flojera se quede en la cama. Tú no.", "Haz que tu playlist se sienta orgullosa.", "Cada repetición es un “te quiero” para ti misma.",
+  "¡Vamos que se puede! Y si no se puede, igual se puede.",
+];
+const BOOST_END = "Ya te di todo el ánimo de hoy. ¡Ahora te toca a ti!";
+const CELEB = [
+  "¡ESA ES MI POLOLA! Anda y rómpela.", "¡Sabía que ibas a ir! Te amo, te amo, te amo.", "¡Grande, mi amor! Ya ganaste la parte más difícil: decidirte.",
+  "¡Wiii! Mini Diego está bailando de felicidad.", "Me tienes orgullosísimo. Después me cuentas cómo te fue.", "¡Así se hace, preciosa! La flojera perdió por goleada.",
+  "Te ganaste una estrella y un beso en la frente.", "¡Eso! Ve tranquila, a tu ritmo, y disfrútalo.", "Mi atleta favorita va en camino. ¡Que tiemble el gym!",
+  "¡Vamos con todo! Y no te olvides de tu agüita.", "Te admiro tanto. Hoy de nuevo me demostraste por qué.", "¡Golazo! Ya quiero que me cuentes.",
+  "Decidirte cuando no tenías ganas es de valientes. Y tú lo eres.", "¡Lo sabía! Vas a volver sintiéndote increíble.",
+];
+const DEAL = [
+  "Te entiendo, mi amor. Hagamos un trato: 5 minutitos conmigo aquí mismo. Si al terminar sigues sin ganas, descansas sin culpa.",
+  "Está bien no tener ganas. ¿Me regalas 5 minutos? Yo los hago contigo.",
+  "Ya, no vayamos al gym. Pero muévete 5 minutos conmigo, en pijama si quieres.",
+  "Te propongo algo: 5 minutos, nada más. Muchas veces las ganas aparecen en el minuto 3.",
+  "Hoy pesa, lo sé. Por eso te traje una rutina chiquitita: 5 minutos y quedamos a mano.",
+  "Sin presión, preciosa. Solo 5 minutos para que tu cuerpo despierte. Yo te cuento los segundos.",
+  "No tienes que ir a ningún lado. Hagamos 5 minutos juntos aquí y después decides.",
+  "La flojera es astuta, pero nosotros más. 5 minutos y le ganamos.",
+  "Te confieso algo: yo también tengo flojera. Hagamos 5 minutos juntos y nos sentimos campeones.",
+  "Un secreto: el entrenamiento más corto igual cuenta. Vamos con 5 minutitos.",
+];
+const REST = [
+  "Descansar también es entrenar. Toma agüita, duerme rico y mañana volvemos con todo.",
+  "Tu cuerpo te pide una pausa, y escucharlo también es quererte. Te amo igual de mucho.",
+  "Hoy descansa sin culpa, preciosa. Las campeonas también recargan pilas.",
+  "Está bien. Hoy regalonea, estira un poquito y acuéstate temprano. Mañana es otro día.",
+  "Un día de descanso no borra nada de lo que has logrado. Nada.",
+  "Hoy te toca mimarte. Mañana te toca brillar. Yo te acompaño en las dos.",
+  "Recarga energía, mi amor. Mañana mini Diego te espera con el mejor ánimo.",
+  "Si estás cansada, duerme. Los músculos crecen descansando, y el amor también.",
+];
+const CHARGE = [
+  "¡Listo! Te pasé toda mi energía. Ahora anda a usarla.", "Energía al 100%. Efectos secundarios: ganas de entrenar y de darme besos.",
+  "¡Cargada! Ahora eres oficialmente imparable.", "Ahí va toda mi buena onda. No la desperdicies en el sillón.",
+  "¡Batería llena! Ya no hay excusa, mi amor.", "Te mandé energía, amor y un poquito de mis ganas de verte.",
+  "¡Fiuuum! Energía entregada. Mini Diego quedó cansadito por ti.", "Ya estás cargada al máximo. ¡A brillar!",
+];
+const TAPS = ["¡Ay! Me hiciste cosquillas.", "Te amo. ¿Ya te lo dije hoy?", "Oye, deja de tocarme y anda al gym.", "Mua. Ese beso es para el camino.", "Soy chiquitito, pero te quiero en grande."];
+const WEEK = [
+  "Domingo: para recargar, o para sorprenderte a ti misma.", "Los lunes cuestan, pero empezar la semana entrenando es de otro nivel.",
+  "Martes: lo peor de la semana ya pasó.", "Miércoles: mitad de semana, mitad de camino.", "Jueves: casi viernes. Que el cuerpo lo celebre moviéndose.",
+  "Viernes: cerremos la semana con broche de oro.", "Sábado: entrenas sin apuro y después regaloneamos.",
+];
+const PETS = ["mi wawita mosha", "mi amor", "preciosa", "bonita", "mi niña linda", "mi vida", "mi polola favorita"];
+const INTRO = "Hola, mi amor. Soy mini Diego, tu entrenador de bolsillo para los días que no tienes ganas. Todos los días te voy a decir algo distinto. Usa los botones de abajo cuando me necesites.";
+// vales que se desbloquean con las estrellas
+const VALES = [[3, "Un masajito de piernas después del gym"], [7, "Un heladito extra, sí, otro más"], [12, "Una cita donde tú eliges todo"], [20, "Un día entero de regaloneo"], [30, "Lo que tú quieras, dentro de lo legal"]];
+// ejercicios de la rutina de 5 minutos (4 al azar del día + estiramiento al final)
+const EX = [
+  { name: "Saltos de tijera", tip: "Brazos arriba y piernas afuera al mismo tiempo. ¡Con ritmo!", anim: "jacks" },
+  { name: "Sentadillas", tip: "Espalda derecha, como si te sentaras en una silla invisible.", anim: "squat" },
+  { name: "Trote en el lugar", tip: "Como si vinieras corriendo a darme un abrazo.", anim: "run" },
+  { name: "Boxeo al aire", tip: "Puños arriba y golpéale la cara a la flojera.", anim: "box" },
+  { name: "Bíceps con botellas", tip: "¿No tienes pesas? Dos botellas de agua sirven perfecto.", anim: "bottles" },
+  { name: "Rodillas arriba", tip: "Más rápido que el trote: rodillas a la altura de la cintura.", anim: "knees" },
+  { name: "Círculos de brazos", tip: "Brazos estirados a los lados y círculos chiquititos.", anim: "circles" },
+];
+const STRETCH = { name: "Estiramiento", tip: "Brazos al cielo y de lado a lado. Respira lento: lo hiciste increíble.", anim: "stretch" };
+const WORK = 45, PAUSE = 15;   // segundos de cada ejercicio y de cada descanso
+const WA = "56941089585";
+
+/* ====================== utilidades y fecha ====================== */
+const $ = (s, r = document) => r.querySelector(s);
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const buzz = p => { try { navigator.vibrate?.(p); } catch {} };
+const wa = t => `https://api.whatsapp.com/send?phone=${WA}&text=${encodeURIComponent(t)}`;
+const now = () => window.__FECHA ? new Date(window.__FECHA) : new Date();
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const dayN = d => Math.round((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - Date.UTC(2026, 9, 14)) / 864e5);
+const md = (a, b) => ((a % b) + b) % b;
+const TODAY = now(), D = dayN(TODAY), KEY = ymd(TODAY);
+const rot = (arr, mul, off = 0) => arr[md(D * mul + off, arr.length)];   // lo del día: cambia cada día y no se repite hasta dar la vuelta
+const speed = () => window.__RAPIDO || 1;
+
+// lo que se guarda en su celular
+let st = { days: {}, first: KEY, mute: false, claimed: {}, seen: false, taps: 0 };
+try { const v = JSON.parse(localStorage.getItem("mini_diego") || "null"); if (v && typeof v === "object") st = { ...st, ...v, days: { ...(v.days || {}) }, claimed: { ...(v.claimed || {}) } }; } catch {}
+const persist = () => { try { localStorage.setItem("mini_diego", JSON.stringify(st)); } catch {} };
+const firstTime = !st.seen; st.seen = true; persist();
+const starCount = () => Object.values(st.days).filter(v => v === "gym" || v === "mini").length;
+const dayNumber = () => Math.max(1, D - dayN(new Date(st.first + "T12:00")) + 1);
+
+/* ====================== sonido 8-bit ====================== */
+const SND = (() => {
+  let ctx, out, chg;
+  const init = () => { if (ctx) return; const C = window.AudioContext || window.webkitAudioContext; if (!C) return; ctx = new C(); out = ctx.createGain(); out.gain.value = .55; out.connect(ctx.destination); };
+  const ok = () => ctx && !st.mute;
+  const N = m => 440 * Math.pow(2, (m - 69) / 12);
+  function tone(f, t, d, v = .06, type = "square") { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.0005, t + d); o.connect(g); g.connect(out); o.start(t); o.stop(t + d + .02); }
+  const seq = (ns, gap, v = .06, type = "square") => { if (!ok()) return; const t = ctx.currentTime; ns.forEach((m, i) => m && tone(N(m), t + i * gap, gap * 1.5, v, type)); };
+  const VO = [57, 59, 62, 64, 66];
+  return {
+    wake() { init(); ctx?.resume?.(); },
+    voice(i) { if (!ok() || i % 2) return; tone(N(VO[Math.floor(Math.random() * VO.length)]), ctx.currentTime, .045, .03, "square"); },
+    click() { seq([79], .04, .04); }, boost() { seq([72, 76, 79, 84], .06, .05); }, soft() { seq([67, 64, 60], .1, .04, "triangle"); },
+    fanfare() { seq([72, 72, 72, 76, 79, 0, 76, 79, 84], .1, .06); }, beep() { seq([81], .08, .06); }, go() { seq([88, 93], .09, .06); },
+    kiss() { if (!ok()) return; const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine"; o.frequency.setValueAtTime(320, t); o.frequency.exponentialRampToValueAtTime(1300, t + .11);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.2, t + .025); g.gain.exponentialRampToValueAtTime(.001, t + .16); o.connect(g); g.connect(out); o.start(t); o.stop(t + .18); },
+    chargeOn() { if (!ok() || chg) return; const o = ctx.createOscillator(), g = ctx.createGain(); o.type = "square"; o.frequency.value = 160; g.gain.value = .035; o.connect(g); g.connect(out); o.start(); chg = { o, g }; },
+    chargeLevel(k) { if (chg) chg.o.frequency.setTargetAtTime(160 + k * 720 + Math.sin(performance.now() / 30) * 20, ctx.currentTime, .02); },
+    chargeOff() { if (!chg) return; const { o, g } = chg; chg = null; g.gain.setTargetAtTime(0, ctx.currentTime, .03); o.stop(ctx.currentTime + .2); },
+  };
+})();
+addEventListener("pointerdown", () => SND.wake(), { capture: true });
+
+/* ====================== la escena en pixeles ====================== */
+const LW = 100, LH = 72, GROUND = 68, OY = 4;   // OY: la pantalla muestra la pieza sin las 4 filas de más arriba
+const lo = document.createElement("canvas"); lo.width = LW; lo.height = LH; const g = lo.getContext("2d");
+const cv = $("#scene"), cx = cv.getContext("2d");
+function fit() {
+  const w = cv.parentElement.clientWidth - 16, d = devicePixelRatio || 1;
+  cv.style.width = w + "px"; cv.style.height = Math.round(w * LH / LW) + "px"; cv.width = Math.round(w * d); cv.height = Math.round(w * LH / LW * d);
+}
+addEventListener("resize", fit);
+const px = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y) - OY, w, h); };
+function line([x0, y0], [x1, y1], t, c) {
+  const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) * 2)); g.fillStyle = c;
+  for (let i = 0; i <= n; i++) { const x = x0 + (x1 - x0) * i / n, y = y0 + (y1 - y0) * i / n; g.fillRect(Math.round(x - t / 2), Math.round(y - t / 2) - OY, t, t); }
+}
+const rows = (r, x, y, pal) => r.forEach((row, j) => { for (let i = 0; i < row.length; i++) { const ch = row[i]; if (ch !== "." && pal[ch]) px(x + i, y + j, 1, 1, pal[ch]); } });
+const HEART = ["XX.XX", "XXXXX", ".XXX.", "..X.."];
+const mix = (a, b, k) => { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, "0")).join(""); };
+
+// lo que cambia cada día en la pieza
+const WALLS = [["#e9dcff", "#dccafa"], ["#d3f4e8", "#bfeadb"], ["#ffe1d3", "#ffd0bd"], ["#dbeeff", "#c8e3fb"], ["#fff1c6", "#ffe6a3"]];
+const MATS = [["#ff7fb3", "#d9578e"], ["#4fd6ad", "#2fa985"], ["#a68cff", "#7f63e6"], ["#6cc0ff", "#3f98dd"]];
+const WALL = rot(WALLS, 2), MAT = rot(MATS, 3);
+const ACC = rot(["cintillo", "jockey", "toalla", "munequeras", ""], 2, 1);
+const DAILY = rot(["pesas", "jacks", "squat", "box", "run", "flex"], 5);
+const SIGN = rot(["TE AMO", "TÚ PUEDES"], 1);
+
+function hourNow() { return now().getHours(); }
+function drawRoom(t) {
+  const h = hourNow(), night = h >= 21 || h < 6, eve = h >= 18 && h < 21, morn = h >= 6 && h < 11;
+  const wall = night ? WALL.map(c => mix(c, "#251d4a", .72)) : eve ? WALL.map(c => mix(c, "#ff9fb5", .18)) : WALL;
+  px(0, 0, LW, 54, wall[0]); for (let x = 0; x < LW; x += 8) px(x, 0, 4, 54, wall[1]);   // papel mural a rayas
+  px(0, 52, LW, 2, mix(wall[1], "#3b1838", .25));
+  // ventana: el cielo cambia con la hora
+  const sky = night ? "#1d1850" : eve ? "#ff9fb5" : morn ? "#ffc9a3" : "#8fd3ff";
+  px(7, 7, 24, 24, "#ffffff"); px(9, 9, 20, 20, sky);
+  if (eve) { px(9, 21, 20, 8, "#ffc27a"); px(16, 19, 6, 4, "#ffe08a"); }
+  else if (night) { px(21, 11, 4, 5, "#fff3c4"); px(23, 11, 2, 3, sky); [[11, 12], [14, 24], [26, 22], [18, 14]].forEach(([x, y], i) => { if (Math.floor(t / 500 + i) % 3) px(x, y, 1, 1, "#ffffff"); }); }
+  else { px(morn ? 12 : 21, morn ? 21 : 11, 5, 5, "#ffe066"); const cx0 = 9 + md(Math.floor(t / 260), 26) - 6; px(cx0, 15, 7, 2, "#ffffff"); px(cx0 + 2, 14, 3, 1, "#ffffff"); }
+  px(18, 9, 2, 20, "#ffffff"); px(9, 18, 20, 2, "#ffffff"); px(6, 31, 26, 2, "#e6d3df");
+  // cuadro con corazón
+  px(73, 9, 17, 18, "#3b1838"); px(74, 10, 15, 16, "#ff6fae"); rows(HEART, 79, 15, { X: "#ffffff" }); px(77, 22, 9, 1, "#ffd1e6");
+  // piso de madera
+  px(0, 54, LW, 22, "#e7b085"); for (let y = 58; y < LH + OY; y += 5) px(0, y, LW, 1, "#d39a6c"); for (let y = 54, k = 0; y < LH + OY; y += 5, k++) for (let x = (k % 2) * 13; x < LW; x += 26) px(x, y, 1, 5, "#d39a6c");
+  // plantita
+  px(5, 61, 8, 7, "#d9774f"); px(5, 61, 8, 1, "#ef9a74"); px(6, 54, 2, 7, "#3fae6a"); px(9, 52, 2, 9, "#2f8f55"); px(11, 56, 2, 5, "#3fae6a"); px(4, 57, 2, 2, "#3fae6a");
+  // pesitas en el piso
+  px(80, 64, 14, 2, "#8e95a8"); px(78, 62, 3, 6, "#3b3f52"); px(93, 62, 3, 6, "#3b3f52"); px(84, 69, 8, 1, "#8e95a8"); px(83, 68, 2, 3, "#ff5c98"); px(91, 68, 2, 3, "#ff5c98");
+  // la colchoneta del día
+  px(30, 66, 40, 6, MAT[0]); px(28, 67, 44, 4, MAT[0]); px(28, 71, 44, 1, MAT[1]); px(30, 72, 40, 1, MAT[1]); for (let x = 34; x < 68; x += 6) px(x, 67, 2, 4, mix(MAT[0], "#ffffff", .25));
+}
+
+// ---- mini Diego: un muñequito en pixeles armado por partes, con la ropa del Diego de verdad ----
+const C = { K: "#1a1a22", S: "#e8b48e", G: "#0d0d12", g: "#8a8aa0", M: "#9a3b2b", p: "#ff8fa3", b: "#f49a9a", H: "#ff2d6f", R: "#d62828", r: "#a81c1c", W: "#ffffff",
+  T: "#5b5f73", t: "#4b4f62", Y: "#ffd84d", J: "#5b84c4", j: "#4a72b2", B: "#2c3e66", w: "#e9eef5" };
+const MOUTH = { smile: ["SSMSSSSMSS", ".SSMMMMSS."], grin: ["SSMMMMMMSS", ".SSMppMSS."], kiss: ["SSSSMMSSSS", ".SSSMMSSS."], tired: ["SSSMMMMSSS", ".SSSSSSSS."], oh: ["SSSSMMSSSS", ".SSSMMSSS."] };
+function headRows(o) {
+  const r = ["..KKKKKK..", ".KKKKKKKK.", "KKKKKKKKKK", "KSSSSSSSSK", "SGGGSSGGGS", "SGgGGGGgGS", "SSSSSSSSSS", ...MOUTH[o.mouth || "smile"], "..SSSSSS.."];
+  if (o.glint) r[5] = "SGGgGGGGgS";
+  if (o.hearts) { r[4] = "SHSHSSHSHS"; r[5] = "SHHHSSHHHS"; r[6] = "SSHSSSSHSS"; }
+  if (o.blush) r[6] = r[6].slice(0, 1) + "b" + r[6].slice(2, 8) + "b" + r[6].slice(9);
+  if (o.acc === "cintillo") r[3] = "RRRRRRRRRR";
+  if (o.acc === "jockey") { r[0] = "..RRRRRR.."; r[1] = ".RRRWWRRR."; r[2] = "RRRRRRRRRR"; r[3] = "rrrrrrrrrr"; }
+  return r;
+}
+const IDLE = { y: 0, hy: 0, kL: [-2, 6], fL: [-2, 12], kR: [2, 6], fR: [2, 12], eL: [-6, -4], hL: [-6, 1], eR: [6, -4], hR: [6, 1] };
+const P = o => ({ ...IDLE, ...o });
+const ARMS_UP = { eL: [-8, -14], hL: [-7, -20], eR: [8, -14], hR: [7, -20] };
+const POSES = {
+  idle: P({}), idle2: P({ hL: [-6, 0], hR: [6, 0], hy: 0.4 }),
+  wave1: P({ eR: [9, -12], hR: [9, -18], mouth: "grin" }), wave2: P({ eR: [9, -12], hR: [12, -16], mouth: "grin" }),
+  flex1: P({ eL: [-10, -9], hL: [-10, -15], eR: [10, -9], hR: [10, -15], mouth: "grin" }), flex2: P({ eL: [-11, -8], hL: [-9, -16], eR: [11, -8], hR: [9, -16], mouth: "grin", y: -1 }),
+  jack1: P({ hL: [-7, 2], hR: [7, 2] }), jack2: P({ y: -3, kL: [-4, 6], fL: [-6, 12], kR: [4, 6], fR: [6, 12], ...ARMS_UP, mouth: "grin" }),
+  squat0: P({ eL: [-6, -6], hL: [-2, -7], eR: [6, -6], hR: [2, -7] }), squat1: P({ y: 5, kL: [-6, 3], fL: [-3, 7], kR: [6, 3], fR: [3, 7], eL: [-6, -6], hL: [-2, -7], eR: [6, -6], hR: [2, -7], mouth: "oh" }),
+  run1: P({ y: -1, kL: [-3, 3], fL: [-3, 8], eR: [7, -7], hR: [5, -12], hL: [-7, 1] }), run2: P({ y: -1, kR: [3, 3], fR: [3, 8], eL: [-7, -7], hL: [-5, -12], hR: [7, 1] }),
+  knee1: P({ y: -2, kL: [-3, 1], fL: [-4, 6], eR: [7, -8], hR: [4, -13], hL: [-7, 0], mouth: "grin" }), knee2: P({ y: -2, kR: [3, 1], fR: [4, 6], eL: [-7, -8], hL: [-4, -13], hR: [7, 0], mouth: "grin" }),
+  guard: P({ kL: [-3, 6], fL: [-4, 12], eL: [-6, -6], hL: [-3, -12], eR: [6, -6], hR: [3, -12] }),
+  punchR: P({ kL: [-3, 6], fL: [-4, 12], eL: [-6, -6], hL: [-3, -12], eR: [9, -10], hR: [14, -12], mouth: "grin" }),
+  punchL: P({ kL: [-3, 6], fL: [-4, 12], eR: [6, -6], hR: [3, -12], eL: [-9, -10], hL: [-14, -12], mouth: "grin" }),
+  curl1: P({}), curl2: P({ eL: [-6, -3], hL: [-5, -9], eR: [6, -3], hR: [5, -9], mouth: "oh" }),
+  stretchUp: P({ eL: [-4, -14], hL: [-2, -21], eR: [4, -14], hR: [2, -21] }),
+  stretchL: P({ eL: [-6, -14], hL: [-9, -20], eR: [2, -15], hR: [-5, -21] }), stretchR: P({ eR: [6, -14], hR: [9, -20], eL: [-2, -15], hL: [5, -21] }),
+  cheer1: P({ y: -2, eL: [-8, -13], hL: [-9, -19], eR: [8, -7], hR: [12, -9], mouth: "grin" }), cheer2: P({ eR: [8, -13], hR: [9, -19], eL: [-8, -7], hL: [-12, -9], mouth: "grin" }),
+  sign1: P({ eL: [-8, -16], hL: [-7, -24], eR: [8, -16], hR: [7, -24], mouth: "grin" }), sign2: P({ eL: [-8, -16], hL: [-7, -24], eR: [8, -16], hR: [7, -24], y: -1, mouth: "grin" }),
+  hug: P({ eL: [-9, -7], hL: [-13, -11], eR: [9, -7], hR: [13, -11], mouth: "smile", hearts: true, blush: true }),
+  charge1: P({ y: 3, kL: [-5, 4], fL: [-6, 9], kR: [5, 4], fR: [6, 9], eL: [-8, -4], hL: [-5, -1], eR: [8, -4], hR: [5, -1], mouth: "tired" }),
+  charge2: P({ y: 2, kL: [-5, 5], fL: [-6, 10], kR: [5, 5], fR: [6, 10], eL: [-8, -4], hL: [-5, -1], eR: [8, -4], hR: [5, -1], mouth: "tired" }),
+  sit1: P({ y: 9, kL: [-6, 0], fL: [1, 2], kR: [6, 0], fR: [-1, 2], eL: [-7, -4], hL: [-6, -1], eR: [7, -4], hR: [6, -1], mouth: "tired", hy: 1 }),
+  sit2: P({ y: 9, kL: [-6, 0], fL: [1, 2], kR: [6, 0], fR: [-1, 2], eL: [-7, -4], hL: [-6, -1], eR: [7, -4], hR: [6, -1], mouth: "tired", hy: 2 }),
+  kiss1: P({ eR: [6, -7], hR: [1, -14], mouth: "kiss", blush: true }), kiss2: P({ eR: [9, -10], hR: [14, -13], mouth: "kiss", blush: true }),
+};
+const A = (f, d, extra = {}) => ({ f: f.map(k => POSES[k]), d, ...extra });
+const ANIM = {
+  idle: A(["idle", "idle2"], 800), wave: A(["wave1", "wave2"], 230), flex: A(["flex1", "flex2"], 380),
+  jacks: A(["jack1", "jack2"], 330, { sweat: true }), squat: A(["squat0", "squat1"], 700, { sweat: true }), run: A(["run1", "run2"], 230, { sweat: true }),
+  knees: A(["knee1", "knee2"], 170, { sweat: true }), box: A(["guard", "punchR", "guard", "punchL"], 210, { sweat: true }),
+  pesas: A(["curl1", "curl2"], 650, { prop: "dumbbell", sweat: true }), bottles: A(["curl1", "curl2"], 650, { prop: "bottle", sweat: true }),
+  stretch: A(["stretchUp", "stretchL", "stretchUp", "stretchR"], 1100),
+  cheer: A(["cheer1", "cheer2"], 230, { prop: "pompom" }), sign: A(["sign1", "sign2"], 500, { prop: "sign" }),
+  hug: A(["hug", "hug"], 900), charge: A(["charge1", "charge2"], 70, { aura: true }), rest: A(["sit1", "sit2"], 1300, { zzz: true }),
+  kiss: A(["kiss1", "kiss2"], 360), walk: A(["run1", "run2"], 200), drink: A(["idle", "idle2"], 900, { prop: "bottleR" }),
+  circles: { f: [POSES.idle], d: 1000, sweat: true, fn: t => { const a = t / 110, o = { eL: [-9, -10], eR: [9, -10], hL: [-14 + 2 * Math.cos(a), -11 + 2 * Math.sin(a)], hR: [14 - 2 * Math.cos(a), -11 + 2 * Math.sin(a)], mouth: "oh" }; return P(o); } },
+};
+const lerp = (a, b, k) => a + (b - a) * k;
+function poseAt(name, t) {
+  const a = ANIM[name]; if (a.fn) return a.fn(t);
+  const n = a.f.length, k = t / a.d, i = md(Math.floor(k), n), j = (i + 1) % n, f = k - Math.floor(k), e = f * f * (3 - 2 * f);
+  const p = a.f[i], q = a.f[j], o = {};
+  for (const key in { ...p, ...q }) { const u = p[key], v = q[key]; o[key] = Array.isArray(u) ? [lerp(u[0], v[0], e), lerp(u[1], v[1], e)] : typeof u === "number" ? lerp(u, v ?? u, e) : (e < .5 ? u : v); }
+  return o;
+}
+const PIXFONT = { T: ["XXX", ".X.", ".X.", ".X.", ".X."], E: ["XXX", "X..", "XX.", "X..", "XXX"], A: [".X.", "X.X", "XXX", "X.X", "X.X"], M: ["X.X", "XXX", "X.X", "X.X", "X.X"],
+  O: ["XXX", "X.X", "X.X", "X.X", "XXX"], U: ["X.X", "X.X", "X.X", "X.X", "XXX"], "Ú": ["X.X", "X.X", "X.X", "X.X", "XXX"], P: ["XX.", "X.X", "XX.", "X..", "X.."],
+  D: ["XX.", "X.X", "X.X", "X.X", "XX."], S: [".XX", "X..", ".X.", "..X", "XX."] };
+function pixText(s, cx0, y, c) {
+  const w = s.length * 4 - 1; let x = Math.round(cx0 - w / 2);
+  for (const ch of s) { if (PIXFONT[ch]) { rows(PIXFONT[ch], x, y, { X: c }); if (ch === "Ú") px(x + 1, y - 2, 2, 1, c); } x += 4; }
+  return w;
+}
+function drawDiego(x0, ps, a, t) {
+  const bx = Math.round(x0), by = Math.round(GROUND - 12 + (ps.y || 0));
+  const J = ([x, y]) => [bx + x, by + y];
+  // sombra
+  px(bx - 7, GROUND + 1, 14, 1, "rgba(59,24,56,.18)");
+  // piernas y zapatillas
+  line(J([-2, 0]), J(ps.kL), 3, C.J); line(J(ps.kL), J(ps.fL), 3, C.J);
+  line(J([2, 0]), J(ps.kR), 3, C.j); line(J(ps.kR), J(ps.fR), 3, C.j);
+  for (const f of [ps.fL, ps.fR]) { const [fx, fy] = J(f); px(fx - 2, fy - 1, 4, 2, C.B); px(fx - 2, fy + 1, 4, 1, C.w); }
+  // polera gris con el dibujo rojo
+  px(bx - 4, by - 10, 9, 10, C.T); px(bx + 4, by - 10, 1, 10, C.t); px(bx - 2, by - 7, 4, 3, C.R); px(bx + 1, by - 7, 1, 1, C.Y); px(bx - 1, by - 5, 1, 1, C.Y);
+  px(bx - 4, by - 1, 9, 2, C.J);
+  if (ACC === "toalla") { px(bx - 4, by - 11, 9, 2, C.W); px(bx - 4, by - 9, 2, 4, C.W); px(bx + 3, by - 9, 2, 3, C.W); px(bx - 4, by - 7, 2, 1, "#9fd8ff"); }
+  // cabeza
+  const hx = bx - 5, hy = Math.round(by - 21 + (ps.hy || 0));
+  px(bx - 1, by - 11, 3, 1, C.S);
+  rows(headRows({ mouth: ps.mouth, hearts: ps.hearts || flags.hearts, blush: ps.blush || flags.blush, glint: Math.floor(t / 1600) % 4 === 0, acc: ACC }), hx, hy, C);
+  if (ACC === "cintillo") { px(hx + 10, hy + 3, 1, 1, C.R); px(hx + 11, hy + 4, 1, 1, C.R); }
+  if (ACC === "jockey") { px(hx - 1, hy + 3, 1, 1, C.r); px(hx + 10, hy + 3, 1, 1, C.r); }
+  // el cartel va detrás de las manos
+  if (a.prop === "sign") { const sy = Math.round(by + ps.hL[1] - 10), w = SIGN.length * 4 + 5; px(bx - w / 2 - 1, sy - 1, w + 2, 11, "#3b1838"); px(bx - w / 2, sy, w, 9, "#fffafc"); pixText(SIGN, bx, sy + 2, "#ff2d6f"); }
+  // brazos: manga gris y después piel
+  for (const [sx, e, h] of [[-5, ps.eL, ps.hL], [5, ps.eR, ps.hR]]) {
+    const sh = J([sx, -9]), el = J(e), ha = J(h);
+    line(sh, el, 2, C.S); line(el, ha, 2, C.S); line(sh, [lerp(sh[0], el[0], .45), lerp(sh[1], el[1], .45)], 3, C.T);
+    px(ha[0] - 1, ha[1] - 1, 2, 2, C.S);
+    if (ACC === "munequeras") { const m = [lerp(el[0], ha[0], .72), lerp(el[1], ha[1], .72)]; px(m[0] - 1, m[1] - 1, 3, 2, C.Y); }
+    if (a.prop === "dumbbell") { px(ha[0] - 3, ha[1] - 1, 6, 1, "#8e95a8"); px(ha[0] - 4, ha[1] - 2, 2, 3, "#3b3f52"); px(ha[0] + 2, ha[1] - 2, 2, 3, "#3b3f52"); }
+    if (a.prop === "bottle") { px(ha[0] - 1, ha[1] - 4, 2, 6, "#8fd3ff"); px(ha[0] - 1, ha[1] - 5, 2, 1, C.W); px(ha[0] - 1, ha[1] - 2, 2, 1, "#5fb8f0"); }
+    if (a.prop === "pompom") { const c = sx < 0 ? "#ff5c98" : "#ffc93d"; px(ha[0] - 2, ha[1] - 3, 5, 4, c); px(ha[0] - 3, ha[1] - 2, 7, 2, c); px(ha[0] - 1, ha[1] - 3, 1, 1, C.W); }
+    if (a.prop === "bottleR" && sx > 0) { px(ha[0] - 1, ha[1] - 4, 2, 6, "#8fd3ff"); px(ha[0] - 1, ha[1] - 5, 2, 1, C.W); }
+  }
+}
+
+// partículas: corazones, chispas, papel picado, gotas de sudor, zzz, aura
+let parts = [];
+const spawn = (o, n = 1) => { if (reduced && n > 4) n = Math.ceil(n / 3); for (let i = 0; i < n; i++) parts.push({ life: 0, max: 60, vx: 0, vy: 0, ...(typeof o === "function" ? o(i) : o) }); };
+const heartPop = (x, y, n = 6, c = "#ff2d6f") => spawn(i => ({ type: "heart", x: x + (Math.random() - .5) * 14, y: y + (Math.random() - .5) * 6, vx: (Math.random() - .5) * .5, vy: -.35 - Math.random() * .4, max: 70 + Math.random() * 30, c: i % 3 === 2 ? "#ff8fb8" : c }), n);
+const confetti = n => spawn(() => ({ type: "conf", x: Math.random() * LW, y: -4 - Math.random() * 20, vx: (Math.random() - .5) * .4, vy: .5 + Math.random() * .6, max: 160, c: ["#ff5c98", "#ffc93d", "#3fd4a6", "#a68cff", "#6cc0ff"][Math.floor(Math.random() * 5)] }), n);
+function drawParts() {
+  for (const p of parts) {
+    p.life++; p.x += p.vx; p.y += p.vy;
+    if (p.type === "conf") { p.vx += Math.sin((p.life + p.x) / 9) * .02; px(p.x, p.y, 2, 1 + (Math.floor(p.life / 6) % 2), p.c); }
+    else if (p.type === "heart") { if (p.life < p.max - 12 || p.life % 4 < 2) rows(HEART, Math.round(p.x) - 2, Math.round(p.y) - 2, { X: p.c }); }
+    else if (p.type === "drop") { p.vy += .05; px(p.x, p.y, 1, 2, "#7fd0ff"); }
+    else if (p.type === "z") { p.x += Math.sin(p.life / 12) * .2; rows(p.big ? ["XXXX", "..X.", ".X..", "XXXX"] : ["XXX", ".X.", "XXX"], Math.round(p.x), Math.round(p.y), { X: "#ffffff" }); }
+    else if (p.type === "aura") { px(p.x, p.y, 1, 2, p.life % 6 < 3 ? "#ffe066" : "#ffffff"); }
+    else if (p.type === "spark") { const s = p.life % 8 < 4; px(p.x, p.y, 1, 1, "#fff6b0"); if (s) { px(p.x - 1, p.y, 1, 1, "#fff6b0"); px(p.x + 1, p.y, 1, 1, "#fff6b0"); px(p.x, p.y - 1, 1, 1, "#fff6b0"); px(p.x, p.y + 1, 1, 1, "#fff6b0"); } }
+  }
+  parts = parts.filter(p => p.life < p.max && p.y < LH + 6 && p.y > -30);
+}
+
+// qué está haciendo mini Diego
+const flags = { hearts: false, blush: false };
+const dg = { x: -14, anim: "walk", t0: 0, base: "daily", until: 0, next: null, charge: 0, lock: false };
+let dailyPhase = 0, dailyAt = 0;
+const DAILY_LOOP = [[DAILY, 4200], ["idle", 1800], ["wave", 1400], ["idle", 1400], ["sign", 2600], ["idle", 1500], ["flex", 1500]];
+function act(anim, ms, then, fl = {}) { flags.hearts = !!fl.hearts; flags.blush = !!fl.blush; dg.anim = anim; dg.t0 = performance.now(); dg.until = ms ? performance.now() + ms : 0; dg.next = then || null; }
+function setBase(b) { dg.base = b; if (!dg.until) baseAnim(true); }
+function baseAnim(reset) {
+  const t = performance.now();
+  if (dg.base === "daily") { if (reset) { dailyPhase = 0; dailyAt = t; } const [a] = DAILY_LOOP[dailyPhase]; if (dg.anim !== a) { dg.anim = a; dg.t0 = t; } }
+  else if (dg.anim !== dg.base) { dg.anim = dg.base; dg.t0 = t; }
+}
+function tickDiego(t) {
+  if (dg.x < 50) { dg.x = Math.min(50, dg.x + .55); if (dg.x >= 50) { act("wave", 1600); heartPop(50, 30, 3); } return; }
+  if (dg.until && t > dg.until) { dg.until = 0; flags.hearts = false; flags.blush = false; const n = dg.next; dg.next = null; if (n) n(); else baseAnim(true); }
+  if (!dg.until && !dg.lock && dg.base === "daily" && t - dailyAt > DAILY_LOOP[dailyPhase][1]) { dailyPhase = (dailyPhase + 1) % DAILY_LOOP.length; dailyAt = t; baseAnim(false); }
+  const a = ANIM[dg.anim];
+  if (a.sweat && Math.random() < .02) spawn({ type: "drop", x: dg.x + (Math.random() < .5 ? -6 : 6), y: 38, vx: (Math.random() - .5) * .6, vy: -.6, max: 30 });
+  if (a.zzz && Math.random() < .012) spawn({ type: "z", x: dg.x + 6, y: 40, vy: -.18, max: 110, big: Math.random() < .5 });
+  if (a.aura) { if (Math.random() < .6) spawn({ type: "aura", x: dg.x + (Math.random() - .5) * 26, y: GROUND - Math.random() * 30, vy: -.5 - Math.random() * .5, max: 26 }); }
+}
+function frame(t) {
+  tickDiego(t);
+  drawRoom(t);
+  const a = ANIM[dg.anim], ps = poseAt(dg.anim, t - dg.t0);
+  if (a.aura) { const k = .4 + dg.charge * .6; g.globalAlpha = .35 * k; px(dg.x - 12, 30, 24, 40, "#ffe066"); g.globalAlpha = 1; }
+  drawDiego(dg.x + (a.aura ? (Math.random() - .5) * dg.charge * 1.2 : 0), ps, a, t);
+  drawParts();
+  cx.imageSmoothingEnabled = false; cx.drawImage(lo, 0, 0, cv.width, cv.height);
+  requestAnimationFrame(frame);
+}
+
+/* ====================== el globo: escribe letra por letra ====================== */
+let typing = 0, queue = [];
+function say(text, opts = {}) {
+  clearInterval(typing); const el = $("#say"); $("#greet").textContent = opts.greet || ""; $("#greet").hidden = !opts.greet;
+  const full = text; let i = 0; el.textContent = ""; el.dataset.full = full;
+  $("#more").hidden = true; if (!opts.keepWa) $("#waLink").hidden = true;
+  if (reduced) { el.textContent = full; afterType(); return; }
+  const caret = document.createElement("span"); caret.className = "caret";
+  typing = setInterval(() => { i++; el.textContent = full.slice(0, i); el.appendChild(caret); SND.voice(i); if (i >= full.length) { clearInterval(typing); typing = 0; caret.remove(); afterType(); } }, 26);
+}
+function afterType() { if (queue.length) $("#more").hidden = false; }
+$("#bubble").addEventListener("click", e => {
+  if (e.target.closest("a")) return;
+  if (typing) { clearInterval(typing); typing = 0; $("#say").textContent = $("#say").dataset.full; afterType(); return; }
+  if (queue.length) { const q = queue.shift(); SND.click(); q(); }
+});
+
+/* ====================== botones ====================== */
+const show = id => { for (const p of ["#pad", "#padNo", "#padDone", "#routine"]) $(p).hidden = p !== id; };
+const greetText = () => { const h = hourNow(); return `${h >= 5 && h < 12 ? "¡Buenos días" : h >= 12 && h < 20 ? "¡Buenas tardes" : "¡Buenas noches"}, ${rot(PETS, 3)}! ${WEEK[TODAY.getDay()]}`; };
+const showDaily = () => say(rot(MSGS, 37, 11), { greet: greetText() });
+
+let boostI = 0;
+$("#bAnimo").addEventListener("click", () => {
+  SND.boost(); buzz(15);
+  const txt = boostI < 5 ? BOOSTS[md(D * 13 + boostI * 7, BOOSTS.length)] : BOOST_END; boostI = boostI < 5 ? boostI + 1 : 0;
+  act(boostI % 2 ? "flex" : "cheer", 1900); heartPop(dg.x, 30, 5); say(txt);
+});
+
+// cargar energía: hay que mantener apretado
+let chargeRaf = 0, chargeLast = 0, chargeDone = false, warned = false;
+const bC = $("#bCarga");
+function chargeLoop(t) {
+  const dt = Math.min(50, t - chargeLast); chargeLast = t;
+  if (bC.classList.contains("held")) dg.charge = Math.min(1, dg.charge + dt / (2200 / speed()));
+  else dg.charge = Math.max(0, dg.charge - dt / 500);
+  $("#cargaFill").style.width = dg.charge * 100 + "%"; SND.chargeLevel(dg.charge);
+  if (dg.charge >= 1 && !chargeDone) {
+    chargeDone = true; dg.lock = false; bC.classList.remove("held"); SND.chargeOff(); SND.fanfare(); buzz([40, 30, 80]);
+    for (let i = 0; i < 18; i++) spawn({ type: "spark", x: dg.x, y: 46, vx: Math.cos(i / 18 * 6.28) * 1.4, vy: Math.sin(i / 18 * 6.28) * 1.4, max: 40 });
+    heartPop(dg.x, 34, 14); confetti(30); act("cheer", 2200); say(rot(CHARGE, 5));
+  }
+  if (dg.charge > 0 || bC.classList.contains("held")) chargeRaf = requestAnimationFrame(chargeLoop);
+  else { chargeRaf = 0; $("#cargaFill").style.width = "0"; }
+}
+bC.addEventListener("pointerdown", e => {
+  e.preventDefault(); try { bC.setPointerCapture(e.pointerId); } catch {} bC.classList.add("held"); dg.lock = true; chargeDone = false; dg.charge = Math.max(dg.charge, 0);
+  SND.chargeOn(); buzz(10); act("charge", 0); if (!chargeRaf) { chargeLast = performance.now(); chargeRaf = requestAnimationFrame(chargeLoop); }
+});
+const release = () => {
+  if (!bC.classList.contains("held")) return; bC.classList.remove("held"); dg.lock = false; SND.chargeOff();
+  if (!chargeDone) { baseAnim(true); if (!warned || dg.charge > .15) { warned = true; say("¡No sueltes! Mantén apretado hasta que se llene la barra."); } }
+};
+bC.addEventListener("pointerup", release); bC.addEventListener("pointercancel", release); bC.addEventListener("lostpointercapture", release);
+bC.addEventListener("contextmenu", e => e.preventDefault());
+bC.addEventListener("keydown", e => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); bC.dispatchEvent(new PointerEvent("pointerdown")); } });
+bC.addEventListener("keyup", e => { if (e.key === " " || e.key === "Enter") release(); });
+
+function markDay(kind) {   // una estrella por día como máximo; "gym" le gana a "mini"
+  const prev = st.days[KEY], had = prev === "gym" || prev === "mini";
+  if (kind === "gym" || !had) st.days[KEY] = kind; persist(); renderStars(); return !had && (kind === "gym" || kind === "mini");
+}
+function celebrate(line, waText) {
+  SND.fanfare(); buzz([40, 60, 40]); act("cheer", 4200); confetti(70); heartPop(dg.x, 30, 10);
+  say(line); const w = $("#waLink"); w.href = wa(waText); w.hidden = false;
+}
+function goGym() {
+  const nuevo = markDay("gym");
+  celebrate(nuevo ? rot(CELEB, 3) : "¡Ya estás marcada por hoy! Anda tranquila, que te espero con un abrazo.",
+    `¡Voy al gym! 💪 Aunque no tenía ganas, mini Diego me convenció. Llevo ${starCount()} ⭐`);
+  $("#waLink").textContent = "AVISARLE A DIEGO 💬";
+  show("#pad");
+}
+$("#bVoy").addEventListener("click", goGym);
+$("#bVoy2").addEventListener("click", goGym);
+$("#bNo").addEventListener("click", () => { $("#bRest").hidden = false; SND.soft(); buzz(10); act("hug", 2600, null, { hearts: true, blush: true }); heartPop(dg.x, 32, 4); say(rot(DEAL, 3)); show("#padNo"); });
+$("#bBack1").addEventListener("click", () => { SND.click(); show("#pad"); setBase("daily"); act("wave", 1200); showDaily(); });
+$("#bBack2").addEventListener("click", () => { SND.click(); show("#pad"); setBase("daily"); act("kiss", 1400, () => baseAnim(true)); setTimeout(() => heartPop(dg.x + 12, 30, 4), 400); say("Gracias por moverte conmigo hoy. Te amo, mi amor."); });
+$("#bRest").addEventListener("click", () => {
+  SND.soft(); if (!st.days[KEY]) { st.days[KEY] = "rest"; persist(); renderStars(); }
+  setBase("rest"); act("rest", 0); say(rot(REST, 3)); show("#padNo"); $("#bRest").hidden = true;
+});
+
+// tocar a mini Diego
+cv.addEventListener("click", () => {
+  if (dg.x < 50) return; st.taps = (st.taps || 0) + 1; persist(); SND.kiss(); buzz(8);
+  act("kiss", 1300, null, { hearts: true, blush: true }); setTimeout(() => heartPop(dg.x + 12, 30, 3), 360);
+  if (!rt.on) say(st.taps % 10 === 0 ? "Ya po, deja de hacerme cariño y anda al gym." : TAPS[st.taps % TAPS.length]);
+});
+
+/* ====================== rutina de 5 minutos ====================== */
+const EXS = (() => { const s = md(D * 3, 7); return [0, 2, 4, 6].map(k => EX[(s + k) % 7]).concat(STRETCH); })();
+const rt = { on: false, steps: [], i: 0, left: 0, paused: false, timer: 0, last: 0 };
+function buildSteps() { const s = [{ kind: "prep", secs: 5 }]; EXS.forEach((e, k) => { s.push({ kind: "ex", secs: WORK, ex: e, n: k }); if (k < EXS.length - 1) s.push({ kind: "rest", secs: PAUSE, nextEx: EXS[k + 1] }); }); return s; }
+const fmtT = s => { const c = Math.max(0, Math.ceil(s)); return `${Math.floor(c / 60)}:${String(c % 60).padStart(2, "0")}`; };
+function startRoutine() {
+  rt.on = true; rt.steps = buildSteps(); rt.i = -1; rt.paused = false; show("#routine"); $("#rtPause").textContent = "PAUSA";
+  $("#rtDots").innerHTML = EXS.map(() => "<i></i>").join(""); nextStep(); clearInterval(rt.timer); rt.last = performance.now(); rt.timer = setInterval(rtTick, 100);
+}
+function nextStep() {
+  rt.i++; const s = rt.steps[rt.i];
+  if (!s) return finishRoutine();
+  rt.left = s.secs; rt.beeped = 4; const dots = [...$("#rtDots").children];
+  dots.forEach((d, k) => { d.className = s.kind === "ex" ? (k < s.n ? "done" : k === s.n ? "now" : "") : (k < (s.nextEx ? EXS.indexOf(s.nextEx) : 0) ? "done" : ""); });
+  $("#rtBarBox").classList.toggle("rest", s.kind !== "ex");
+  if (s.kind === "prep") { $("#rtStep").textContent = "¡PREPÁRATE!"; dg.until = 0; setBase("idle"); act("wave", 1500); say(`Hoy hacemos 5 ejercicios: ${EXS.map(e => e.name.toLowerCase()).join(", ")}. ¡Yo los hago contigo!`); }
+  else if (s.kind === "ex") { $("#rtStep").textContent = `EJERCICIO ${s.n + 1} DE ${EXS.length}`; SND.go(); buzz(30); dg.until = 0; setBase(s.ex.anim); baseAnim(true); say(`${s.ex.name}. ${s.ex.tip}`, { greet: s.n === EXS.length - 1 ? "El último, y es suavecito" : s.n === 0 ? "¡Partimos!" : "" }); }
+  else { $("#rtStep").textContent = "DESCANSO"; SND.soft(); setBase("drink"); baseAnim(true); say(`Toma agüita y respira. Lo que viene: ${s.nextEx.name.toLowerCase()}.`, { greet: BOOSTS[md(D * 13 + rt.i * 3, BOOSTS.length)] }); }
+  rtRender();
+}
+function rtRender() { const s = rt.steps[rt.i]; if (!s) return; $("#rtTime").textContent = fmtT(rt.left); $("#rtBar").style.width = (1 - rt.left / s.secs) * 100 + "%"; }
+function rtTick() {
+  const t = performance.now(), dt = (t - rt.last) / 1000 * speed(); rt.last = t; if (!rt.on || rt.paused) return;
+  rt.left -= dt; const c = Math.ceil(rt.left);
+  if (c <= 3 && c >= 1 && c < rt.beeped) { rt.beeped = c; SND.beep(); }
+  if (rt.left <= 0) nextStep(); else rtRender();
+}
+function stopRoutine() { rt.on = false; clearInterval(rt.timer); setBase("daily"); }
+function finishRoutine() {
+  stopRoutine(); const nuevo = markDay("mini"); show("#padDone");
+  celebrate(`¡LO HICISTE! 5 minutos que valen oro.${nuevo ? " Te ganaste una estrella." : ""} Si te quedaron ganas, el gym te espera. Si no, ya cumpliste y te amo igual.`,
+    `¡Hice los 5 minutos con mini Diego! 💪 Llevo ${starCount()} ⭐`);
+}
+$("#bMini").addEventListener("click", () => { SND.click(); startRoutine(); });
+$("#rtPause").addEventListener("click", () => { rt.paused = !rt.paused; SND.click(); $("#rtPause").textContent = rt.paused ? "SEGUIR" : "PAUSA"; if (rt.paused) { setBase("idle"); baseAnim(true); } else { const s = rt.steps[rt.i]; setBase(s.kind === "ex" ? s.ex.anim : s.kind === "rest" ? "drink" : "idle"); baseAnim(true); } });
+$("#rtNext").addEventListener("click", () => { SND.click(); rt.paused = false; $("#rtPause").textContent = "PAUSA"; nextStep(); });
+$("#rtExit").addEventListener("click", () => { SND.soft(); stopRoutine(); show("#padNo"); act("hug", 2000, null, { hearts: true }); say("Está bien, mi amor. Lo que alcanzaste a hacer igual cuenta."); });
+
+/* ====================== estrellas y vales ====================== */
+const ICONS = {
+  heart: ["........", ".XX..XX.", "XXXXXXXX", "XXXXXXXX", ".XXXXXX.", "..XXXX..", "...XX...", "........"],
+  bolt: ["....XX..", "...XX...", "..XX....", ".XXXXX..", "...XX...", "..XX....", ".XX.....", "........"],
+  shoe: ["........", "..XX....", "..XXX...", "..XXXX..", ".XXXXXXX", "XXXXXXXX", "OOOOOOOO", "........"],
+  moon: ["...XXX..", "..XX....", ".XX.....", ".XX.....", ".XX.....", "..XX....", "...XXX..", "........"],
+  clock: ["..XXXX..", ".X....X.", "X...X..X", "X...X..X", "X...XX.X", "X......X", ".X....X.", "..XXXX.."],
+  star: ["...XX...", "...XX...", "XXXXXXXX", ".XXXXXX.", "..XXXX..", ".XX..XX.", ".X....X.", "........"],
+  dot: ["........", "........", "........", "...XX...", "...XX...", "........", "........", "........"],
+};
+function paintIcon(c, name, col, col2) { const k = c.getContext("2d"); k.clearRect(0, 0, 8, 8); ICONS[name].forEach((r, j) => [...r].forEach((v, i) => { if (v !== ".") { k.fillStyle = v === "O" ? (col2 || "#fff") : col; k.fillRect(i, j, 1, 1); } })); }
+document.querySelectorAll("canvas.ic").forEach(c => paintIcon(c, c.dataset.ic, "#3b1838", "#ffffff"));
+const DOW = ["L", "M", "M", "J", "V", "S", "D"];
+function renderStars() {
+  const n = starCount(); $("#hudStars").textContent = `★ ${n}`; $("#hudDay").textContent = `DÍA ${dayNumber()}`;
+  // esta semana (lunes a domingo)
+  const mon = new Date(TODAY); mon.setDate(TODAY.getDate() - md(TODAY.getDay() - 1, 7));
+  $("#week").innerHTML = DOW.map((l, i) => { const d = new Date(mon); d.setDate(mon.getDate() + i); const k = ymd(d); return `<div class="day${k === KEY ? " today" : ""}"><span>${l}</span><canvas width="8" height="8" data-k="${k}"></canvas></div>`; }).join("");
+  const cs = getComputedStyle(document.documentElement);
+  $("#week").querySelectorAll("canvas").forEach(c => { const v = st.days[c.dataset.k];
+    if (v === "gym") paintIcon(c, "star", cs.getPropertyValue("--gold").trim() || "#e8a400"); else if (v === "mini") paintIcon(c, "star", "#2fbf94"); else if (v === "rest") paintIcon(c, "moon", "#8a70e0"); else paintIcon(c, "dot", cs.getPropertyValue("--muted").trim() || "#8a5a7f");
+    c.setAttribute("aria-label", v === "gym" ? "fue al gym" : v === "mini" ? "hizo los 5 minutos" : v === "rest" ? "descanso" : "sin marcar"); c.setAttribute("role", "img"); });
+  const nx = VALES.find(([t]) => n < t);
+  if (nx) { const prev = [...VALES].reverse().find(([t]) => n >= t)?.[0] || 0; $("#nextTxt").textContent = `Próximo vale: ${nx[1].toLowerCase()}`; $("#nextNum").textContent = `${n}/${nx[0]} ★`; $("#meter").style.width = ((n - prev) / (nx[0] - prev)) * 100 + "%"; }
+  else { $("#nextTxt").textContent = "¡Desbloqueaste todos los vales!"; $("#nextNum").textContent = `${n} ★`; $("#meter").style.width = "100%"; }
+  $("#vales").innerHTML = VALES.map(([t, txt]) => { const open = n >= t, got = st.claimed[t];
+    return `<li class="vale${open ? "" : " locked"}"><span class="n">${t}★</span><span class="t">Vale por ${txt[0].toLowerCase() + txt.slice(1)}</span>${open ? `<a href="${wa(`Vengo a cobrar mi vale de mini Diego 🎟️: ${txt} (${t} ⭐)`)}" target="_blank" rel="noopener" data-t="${t}">${got ? "COBRADO ✓" : "COBRAR"}</a>` : `<span class="st">FALTAN ${t - n}</span>`}</li>`; }).join("");
+  $("#vales").querySelectorAll("a").forEach(a => a.addEventListener("click", () => { st.claimed[a.dataset.t] = true; persist(); setTimeout(renderStars, 300); }));
+}
+function renderFoot() {
+  const n = now(), m = new Date(n); m.setHours(24, 0, 0, 0); const mins = Math.max(1, Math.round((m - n) / 60000));
+  $("#foot").innerHTML = `Mañana mini Diego trae un mensaje nuevo · <b>${mins >= 60 ? `${Math.floor(mins / 60)} h ${mins % 60} min` : `${mins} min`}</b>`;
+}
+
+/* ====================== partida ====================== */
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+$("#fecha").textContent = `${DIAS[TODAY.getDay()]} ${TODAY.getDate()} de ${MESES[TODAY.getMonth()]}`;
+$("#muteBtn").addEventListener("click", () => { st.mute = !st.mute; persist(); $("#muteBtn").setAttribute("aria-pressed", st.mute); $("#muteBtn").setAttribute("aria-label", st.mute ? "Activar sonidos" : "Silenciar sonidos"); if (!st.mute) SND.click(); });
+$("#muteBtn").setAttribute("aria-pressed", st.mute);
+fit(); renderStars(); renderFoot(); setInterval(renderFoot, 30000);
+if (firstTime) { say(INTRO, { greet: "¡Hola!" }); queue.push(showDaily); } else showDaily();
+requestAnimationFrame(frame);
+</script>
+</html>
