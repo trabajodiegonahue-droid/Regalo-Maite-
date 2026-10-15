@@ -95,7 +95,7 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 .rt-bar { height: 12px; background: var(--shell-dk); box-shadow: 0 -2px 0 0 var(--plum), 0 2px 0 0 var(--plum), -2px 0 0 0 var(--plum), 2px 0 0 0 var(--plum); }
 .rt-bar i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(90deg, var(--mint) 0 6px, #7ff0cb 6px 8px); }
 .rt-bar.rest i { background: repeating-linear-gradient(90deg, var(--lav) 0 6px, #ddd2ff 6px 8px); }
-.rt-dots { display: flex; gap: 6px; justify-content: center; }
+.rt-dots { display: flex; gap: 6px; justify-content: flex-start; flex-wrap: wrap; }
 .rt-dots i { width: 10px; height: 10px; background: var(--shell-lt); box-shadow: inset 0 0 0 2px var(--shell-dk); }
 .rt-dots i.done { background: var(--mint); box-shadow: inset 0 0 0 2px var(--plum); }
 .rt-dots i.now { background: var(--sun); box-shadow: inset 0 0 0 2px var(--plum); }
@@ -142,6 +142,19 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 .badge[aria-pressed="true"] { box-shadow: 0 -2px 0 0 var(--rose), 0 2px 0 0 var(--rose), -2px 0 0 0 var(--rose), 2px 0 0 0 var(--rose); }
 .card .badge-info { min-height: 2.8em; color: var(--text); }
 .md-count { color: var(--gold); }
+.rt-sub { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 22px; }
+.mus { border: 0; padding: 5px 8px; background: var(--shell-lt); color: var(--plum); font: 700 .55rem/1 var(--f-pix); box-shadow: 0 -2px 0 0 var(--plum), 0 2px 0 0 var(--plum), -2px 0 0 0 var(--plum), 2px 0 0 0 var(--plum); }
+.mus[aria-pressed="false"] { opacity: .55; }
+.resumen { color: var(--text); }
+.vasos { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
+.vaso { border: 0; background: var(--bg); padding: 6px 0; display: grid; place-items: center; }
+.vaso canvas { width: 26px; height: 26px; image-rendering: pixelated; }
+.vaso.lleno { background: color-mix(in srgb, #3f98dd 14%, var(--bg)); }
+.card .aw-msg { color: var(--text); min-height: 2.8em; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { text-decoration: none; padding: 9px 11px; background: var(--bg); color: var(--text); font: 600 .95rem/1.1 var(--f-body);
+  box-shadow: 0 -2px 0 0 var(--card-line), 0 2px 0 0 var(--card-line), -2px 0 0 0 var(--card-line), 2px 0 0 0 var(--card-line); }
+.chip:active { transform: translateY(2px); }
 .foot { margin: 0; text-align: center; font: 500 .95rem/1.4 var(--f-body); color: var(--muted); }
 .foot b { font: 700 .7rem/1 var(--f-pix); color: var(--rose); }
 
@@ -204,7 +217,7 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
     <div class="routine" id="routine" hidden>
       <div class="rt-head"><span class="rt-step" id="rtStep">EJERCICIO 1 DE 5</span><span class="rt-time" id="rtTime">0:45</span></div>
       <div class="rt-bar" id="rtBarBox"><i id="rtBar"></i></div>
-      <div class="rt-dots" id="rtDots" aria-hidden="true"></div>
+      <div class="rt-sub"><div class="rt-dots" id="rtDots" aria-hidden="true"></div><button class="mus" id="rtMus" aria-pressed="true">♫ MÚSICA</button></div>
       <div class="rt-btns" id="rtBtns"></div>
     </div>
   </section>
@@ -214,11 +227,24 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
     <p>Ganas una por cada día que vas al gym o completas un cronómetro con mini Diego, desde 1 minuto. Con las estrellas se desbloquean vales para cobrarle al Diego de verdad.</p>
     <div class="week" id="week" aria-label="Esta semana"></div>
     <p class="streak"><canvas id="flameIc" width="8" height="8" aria-hidden="true"></canvas><span id="streakTxt"></span></p>
+    <p class="resumen" id="resumen"></p>
     <div class="next">
       <div class="next-row"><span id="nextTxt"></span><b id="nextNum"></b></div>
       <div class="meter" aria-hidden="true"><i id="meter"></i></div>
     </div>
     <ul class="vales" id="vales"></ul>
+  </section>
+
+  <section class="card" aria-labelledby="awTitle">
+    <h2 id="awTitle">AGÜITA DE HOY</h2>
+    <div class="vasos" id="vasos"></div>
+    <p class="aw-msg" id="awMsg" aria-live="polite">Toca un vaso cada vez que tomes agua. La meta son 8.</p>
+  </section>
+
+  <section class="card" aria-labelledby="wsTitle">
+    <h2 id="wsTitle">ESCRÍBELE A DIEGO</h2>
+    <p>Un toque y se abre WhatsApp con el mensaje listo para el Diego de verdad.</p>
+    <div class="chips" id="chips"></div>
   </section>
 
   <section class="card" aria-labelledby="mdTitle">
@@ -532,7 +558,25 @@ const BADGES = [
   ["carinosa", "Cariñosa", "heart", "Hacerle cariño a mini Diego 25 veces.", "Me has hecho cariño 25 veces. Mini Diego está derretido."],
   ["energia", "Pila cargada", "bolt", "Cargar energía 10 veces.", "Cargaste energía 10 veces. Mi batería siempre es para ti."],
   ["vale", "Cobradora", "ticket", "Cobrar tu primer vale.", "Cobraste tu primer vale. Prepárate, que Diego cumple."],
+  ["hidratada", "Hidratada", "drop", "Tomar 8 vasos de agua en un día.", "Ocho vasos en un día. Hidratada y preciosa."],
+  ["cien", "100 minutos", "clock", "Sumar 100 minutos con mini Diego.", "Cien minutos entrenando conmigo. Qué orgullo más grande."],
+  ["quinientos", "500 minutos", "star", "Sumar 500 minutos con mini Diego.", "¡Quinientos minutos! Eres oficialmente mi campeona."],
+  ["mensajito", "Mensajito", "chat", "Escribirle a Diego desde aquí.", "Le escribiste a Diego. Seguro sonrió al tiro."],
 ];
+// agüita: lo que dice mini Diego con cada vaso
+const AGUA = [
+  "Primer vasito. Tu cuerpo ya te está diciendo gracias.", "Dos vasos. Vas regando tu plantita interior.", "Tres. Así me gusta, hidratadita.",
+  "La mitad. Eres más constante que la lluvia de Temuco.", "Cinco vasos. Tu piel brilla, y no es solo por mí.", "Seis. Ya casi, preciosa.",
+  "Siete. Uno más y eres oficialmente una plantita feliz.", "¡Ocho vasos! Hidratada y preciosa. Te amo.",
+];
+// mensajitos rápidos para el Diego de verdad
+const CHIPS = [
+  ["Necesito ánimo", "Mini Diego me mandó a pedirte ánimo 🥺 Hoy no tengo ganas de entrenar."], ["¡Ya entrené!", "¡Ya entrené! 💪 Mini Diego está orgulloso, ¿y tú?"],
+  ["Te extraño", "Te extraño 💗"], ["¿Vamos juntos al gym?", "¿Vamos juntos al gym? 🏋️‍♀️"], ["Me debes besos", "Me debes un beso por cada sentadilla que hice hoy 😌"],
+  ["¿Me llamas?", "¿Me llamas un ratito? 📞"],
+];
+// lo que dice mini Diego si tocan a mini Maite
+const MT_TAPS = ["Esa es mi polola: la más linda del mundo, hasta en pixeles.", "Mini Maite dice que vamos con todo.", "Mírala, entrenando conmigo. Igualita a ti de linda.", "Mini Maite me tiene igual de enamorado que tú."];
 // vales que se desbloquean con las estrellas
 const VALES = [[3, "Un masajito de piernas después del gym"], [7, "Un heladito extra, sí, otro más"], [12, "Una cita donde tú eliges todo"], [20, "Un día entero de regaloneo"], [30, "Lo que tú quieras, dentro de lo legal"]];
 // ejercicios de la rutina de 5 minutos (4 al azar del día + estiramiento al final)
@@ -565,7 +609,7 @@ const speed = () => window.__RAPIDO || 1;
 // lo que se guarda en su celular
 let st = { days: {}, first: KEY, mute: false, claimed: {}, seen: false, taps: 0 };
 try { const v = JSON.parse(localStorage.getItem("mini_diego") || "null"); if (v && typeof v === "object") st = { ...st, ...v, days: { ...(v.days || {}) }, claimed: { ...(v.claimed || {}) } }; } catch {}
-st.badges = { ...(st.badges || {}) };
+st.badges = { ...(st.badges || {}) }; st.water = { ...(st.water || {}) }; st.mins = { ...(st.mins || {}) }; if (st.music === undefined) st.music = true;
 st.stats = { charges: 0, series: 0, libreMax: 0, early: false, late: false, ...(st.stats || {}) }; st.stats.done = { ...(st.stats.done || {}) };
 const persist = () => { try { localStorage.setItem("mini_diego", JSON.stringify(st)); } catch {} };
 const firstTime = !st.seen; st.seen = true; persist();
@@ -578,11 +622,32 @@ const SND = (() => {
   const init = () => { if (ctx) return; const C = window.AudioContext || window.webkitAudioContext; if (!C) return; ctx = new C(); out = ctx.createGain(); out.gain.value = .55; out.connect(ctx.destination); };
   const ok = () => ctx && !st.mute;
   const N = m => 440 * Math.pow(2, (m - 69) / 12);
-  function tone(f, t, d, v = .06, type = "square") { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.0005, t + d); o.connect(g); g.connect(out); o.start(t); o.stop(t + d + .02); }
+  function tone(f, t, d, v = .06, type = "square", dest = out) { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.0005, t + d); o.connect(g); g.connect(dest); o.start(t); o.stop(t + d + .02); }
+  // música para entrenar (original): "ritmo" con batería y "suave" para estirar y descansar
+  const MEL = [76, 79, 84, 79, 76, 0, 74, 76, 74, 79, 83, 79, 74, 0, 71, 74, 72, 76, 81, 76, 72, 0, 74, 76, 77, 76, 74, 72, 74, 0, 72, 0,
+    84, 0, 83, 84, 86, 84, 79, 0, 83, 0, 81, 83, 86, 83, 79, 0, 81, 0, 79, 81, 84, 81, 76, 0, 77, 79, 81, 77, 79, 0, 0, 0];
+  function kick(t, d) { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine"; o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(45, t + .12); g.gain.setValueAtTime(.12, t); g.gain.exponentialRampToValueAtTime(.001, t + .15); o.connect(g); g.connect(d); o.start(t); o.stop(t + .16); }
+  let noiseBuf;
+  function hat(t, d) { if (!noiseBuf) { noiseBuf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * .05), ctx.sampleRate); const c = noiseBuf.getChannelData(0); for (let i = 0; i < c.length; i++) c[i] = Math.random() * 2 - 1; }
+    const n = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain(); n.buffer = noiseBuf; f.type = "highpass"; f.frequency.value = 7000; g.gain.setValueAtTime(.05, t); g.gain.exponentialRampToValueAtTime(.001, t + .04); n.connect(f); f.connect(g); g.connect(d); n.start(t); n.stop(t + .05); }
+  const TR = {
+    ritmo: { bpm: 132, play(step, t, sp, d) { const bar = Math.floor(step / 8) % 8, i = step % 8, root = [48, 43, 45, 41][bar % 4], m = MEL[bar * 8 + i];
+      if (m) tone(N(m), t, sp * .9, .04, "square", d); tone(N(root + (i % 2 ? 12 : 0)), t, sp * .8, .06, "triangle", d); if (i % 2 === 0) kick(t, d); else hat(t, d); } },
+    suave: { bpm: 76, play(step, t, sp, d) { const bar = Math.floor(step / 8) % 4, i = step % 8, ch = [[60, 64, 67, 71], [57, 60, 64, 67], [53, 57, 60, 64], [55, 59, 62, 67]][bar];
+      tone(N(ch[[0, 1, 2, 3, 2, 1, 2, 3][i]] + 12), t, sp * 1.8, .035, "triangle", d); if (i === 0) tone(N(ch[0] - 12), t, sp * 6, .05, "sine", d); } },
+  };
+  let mus = null;
   const seq = (ns, gap, v = .06, type = "square") => { if (!ok()) return; const t = ctx.currentTime; ns.forEach((m, i) => m && tone(N(m), t + i * gap, gap * 1.5, v, type)); };
   const VO = [57, 59, 62, 64, 66];
   return {
     wake() { init(); ctx?.resume?.(); },
+    musicOn(name) { init(); if (!ctx) return; if (mus && mus.name === name) return; this.musicOff(); ctx.resume?.();
+      const tr = TR[name], d = ctx.createGain(); d.gain.value = st.mute ? 0 : .5; d.connect(out);
+      const m = { name, d, step: 0, next: ctx.currentTime + .08 };
+      m.timer = setInterval(() => { const sp = 60 / tr.bpm / 2; while (m.next < ctx.currentTime + .25) { tr.play(m.step, m.next, sp, d); m.next += sp; m.step++; } }, 90); mus = m; },
+    musicOff() { if (!mus) return; const m = mus; mus = null; clearInterval(m.timer); m.d.gain.setTargetAtTime(0, ctx.currentTime, .15); setTimeout(() => m.d.disconnect(), 700); },
+    muteAll(on) { if (mus) mus.d.gain.setTargetAtTime(on ? 0 : .5, ctx.currentTime, .1); },
+    glug() { seq([79, 74, 71], .05, .04, "sine"); },
     voice(i) { if (!ok() || i % 2) return; tone(N(VO[Math.floor(Math.random() * VO.length)]), ctx.currentTime, .045, .03, "square"); },
     click() { seq([79], .04, .04); }, pop() { seq([91, 96], .03, .035, "triangle"); }, boost() { seq([72, 76, 79, 84], .06, .05); }, soft() { seq([67, 64, 60], .1, .04, "triangle"); },
     fanfare() { seq([72, 72, 72, 76, 79, 0, 76, 79, 84], .1, .06); }, beep() { seq([81], .08, .06); }, go() { seq([88, 93], .09, .06); },
@@ -766,15 +831,46 @@ function drawDiego(x0, ps, a, t, at) {
     line(sh, el, 2, C.S); line(el, ha, 2, C.S); line(sh, [lerp(sh[0], el[0], .45), lerp(sh[1], el[1], .45)], 3, C.T);
     px(ha[0] - 1, ha[1] - 1, 2, 2, C.S);
     if (ACC === "munequeras") { const m = [lerp(el[0], ha[0], .72), lerp(el[1], ha[1], .72)]; px(m[0] - 1, m[1] - 1, 3, 2, C.Y); }
-    if (a.prop === "dumbbell") { px(ha[0] - 3, ha[1] - 1, 6, 1, "#8e95a8"); px(ha[0] - 4, ha[1] - 2, 2, 3, "#3b3f52"); px(ha[0] + 2, ha[1] - 2, 2, 3, "#3b3f52"); }
-    if (a.prop === "bottle") { px(ha[0] - 1, ha[1] - 4, 2, 6, "#8fd3ff"); px(ha[0] - 1, ha[1] - 5, 2, 1, C.W); px(ha[0] - 1, ha[1] - 2, 2, 1, "#5fb8f0"); }
-    if (a.prop === "rope" && sx > 0) drawRope(bx, by, ps, at);
-    if (a.prop === "pompom") { const c = sx < 0 ? "#ff5c98" : "#ffc93d"; px(ha[0] - 2, ha[1] - 3, 5, 4, c); px(ha[0] - 3, ha[1] - 2, 7, 2, c); px(ha[0] - 1, ha[1] - 3, 1, 1, C.W); }
-    if (a.prop === "thumb" && sx > 0) px(ha[0], ha[1] - 3, 1, 2, C.S);
-    if (a.prop === "bottleR" && sx > 0) { px(ha[0] - 1, ha[1] - 4, 2, 6, "#8fd3ff"); px(ha[0] - 1, ha[1] - 5, 2, 1, C.W); }
+    handProp(a, sx, ha, bx, by, ps, at, C.S);
   }
 }
 
+// lo que tienen en las manos (sirve para los dos)
+function handProp(a, sx, ha, bx, by, ps, at, skin) {
+  if (a.prop === "dumbbell") { px(ha[0] - 3, ha[1] - 1, 6, 1, "#8e95a8"); px(ha[0] - 4, ha[1] - 2, 2, 3, "#3b3f52"); px(ha[0] + 2, ha[1] - 2, 2, 3, "#3b3f52"); }
+  if (a.prop === "bottle") { px(ha[0] - 1, ha[1] - 4, 2, 6, "#8fd3ff"); px(ha[0] - 1, ha[1] - 5, 2, 1, "#ffffff"); px(ha[0] - 1, ha[1] - 2, 2, 1, "#5fb8f0"); }
+  if (a.prop === "rope" && sx > 0) drawRope(bx, by, ps, at);
+  if (a.prop === "pompom") { const c = sx < 0 ? "#ff5c98" : "#ffc93d"; px(ha[0] - 2, ha[1] - 3, 5, 4, c); px(ha[0] - 3, ha[1] - 2, 7, 2, c); px(ha[0] - 1, ha[1] - 3, 1, 1, "#ffffff"); }
+  if (a.prop === "thumb" && sx > 0) px(ha[0], ha[1] - 3, 1, 2, skin);
+  if (a.prop === "bottleR" && sx > 0) { px(ha[0] - 1, ha[1] - 4, 2, 6, "#8fd3ff"); px(ha[0] - 1, ha[1] - 5, 2, 1, "#ffffff"); }
+}
+// ---- mini Maite: gorrito morado con lunares (como en la foto de chiquititos), pelo largo, polera rosada con corazón y calzas ----
+const CM = { K: "#4a2c1f", S: "#f2c4a0", E: "#2a1a10", M: "#c2185b", p: "#ff8fa3", b: "#f49a9a", H: "#8e6bc9", h: "#f2ecff", R: "#ff2d6f", P: "#ff6fae", Q: "#e0528f", L: "#6a4bc4", l: "#5a3db0", W: "#ffffff", Z: "#f5f0ff" };
+const MMOUTH = { smile: ["KSMSSSSMSK", "KKSMMMMSKK"], grin: ["KSMMMMMMSK", "KKSMppMSKK"], kiss: ["KSSSMMSSSK", "KKSSMMSSKK"], tired: ["KSSSMMSSSK", "KKSSSSSSKK"], oh: ["KSSSMMSSSK", "KKSSMMSSKK"] };
+function maiteHead(o) {
+  const r = ["..HHHHHH..", ".HhHHhHHh.", "HHHHHHHHHH", "KSSSSSSSSK", o.hearts ? "KSRSSSSRSK" : "KSESSSSESK", "KSSSSSSSSK", ...(MMOUTH[o.mouth] || MMOUTH.smile), "KK.SSSS.KK", "KK......KK"];
+  if (o.blush) r[5] = "KSbSSSSbSK";
+  return r;
+}
+function drawMaite(x0, ps, a, t, at) {
+  const bx = Math.round(x0 + (ps.dx || 0)), by = Math.round(GROUND - 12 + (ps.y || 0)), J = ([x, y]) => [bx + x, by + y];
+  px(bx - 7, GROUND + 1, 14, 1, "rgba(59,24,56,.18)");
+  line(J([-2, 0]), J(ps.kL), 3, CM.L); line(J(ps.kL), J(ps.fL), 3, CM.L);
+  line(J([2, 0]), J(ps.kR), 3, CM.l); line(J(ps.kR), J(ps.fR), 3, CM.l);
+  for (const f of [ps.fL, ps.fR]) { const [fx, fy] = J(f); px(fx - 2, fy - 1, 4, 2, CM.Z); px(fx - 2, fy + 1, 4, 1, CM.R); }
+  px(bx - 4, by - 10, 9, 10, CM.P); px(bx + 4, by - 10, 1, 10, CM.Q); rows(["X.X", "XXX", ".X."], bx - 1, by - 7, { X: CM.W });
+  px(bx - 4, by - 1, 9, 2, CM.L);
+  const hx = bx - 5, hy = Math.round(by - 21 + (ps.hy || 0));
+  px(bx - 1, by - 11, 3, 1, CM.S);
+  rows(maiteHead({ mouth: ps.mouth, hearts: ps.hearts || flags.hearts, blush: ps.blush || flags.blush }), hx, hy, CM);
+  if (a.prop === "heartSign") { const hy2 = Math.round(by + ps.hL[1]); rows(HEART7, bx - 3, hy2 - 7, { X: "#ff2d6f" }); }
+  for (const [sx, e, h] of [[-5, ps.eL, ps.hL], [5, ps.eR, ps.hR]]) {
+    const sh = J([sx, -9]), el = J(e), ha = J(h);
+    line(sh, el, 2, CM.S); line(el, ha, 2, CM.S); line(sh, [lerp(sh[0], el[0], .45), lerp(sh[1], el[1], .45)], 3, CM.P);
+    px(ha[0] - 1, ha[1] - 1, 2, 2, CM.S);
+    handProp(a, sx, ha, bx, by, ps, at, CM.S);
+  }
+}
 // la cuerda de saltar: pasa por arriba de la cabeza y por debajo de los pies
 function drawRope(bx, by, ps, at) {
   const ph = at / 600 * Math.PI * 2, L = [bx + ps.hL[0], by + ps.hL[1]], R = [bx + ps.hR[0], by + ps.hR[1]], my = lerp(by - 31, GROUND + 2, (1 - Math.cos(ph)) / 2), cy = 2 * my - (L[1] + R[1]) / 2;
@@ -804,7 +900,11 @@ function drawParts() {
 
 // qué está haciendo mini Diego
 const flags = { hearts: false, blush: false };
-const dg = { x: -14, anim: "walk", t0: 0, base: "daily", until: 0, next: null, charge: 0, lock: false };
+const dg = { x: -14, anim: "walk", t0: 0, base: "daily", until: 0, next: null, charge: 0, lock: false, ready: false };
+const mt = { x: -16, tx: -16, vis: false, timer: 0 };   // mini Maite: llega a entrenar y a celebrar
+function mtJoin() { clearTimeout(mt.timer); mt.vis = true; mt.tx = 35; }
+function mtLeave(ms = 0) { clearTimeout(mt.timer); mt.timer = setTimeout(() => { if (!rt.on) { mt.vis = false; mt.tx = -18; } }, ms); }
+const DX = () => mt.vis ? 63 : 50;   // dónde se para mini Diego
 let dailyPhase = 0, dailyAt = 0;
 const DAILY_LOOP = [[DAILY, 4200], ["idle", 1500], ["wave", 1400], ["idle", 1200], ["sign", 2600], ["idle", 1200], ["heartHands", 2200], ["idle", 1300],
   ["dance", 2600], ["idle", 1300], ["thumbs", 1500], ["idle", 1200], ["jumprope", 3000], ["idle", 1200], ["flex", 1500]];
@@ -816,7 +916,9 @@ function baseAnim(reset) {
   else if (dg.anim !== dg.base) { dg.anim = dg.base; dg.t0 = t; }
 }
 function tickDiego(t) {
-  if (dg.x < 50) { dg.x = Math.min(50, dg.x + .55); if (dg.x >= 50) { act("wave", 1600); heartPop(50, 30, 3); } return; }
+  if (!dg.ready) { dg.x = Math.min(50, dg.x + .55); if (dg.x >= 50) { dg.ready = true; act("wave", 1600); heartPop(50, 30, 3); } return; }
+  if (Math.abs(dg.x - DX()) > .4) dg.x += Math.sign(DX() - dg.x) * .6;
+  if (Math.abs(mt.x - mt.tx) > .4) mt.x += Math.sign(mt.tx - mt.x) * .8;
   if (dg.fxUntil && t > dg.fxUntil) { dg.fxUntil = 0; if (!dg.until) { flags.hearts = false; flags.blush = false; } }
   if (dg.until && t > dg.until) { dg.until = 0; flags.hearts = false; flags.blush = false; const n = dg.next; dg.next = null; if (n) n(); else baseAnim(true); }
   if (!dg.until && !dg.lock && dg.base === "daily" && t - dailyAt > DAILY_LOOP[dailyPhase][1]) { dailyPhase = (dailyPhase + 1) % DAILY_LOOP.length; dailyAt = t; baseAnim(false); }
@@ -830,7 +932,9 @@ function frame(t) {
   drawRoom(t);
   const a = ANIM[dg.anim], ps = poseAt(dg.anim, t - dg.t0);
   if (a.aura) { const k = .4 + dg.charge * .6; g.globalAlpha = .35 * k; px(dg.x - 12, 30, 24, 40, "#ffe066"); g.globalAlpha = 1; }
-  drawDiego(dg.x + (a.aura ? (Math.random() - .5) * dg.charge * 1.2 : 0), ps, a, t, t - dg.t0);
+  if (mt.x > -15) { const mv = Math.abs(mt.x - mt.tx) > .4; drawMaite(mt.x, mv ? poseAt("walk", t) : ps, mv ? ANIM.walk : a, t, t - dg.t0); }
+  const dmv = dg.ready && Math.abs(dg.x - DX()) > .4;
+  drawDiego(dg.x + (a.aura ? (Math.random() - .5) * dg.charge * 1.2 : 0), dmv ? poseAt("walk", t) : ps, dmv ? ANIM.walk : a, t, t - dg.t0);
   drawParts();
   cx.imageSmoothingEnabled = false; cx.drawImage(lo, 0, 0, cv.width, cv.height);
   requestAnimationFrame(frame);
@@ -910,6 +1014,7 @@ function celebrate(line, waText) {
   say(line); const w = $("#waLink"); w.href = wa(waText); w.hidden = false; checkBadges();
 }
 function goGym() {
+  mtJoin(); mtLeave(7000); setTimeout(() => heartPop(44, 30, 8), 900);
   const nuevo = markDay("gym");
   celebrate(nuevo ? rot(CELEB, 5) : "¡Ya estás marcada por hoy! Anda tranquila, que te espero con un abrazo.",
     `¡Voy al gym! 💪 Aunque no tenía ganas, mini Diego me convenció. Llevo ${starCount()} ⭐`);
@@ -942,8 +1047,9 @@ const SPOTS = [
 ];
 const TAP_ANIMS = ["kiss", "heartHands", "dance", "thumbs", "flex", "wave"];
 cv.addEventListener("click", e => {
-  if (dg.x < 50) return;
+  if (!dg.ready) return;
   const r = cv.getBoundingClientRect(), lx = (e.clientX - r.left) / r.width * LW, ly = (e.clientY - r.top) / r.height * LH + OY;
+  if (mt.vis && e.clientX && Math.abs(lx - mt.x) < 8 && ly > 32 && ly < 72) { SND.kiss(); buzz(8); heartPop(mt.x, 32, 4); if (!rt.on) say(MT_TAPS[(st.taps = (st.taps || 0) + 1) % MT_TAPS.length]); persist(); return; }
   const spot = e.clientX ? SPOTS.find(q => lx >= q.x0 && lx <= q.x1 && ly >= q.y0 && ly <= q.y1) : null;
   if (spot) { SND.click(); buzz(8); const line = spot.fn(); if (!rt.on) say(line); return; }
   st.taps = (st.taps || 0) + 1; persist(); SND.kiss(); buzz(8);
@@ -979,10 +1085,16 @@ function setBtns(list) {
   box.innerHTML = list.map(([id, label, cls]) => `<button class="key ${cls || ""}" id="${id}">${label}</button>`).join("");
   list.forEach(([id, , , fn]) => $("#" + id).addEventListener("click", fn));
 }
-function runClock() { scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); rt.on = true; rt.paused = false; rt.active = 0; rt.minSaid = 0; rt.since = 0; rt.seriesT = 0; clearInterval(rt.timer); rt.last = performance.now(); rt.timer = setInterval(rtTick, 100); show("#routine"); $("#rtBarBox").hidden = false; }
-function stopTimer() { rt.on = false; rt.running = false; clearInterval(rt.timer); setBase("daily"); }
+function runClock() { mtJoin(); scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); rt.on = true; rt.paused = false; rt.active = 0; rt.minSaid = 0; rt.since = 0; rt.seriesT = 0; clearInterval(rt.timer); rt.last = performance.now(); rt.timer = setInterval(rtTick, 100); show("#routine"); $("#rtBarBox").hidden = false; }
+function stopTimer() { rt.on = false; rt.running = false; clearInterval(rt.timer); setBase("daily"); SND.musicOff(); }
+function musicFor() {
+  const btn = $("#rtMus"); btn.setAttribute("aria-pressed", st.music); btn.textContent = st.music ? "♫ MÚSICA" : "♫ SIN MÚSICA";
+  if (!rt.on || rt.paused || !st.music) return SND.musicOff();
+  const s = rt.steps[rt.i]; SND.musicOn(rt.plan === "estirar" || (s && (s.kind === "rest" || s.kind === "prep")) || (rt.mode === "series" && rt.running) ? "suave" : "ritmo");
+}
+$("#rtMus").addEventListener("click", () => { st.music = !st.music; persist(); SND.click(); musicFor(); });
 function togglePause() {
-  rt.paused = !rt.paused; SND.click(); $("#rtPause").textContent = rt.paused ? "SEGUIR" : "PAUSA";
+  rt.paused = !rt.paused; SND.click(); $("#rtPause").textContent = rt.paused ? "SEGUIR" : "PAUSA"; musicFor();
   if (rt.paused) { setBase("idle"); baseAnim(true); say("Pausa. Respira, que aquí te espero."); } else { setBase(curAnim()); baseAnim(true); }
 }
 function curAnim() { const s = rt.steps[rt.i]; if (rt.mode === "up") return DAILY; if (!s) return "idle"; return s.kind === "ex" ? s.ex.anim : s.kind === "rest" ? (s.secs > 5 ? "drink" : "idle") : s.kind === "walk" ? "walkslow" : "idle"; }
@@ -1004,12 +1116,12 @@ function startWalk(min) {
 function nextStep() {
   rt.i++; const s = rt.steps[rt.i];
   if (!s) return endTimer(true);
-  rt.left = s.secs; rt.beeped = 4; rt.since = 0;
+  rt.left = s.secs; rt.beeped = 4; rt.since = 0; setTimeout(musicFor, 0);
   const cur = s.kind === "ex" ? s.n : (rt.steps.slice(rt.i).find(x => x.kind === "ex")?.n ?? 99);   // el ejercicio que toca (o el que viene)
   [...$("#rtDots").children].forEach((d, k) => { d.className = k < cur ? "done" : k === cur && s.kind === "ex" ? "now" : ""; });
   $("#rtBarBox").classList.toggle("rest", s.kind === "rest" || s.kind === "prep");
   dg.until = 0;
-  if (s.kind === "prep") { $("#rtStep").textContent = "¡PREPÁRATE!"; setBase("idle"); act("wave", 1500); say(rt.mode === "walk" ? `Vamos a caminar ${s === rt.steps[0] ? rt.steps[1].min : ""} minutos. Cada minuto te voy a decir algo. Si quieres, ponte audífonos con tu música.` : PLANS[rt.plan].intro()); }
+  if (s.kind === "prep") { $("#rtStep").textContent = "¡PREPÁRATE!"; setBase("idle"); act("wave", 1500); say(rt.mode === "walk" ? `Vamos a caminar ${s === rt.steps[0] ? rt.steps[1].min : ""} minutos. Cada minuto te voy a decir algo. Si quieres, ponte audífonos con tu música.` : PLANS[rt.plan].intro(), { greet: "Mini Maite vino a entrenar con nosotros" }); }
   else if (s.kind === "ex") { $("#rtStep").textContent = `EJERCICIO ${s.n + 1} DE ${s.total}`; SND.go(); buzz(30); setBase(s.ex.anim); baseAnim(true); say(`${s.ex.name}. ${s.ex.tip}`, { greet: s.n === s.total - 1 ? "El último" : s.n === 0 ? "¡Partimos!" : s.n === Math.floor(s.total / 2) ? "¡Vas en la mitad!" : "" }); }
   else if (s.kind === "rest") { $("#rtStep").textContent = s.secs > 5 ? "DESCANSO" : "CAMBIAMOS"; SND.soft(); setBase(s.secs > 5 ? "drink" : "idle"); baseAnim(true); say(s.secs > 5 ? `Toma agüita y respira. Lo que viene: ${s.nextEx.name.toLowerCase()}.` : `Ahora: ${s.nextEx.name.toLowerCase()}.`, { greet: s.secs > 5 ? BOOSTS[md(D * 13 + rt.i * 3, BOOSTS.length)] : "" }); }
   else if (s.kind === "walk") { SND.go(); buzz(30); setBase("walkslow"); baseAnim(true); say(`¡A caminar! ${WALK_LINES[md(D, WALK_LINES.length)]}`, { greet: `Caminata de ${s.min} minutos` }); }
@@ -1019,19 +1131,19 @@ function nextStep() {
 function startUp() {
   rt.mode = "up"; rt.plan = ""; rt.steps = []; rt.up = 0; rt.walkMin = 0; $("#rtDots").innerHTML = ""; $("#rtBarBox").classList.remove("rest");
   setBtns([["rtPause", "PAUSA", "key--sun", togglePause], ["rtReset", "REINICIAR", "key--ghost", () => { SND.click(); rt.up = 0; rt.active = 0; rt.walkMin = 0; rtRender(); say("Desde cero. ¡Vamos de nuevo!"); }], ["rtExit", "TERMINAR", "key--mint", () => endTimer(true)]]);
-  runClock(); $("#rtStep").textContent = "CRONÓMETRO"; dg.until = 0; setBase(DAILY); baseAnim(true);
+  runClock(); musicFor(); $("#rtStep").textContent = "CRONÓMETRO"; dg.until = 0; setBase(DAILY); baseAnim(true);
   say("Tú pones el ritmo: haz lo que quieras y yo te cuento el tiempo. Desde 1 minuto ganas tu estrella."); rtRender();
 }
 // descanso entre series (para usarlo en el gym)
 function startSeries() {
   rt.mode = "series"; rt.plan = ""; rt.serie = 0; rt.running = false; rt.restSecs = st.serie || 60; $("#rtDots").innerHTML = ""; $("#rtBarBox").classList.add("rest");
-  runClock(); seriesBtns(); $("#rtStep").textContent = "ENTRE SERIES"; dg.until = 0; setBase("pesas"); baseAnim(true);
+  runClock(); seriesBtns(); musicFor(); $("#rtStep").textContent = "ENTRE SERIES"; dg.until = 0; setBase("pesas"); baseAnim(true);
   say("Cuando termines una serie, aprieta DESCANSAR y yo te cuento el descanso. Te aviso cuando toque la siguiente."); rtRender();
 }
 function seriesBtns() {
   setBtns([...[45, 60, 90].map(n => [`rtS${n}`, `${n} S`, rt.restSecs === n ? "sel" : "key--ghost", () => { SND.click(); rt.restSecs = n; st.serie = n; persist(); if (rt.running) rt.left = n; seriesBtns(); rtRender(); }]),
     ["rtGo", rt.running ? "SALTAR" : "DESCANSAR", "key--mint big", () => { if (rt.running) { rt.left = 0; return; } rt.serie++; rt.running = true; rt.left = rt.restSecs; rt.beeped = 4; rt.since = 0; st.stats.series++; persist(); checkBadges(); SND.soft(); setBase("drink"); baseAnim(true);
-      $("#rtStep").textContent = `DESCANSO · SERIE ${rt.serie}`; say(SERIES_LINES[md(D + rt.serie, SERIES_LINES.length)]); seriesBtns(); rtRender(); }],
+      $("#rtStep").textContent = `DESCANSO · SERIE ${rt.serie}`; musicFor(); say(SERIES_LINES[md(D + rt.serie, SERIES_LINES.length)]); seriesBtns(); rtRender(); }],
     ["rtExit", "SALIR", "key--ghost big", () => endTimer(false)]]);
 }
 function rtRender() {
@@ -1052,7 +1164,7 @@ function rtTick() {
     if (mm > rt.minSaid && rt.since >= 4 && (!rt.running || rt.left >= 4)) { rt.minSaid = mm; minuteLine(mm, "en el gym"); }
     if (!rt.running) return rtRender(); rt.left -= dt; const c = Math.ceil(rt.left);
     if (c <= 3 && c >= 1 && c < rt.beeped) { rt.beeped = c; SND.beep(); }
-    if (rt.left <= 0) { rt.running = false; rt.since = 0; SND.go(); buzz([200, 100, 200]); act("cheer", 1600); setBase("pesas"); $("#rtStep").textContent = `SERIE ${rt.serie + 1}`; say(`¡A la siguiente serie! ${BOOSTS[md(D * 5 + rt.serie, BOOSTS.length)]}`); seriesBtns(); }
+    if (rt.left <= 0) { rt.running = false; rt.since = 0; musicFor(); SND.go(); buzz([200, 100, 200]); act("cheer", 1600); setBase("pesas"); $("#rtStep").textContent = `SERIE ${rt.serie + 1}`; say(`¡A la siguiente serie! ${BOOSTS[md(D * 5 + rt.serie, BOOSTS.length)]}`); seriesBtns(); }
     return rtRender();
   }
   const s = rt.steps[rt.i]; rt.left -= dt; if (s && s.kind !== "prep") rt.active += dt;
@@ -1068,6 +1180,8 @@ function rtTick() {
 }
 function endTimer(done) {
   const secs = rt.active, mode = rt.mode, plan = rt.plan; stopTimer();
+  if (mode !== "series") { st.mins[KEY] = (st.mins[KEY] || 0) + secs / 60; persist(); renderStars(); }   // minutos con mini Diego
+  mtLeave(secs < 59.5 || mode === "series" ? 1800 : 7000);
   if (mode === "series") { show("#padNo"); say(`¡Bien entrenado! Hiciste ${rt.serie} serie${rt.serie === 1 ? "" : "s"}. Si todavía no lo marcas, aprieta ¡Voy al gym! para ganar tu estrella.`); return; }
   if (secs < 59.5) { show("#padNo"); act("hug", 2000, null, { hearts: true }); say("Está bien, mi amor. Desde 1 minuto ya ganas tu estrella; cuando quieras lo intentamos de nuevo."); return; }
   if (done && mode === "plan") st.stats.done[plan] = true;
@@ -1099,6 +1213,10 @@ const ICONS = {
   flame: ["...X....", "...XX...", "..XXX...", ".XXXX.X.", ".XXXXXX.", "XXXOOXXX", "XXOOOOXX", ".XXXXXX."],
   sun: ["...X....", ".X.X.X..", "..XXX...", "XXXXXXX.", "..XXX...", ".X.X.X..", "...X....", "........"],
   ticket: ["........", "XXXXXXXX", "X.X..X.X", "XXX..XXX", "XXX..XXX", "X.X..X.X", "XXXXXXXX", "........"],
+  drop: ["...X....", "...X....", "..XXX...", ".XXXXX..", ".XXOXX..", ".XXXXX..", "..XXX...", "........"],
+  chat: ["XXXXXXX.", "X.....X.", "X.X.X.X.", "X.....X.", "XXXXXXX.", ".XX.....", "X.......", "........"],
+  vasoV: ["X......X", "X......X", "X......X", ".X....X.", ".X....X.", ".X....X.", "..XXXX..", "........"],
+  vasoL: ["X......X", "XOOOOOOX", "XOOOOOOX", ".XOOOOX.", ".XOOOOX.", ".XOOOOX.", "..XXXX..", "........"],
   dot: ["........", "........", "........", "...XX...", "...XX...", "........", "........", "........"],
 };
 function paintIcon(c, name, col, col2) { const k = c.getContext("2d"); k.clearRect(0, 0, 8, 8); ICONS[name].forEach((r, j) => [...r].forEach((v, i) => { if (v !== ".") { k.fillStyle = v === "O" ? (col2 || "#fff") : col; k.fillRect(i, j, 1, 1); } })); }
@@ -1115,6 +1233,9 @@ function renderStars() {
     c.setAttribute("aria-label", v === "gym" ? "fue al gym" : v === "mini" ? "hizo un cronómetro" : v === "rest" ? "descanso" : "sin marcar"); c.setAttribute("role", "img"); });
   const sk = streak(); paintIcon($("#flameIc"), "flame", sk ? "#ff7a3d" : (cs.getPropertyValue("--muted").trim() || "#8a5a7f"), "#ffd166");
   $("#streakTxt").textContent = sk ? `Racha: ${sk} día${sk > 1 ? "s" : ""} seguido${sk > 1 ? "s" : ""}` : "Gana una estrella hoy para empezar tu racha.";
+  const wkDays = DOW.map((_, i) => { const d = new Date(mon); d.setDate(mon.getDate() + i); return ymd(d); });
+  const wkStars = wkDays.filter(k => isStar(st.days[k])).length, wkMin = Math.round(wkDays.reduce((a, k) => a + (st.mins[k] || 0), 0)), tot = Math.round(totalMins());
+  $("#resumen").textContent = `Esta semana: ${wkStars} estrella${wkStars === 1 ? "" : "s"} y ${wkMin} minuto${wkMin === 1 ? "" : "s"} con mini Diego. En total: ${tot} minuto${tot === 1 ? "" : "s"}.`;
   const nx = VALES.find(([t]) => n < t);
   if (nx) { const prev = [...VALES].reverse().find(([t]) => n >= t)?.[0] || 0; $("#nextTxt").textContent = `Próximo vale: ${nx[1].toLowerCase()}`; $("#nextNum").textContent = `${n}/${nx[0]} ★`; $("#meter").style.width = ((n - prev) / (nx[0] - prev)) * 100 + "%"; }
   else { $("#nextTxt").textContent = "¡Desbloqueaste todos los vales!"; $("#nextNum").textContent = `${n} ★`; $("#meter").style.width = "100%"; }
@@ -1128,7 +1249,9 @@ const gymCount = () => Object.values(st.days).filter(v => v === "gym").length;
 const BADGE_TEST = { primera: () => starCount() >= 1, racha3: () => streak() >= 3, racha7: () => streak() >= 7, gym5: () => gymCount() >= 5, gym15: () => gymCount() >= 15,
   uno: () => st.stats.done.uno, diez: () => st.stats.done.diez, estirar: () => st.stats.done.estirar, caminata: () => st.stats.done.caminata, libre20: () => st.stats.libreMax >= 1200,
   series20: () => st.stats.series >= 20, temprano: () => st.stats.early, noche: () => st.stats.late, carinosa: () => (st.taps || 0) >= 25, energia: () => st.stats.charges >= 10,
-  vale: () => Object.keys(st.claimed).length > 0 };
+  vale: () => Object.keys(st.claimed).length > 0, hidratada: () => Object.values(st.water).some(v => v >= 8), cien: () => totalMins() >= 100,
+  quinientos: () => totalMins() >= 500, mensajito: () => (st.stats.msgs || 0) > 0 };
+const totalMins = () => Object.values(st.mins).reduce((a, b) => a + b, 0);
 function checkBadges() {   // las medallas nuevas se entregan en el globo, después de lo que esté diciendo mini Diego
   const nuevas = BADGES.filter(([id]) => !st.badges[id] && BADGE_TEST[id]());
   if (!nuevas.length) return 0;
@@ -1137,7 +1260,7 @@ function checkBadges() {   // las medallas nuevas se entregan en el globo, despu
   if (!typing) afterType();
   return nuevas.length;
 }
-const BADGE_COL = { star: "#e8a400", flame: "#ff7a3d", dumbbell: "#6c7a99", bolt: "#f2b705", person: "#8a70e0", shoe: "#2fbf94", clock: "#3f98dd", sun: "#ffb020", moon: "#8a70e0", heart: "#ff4f8b", ticket: "#ff5c98" };
+const BADGE_COL = { drop: "#3f98dd", chat: "#ff5c98", star: "#e8a400", flame: "#ff7a3d", dumbbell: "#6c7a99", bolt: "#f2b705", person: "#8a70e0", shoe: "#2fbf94", clock: "#3f98dd", sun: "#ffb020", moon: "#8a70e0", heart: "#ff4f8b", ticket: "#ff5c98" };
 function renderBadges() {
   const got = BADGES.filter(([id]) => st.badges[id]).length, muted = getComputedStyle(document.documentElement).getPropertyValue("--muted").trim() || "#8a5a7f";
   $("#mdCount").textContent = `${got}/${BADGES.length}`;
@@ -1149,6 +1272,21 @@ function renderBadges() {
       $("#badgeInfo").textContent = on ? `${name}: ${line} Ganada el ${d.getDate()} de ${MESES[d.getMonth()]}.` : `Para ganarla: ${how}`; });
   });
 }
+function renderWater() {
+  const n = st.water[KEY] || 0, ink = getComputedStyle(document.documentElement).getPropertyValue("--text").trim() || "#3b1838";
+  $("#vasos").innerHTML = Array.from({ length: 8 }, (_, i) => `<button class="vaso${i < n ? " lleno" : ""}" data-i="${i}" aria-label="Vaso ${i + 1}${i < n ? ", tomado" : ""}"><canvas width="8" height="8" aria-hidden="true"></canvas></button>`).join("");
+  $("#vasos").querySelectorAll(".vaso").forEach(b => { const i = +b.dataset.i; paintIcon(b.querySelector("canvas"), i < n ? "vasoL" : "vasoV", ink, "#3f98dd");
+    b.addEventListener("click", () => {
+      const m = i < n ? i : i + 1; st.water[KEY] = m; persist(); renderWater();
+      if (m > n) { SND.glug(); buzz(10); if (dg.ready && !rt.on) act("drink", 1600); $("#awMsg").textContent = AGUA[m - 1];
+        if (m === 8) { SND.fanfare(); confetti(40); fireworks(2); heartPop(dg.x, 30, 6); } checkBadges(); }
+      else $("#awMsg").textContent = m ? `Listo, quedaste en ${m} vaso${m > 1 ? "s" : ""}.` : "Toca un vaso cada vez que tomes agua. La meta son 8.";
+    }); });
+}
+function renderChips() {
+  $("#chips").innerHTML = CHIPS.map(([l, m]) => `<a class="chip" href="${wa(m)}" target="_blank" rel="noopener">${l}</a>`).join("");
+  $("#chips").querySelectorAll("a").forEach(a => a.addEventListener("click", () => { st.stats.msgs = (st.stats.msgs || 0) + 1; persist(); SND.kiss(); setTimeout(checkBadges, 300); }));
+}
 function renderFoot() {
   const n = now(), m = new Date(n); m.setHours(24, 0, 0, 0); const mins = Math.max(1, Math.round((m - n) / 60000));
   $("#foot").innerHTML = `Mañana mini Diego trae un mensaje nuevo · <b>${mins >= 60 ? `${Math.floor(mins / 60)} h ${mins % 60} min` : `${mins} min`}</b>`;
@@ -1158,9 +1296,9 @@ function renderFoot() {
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 $("#fecha").textContent = `${DIAS[TODAY.getDay()]} ${TODAY.getDate()} de ${MESES[TODAY.getMonth()]}`;
-$("#muteBtn").addEventListener("click", () => { st.mute = !st.mute; persist(); $("#muteBtn").setAttribute("aria-pressed", st.mute); $("#muteBtn").setAttribute("aria-label", st.mute ? "Activar sonidos" : "Silenciar sonidos"); if (!st.mute) SND.click(); });
+$("#muteBtn").addEventListener("click", () => { st.mute = !st.mute; persist(); SND.muteAll(st.mute); $("#muteBtn").setAttribute("aria-pressed", st.mute); $("#muteBtn").setAttribute("aria-label", st.mute ? "Activar sonidos" : "Silenciar sonidos"); if (!st.mute) SND.click(); });
 $("#muteBtn").setAttribute("aria-pressed", st.mute);
-fit(); renderStars(); renderBadges(); renderFoot(); setInterval(renderFoot, 30000);
+fit(); renderStars(); renderBadges(); renderWater(); renderChips(); renderFoot(); setInterval(renderFoot, 30000);
 if (firstTime) { say(INTRO, { greet: "¡Hola!" }); queue.push(showDaily); } else showDaily();
 if (checkBadges()) queue.push(showDaily);   // después de las medallas, se puede volver al mensaje del día
 requestAnimationFrame(frame);
