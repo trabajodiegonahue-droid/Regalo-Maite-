@@ -101,6 +101,15 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 .rt-dots i.now { background: var(--sun); box-shadow: inset 0 0 0 2px var(--plum); }
 .rt-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 .rt-btns .key { grid-template-columns: 1fr; text-align: center; min-height: 44px; padding: 8px 6px 11px; font: 700 .62rem/1.1 var(--f-pix); }
+.rt-btns.two { grid-template-columns: 1fr 1fr; }
+.rt-btns.many { grid-template-columns: repeat(6, 1fr); }
+.rt-btns.many .key { grid-column: span 2; min-height: 38px; } .rt-btns.many .key.big { grid-column: span 3; min-height: 44px; }
+.key.sel { --c: var(--sun); --c-dk: var(--sun-dk); }
+.pad--menu { gap: 8px 10px; }
+.pad--menu .key { min-height: 50px; padding: 7px 9px 10px; font-size: .95rem; }
+.pad--three { grid-template-columns: repeat(3, 1fr); }
+.pad--three .key { grid-template-columns: 1fr; text-align: center; font: 700 .8rem/1.1 var(--f-pix); }
+.tools { display: flex; gap: 10px; }
 
 /* estrellas */
 .card { background: var(--card); padding: 16px; display: grid; gap: 12px;
@@ -133,7 +142,7 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 <div class="wrap">
   <header class="top">
     <div class="brand"><span class="logo">MINI DIEGO</span><span class="sub" id="fecha"></span></div>
-    <button class="icon" id="muteBtn" aria-label="Silenciar sonidos" aria-pressed="false">♪</button>
+    <div class="tools"><button class="icon" id="clockBtn" aria-label="Cronómetros"><canvas class="ic hdr" data-ic="clock" width="8" height="8" style="width:20px;height:20px;image-rendering:pixelated"></canvas></button><button class="icon" id="muteBtn" aria-label="Silenciar sonidos" aria-pressed="false">♪</button></div>
   </header>
 
   <section class="device" aria-label="Mini Diego, tu entrenador de bolsillo">
@@ -158,10 +167,23 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
       <button class="key key--lav" id="bNo"><canvas class="ic" data-ic="moon" width="8" height="8"></canvas><span>No tengo ganas</span></button>
     </div>
 
-    <div class="pad" id="padNo" hidden>
-      <button class="key key--mint key--wide" id="bMini"><canvas class="ic" data-ic="clock" width="8" height="8"></canvas><span>5 minutos contigo<small>Aquí mismo, sin ir al gym</small></span></button>
-      <button class="key key--lav" id="bRest"><canvas class="ic" data-ic="moon" width="8" height="8"></canvas><span>Necesito descansar</span></button>
-      <button class="key key--ghost" id="bBack1">◀ VOLVER</button>
+    <div class="pad pad--menu" id="padNo" hidden>
+      <button class="key key--sun" data-plan="uno"><canvas class="ic" data-ic="bolt" width="8" height="8"></canvas><span>1 minuto<small>Cero ganas</small></span></button>
+      <button class="key key--mint" data-plan="cinco"><canvas class="ic" data-ic="heart" width="8" height="8"></canvas><span>5 minutos<small>Rutina conmigo</small></span></button>
+      <button class="key" data-plan="diez"><canvas class="ic" data-ic="star" width="8" height="8"></canvas><span>10 minutos<small>Un poquito más</small></span></button>
+      <button class="key key--lav" data-plan="estirar"><canvas class="ic" data-ic="person" width="8" height="8"></canvas><span>Solo estirar<small>5 min suavecito</small></span></button>
+      <button class="key key--mint" id="bWalk"><canvas class="ic" data-ic="shoe" width="8" height="8"></canvas><span>Caminata<small>10, 20 o 30 min</small></span></button>
+      <button class="key key--sun" id="bUp"><canvas class="ic" data-ic="clock" width="8" height="8"></canvas><span>Cronómetro<small>Tú pones el ritmo</small></span></button>
+      <button class="key" id="bSeries"><canvas class="ic" data-ic="dumbbell" width="8" height="8"></canvas><span>Entre series<small>Para el gym</small></span></button>
+      <button class="key key--lav" id="bRest"><canvas class="ic" data-ic="moon" width="8" height="8"></canvas><span>Descansar<small>Sin culpa</small></span></button>
+      <button class="key key--ghost key--wide" id="bBack1">◀ VOLVER</button>
+    </div>
+
+    <div class="pad pad--three" id="padWalk" hidden>
+      <button class="key key--mint" data-walk="10">10 MIN</button>
+      <button class="key key--mint" data-walk="20">20 MIN</button>
+      <button class="key key--mint" data-walk="30">30 MIN</button>
+      <button class="key key--ghost key--wide" id="bBack3" style="grid-column:1/-1">◀ VOLVER</button>
     </div>
 
     <div class="pad" id="padDone" hidden>
@@ -173,17 +195,13 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
       <div class="rt-head"><span class="rt-step" id="rtStep">EJERCICIO 1 DE 5</span><span class="rt-time" id="rtTime">0:45</span></div>
       <div class="rt-bar" id="rtBarBox"><i id="rtBar"></i></div>
       <div class="rt-dots" id="rtDots" aria-hidden="true"></div>
-      <div class="rt-btns">
-        <button class="key key--sun" id="rtPause">PAUSA</button>
-        <button class="key key--mint" id="rtNext">SIGUIENTE</button>
-        <button class="key key--ghost" id="rtExit">SALIR</button>
-      </div>
+      <div class="rt-btns" id="rtBtns"></div>
     </div>
   </section>
 
   <section class="card" aria-labelledby="stTitle">
     <h2 id="stTitle">TUS ESTRELLAS</h2>
-    <p>Ganas una por cada día que vas al gym o haces los 5 minutos con mini Diego. Con las estrellas se desbloquean vales para cobrarle al Diego de verdad.</p>
+    <p>Ganas una por cada día que vas al gym o completas un cronómetro con mini Diego, desde 1 minuto. Con las estrellas se desbloquean vales para cobrarle al Diego de verdad.</p>
     <div class="week" id="week" aria-label="Esta semana"></div>
     <div class="next">
       <div class="next-row"><span id="nextTxt"></span><b id="nextNum"></b></div>
@@ -286,16 +304,37 @@ const CELEB = [
   "Decidirte cuando no tenías ganas es de valientes. Y tú lo eres.", "¡Lo sabía! Vas a volver sintiéndote increíble.",
 ];
 const DEAL = [
-  "Te entiendo, mi amor. Hagamos un trato: 5 minutitos conmigo aquí mismo. Si al terminar sigues sin ganas, descansas sin culpa.",
-  "Está bien no tener ganas. ¿Me regalas 5 minutos? Yo los hago contigo.",
-  "Ya, no vayamos al gym. Pero muévete 5 minutos conmigo, en pijama si quieres.",
-  "Te propongo algo: 5 minutos, nada más. Muchas veces las ganas aparecen en el minuto 3.",
-  "Hoy pesa, lo sé. Por eso te traje una rutina chiquitita: 5 minutos y quedamos a mano.",
-  "Sin presión, preciosa. Solo 5 minutos para que tu cuerpo despierte. Yo te cuento los segundos.",
-  "No tienes que ir a ningún lado. Hagamos 5 minutos juntos aquí y después decides.",
-  "La flojera es astuta, pero nosotros más. 5 minutos y le ganamos.",
-  "Te confieso algo: yo también tengo flojera. Hagamos 5 minutos juntos y nos sentimos campeones.",
-  "Un secreto: el entrenamiento más corto igual cuenta. Vamos con 5 minutitos.",
+  "Te entiendo, mi amor. Hagamos un trato: elige cuánto, aunque sea 1 minuto. Si al terminar sigues sin ganas, descansas sin culpa.",
+  "Está bien no tener ganas. ¿Me regalas aunque sea un minuto? Yo lo hago contigo.",
+  "Ya, no vayamos al gym. Pero muévete un ratito conmigo, en pijama si quieres.",
+  "Te propongo algo: empieza con poquito. Muchas veces las ganas aparecen en el minuto 3.",
+  "Hoy pesa, lo sé. Por eso te traje cronómetros chiquititos: elige uno y quedamos a mano.",
+  "Sin presión, preciosa. Elige lo que te acomode y yo te cuento los segundos.",
+  "No tienes que ir a ningún lado. Elige algo cortito aquí mismo y después decides.",
+  "La flojera es astuta, pero nosotros más. Un minuto y le ganamos.",
+  "Te confieso algo: yo también tengo flojera. Hagamos algo cortito juntos y nos sentimos campeones.",
+  "Un secreto: el entrenamiento más corto igual cuenta. Elige uno, aunque sea el de 1 minuto.",
+];
+// caminata: algo nuevo cada minuto
+const WALK_LINES = [
+  "Buen ritmo, sigue así.", "Mueve los brazos al caminar, que ayuda harto.", "Respira por la nariz y bota el aire por la boca.", "Cada paso es un paso más cerca de sentirte increíble.",
+  "Si ves algo bonito en el camino, mándame una foto.", "Sube un poquito el ritmo, solo un poquito.", "Derechita y con los hombros relajados. Así, preciosa.",
+  "Te imagino caminando y me dan ganas de acompañarte.", "Si tienes agüita a mano, toma un sorbito.", "Ya llevas más de lo que creías que ibas a hacer.",
+  "Camina como si vinieras a encontrarte conmigo.", "Vas increíble. De verdad, increíble.",
+];
+// descanso entre series en el gym
+const SERIES_LINES = [
+  "Respira. Agüita. Ya viene la siguiente.", "Esa serie estuvo perfecta.", "Sacude los brazos y suelta los hombros.", "Descansa, que la próxima te sale mejor.",
+  "Te estoy mirando con cara de orgullo.", "Una serie menos para terminar.", "Mientras descansas, te mando un beso.", "Tú puedes con una más. Siempre puedes con una más.",
+];
+// estiramientos suaves
+const STRETCHES = [
+  { name: "Respiración profunda", tip: "Sube los brazos inhalando y bájalos botando el aire. Lento, lento.", anim: "breathe" },
+  { name: "Al cielo y a los lados", tip: "Brazos arriba, estírate hacia un lado y después al otro.", anim: "stretch" },
+  { name: "Brazo cruzado", tip: "Cruza un brazo por delante del pecho y sujétalo con el otro. A la mitad, cambia de lado.", anim: "armcross" },
+  { name: "Cuádriceps", tip: "Toma un pie por detrás y llévalo hacia el poto. Si te tambaleas, apóyate en la pared.", anim: "quad" },
+  { name: "Tocar los pies", tip: "Bájate de a poquito hacia los pies, sin rebotar. Hasta donde llegues está bien.", anim: "toes" },
+  { name: "Respiración final", tip: "Ojos cerrados y respira profundo. Te quiero mucho.", anim: "breathe" },
 ];
 const REST = [
   "Descansar también es entrenar. Toma agüita, duerme rico y mañana volvemos con todo.",
@@ -469,6 +508,11 @@ const POSES = {
   charge2: P({ y: 2, kL: [-5, 5], fL: [-6, 10], kR: [5, 5], fR: [6, 10], eL: [-8, -4], hL: [-5, -1], eR: [8, -4], hR: [5, -1], mouth: "tired" }),
   sit1: P({ y: 9, kL: [-6, 0], fL: [1, 2], kR: [6, 0], fR: [-1, 2], eL: [-7, -4], hL: [-6, -1], eR: [7, -4], hR: [6, -1], mouth: "tired", hy: 1 }),
   sit2: P({ y: 9, kL: [-6, 0], fL: [1, 2], kR: [6, 0], fR: [-1, 2], eL: [-7, -4], hL: [-6, -1], eR: [7, -4], hR: [6, -1], mouth: "tired", hy: 2 }),
+  breatheDown: P({ mouth: "oh" }), breatheUp: P({ eL: [-4, -14], hL: [-2, -21], eR: [4, -14], hR: [2, -21], mouth: "oh" }),
+  armcross1: P({ eR: [2, -6], hR: [-7, -7], eL: [-6, -4], hL: [0, -5] }), armcross2: P({ eL: [-2, -6], hL: [7, -7], eR: [6, -4], hR: [0, -5] }),
+  quad1: P({ kR: [2, 6], fR: [5, 2], eR: [7, -3], hR: [6, 2], eL: [-8, -6], hL: [-12, -8] }), quad2: P({ kL: [-2, 6], fL: [-5, 2], eL: [-7, -3], hL: [-6, 2], eR: [8, -6], hR: [12, -8] }),
+  toes1: P({ y: 2, hy: 3, kL: [-2, 5], fL: [-2, 10], kR: [2, 5], fR: [2, 10], eL: [-5, 0], hL: [-3, 7], eR: [5, 0], hR: [3, 7], mouth: "tired" }),
+  toes2: P({ y: 3, hy: 4, kL: [-2, 4], fL: [-2, 9], kR: [2, 4], fR: [2, 9], eL: [-5, 1], hL: [-3, 8], eR: [5, 1], hR: [3, 8], mouth: "tired" }),
   kiss1: P({ eR: [6, -7], hR: [1, -14], mouth: "kiss", blush: true }), kiss2: P({ eR: [9, -10], hR: [14, -13], mouth: "kiss", blush: true }),
 };
 const A = (f, d, extra = {}) => ({ f: f.map(k => POSES[k]), d, ...extra });
@@ -480,7 +524,9 @@ const ANIM = {
   stretch: A(["stretchUp", "stretchL", "stretchUp", "stretchR"], 1100),
   cheer: A(["cheer1", "cheer2"], 230, { prop: "pompom" }), sign: A(["sign1", "sign2"], 500, { prop: "sign" }),
   hug: A(["hug", "hug"], 900), charge: A(["charge1", "charge2"], 70, { aura: true }), rest: A(["sit1", "sit2"], 1300, { zzz: true }),
-  kiss: A(["kiss1", "kiss2"], 360), walk: A(["run1", "run2"], 200), drink: A(["idle", "idle2"], 900, { prop: "bottleR" }),
+  kiss: A(["kiss1", "kiss2"], 360), walk: A(["run1", "run2"], 200), walkslow: A(["run1", "run2"], 420),
+  breathe: A(["breatheDown", "breatheUp"], 2400), armcross: A(["armcross1", "armcross1", "armcross2", "armcross2"], 1400),
+  quad: A(["quad1", "quad1", "quad2", "quad2"], 1400), toes: A(["toes1", "toes2"], 1300), drink: A(["idle", "idle2"], 900, { prop: "bottleR" }),
   circles: { f: [POSES.idle], d: 1000, sweat: true, fn: t => { const a = t / 110, o = { eL: [-9, -10], eR: [9, -10], hL: [-14 + 2 * Math.cos(a), -11 + 2 * Math.sin(a)], hR: [14 - 2 * Math.cos(a), -11 + 2 * Math.sin(a)], mouth: "oh" }; return P(o); } },
 };
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -601,7 +647,7 @@ $("#bubble").addEventListener("click", e => {
 });
 
 /* ====================== botones ====================== */
-const show = id => { for (const p of ["#pad", "#padNo", "#padDone", "#routine"]) $(p).hidden = p !== id; };
+const show = id => { for (const p of ["#pad", "#padNo", "#padWalk", "#padDone", "#routine"]) $(p).hidden = p !== id; };
 const greetText = () => { const h = hourNow(); return `${h >= 5 && h < 12 ? "¡Buenos días" : h >= 12 && h < 20 ? "¡Buenas tardes" : "¡Buenas noches"}, ${rot(PETS, 3)}! ${WEEK[TODAY.getDay()]}`; };
 const showDaily = () => say(rot(MSGS, 37, 11), { greet: greetText() });
 
@@ -658,7 +704,9 @@ function goGym() {
 }
 $("#bVoy").addEventListener("click", goGym);
 $("#bVoy2").addEventListener("click", goGym);
-$("#bNo").addEventListener("click", () => { $("#bRest").hidden = false; SND.soft(); buzz(10); act("hug", 2600, null, { hearts: true, blush: true }); heartPop(dg.x, 32, 4); say(rot(DEAL, 3)); show("#padNo"); });
+function openMenu(line) { $("#bRest").hidden = false; setBase("daily"); show("#padNo"); say(line); setTimeout(() => $("#padNo").scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" }), 60); }
+$("#bNo").addEventListener("click", () => { SND.soft(); buzz(10); openMenu(rot(DEAL, 3)); act("hug", 2600, null, { hearts: true, blush: true }); heartPop(dg.x, 32, 4); });
+$("#clockBtn").addEventListener("click", () => { if (rt.on) { $(".device").scrollIntoView({ block: "nearest", behavior: "smooth" }); return; } SND.click(); openMenu("¿Qué hacemos hoy? Elige un cronómetro: desde 1 minuto hasta una caminata larga."); act("wave", 1400); });
 $("#bBack1").addEventListener("click", () => { SND.click(); show("#pad"); setBase("daily"); act("wave", 1200); showDaily(); });
 $("#bBack2").addEventListener("click", () => { SND.click(); show("#pad"); setBase("daily"); act("kiss", 1400, () => baseAnim(true)); setTimeout(() => heartPop(dg.x + 12, 30, 4), 400); say("Gracias por moverte conmigo hoy. Te amo, mi amor."); });
 $("#bRest").addEventListener("click", () => {
@@ -673,43 +721,127 @@ cv.addEventListener("click", () => {
   if (!rt.on) say(st.taps % 10 === 0 ? "Ya po, deja de hacerme cariño y anda al gym." : TAPS[st.taps % TAPS.length]);
 });
 
-/* ====================== rutina de 5 minutos ====================== */
-const EXS = (() => { const s = md(D * 3, 7); return [0, 2, 4, 6].map(k => EX[(s + k) % 7]).concat(STRETCH); })();
-const rt = { on: false, steps: [], i: 0, left: 0, paused: false, timer: 0, last: 0 };
-function buildSteps() { const s = [{ kind: "prep", secs: 5 }]; EXS.forEach((e, k) => { s.push({ kind: "ex", secs: WORK, ex: e, n: k }); if (k < EXS.length - 1) s.push({ kind: "rest", secs: PAUSE, nextEx: EXS[k + 1] }); }); return s; }
+/* ====================== cronómetros ====================== */
+const EXS = (() => { const s0 = md(D * 3, 7); return [0, 2, 4, 6].map(k => EX[(s0 + k) % 7]); })();   // los 4 ejercicios del día
+const prep = secs => ({ kind: "prep", secs });
+function circuit(list, work, rest) { const out = []; list.forEach((e, k) => { out.push({ kind: "ex", secs: work, ex: e }); if (rest && k < list.length - 1) out.push({ kind: "rest", secs: rest, nextEx: list[k + 1] }); }); return out; }
+const PLANS = {
+  uno: { what: "1 minuto", steps: () => [prep(3), ...circuit([EXS[0], EXS[1], STRETCH], 20, 0)], intro: () => "Un minuto, nada más: tres ejercicios de 20 segundos. Hasta un minuto cuenta.",
+    done: "¡Un minuto hecho! Lo importante es que no dejaste ganar a la flojera." },
+  cinco: { what: "los 5 minutos", steps: () => [prep(5), ...circuit([...EXS, STRETCH], WORK, PAUSE)], intro: () => `Hoy hacemos 5 ejercicios: ${[...EXS, STRETCH].map(e => e.name.toLowerCase()).join(", ")}. ¡Yo los hago contigo!`,
+    done: "¡LO HICISTE! 5 minutos que valen oro." },
+  diez: { what: "10 minutos", steps: () => [prep(5), ...circuit([...EXS, ...EXS, STRETCH], 50, 15)], intro: () => "Dos vueltas a los 4 ejercicios del día y un estiramiento al final. Vamos con calma.",
+    done: "¡10 minutos! Eso ya es un entrenamiento de verdad. Te amo, campeona." },
+  estirar: { what: "5 minutos de estiramiento", steps: () => [prep(3), ...circuit(STRETCHES, 45, 5)], intro: () => "Hoy nada de saltos: solo estirar suavecito. Tu cuerpo te lo va a agradecer.",
+    done: "Estiraste todo. Tu cuerpo te da las gracias, y yo también." },
+};
+const rt = { on: false, mode: "", plan: "", steps: [], i: 0, left: 0, up: 0, active: 0, paused: false, timer: 0, last: 0, walkMin: 0, serie: 0, running: false, restSecs: 60 };
 const fmtT = s => { const c = Math.max(0, Math.ceil(s)); return `${Math.floor(c / 60)}:${String(c % 60).padStart(2, "0")}`; };
-function startRoutine() {
-  rt.on = true; rt.steps = buildSteps(); rt.i = -1; rt.paused = false; show("#routine"); $("#rtPause").textContent = "PAUSA";
-  $("#rtDots").innerHTML = EXS.map(() => "<i></i>").join(""); nextStep(); clearInterval(rt.timer); rt.last = performance.now(); rt.timer = setInterval(rtTick, 100);
+const fmtUp = s => { const c = Math.max(0, Math.floor(s)); return `${Math.floor(c / 60)}:${String(c % 60).padStart(2, "0")}`; };
+function setBtns(list) {
+  const box = $("#rtBtns"); box.className = "rt-btns" + (list.length === 2 ? " two" : list.length > 3 ? " many" : "");
+  box.innerHTML = list.map(([id, label, cls]) => `<button class="key ${cls || ""}" id="${id}">${label}</button>`).join("");
+  list.forEach(([id, , , fn]) => $("#" + id).addEventListener("click", fn));
+}
+function runClock() { scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); rt.on = true; rt.paused = false; rt.active = 0; clearInterval(rt.timer); rt.last = performance.now(); rt.timer = setInterval(rtTick, 100); show("#routine"); $("#rtBarBox").hidden = false; }
+function stopTimer() { rt.on = false; rt.running = false; clearInterval(rt.timer); setBase("daily"); }
+function togglePause() {
+  rt.paused = !rt.paused; SND.click(); $("#rtPause").textContent = rt.paused ? "SEGUIR" : "PAUSA";
+  if (rt.paused) { setBase("idle"); baseAnim(true); say("Pausa. Respira, que aquí te espero."); } else { setBase(curAnim()); baseAnim(true); }
+}
+function curAnim() { const s = rt.steps[rt.i]; if (rt.mode === "up") return DAILY; if (!s) return "idle"; return s.kind === "ex" ? s.ex.anim : s.kind === "rest" ? (s.secs > 5 ? "drink" : "idle") : s.kind === "walk" ? "walkslow" : "idle"; }
+
+// rutinas guiadas: 1, 5 y 10 minutos, y estiramiento
+function startPlan(key) {
+  rt.mode = "plan"; rt.plan = key; rt.steps = PLANS[key].steps(); rt.i = -1;
+  const exs = rt.steps.filter(x => x.kind === "ex"); exs.forEach((x, k) => { x.n = k; x.total = exs.length; });
+  $("#rtDots").innerHTML = exs.map(() => "<i></i>").join("");
+  setBtns([["rtPause", "PAUSA", "key--sun", togglePause], ["rtNext", "SIGUIENTE", "key--mint", () => { SND.click(); if (rt.paused) togglePause(); nextStep(); }], ["rtExit", "SALIR", "key--ghost", () => endTimer(false)]]);
+  runClock(); nextStep();
+}
+// caminata
+function startWalk(min) {
+  rt.mode = "walk"; rt.plan = ""; rt.steps = [prep(3), { kind: "walk", secs: min * 60, min }]; rt.i = -1; rt.walkMin = 0; $("#rtDots").innerHTML = "";
+  setBtns([["rtPause", "PAUSA", "key--sun", togglePause], ["rtExit", "TERMINAR", "key--ghost", () => endTimer(false)]]);
+  runClock(); nextStep();
 }
 function nextStep() {
   rt.i++; const s = rt.steps[rt.i];
-  if (!s) return finishRoutine();
-  rt.left = s.secs; rt.beeped = 4; const dots = [...$("#rtDots").children];
-  dots.forEach((d, k) => { d.className = s.kind === "ex" ? (k < s.n ? "done" : k === s.n ? "now" : "") : (k < (s.nextEx ? EXS.indexOf(s.nextEx) : 0) ? "done" : ""); });
-  $("#rtBarBox").classList.toggle("rest", s.kind !== "ex");
-  if (s.kind === "prep") { $("#rtStep").textContent = "¡PREPÁRATE!"; dg.until = 0; setBase("idle"); act("wave", 1500); say(`Hoy hacemos 5 ejercicios: ${EXS.map(e => e.name.toLowerCase()).join(", ")}. ¡Yo los hago contigo!`); }
-  else if (s.kind === "ex") { $("#rtStep").textContent = `EJERCICIO ${s.n + 1} DE ${EXS.length}`; SND.go(); buzz(30); dg.until = 0; setBase(s.ex.anim); baseAnim(true); say(`${s.ex.name}. ${s.ex.tip}`, { greet: s.n === EXS.length - 1 ? "El último, y es suavecito" : s.n === 0 ? "¡Partimos!" : "" }); }
-  else { $("#rtStep").textContent = "DESCANSO"; SND.soft(); setBase("drink"); baseAnim(true); say(`Toma agüita y respira. Lo que viene: ${s.nextEx.name.toLowerCase()}.`, { greet: BOOSTS[md(D * 13 + rt.i * 3, BOOSTS.length)] }); }
+  if (!s) return endTimer(true);
+  rt.left = s.secs; rt.beeped = 4;
+  const cur = s.kind === "ex" ? s.n : (rt.steps.slice(rt.i).find(x => x.kind === "ex")?.n ?? 99);   // el ejercicio que toca (o el que viene)
+  [...$("#rtDots").children].forEach((d, k) => { d.className = k < cur ? "done" : k === cur && s.kind === "ex" ? "now" : ""; });
+  $("#rtBarBox").classList.toggle("rest", s.kind === "rest" || s.kind === "prep");
+  dg.until = 0;
+  if (s.kind === "prep") { $("#rtStep").textContent = "¡PREPÁRATE!"; setBase("idle"); act("wave", 1500); say(rt.mode === "walk" ? `Vamos a caminar ${s === rt.steps[0] ? rt.steps[1].min : ""} minutos. Cada minuto te voy a decir algo. Si quieres, ponte audífonos con tu música.` : PLANS[rt.plan].intro()); }
+  else if (s.kind === "ex") { $("#rtStep").textContent = `EJERCICIO ${s.n + 1} DE ${s.total}`; SND.go(); buzz(30); setBase(s.ex.anim); baseAnim(true); say(`${s.ex.name}. ${s.ex.tip}`, { greet: s.n === s.total - 1 ? "El último" : s.n === 0 ? "¡Partimos!" : s.n === Math.floor(s.total / 2) ? "¡Vas en la mitad!" : "" }); }
+  else if (s.kind === "rest") { $("#rtStep").textContent = s.secs > 5 ? "DESCANSO" : "CAMBIAMOS"; SND.soft(); setBase(s.secs > 5 ? "drink" : "idle"); baseAnim(true); say(s.secs > 5 ? `Toma agüita y respira. Lo que viene: ${s.nextEx.name.toLowerCase()}.` : `Ahora: ${s.nextEx.name.toLowerCase()}.`, { greet: s.secs > 5 ? BOOSTS[md(D * 13 + rt.i * 3, BOOSTS.length)] : "" }); }
+  else if (s.kind === "walk") { SND.go(); buzz(30); setBase("walkslow"); baseAnim(true); say(`¡A caminar! ${WALK_LINES[md(D, WALK_LINES.length)]}`, { greet: `Caminata de ${s.min} minutos` }); }
   rtRender();
 }
-function rtRender() { const s = rt.steps[rt.i]; if (!s) return; $("#rtTime").textContent = fmtT(rt.left); $("#rtBar").style.width = (1 - rt.left / s.secs) * 100 + "%"; }
+// cronómetro libre (cuenta hacia arriba)
+function startUp() {
+  rt.mode = "up"; rt.plan = ""; rt.steps = []; rt.up = 0; rt.walkMin = 0; $("#rtDots").innerHTML = ""; $("#rtBarBox").classList.remove("rest");
+  setBtns([["rtPause", "PAUSA", "key--sun", togglePause], ["rtReset", "REINICIAR", "key--ghost", () => { SND.click(); rt.up = 0; rt.active = 0; rt.walkMin = 0; rtRender(); say("Desde cero. ¡Vamos de nuevo!"); }], ["rtExit", "TERMINAR", "key--mint", () => endTimer(true)]]);
+  runClock(); $("#rtStep").textContent = "CRONÓMETRO"; dg.until = 0; setBase(DAILY); baseAnim(true);
+  say("Tú pones el ritmo: haz lo que quieras y yo te cuento el tiempo. Desde 1 minuto ganas tu estrella."); rtRender();
+}
+// descanso entre series (para usarlo en el gym)
+function startSeries() {
+  rt.mode = "series"; rt.plan = ""; rt.serie = 0; rt.running = false; rt.restSecs = st.serie || 60; $("#rtDots").innerHTML = ""; $("#rtBarBox").classList.add("rest");
+  runClock(); seriesBtns(); $("#rtStep").textContent = "ENTRE SERIES"; dg.until = 0; setBase("pesas"); baseAnim(true);
+  say("Cuando termines una serie, aprieta DESCANSAR y yo te cuento el descanso. Te aviso cuando toque la siguiente."); rtRender();
+}
+function seriesBtns() {
+  setBtns([...[45, 60, 90].map(n => [`rtS${n}`, `${n} S`, rt.restSecs === n ? "sel" : "key--ghost", () => { SND.click(); rt.restSecs = n; st.serie = n; persist(); if (rt.running) rt.left = n; seriesBtns(); rtRender(); }]),
+    ["rtGo", rt.running ? "SALTAR" : "DESCANSAR", "key--mint big", () => { if (rt.running) { rt.left = 0; return; } rt.serie++; rt.running = true; rt.left = rt.restSecs; rt.beeped = 4; SND.soft(); setBase("drink"); baseAnim(true);
+      $("#rtStep").textContent = `DESCANSO · SERIE ${rt.serie}`; say(SERIES_LINES[md(D + rt.serie, SERIES_LINES.length)]); seriesBtns(); rtRender(); }],
+    ["rtExit", "SALIR", "key--ghost big", () => endTimer(false)]]);
+}
+function rtRender() {
+  if (rt.mode === "up") { $("#rtTime").textContent = fmtUp(rt.up); $("#rtBar").style.width = (rt.up % 60) / 60 * 100 + "%"; return; }
+  if (rt.mode === "series") { $("#rtTime").textContent = fmtT(rt.running ? rt.left : rt.restSecs); $("#rtBar").style.width = rt.running ? (1 - rt.left / rt.restSecs) * 100 + "%" : "0"; return; }
+  const s = rt.steps[rt.i]; if (!s) return; $("#rtTime").textContent = fmtT(rt.left); $("#rtBar").style.width = (1 - rt.left / s.secs) * 100 + "%";
+  if (s.kind === "walk") $("#rtStep").textContent = `CAMINATA · MINUTO ${Math.min(s.min, rt.walkMin + 1)} DE ${s.min}`;
+}
 function rtTick() {
   const t = performance.now(), dt = (t - rt.last) / 1000 * speed(); rt.last = t; if (!rt.on || rt.paused) return;
-  rt.left -= dt; const c = Math.ceil(rt.left);
-  if (c <= 3 && c >= 1 && c < rt.beeped) { rt.beeped = c; SND.beep(); }
+  if (rt.mode === "up") {
+    rt.up += dt; rt.active += dt; const m = Math.floor(rt.up / 60);
+    if (m > rt.walkMin) { rt.walkMin = m; SND.boost(); buzz(20); act("cheer", 1500); heartPop(dg.x, 30, 3); say(`¡${m} minuto${m > 1 ? "s" : ""}! ${BOOSTS[md(D * 7 + m, BOOSTS.length)]}`, { greet: m === 1 ? "Ya ganaste tu estrella de hoy" : "" }); }
+    return rtRender();
+  }
+  if (rt.mode === "series") {
+    if (!rt.running) return; rt.left -= dt; const c = Math.ceil(rt.left);
+    if (c <= 3 && c >= 1 && c < rt.beeped) { rt.beeped = c; SND.beep(); }
+    if (rt.left <= 0) { rt.running = false; SND.go(); buzz([200, 100, 200]); act("cheer", 1600); setBase("pesas"); $("#rtStep").textContent = `SERIE ${rt.serie + 1}`; say(`¡A la siguiente serie! ${BOOSTS[md(D * 5 + rt.serie, BOOSTS.length)]}`); seriesBtns(); }
+    return rtRender();
+  }
+  const s = rt.steps[rt.i]; rt.left -= dt; if (s && s.kind !== "prep") rt.active += dt;
+  const c = Math.ceil(rt.left);
+  if (c <= 3 && c >= 1 && c < rt.beeped && s?.kind !== "walk") { rt.beeped = c; SND.beep(); }
+  if (s?.kind === "walk") {
+    const m = Math.floor((s.secs - rt.left) / 60);
+    if (m > rt.walkMin && rt.left > 0) { rt.walkMin = m; SND.boost(); buzz(20); heartPop(dg.x, 30, 2);
+      say(m === s.min - 1 ? "¡Último minuto! Termina con todo." : m * 2 === s.min ? "¡Mitad del camino! Lo que queda es de bajada." : WALK_LINES[md(D + m, WALK_LINES.length)], { greet: `Minuto ${m}` }); }
+  }
   if (rt.left <= 0) nextStep(); else rtRender();
 }
-function stopRoutine() { rt.on = false; clearInterval(rt.timer); setBase("daily"); }
-function finishRoutine() {
-  stopRoutine(); const nuevo = markDay("mini"); show("#padDone");
-  celebrate(`¡LO HICISTE! 5 minutos que valen oro.${nuevo ? " Te ganaste una estrella." : ""} Si te quedaron ganas, el gym te espera. Si no, ya cumpliste y te amo igual.`,
-    `¡Hice los 5 minutos con mini Diego! 💪 Llevo ${starCount()} ⭐`);
+function endTimer(done) {
+  const secs = rt.active, mode = rt.mode, plan = rt.plan; stopTimer();
+  if (mode === "series") { show("#padNo"); say(`¡Bien entrenado! Hiciste ${rt.serie} serie${rt.serie === 1 ? "" : "s"}. Si todavía no lo marcas, aprieta ¡Voy al gym! para ganar tu estrella.`); return; }
+  if (secs < 59.5) { show("#padNo"); act("hug", 2000, null, { hearts: true }); say("Está bien, mi amor. Desde 1 minuto ya ganas tu estrella; cuando quieras lo intentamos de nuevo."); return; }
+  const nuevo = markDay("mini"), mins = Math.round(secs / 60); show("#padDone");
+  const what = mode === "walk" ? `${mins} minutos de caminata` : mode === "up" ? `${fmtUp(secs)} de ejercicio` : PLANS[plan].what;
+  const line = !done ? `Hiciste ${fmtUp(secs)} y eso igual cuenta.` : mode === "walk" ? `¡Caminaste ${mins} minutos! Cada paso fue para ti, y yo te aplaudí todo el camino.` : mode === "up" ? `¡${fmtUp(secs)} de puro esfuerzo! Te amo y te admiro.` : PLANS[plan].done;
+  celebrate(`${line}${nuevo ? " Te ganaste una estrella." : ""} Si te quedaron ganas, el gym te espera. Si no, ya cumpliste y te amo igual.`, `¡Hice ${what} con mini Diego! 💪 Llevo ${starCount()} ⭐`);
 }
-$("#bMini").addEventListener("click", () => { SND.click(); startRoutine(); });
-$("#rtPause").addEventListener("click", () => { rt.paused = !rt.paused; SND.click(); $("#rtPause").textContent = rt.paused ? "SEGUIR" : "PAUSA"; if (rt.paused) { setBase("idle"); baseAnim(true); } else { const s = rt.steps[rt.i]; setBase(s.kind === "ex" ? s.ex.anim : s.kind === "rest" ? "drink" : "idle"); baseAnim(true); } });
-$("#rtNext").addEventListener("click", () => { SND.click(); rt.paused = false; $("#rtPause").textContent = "PAUSA"; nextStep(); });
-$("#rtExit").addEventListener("click", () => { SND.soft(); stopRoutine(); show("#padNo"); act("hug", 2000, null, { hearts: true }); say("Está bien, mi amor. Lo que alcanzaste a hacer igual cuenta."); });
+document.querySelectorAll("[data-plan]").forEach(b => b.addEventListener("click", () => { SND.click(); startPlan(b.dataset.plan); }));
+$("#bWalk").addEventListener("click", () => { SND.click(); show("#padWalk"); say("¿Cuánto caminamos? Elige y yo te acompaño minuto a minuto."); setBase("walkslow"); baseAnim(true); });
+document.querySelectorAll("[data-walk]").forEach(b => b.addEventListener("click", () => { SND.click(); startWalk(+b.dataset.walk); }));
+$("#bBack3").addEventListener("click", () => { SND.click(); show("#padNo"); setBase("daily"); say("Elige otro cronómetro, el que te acomode."); });
+$("#bUp").addEventListener("click", () => { SND.click(); startUp(); });
+$("#bSeries").addEventListener("click", () => { SND.click(); startSeries(); });
 
 /* ====================== estrellas y vales ====================== */
 const ICONS = {
@@ -719,10 +851,12 @@ const ICONS = {
   moon: ["...XXX..", "..XX....", ".XX.....", ".XX.....", ".XX.....", "..XX....", "...XXX..", "........"],
   clock: ["..XXXX..", ".X....X.", "X...X..X", "X...X..X", "X...XX.X", "X......X", ".X....X.", "..XXXX.."],
   star: ["...XX...", "...XX...", "XXXXXXXX", ".XXXXXX.", "..XXXX..", ".XX..XX.", ".X....X.", "........"],
+  person: ["X..XX..X", ".X.XX.X.", "..XXXX..", "...XX...", "...XX...", "..X..X..", "..X..X..", "........"],
+  dumbbell: ["........", "X......X", "XX....XX", "XXXXXXXX", "XXXXXXXX", "XX....XX", "X......X", "........"],
   dot: ["........", "........", "........", "...XX...", "...XX...", "........", "........", "........"],
 };
 function paintIcon(c, name, col, col2) { const k = c.getContext("2d"); k.clearRect(0, 0, 8, 8); ICONS[name].forEach((r, j) => [...r].forEach((v, i) => { if (v !== ".") { k.fillStyle = v === "O" ? (col2 || "#fff") : col; k.fillRect(i, j, 1, 1); } })); }
-document.querySelectorAll("canvas.ic").forEach(c => paintIcon(c, c.dataset.ic, "#3b1838", "#ffffff"));
+document.querySelectorAll("canvas.ic").forEach(c => paintIcon(c, c.dataset.ic, c.classList.contains("hdr") ? (getComputedStyle(document.documentElement).getPropertyValue("--text").trim() || "#3b1838") : "#3b1838", "#ffffff"));
 const DOW = ["L", "M", "M", "J", "V", "S", "D"];
 function renderStars() {
   const n = starCount(); $("#hudStars").textContent = `★ ${n}`; $("#hudDay").textContent = `DÍA ${dayNumber()}`;
