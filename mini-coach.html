@@ -183,6 +183,31 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 .mood { border: 0; background: var(--paper); color: var(--plum); display: grid; justify-items: center; gap: 5px; padding: 8px 1px 7px; font: 700 .42rem/1.15 var(--f-pix); text-align: center;
   box-shadow: 0 -2px 0 0 var(--plum), 0 2px 0 0 var(--plum), -2px 0 0 0 var(--plum), 2px 0 0 0 var(--plum), inset 0 -3px 0 #f6dbe8; }
 .mood canvas { width: 28px; height: 28px; image-rendering: pixelated; }
+.sheet { position: fixed; inset: 0; z-index: 40; background: rgba(31, 15, 34, .55); display: grid; align-items: end; }
+.sheet-box { box-sizing: border-box; background: var(--card); color: var(--text); max-height: 86vh; max-height: 86dvh; overflow-y: auto; overscroll-behavior: contain; border-radius: 18px 18px 0 0; display: grid; gap: 12px;
+  padding: 16px max(16px, env(safe-area-inset-right, 0px)) 96px max(16px, env(safe-area-inset-left, 0px)); }
+.sh-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; position: sticky; top: -16px; z-index: 2; margin: -16px 0 -6px; padding: 16px 0 6px; background: var(--card); }
+.sh-head h2 { margin: 0; font: 700 .9rem/1.2 var(--f-pix); letter-spacing: .06em; color: var(--rose); }
+.sh-sub { margin: 0; color: var(--muted); line-height: 1.4; }
+.zonas { display: flex; flex-wrap: wrap; gap: 8px; }
+.zona { border: 0; padding: 9px 11px; background: var(--bg); color: var(--text); font: 600 .92rem/1.1 var(--f-body);
+  box-shadow: 0 -2px 0 0 var(--card-line), 0 2px 0 0 var(--card-line), -2px 0 0 0 var(--card-line), 2px 0 0 0 var(--card-line); }
+.zona[aria-pressed="true"] { background: var(--sun); color: var(--plum); box-shadow: 0 -2px 0 0 var(--plum), 0 2px 0 0 var(--plum), -2px 0 0 0 var(--plum), 2px 0 0 0 var(--plum); }
+.sh-opts { display: grid; gap: 8px; }
+.sh-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; font: 600 .92rem/1.2 var(--f-body); }
+.seg { display: flex; gap: 6px; }
+.seg button { border: 0; padding: 7px 9px; background: var(--bg); color: var(--text); font: 700 .58rem/1 var(--f-pix); box-shadow: 0 -2px 0 0 var(--card-line), 0 2px 0 0 var(--card-line), -2px 0 0 0 var(--card-line), 2px 0 0 0 var(--card-line); }
+.seg button[aria-pressed="true"] { background: var(--mint); color: var(--plum); box-shadow: 0 -2px 0 0 var(--plum), 0 2px 0 0 var(--plum), -2px 0 0 0 var(--plum), 2px 0 0 0 var(--plum); }
+.ex-cat { margin: 6px 0 0; font: 700 .62rem/1.2 var(--f-pix); letter-spacing: .08em; color: var(--rose); }
+.ex-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+.ex { position: relative; border: 0; background: var(--bg); color: var(--text); display: grid; justify-items: center; align-content: start; gap: 4px; padding: 6px 3px 8px; font: 600 .78rem/1.15 var(--f-body); text-align: center; min-width: 0; }
+.ex canvas { width: 80px; max-width: 100%; aspect-ratio: 40 / 34; height: auto; image-rendering: pixelated; }
+.ex.on { background: color-mix(in srgb, var(--mint) 24%, var(--bg)); box-shadow: 0 -2px 0 0 var(--mint-dk), 0 2px 0 0 var(--mint-dk), -2px 0 0 0 var(--mint-dk), 2px 0 0 0 var(--mint-dk); }
+.ex .num { position: absolute; top: 4px; right: 4px; min-width: 18px; height: 18px; padding: 0 3px; background: var(--mint); color: var(--plum); font: 700 .55rem/18px var(--f-pix); }
+.sh-foot { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--card); color: var(--text); box-shadow: 0 -3px 0 var(--card-line);
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); font: 600 .92rem/1.25 var(--f-body); }
+.sh-foot .key { grid-template-columns: 1fr; text-align: center; min-height: 44px; padding: 8px 14px 11px; font: 700 .7rem/1 var(--f-pix); flex: none; }
+.sh-foot .key:disabled { opacity: .5; }
 .foot { margin: 0; text-align: center; font: 500 .95rem/1.4 var(--f-body); color: var(--muted); }
 .foot b { font: 700 .7rem/1 var(--f-pix); color: var(--rose); }
 
@@ -194,6 +219,20 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 </style>
 
 <div id="flash" aria-hidden="true"></div>
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="shTitle">
+    <div class="sh-head"><h2 id="shTitle">ARMA TU RUTINA</h2><button class="icon" id="shClose" aria-label="Cerrar">✕</button></div>
+    <p class="sh-sub">Elige una zona o toca los ejercicios que quieras, en el orden que quieras. Mini Diego y mini Maite hacen todo contigo.</p>
+    <div class="zonas" id="zonas"></div>
+    <div class="sh-opts">
+      <div class="sh-row"><span>Tiempo por ejercicio</span><div class="seg" id="segWork"></div></div>
+      <div class="sh-row"><span>Descanso</span><div class="seg" id="segRest"></div></div>
+      <div class="sh-row"><span>Calentar y estirar</span><div class="seg" id="segWarm"></div></div>
+    </div>
+    <div id="exList"></div>
+  </div>
+  <div class="sh-foot"><span id="shSum">Elige al menos 1 ejercicio</span><button class="key key--mint" id="shGo" disabled>EMPEZAR ▶</button></div>
+</div>
 <div class="wrap">
   <header class="top">
     <div class="brand"><span class="logo">MINI COACH</span><span class="sub" id="fecha"></span></div>
@@ -228,6 +267,7 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
       <button class="key key--mint" data-plan="cinco"><canvas class="ic" data-ic="heart" width="8" height="8"></canvas><span>5 minutos<small>Rutina conmigo</small></span></button>
       <button class="key" data-plan="diez"><canvas class="ic" data-ic="star" width="8" height="8"></canvas><span>10 minutos<small>Un poquito más</small></span></button>
       <button class="key key--lav" data-plan="estirar"><canvas class="ic" data-ic="person" width="8" height="8"></canvas><span>Solo estirar<small>5 min suavecito</small></span></button>
+      <button class="key key--sun key--wide" id="bArma"><canvas class="ic" data-ic="star" width="8" height="8"></canvas><span>Arma tu rutina<small>Elige tú los ejercicios, por zona o uno por uno</small></span></button>
       <button class="key key--mint" id="bWalk"><canvas class="ic" data-ic="shoe" width="8" height="8"></canvas><span>Caminata<small>10, 20 o 30 min</small></span></button>
       <button class="key key--sun" id="bUp"><canvas class="ic" data-ic="clock" width="8" height="8"></canvas><span>Cronómetro<small>Tú pones el ritmo</small></span></button>
       <button class="key" id="bSeries"><canvas class="ic" data-ic="dumbbell" width="8" height="8"></canvas><span>Entre series<small>Para el gym</small></span></button>
@@ -567,14 +607,6 @@ const SERIES_LINES = [
   "La siguiente serie es tuya.",
 ];
 // estiramientos suaves
-const STRETCHES = [
-  { name: "Respiración profunda", tip: "Sube los brazos inhalando y bájalos botando el aire. Lento, lento.", anim: "breathe" },
-  { name: "Al cielo y a los lados", tip: "Brazos arriba, estírate hacia un lado y después al otro.", anim: "stretch" },
-  { name: "Brazo cruzado", tip: "Cruza un brazo por delante del pecho y sujétalo con el otro. A la mitad, cambia de lado.", anim: "armcross" },
-  { name: "Cuádriceps", tip: "Toma un pie por detrás y llévalo hacia el poto. Si te tambaleas, apóyate en la pared.", anim: "quad" },
-  { name: "Tocar los pies", tip: "Bájate de a poquito hacia los pies, sin rebotar. Hasta donde llegues está bien.", anim: "toes" },
-  { name: "Respiración final", tip: "Ojos cerrados y respira profundo. Te quiero mucho.", anim: "breathe" },
-];
 const REST = [
   "Descansar también es entrenar. Toma agüita, duerme rico y mañana volvemos con todo.",
   "Tu cuerpo te pide una pausa, y escucharlo también es quererte. Te amo igual de mucho.",
@@ -661,6 +693,12 @@ const BADGES = [
   ["musica", "Bailarina", "note", "Terminar un cronómetro con la música puesta.", "Entrenaste con musiquita, mi amor. Te imagino bailando y me derrito.", "crono"],
   ["parejaFit", "Pareja fit", "heart", "Terminar la rutina de a dos.", "Rutina de a dos completa, mi amor. Somos el mejor equipo del mundo, cachai.", "crono"],
   ["duo5", "Inseparables fit", "heart", "Terminar 5 veces la rutina de a dos.", "Cinco rutinas juntos, mi vida. Entrenar contigo es mi parte favorita.", "crono"],
+  ["atumanera", "A tu manera", "star", "Terminar una rutina armada por ti.", "Armaste tu propia rutina y la hiciste, mi reina. Eres tu propia coach, cachai.", "crono"],
+  ["entrenadora", "Entrenadora", "trophy", "Terminar 5 rutinas armadas por ti.", "Cinco rutinas tuyas, mi amor. Ya podrías entrenarme a mí.", "crono"],
+  ["core", "Abdomen de acero", "flame", "Hacer 20 ejercicios de abdomen.", "Veinte ejercicios de abdomen, mi princesa. Fuerte por dentro y por fuera.", "crono"],
+  ["piernasAcero", "Piernas de acero", "flame", "Hacer 20 ejercicios de piernas y glúteos.", "Veinte de piernas, mi vida. Con esas piernas llegas a donde quieras.", "crono"],
+  ["brazosFuertes", "Brazos fuertes", "dumbbell", "Hacer 20 ejercicios de brazos y espalda.", "Veinte de brazos, mi chiquitita. Ahora tus abrazos son más apretados todavía.", "crono"],
+  ["calentadita", "Bien calentadita", "sun", "Hacer 20 ejercicios de calentamiento.", "Veinte calentamientos, mi wawita mosha. Así se cuida el cuerpo. Te adoro.", "crono"],
   ["hidratada", "Hidratada", "drop", "Tomar 8 vasos de agua en un día.", "Ocho vasos en un día, mi reina. Hidratada y preciosa.", "agua"],
   ["agua3", "Hidratada x3", "drop", "Tomar 8 vasos en 3 días distintos.", "Tres días hidratadita, mi wawita mosha. Tu cuerpito te lo agradece.", "agua"],
   ["agua7", "Plantita feliz", "drop", "Tomar 8 vasos en 7 días distintos.", "Siete días de agüita completa, mi vida. Eres una plantita feliz, cachai.", "agua"],
@@ -745,7 +783,7 @@ const DUO = [
   { name: "Saltos sincronizados", tip: "Saltos de tijera al mismo tiempo. ¡El que se descoordina da un beso!", anim: "duoJacks" },
   { name: "El espejo", tip: "Uno mueve los brazos y el otro lo imita como espejo. A la mitad cambian.", anim: "espejo" },
   { name: "Rodillas de la mano", tip: "Tomados de la mano, suban las rodillas por turnos.", anim: "duoKnees" },
-  { name: "Choque de puños", tip: "Frente a frente, golpecitos suaves que chocan en el medio.", anim: "duoPunch" },
+  { name: "Plancha chocando manos", tip: "Frente a frente en plancha alta: choquen una mano y después la otra, sin mover la cadera.", anim: "duoPlank" },
   { name: "Abrazo final", tip: "Brazos al cielo, respiren hondo... y abrazo apretado de 30 segundos.", anim: "duoHug" },
 ];
 // agüita: lo que dice mini Diego con cada vaso
@@ -764,17 +802,57 @@ const CHIPS = [
 const MT_TAPS = ["Esa es mi polola: la más linda del mundo, hasta en pixeles.", "Mini Maite dice que vamos con todo.", "Mírala, entrenando conmigo. Igualita a ti de linda.", "Mini Maite me tiene igual de enamorado que tú."];
 // vales que se desbloquean con las estrellas
 const VALES = [[3, "Un masajito de piernas después del gym"], [7, "Un heladito extra, sí, otro más"], [12, "Una cita donde tú eliges todo"], [20, "Un día entero de regaloneo"], [30, "Lo que tú quieras, dentro de lo legal"]];
-// ejercicios de la rutina de 5 minutos (4 al azar del día + estiramiento al final)
-const EX = [
-  { name: "Saltos de tijera", tip: "Brazos arriba y piernas afuera al mismo tiempo. ¡Con ritmo!", anim: "jacks" },
-  { name: "Sentadillas", tip: "Espalda derecha, como si te sentaras en una silla invisible.", anim: "squat" },
-  { name: "Trote en el lugar", tip: "Como si vinieras corriendo a darme un abrazo.", anim: "run" },
-  { name: "Boxeo al aire", tip: "Puños arriba y golpéale la cara a la flojera.", anim: "box" },
-  { name: "Bíceps con botellas", tip: "¿No tienes pesas? Dos botellas de agua sirven perfecto.", anim: "bottles" },
-  { name: "Rodillas arriba", tip: "Más rápido que el trote: rodillas a la altura de la cintura.", anim: "knees" },
-  { name: "Círculos de brazos", tip: "Brazos estirados a los lados y círculos chiquititos.", anim: "circles" },
-];
-const STRETCH = { name: "Estiramiento", tip: "Brazos al cielo y de lado a lado. Respira lento: lo hiciste increíble.", anim: "stretch" };
+// catálogo de ejercicios reales: [id, grupo, nombre, cómo se hace, animación]
+const EX_CATS = [["calentamiento", "CALENTAMIENTO"], ["piernas", "PIERNAS Y GLÚTEOS"], ["abdomen", "ABDOMEN"], ["brazos", "BRAZOS Y ESPALDA"], ["cardio", "CARDIO"], ["estirar", "ESTIRAMIENTO"]];
+const EXC = {};
+[["marcha", "calentamiento", "Marcha en el lugar", "Sube las rodillas suave y mueve los brazos. Es para que el cuerpo despierte.", "walkslow"],
+ ["brazos", "calentamiento", "Círculos de brazos", "Brazos estirados a los lados: círculos chicos hacia adelante y después hacia atrás.", "circles"],
+ ["cadera", "calentamiento", "Círculos de cadera", "Manos en la cintura y dibuja círculos grandes con la cadera, hacia un lado y al otro.", "hipcircles"],
+ ["tronco", "calentamiento", "Giros de tronco", "Pies firmes y gira suave el tronco de un lado a otro. Los brazos acompañan.", "twist"],
+ ["talones", "calentamiento", "Talones al glúteo", "Trotecito suave llevando los talones hacia el poto.", "buttkicks"],
+ ["mediaSentadilla", "calentamiento", "Media sentadilla", "Baja solo hasta la mitad, sin apuro. Calienta rodillas y piernas.", "halfsquat"],
+ ["sentadilla", "piernas", "Sentadillas", "Pies al ancho de los hombros: baja como si te sentaras y sube empujando con los talones.", "squat"],
+ ["sumo", "piernas", "Sentadilla sumo", "Piernas bien abiertas y puntas hacia afuera. Baja derechita y aprieta los glúteos al subir.", "sumo"],
+ ["zancada", "piernas", "Zancadas", "Un paso largo adelante y baja hasta que las dos rodillas queden en 90°. A la mitad cambia de pierna.", "lunge"],
+ ["zancadaLateral", "piernas", "Zancada lateral", "Paso al costado, dobla esa rodilla y deja la otra pierna estirada. Alterna los lados.", "sidelunge"],
+ ["puente", "piernas", "Puente de glúteos", "Boca arriba con las rodillas dobladas: sube la cadera apretando los glúteos y baja lento.", "bridge"],
+ ["patada", "piernas", "Patada de glúteo", "En cuatro apoyos, sube una pierna con la rodilla doblada hacia el techo. A la mitad cambia de lado.", "donkey"],
+ ["pantorrillas", "piernas", "Elevación de talones", "Párate en puntitas y baja lento. Si quieres, afírmate de una pared.", "calf"],
+ ["pared", "piernas", "Sentadilla en la pared", "Espalda pegada a la pared y rodillas en 90°, como en una silla invisible. Aguanta, mi amor.", "wallsit"],
+ ["abdominales", "abdomen", "Abdominales", "Boca arriba con las rodillas dobladas: sube los hombros mirando al techo, sin tirar del cuello.", "crunch"],
+ ["plancha", "abdomen", "Plancha", "Antebrazos en el suelo y el cuerpo derechito como tabla. Aprieta el abdomen y respira.", "plank"],
+ ["escaladores", "abdomen", "Escaladores", "En plancha alta, lleva una rodilla al pecho y después la otra, rápido.", "climbers"],
+ ["elevacionPiernas", "abdomen", "Elevación de piernas", "Boca arriba, sube las piernas estiradas y bájalas lento sin tocar el suelo.", "legraise"],
+ ["bicicleta", "abdomen", "Abdominal bicicleta", "Hombros arriba y pedalea: una rodilla al pecho y después la otra.", "bicycle"],
+ ["rusos", "abdomen", "Giros rusos", "Sentada, inclínate un poco hacia atrás y gira el tronco de un lado a otro con las manos juntas.", "russian"],
+ ["planchaLateral", "abdomen", "Plancha lateral", "De lado sobre un antebrazo, cadera arriba y el otro brazo al cielo. A la mitad cambia de lado.", "sideplank"],
+ ["flexRodillas", "brazos", "Flexiones de rodillas", "Rodillas en el suelo y manos bajo los hombros: baja el pecho y empuja. Así se parte.", "kneepush"],
+ ["flexiones", "brazos", "Flexiones", "Cuerpo derechito: baja el pecho hacia el suelo y empuja. Si cuesta, apoya las rodillas.", "pushup"],
+ ["fondos", "brazos", "Fondos en silla", "Manos en el borde de una silla firme: baja doblando los codos hacia atrás y sube.", "dips"],
+ ["biceps", "brazos", "Bíceps con botellas", "Codos pegados al cuerpo: sube las botellas hacia los hombros y baja lento.", "bottles"],
+ ["press", "brazos", "Press de hombros", "Botellas a la altura de los hombros: empújalas hacia el techo y baja controlado.", "press"],
+ ["remo", "brazos", "Remo con botella", "Inclinada hacia adelante con la espalda recta, tira la botella hacia la cintura.", "row"],
+ ["superman", "brazos", "Superman", "Boca abajo, sube brazos y piernas al mismo tiempo, aguanta un segundo y baja. Es para la espalda.", "superman"],
+ ["saltos", "cardio", "Saltos de tijera", "Brazos arriba y piernas afuera al mismo tiempo. ¡Con ritmo!", "jacks"],
+ ["rodillas", "cardio", "Rodillas arriba", "Trote rápido subiendo las rodillas a la altura de la cintura.", "knees"],
+ ["trote", "cardio", "Trote en el lugar", "Trote suave en el lugar, como si vinieras corriendo a darme un abrazo.", "run"],
+ ["cuerda", "cardio", "Saltar la cuerda", "Saltitos cortos en la punta de los pies. Si no tienes cuerda, haz como que sí.", "jumprope"],
+ ["patinador", "cardio", "Saltos de patinador", "Salta de un lado a otro cayendo en un pie, como patinadora.", "skater"],
+ ["burpees", "cardio", "Burpees", "Agáchate, manos al suelo, piernas atrás en plancha, vuelve y salta. A tu ritmo.", "burpee"],
+ ["respiracion", "estirar", "Respiración profunda", "Sube los brazos inhalando y bájalos botando el aire. Lento, lento.", "breathe"],
+ ["cielo", "estirar", "Al cielo y a los lados", "Brazos arriba: estírate hacia un lado y después hacia el otro.", "stretch"],
+ ["brazoCruzado", "estirar", "Brazo cruzado", "Cruza un brazo por delante del pecho y sujétalo con el otro. A la mitad, cambia de lado.", "armcross"],
+ ["cuadriceps", "estirar", "Cuádriceps", "Toma un pie por detrás y llévalo hacia el poto. Si te tambaleas, apóyate en la pared.", "quad"],
+ ["pies", "estirar", "Tocar los pies", "Bájate de a poquito hacia los pies, sin rebotar. Hasta donde llegues está bien.", "toes"],
+ ["gatoVaca", "estirar", "Gato y vaca", "En cuatro apoyos, arquea la espalda hacia arriba como gatito y después hacia abajo. Lento.", "catcow"],
+ ["nino", "estirar", "Postura del niño", "Siéntate sobre los talones y estira los brazos adelante con la frente al suelo. Respira.", "child"],
+ ["isquios", "estirar", "Estiramiento sentada", "Piernas estiradas al frente: llega con las manos lo más lejos que puedas, sin rebotar.", "hamstring"]].forEach(([id, cat, name, tip, anim]) => { EXC[id] = { id, cat, name, tip, anim }; });
+const EX_LIST = Object.values(EXC), BY = c => EX_LIST.filter(e => e.cat === c);
+const pickDay = (c, n, salt = 0, skip = []) => { const l = BY(c).filter(e => !skip.includes(e.id)), s0 = md(D * 3 + salt, l.length); return Array.from({ length: n }, (_, k) => l[(s0 + k) % l.length]); };
+const STRETCH = EXC.cielo;
+const ZONES = [["Cuerpo completo", ["sentadilla", "flexRodillas", "plancha", "zancada", "puente", "saltos"]], ["Piernas y glúteos", ["sentadilla", "zancada", "puente", "sumo", "patada", "pared"]],
+  ["Abdomen", ["abdominales", "plancha", "escaladores", "elevacionPiernas", "bicicleta", "rusos"]], ["Brazos y espalda", ["flexRodillas", "biceps", "press", "remo", "fondos", "superman"]],
+  ["Cardio", ["saltos", "rodillas", "patinador", "cuerda", "burpees", "trote"]]];
 const WORK = 45, PAUSE = 15;   // segundos de cada ejercicio y de cada descanso
 const WA = "56941089585";
 
@@ -797,7 +875,7 @@ try { const v = JSON.parse(localStorage.getItem("mini_diego") || "null"); if (v 
 st.badges = { ...(st.badges || {}) }; st.water = { ...(st.water || {}) }; st.mins = { ...(st.mins || {}) }; if (st.music === undefined) st.music = true; st.fui = { ...(st.fui || {}) }; st.best = st.best || 0;
 st.voy = { ...(st.voy || {}) }; st.visits = { ...(st.visits || {}) }; st.visits[KEY] = true;
 st.stats = { charges: 0, series: 0, libreMax: 0, early: false, late: false, ...(st.stats || {}) }; st.stats.done = { ...(st.stats.done || {}) };
-st.stats.cnt = { ...(st.stats.cnt || {}) }; st.stats.spots = { ...(st.stats.spots || {}) };
+st.stats.cnt = { ...(st.stats.cnt || {}) }; st.stats.cat = { ...(st.stats.cat || {}) }; st.stats.spots = { ...(st.stats.spots || {}) };
 st.outfit = { d: "normal", m: "normal", ...(st.outfit || {}) }; st.moods = { ...(st.moods || {}) };
 const persist = () => { try { localStorage.setItem("mini_diego", JSON.stringify(st)); } catch {} };
 const firstTime = !st.seen; st.seen = true; persist();
@@ -888,7 +966,7 @@ const WALLS = [["#e9dcff", "#dccafa"], ["#d3f4e8", "#bfeadb"], ["#ffe1d3", "#ffd
 const MATS = [["#ff7fb3", "#d9578e"], ["#4fd6ad", "#2fa985"], ["#a68cff", "#7f63e6"], ["#6cc0ff", "#3f98dd"]];
 const WALL = rot(WALLS, 2), MAT = rot(MATS, 3);
 const ACC = rot(["cintillo", "jockey", "toalla", "munequeras", ""], 2, 1);
-const DAILY = rot(["pesas", "jacks", "squat", "box", "run", "flex", "jumprope", "dance"], 3);
+const DAILY = rot(["pesas", "jacks", "squat", "sumo", "run", "flex", "jumprope", "dance"], 3);
 const SIGN = rot(["TE AMO", "TÚ PUEDES"], 1);
 
 function hourNow() { return now().getHours(); }
@@ -1002,9 +1080,70 @@ const POSES = {
   duoKnee2: P({ y: -1, kR: [3, 2], fR: [3, 7], eL: [-9, -4], hL: [-14, -2], eR: [7, -4], hR: [7, 1], mouth: "grin" }),
   duoPunch: P({ kL: [-3, 6], fL: [-4, 12], eL: [-9, -10], hL: [-14, -12], eR: [6, -6], hR: [3, -12], mouth: "grin" }),
   duoHug: P({ eL: [-8, -10], hL: [-15, -9], eR: [6, -4], hR: [6, 1], mouth: "smile", blush: true }), duoHug2: P({ eL: [-8, -10], hL: [-15, -10], eR: [6, -4], hR: [6, 0], mouth: "smile", blush: true, hy: .5 }),
+  halfsq: P({ y: 2, kL: [-4, 4], fL: [-2, 10], kR: [4, 4], fR: [2, 10], eL: [-6, -6], hL: [-2, -7], eR: [6, -6], hR: [2, -7] }),
+  sumo1: P({ kL: [-5, 6], fL: [-7, 12], kR: [5, 6], fR: [7, 12], eL: [-6, -6], hL: [-2, -7], eR: [6, -6], hR: [2, -7] }),
+  sumo2: P({ y: 5, kL: [-8, 3], fL: [-7, 7], kR: [8, 3], fR: [7, 7], eL: [-6, -6], hL: [-2, -7], eR: [6, -6], hR: [2, -7], mouth: "oh" }),
+  sl0: P({ kL: [-5, 6], fL: [-8, 12], kR: [5, 6], fR: [8, 12], eL: [-6, -6], hL: [-2, -7], eR: [6, -6], hR: [2, -7] }),
+  sl1: P({ y: 4, kL: [-8, 3], fL: [-9, 8], kR: [4, 4], fR: [9, 8], eL: [-6, -6], hL: [-2, -7], eR: [6, -6], hR: [2, -7], mouth: "oh" }),
+  sl3: P({ y: 4, kR: [8, 3], fR: [9, 8], kL: [-4, 4], fL: [-9, 8], eL: [-6, -6], hL: [-2, -7], eR: [6, -6], hR: [2, -7], mouth: "oh" }),
+  calf1: P({ eL: [-8, -5], hL: [-5, -2], eR: [8, -5], hR: [5, -2] }), calf2: P({ y: -2, kL: [-2, 7], fL: [-2, 14], kR: [2, 7], fR: [2, 14], eL: [-8, -5], hL: [-5, -2], eR: [8, -5], hR: [5, -2] }),
+  press1: P({ eL: [-8, -9], hL: [-7, -13], eR: [8, -9], hR: [7, -13] }), press2: P({ eL: [-7, -15], hL: [-6, -21], eR: [7, -15], hR: [6, -21], mouth: "oh" }),
+  sk1: P({ dx: -3, y: 1, kL: [-2, 5], fL: [-2, 11], kR: [1, 6], fR: [-5, 10], eL: [-8, -5], hL: [-10, -1], eR: [5, -7], hR: [1, -9] }),
+  sk2: P({ dx: 3, y: 1, kR: [2, 5], fR: [2, 11], kL: [-1, 6], fL: [5, 10], eR: [8, -5], hR: [10, -1], eL: [-5, -7], hL: [-1, -9] }),
   kiss1: P({ eR: [6, -7], hR: [1, -14], mouth: "kiss", blush: true }), kiss2: P({ eR: [9, -10], hR: [14, -13], mouth: "kiss", blush: true }),
 };
 const A = (f, d, extra = {}) => ({ f: f.map(k => POSES[k]), d, ...extra });
+// de perfil, mirando a la derecha: cadera H, hombros S, rodillas/pies A (adelante) y B (atrás), codos/manos; sup = boca arriba
+const sd = o => ({ y: 0, ...o });
+const SPf = { H: [0, -12], S: [1, -22], kA: [1, -6], fA: [1, -1], kB: [-1, -6], fB: [-1, -1], eA: [3, -17], hA: [4, -12], eB: [-1, -17], hB: [0, -12] };
+const Sd = o => sd({ ...SPf, ...o });
+const HP = { H: [-3, -7], S: [8, -9], kA: [-9, -4], fA: [-15, -1], kB: [-9, -4], fB: [-16, -1], eA: [9, -5], hA: [9, -1], eB: [8, -5], hB: [8, -1] };   // plancha alta
+const Q4 = { H: [-3, -8], S: [8, -8], kA: [-3, -1], fA: [-9, -1], kB: [-3, -1], fB: [-9, -1], eA: [8, -4], hA: [8, -1], eB: [7, -4], hB: [7, -1] };   // cuatro apoyos
+const SUP = { sup: true, H: [-1, -2], S: [9, -2] };
+const SIDE = {
+  stand: Sd({}),
+  bk1: Sd({ y: -1, kB: [0, -6], fB: [-5, -9], eA: [4, -18], hA: [6, -15], eB: [-3, -18], hB: [-4, -15] }),
+  bk2: Sd({ y: -1, kA: [0, -6], fA: [-5, -9], eA: [-3, -18], hA: [-4, -15], eB: [4, -18], hB: [6, -15] }),
+  lunge1: Sd({ kA: [4, -7], fA: [7, -1], kB: [-3, -6], fB: [-6, -1], eA: [3, -16], hA: [2, -13], eB: [-2, -16], hB: [-1, -13] }),
+  lunge2: Sd({ H: [0, -8], S: [0, -18], kA: [6, -7], fA: [7, -1], kB: [-2, -2], fB: [-7, -1], eA: [3, -12], hA: [2, -9], eB: [-2, -12], hB: [-1, -9] }),
+  wall1: sd({ H: [-4, -7], S: [-4, -17], kA: [3, -7], fA: [3, -1], kB: [2, -7], fB: [2, -1], eA: [0, -13], hA: [-2, -12], eB: [-1, -12], hB: [1, -13] }),
+  wall2: sd({ H: [-4, -7], S: [-4, -17.5], kA: [3, -7], fA: [3, -1], kB: [2, -7], fB: [2, -1], eA: [0, -13.5], hA: [-2, -12.5], eB: [-1, -12.5], hB: [1, -13.5] }),
+  bridge1: sd({ ...SUP, hd: [1, 0], kA: [-5, -7], fA: [-9, -1], kB: [-4, -7], fB: [-8, -1], eA: [6, -1], hA: [2, -1], eB: [5, -1], hB: [1, -1] }),
+  bridge2: sd({ ...SUP, hd: [1, 0], H: [-1, -8], kA: [-6, -9], fA: [-9, -1], kB: [-5, -9], fB: [-8, -1], eA: [6, -1], hA: [2, -1], eB: [5, -1], hB: [1, -1] }),
+  crunch1: sd({ ...SUP, kA: [-5, -8], fA: [-9, -1], kB: [-4, -8], fB: [-8, -1], eA: [10, -6], hA: [13, -5], eB: [9, -5], hB: [12, -4] }),
+  crunch2: sd({ ...SUP, S: [7, -7], kA: [-5, -8], fA: [-9, -1], kB: [-4, -8], fB: [-8, -1], eA: [7, -12], hA: [10, -12], eB: [6, -11], hB: [9, -11] }),
+  plank1: sd({ H: [-2, -5], S: [9, -6], kA: [-8, -3], fA: [-14, -1], kB: [-8, -3], fB: [-15, -1], eA: [9, -1], hA: [14, -1], eB: [8, -1], hB: [13, -1] }),
+  plank2: sd({ H: [-2, -5.7], S: [9, -6.3], kA: [-8, -3.3], fA: [-14, -1], kB: [-8, -3.3], fB: [-15, -1], eA: [9, -1], hA: [14, -1], eB: [8, -1], hB: [13, -1] }),
+  hp: sd(HP),
+  pushDown: sd({ H: [-3, -3], S: [8, -4], kA: [-9, -2], fA: [-15, -1], kB: [-9, -2], fB: [-16, -1], eA: [5, -6], hA: [9, -1], eB: [4, -6], hB: [8, -1] }),
+  kp1: sd({ H: [-2, -5], S: [7, -8], kA: [-6, -1], fA: [-11, -4], kB: [-6, -1], fB: [-10, -4], eA: [8, -4], hA: [8, -1], eB: [7, -4], hB: [7, -1] }),
+  kp2: sd({ H: [-2, -2.5], S: [7, -3.5], kA: [-6, -1], fA: [-11, -4], kB: [-6, -1], fB: [-10, -4], eA: [4, -6], hA: [8, -1], eB: [3, -6], hB: [7, -1] }),
+  mc1: sd({ ...HP, kA: [2, -4], fA: [-1, -2] }), mc2: sd({ ...HP, kB: [2, -4], fB: [-1, -2] }),
+  lr1: sd({ ...SUP, kA: [-7, -3], fA: [-13, -3], kB: [-7, -2], fB: [-13, -2], eA: [5, -1], hA: [1, -1], eB: [4, -1], hB: [0, -1] }),
+  lr2: sd({ ...SUP, kA: [-3, -8], fA: [-3, -15], kB: [-2, -8], fB: [-2, -15], eA: [5, -1], hA: [1, -1], eB: [4, -1], hB: [0, -1] }),
+  bc1: sd({ ...SUP, S: [8, -6], kA: [1, -8], fA: [-4, -9], kB: [-6, -4], fB: [-12, -5], eA: [8, -11], hA: [11, -10], eB: [7, -10], hB: [10, -9] }),
+  bc2: sd({ ...SUP, S: [8, -6], kB: [1, -8], fB: [-4, -9], kA: [-6, -4], fA: [-12, -5], eA: [8, -11], hA: [11, -10], eB: [7, -10], hB: [10, -9] }),
+  rus1: sd({ H: [0, -2], S: [-4, -11], kA: [5, -7], fA: [10, -4], kB: [5, -7], fB: [10, -3], eA: [1, -8], hA: [4, -6], eB: [0, -7], hB: [4, -6] }),
+  rus2: sd({ H: [0, -2], S: [-4, -11], kA: [5, -7], fA: [10, -4], kB: [5, -7], fB: [10, -3], eA: [-1, -6], hA: [-3, -3], eB: [-2, -6], hB: [-3, -3] }),
+  sp1: sd({ face: [1, -.4], H: [-2, -6], S: [8, -10], kA: [-8, -3], fA: [-13, -1], kB: [-8, -4], fB: [-13, -2], eA: [8, -1], hA: [12, -1], eB: [8, -15], hB: [8, -20] }),
+  sp2: sd({ face: [1, -.4], H: [-2, -6.7], S: [8, -10.4], kA: [-8, -3.4], fA: [-13, -1], kB: [-8, -4.4], fB: [-13, -2], eA: [8, -1], hA: [12, -1], eB: [8, -15.5], hB: [8, -21] }),
+  sm1: sd({ H: [-1, -2], S: [9, -3], kA: [-7, -3], fA: [-13, -5], kB: [-7, -2], fB: [-13, -4], eA: [13, -4], hA: [18, -6], eB: [13, -3], hB: [17, -5] }),
+  sm2: sd({ H: [-1, -2], S: [9, -2], kA: [-7, -2], fA: [-13, -1], kB: [-7, -1], fB: [-13, -1], eA: [13, -2], hA: [18, -2], eB: [13, -1], hB: [17, -1] }),
+  q4: sd(Q4), dk2: sd({ ...Q4, kA: [-7, -9], fA: [-7, -16] }),
+  cat: sd({ ...Q4, M: [2, -11] }), cow: sd({ ...Q4, M: [2, -6] }),
+  child1: sd({ H: [-4, -4], S: [5, -3], kA: [3, -1], fA: [-6, -1], kB: [3, -1], fB: [-6, -1], eA: [10, -1], hA: [15, -1], eB: [10, -1], hB: [14, -1] }),
+  child2: sd({ H: [-4, -5], S: [5, -3], kA: [3, -1], fA: [-6, -1], kB: [3, -1], fB: [-6, -1], eA: [10, -1], hA: [15, -1], eB: [10, -1], hB: [14, -1] }),
+  ham1: sd({ H: [-3, -2], S: [3, -10], kA: [4, -2], fA: [11, -1], kB: [4, -2], fB: [11, -1], eA: [6, -6], hA: [10, -3], eB: [5, -6], hB: [9, -3] }),
+  ham2: sd({ H: [-3, -2], S: [4, -8], kA: [4, -2], fA: [11, -1], kB: [4, -2], fB: [11, -1], eA: [7, -5], hA: [11, -2], eB: [6, -5], hB: [10, -2] }),
+  row1: sd({ H: [0, -11], S: [8, -16], kA: [2, -6], fA: [1, -1], kB: [1, -6], fB: [0, -1], eA: [9, -12], hA: [9, -8], eB: [5, -12], hB: [3, -8] }),
+  row2: sd({ H: [0, -11], S: [8, -16], kA: [2, -6], fA: [1, -1], kB: [1, -6], fB: [0, -1], eA: [3, -15], hA: [6, -13], eB: [5, -12], hB: [3, -8] }),
+  dip1: sd({ H: [0, -7], S: [0, -16], kA: [7, -7], fA: [8, -1], kB: [6, -7], fB: [7, -1], eA: [-2, -11], hA: [-3, -7], eB: [-2, -11], hB: [-3, -7] }),
+  dip2: sd({ H: [0, -3], S: [0, -12], kA: [7, -6], fA: [8, -1], kB: [6, -6], fB: [7, -1], eA: [-5, -10], hA: [-3, -7], eB: [-5, -10], hB: [-3, -7] }),
+  bp2: sd({ H: [-2, -6], S: [3, -14], kA: [3, -6], fA: [0, -1], kB: [2, -6], fB: [-1, -1], eA: [5, -9], hA: [6, -1], eB: [4, -9], hB: [5, -1] }),
+  bp5: Sd({ y: -4, eA: [1, -27], hA: [2, -32], eB: [0, -27], hB: [1, -32] }),
+  duoP2: sd({ ...HP, eA: [12, -9], hA: [16, -11] }), duoP3: sd({ ...HP, eB: [12, -9], hB: [15, -11] }),
+};
+const As = (f, d, extra = {}) => ({ f: f.map(k => SIDE[k]), d, side: true, ...extra });
 const ANIM = {
   idle: A(["idle", "idle2"], 800), wave: A(["wave1", "wave2"], 230), flex: A(["flex1", "flex2"], 380),
   jacks: A(["jack1", "jack2"], 330, { sweat: true }), squat: A(["squat0", "squat1"], 700, { sweat: true }), run: A(["run1", "run2"], 230, { sweat: true }),
@@ -1022,6 +1161,17 @@ const ANIM = {
   duoSquat: A(["squat1", "hfUp"], 700, { mirror: true, sweat: true }), duoJacks: A(["jack1", "jack2"], 330, { mirror: true, sweat: true }),
   espejo: A(["espejo1", "espejo2"], 900, { mirror: true }), duoKnees: A(["duoKnee1", "duoKnee2"], 420, { mirror: true, sweat: true }),
   duoPunch: A(["guard", "duoPunch"], 260, { mirror: true }), duoHug: A(["duoHug", "duoHug2"], 900, { mirror: true, love: true }),
+  hipcircles: { f: [POSES.idle], d: 1000, fn: t => { const w = t / 260; return P({ dx: Math.round(Math.sin(w) * 2), y: Math.cos(w) * .6, eL: [-8, -5], hL: [-5, -2], eR: [8, -5], hR: [5, -2] }); } },
+  twist: { f: [POSES.idle], d: 1000, fn: t => { const w = Math.sin(t / 330); return P({ eL: [-7 + 3 * w, -7], hL: [-2 + 4 * w, -8], eR: [7 + 3 * w, -7], hR: [2 + 4 * w, -8] }); } },
+  halfsquat: A(["squat0", "halfsq"], 650, { sweat: true }), sumo: A(["sumo1", "sumo2"], 750, { sweat: true }), sidelunge: A(["sl1", "sl0", "sl3", "sl0"], 600, { sweat: true }),
+  calf: A(["calf1", "calf2"], 500), press: A(["press1", "press2"], 700, { prop: "bottle", sweat: true }), skater: A(["sk1", "sk2"], 420, { sweat: true }),
+  buttkicks: As(["bk1", "bk2"], 260, { sweat: true }), lunge: As(["lunge1", "lunge2"], 800, { sweat: true }), wallsit: As(["wall1", "wall2"], 900, { prop: "wall" }),
+  bridge: As(["bridge1", "bridge2"], 800), crunch: As(["crunch1", "crunch2"], 700), plank: As(["plank1", "plank2"], 900), climbers: As(["mc1", "mc2"], 200, { sweat: true }),
+  legraise: As(["lr1", "lr2"], 1000), bicycle: As(["bc1", "bc2"], 450), russian: As(["rus1", "rus2"], 500), sideplank: As(["sp1", "sp2"], 900),
+  kneepush: As(["kp1", "kp2"], 700), pushup: As(["hp", "pushDown"], 750), dips: As(["dip1", "dip2"], 750, { prop: "chair" }), row: As(["row1", "row2"], 700, { prop: "bottle" }),
+  superman: As(["sm2", "sm1"], 900), donkey: As(["q4", "dk2"], 600), burpee: As(["stand", "bp2", "hp", "bp2", "bp5"], 380, { sweat: true }),
+  catcow: As(["cat", "cow"], 1400), child: As(["child1", "child2"], 1500), hamstring: As(["ham1", "ham2"], 1300),
+  duoPlank: As(["hp", "duoP2", "hp", "duoP3"], 420, { facing: "duo" }),
   kiss: A(["kiss1", "kiss2"], 360), walk: A(["run1", "run2"], 200), walkslow: A(["run1", "run2"], 420),
   breathe: A(["breatheDown", "breatheUp"], 2400), armcross: A(["armcross1", "armcross1", "armcross2", "armcross2"], 1400),
   quad: A(["quad1", "quad1", "quad2", "quad2"], 1400), toes: A(["toes1", "toes2"], 1300), drink: A(["idle", "idle2"], 900, { prop: "bottleR" }),
@@ -1172,6 +1322,47 @@ function drawMaite(x0, ps, a, t, at, F = FIT_M[st.outfit.m] || FIT_M.normal) {
     handProp(a, sx, ha, bx, by, ps, at, CM.S);
   }
 }
+// ---- de perfil, para los ejercicios en el suelo: mismas caras, misma ropa ----
+const unit = ([x, y]) => { const l = Math.hypot(x, y) || 1; return [x / l, y / l]; };
+function drawSide(x0, ps, who, a, t, dir = 1) {
+  const isD = who === "d", F = isD ? (FIT_D[st.outfit.d] || FIT_D.normal) : (FIT_M[st.outfit.m] || FIT_M.normal), skin = isD ? C.S : CM.S, gy = GROUND + 1 + (ps.y || 0);
+  const Q = ([x, y]) => [x0 + x * dir, gy + y];
+  px(x0 - 14, GROUND + 1, 28, 1, "rgba(59,24,56,.15)");   // sombra
+  if (a.prop === "wall") { const [wx] = Q([-9, 0]); px(Math.min(wx, wx + 2 * dir) , GROUND - 25, 2, 26, "#c9b6e6"); px(Math.min(wx, wx + 2 * dir), GROUND - 25, 2, 1, "#ffffff"); }
+  if (a.prop === "chair") { const [cx1] = Q([-10, 0]), [cx2] = Q([-2, 0]), l = Math.min(cx1, cx2); px(l, GROUND - 7, 9, 2, "#b0703f"); px(l, GROUND - 5, 1, 6, "#8a5530"); px(l + 8, GROUND - 5, 1, 6, "#8a5530"); px(dir > 0 ? l : l + 8, GROUND - 16, 1, 9, "#8a5530"); }
+  const H = Q(ps.H), S = Q(ps.S), M = ps.M ? Q(ps.M) : null;
+  const leg = (k, f, top, low) => { const K = Q(k), Fo = Q(f); line(H, K, 3, top); line(K, Fo, 3, low); if (F.socks) px(Fo[0] - 1, Fo[1] - 2, 3, 1, F.socks); px(Fo[0] - 1, Fo[1] - 1, 3, 2, F.shoe); };
+  const arm = (e, h) => { const E2 = Q(e), Hh = Q(h); line(S, E2, 2, skin); line(E2, Hh, 2, skin); line(S, [lerp(S[0], E2[0], .45), lerp(S[1], E2[1], .45)], 3, F.shirt); px(Hh[0] - 1, Hh[1] - 1, 2, 2, skin);
+    if (a.prop === "bottle") { px(Hh[0] - 1, Hh[1] - 4, 2, 5, "#8fd3ff"); px(Hh[0] - 1, Hh[1] - 5, 2, 1, "#ffffff"); } };
+  leg(ps.kB, ps.fB, F.legT2, F.legB2); arm(ps.eB, ps.hB);
+  if (M) { line(H, M, 5, F.shirt); line(M, S, 5, F.shirt); } else line(H, S, 5, F.shirt);
+  if (F.skirt) disc(H[0], H[1], 3.4, F.skirt); else disc(H[0], H[1], 2.4, F.legT);
+  const up = unit(ps.hd ? [ps.hd[0] * dir, ps.hd[1]] : [S[0] - (M || H)[0], S[1] - (M || H)[1]]);
+  const face = ps.face ? unit([ps.face[0] * dir, ps.face[1]]) : ps.sup ? [up[1], -up[0]] : [-up[1], up[0]];
+  const fc = face[0] * dir < 0 && !ps.sup && !ps.face ? [-face[0], -face[1]] : face;   // que mire hacia adelante
+  sideHead([S[0] + up[0] * 4.4, S[1] + up[1] * 4.4], up, fc, isD, F, ps);
+  leg(ps.kA, ps.fA, F.legT, F.legB); arm(ps.eA, ps.hA);
+}
+function sideHead(c, up, face, isD, F, ps) {
+  const hair = isD ? C.K : CM.K, skin = isD ? C.S : CM.S, R = 3.6;
+  const hat = !isD && F.hat === "dots" ? ["#8e6bc9", "#f2ecff"] : F.hat === "knit" ? [isD ? C.R : (F.knit || "#ff6fae"), "#ffffff"] : null;
+  if (!isD) for (let k = 0; k <= 3; k++) px(c[0] - face[0] * 3.4 - up[0] * k, c[1] - face[1] * 3.4 - up[1] * k, 2, 2, hair);   // pelo largo
+  for (let yy = -4; yy <= 4; yy++) for (let xx = -4; xx <= 4; xx++) {
+    if (xx * xx + yy * yy > R * R) continue;
+    const du = xx * up[0] + yy * up[1], df = xx * face[0] + yy * face[1];
+    let col = skin;
+    if (du > 1.5 || df < -1.1) col = hair;
+    if (!isD && F.band && du > 1.2 && du < 2.2) col = F.band;
+    if (hat && du > 1.8) col = (xx + yy) % 3 === 0 ? hat[1] : hat[0];
+    px(c[0] + xx, c[1] + yy, 1, 1, col);
+  }
+  const e = [c[0] + face[0] * 2 + up[0] * .5, c[1] + face[1] * 2 + up[1] * .5], hearts = ps.hearts || flags.hearts;
+  if (isD) { px(e[0], e[1], 1, 1, hearts ? C.H : C.G); px(e[0] - face[0], e[1] - face[1], 1, 1, hearts ? C.H : C.G); }
+  else px(e[0], e[1], 1, 1, hearts ? "#ff2d6f" : CM.E);
+  if (ps.blush || flags.blush) px(c[0] + face[0] * 1.6 - up[0] * .8, c[1] + face[1] * 1.6 - up[1] * .8, 1, 1, "#f49a9a");
+  px(c[0] + face[0] * 2.6 - up[0] * 1.6, c[1] + face[1] * 2.6 - up[1] * 1.6, 1, 1, "#9a3b2b");   // boquita
+  if (F.hat === "party") { const tip = [c[0] + up[0] * 6, c[1] + up[1] * 6]; line([c[0] + up[0] * 3.5, c[1] + up[1] * 3.5], tip, 2, "#ff5c98"); px(tip[0], tip[1], 1, 1, "#ffd84d"); }
+}
 // mini Maite hace los ejercicios de a dos "en espejo"
 const flipX = ps => ({ ...ps, dx: -(ps.dx || 0), kL: [-ps.kR[0], ps.kR[1]], kR: [-ps.kL[0], ps.kL[1]], fL: [-ps.fR[0], ps.fR[1]], fR: [-ps.fL[0], ps.fL[1]],
   eL: [-ps.eR[0], ps.eR[1]], eR: [-ps.eL[0], ps.eL[1]], hL: [-ps.hR[0], ps.hR[1]], hR: [-ps.hL[0], ps.hL[1]] });
@@ -1214,7 +1405,7 @@ const dg = { syl: -1, x: -14, anim: "walk", t0: 0, base: "daily", until: 0, next
 const mt = { x: -16, tx: -16, vis: false, timer: 0 };   // mini Maite: llega a entrenar y a celebrar
 function mtJoin() { clearTimeout(mt.timer); mt.vis = true; mt.tx = 35; }
 function mtLeave(ms = 0) { clearTimeout(mt.timer); mt.timer = setTimeout(() => { if (!rt.on) { mt.vis = false; mt.tx = -18; } }, ms); }
-const DX = () => rt.close ? 56 : mt.vis ? 63 : 50;   // dónde se para mini Diego (más cerquita para el abrazo)
+const DX = () => rt.close ? 56 : rt.side ? (rt.plan === "duo" ? 64 : 62) : mt.vis ? 63 : 50;   // dónde se para mini Diego (más cerquita para el abrazo)
 let dailyPhase = 0, dailyAt = 0;
 const DAILY_LOOP = [[DAILY, 4200], ["idle", 1500], ["wave", 1400], ["idle", 1200], ["sign", 2600], ["idle", 1200], ["heartHands", 2200], ["idle", 1300],
   ["dance", 2600], ["idle", 1300], ["thumbs", 1500], ["idle", 1200], ["jumprope", 3000], ["idle", 1200], ["flex", 1500]];
@@ -1233,7 +1424,7 @@ function tickDiego(t) {
   if (dg.until && t > dg.until) { dg.until = 0; flags.hearts = false; flags.blush = false; const n = dg.next; dg.next = null; if (n) n(); else baseAnim(true); }
   if (!dg.until && !dg.lock && dg.base === "daily" && t - dailyAt > DAILY_LOOP[dailyPhase][1]) { dailyPhase = (dailyPhase + 1) % DAILY_LOOP.length; dailyAt = t; baseAnim(false); }
   const a = ANIM[dg.anim];
-  if (a.sweat && Math.random() < .02) spawn({ type: "drop", x: dg.x + (Math.random() < .5 ? -6 : 6), y: 38, vx: (Math.random() - .5) * .6, vy: -.6, max: 30 });
+  if (a.sweat && Math.random() < .02) spawn({ type: "drop", x: dg.x + (Math.random() < .5 ? -6 : 6), y: a.side ? GROUND - 12 : 38, vx: (Math.random() - .5) * .6, vy: -.6, max: 30 });
   if (a.love && Math.random() < .05) heartPop((dg.x + mt.x) / 2, 30, 1);
   if (a.zzz && Math.random() < .012) spawn({ type: "z", x: dg.x + 6, y: 40, vy: -.18, max: 110, big: Math.random() < .5 });
   if (a.aura) { if (Math.random() < .6) spawn({ type: "aura", x: dg.x + (Math.random() - .5) * 26, y: GROUND - Math.random() * 30, vy: -.5 - Math.random() * .5, max: 26, c: a.auraC }); }
@@ -1243,9 +1434,11 @@ function frame(t) {
   drawRoom(t);
   const a = ANIM[dg.anim], ps = poseAt(dg.anim, t - dg.t0);
   if (a.aura) { const k = .4 + dg.charge * .6, w = Math.sin(t / 60) * 1.2; g.globalAlpha = .18 * k; disc(dg.x, GROUND - 18, 17 + dg.charge * 4 + w, a.auraC || "#ffe066"); g.globalAlpha = .28 * k; disc(dg.x, GROUND - 18, 11 + dg.charge * 3 - w, a.auraC || "#ffe066"); g.globalAlpha = 1; }   // brillo alrededor
-  if (mt.x > -15) { const mv = Math.abs(mt.x - mt.tx) > .4; drawMaite(mt.x, mv ? poseAt("walk", t) : a.mirror ? flipX(ps) : ps, mv ? ANIM.walk : a, t, t - dg.t0); }
+  if (mt.x > -15) { const mv = Math.abs(mt.x - mt.tx) > .4;
+    if (a.side && !mv) drawSide(Math.round(mt.x), ps, "m", a, t, 1); else drawMaite(mt.x, mv ? poseAt("walk", t) : a.mirror ? flipX(ps) : ps, mv ? ANIM.walk : a, t, t - dg.t0); }
   const dmv = dg.ready && Math.abs(dg.x - DX()) > .4;
-  drawDiego(dg.x + (a.aura ? (Math.random() - .5) * dg.charge * 1.2 : 0), dmv ? poseAt("walk", t) : ps, dmv ? ANIM.walk : a, t, t - dg.t0);
+  if (a.side && !dmv) drawSide(Math.round(dg.x), ps, "d", a, t, a.facing === "duo" ? -1 : 1);
+  else drawDiego(dg.x + (a.aura ? (Math.random() - .5) * dg.charge * 1.2 : 0), dmv ? poseAt("walk", t) : a.side ? POSES.idle : ps, dmv ? ANIM.walk : a.side ? ANIM.idle : a, t, t - dg.t0);
   drawParts();
   if (dg.anim === "kame") bigText(["KA", "KA ME", "KA ME HA", "KA ME HA ME"][Math.max(0, dg.syl)], 50, 10, t, KAME_COLS);
   const bt = t - scn.beam;
@@ -1435,18 +1628,32 @@ cv.addEventListener("click", e => {
 function fx(ms) { flags.blush = true; flags.hearts = true; dg.fxUntil = performance.now() + ms; }
 function minuteFx() { SND.kiss(); buzz(15); heartPop(dg.x, 30, 4); fx(1800); }
 function minuteLine(m, what) { say(MINUTE_LINES[md(D * 11 + m * 7, MINUTE_LINES.length)], { greet: `Minuto ${m}${what ? " · " + what : ""}` }); minuteFx(); }
-const EXS = (() => { const s0 = md(D * 3, 7); return [0, 2, 4, 6].map(k => EX[(s0 + k) % 7]); })();   // los 4 ejercicios del día
 const prep = secs => ({ kind: "prep", secs });
 function circuit(list, work, rest) { const out = []; list.forEach((e, k) => { out.push({ kind: "ex", secs: work, ex: e }); if (rest && k < list.length - 1) out.push({ kind: "rest", secs: rest, nextEx: list[k + 1] }); }); return out; }
+// las rutinas del día: siempre calentamiento, después lo bueno y al final estiramiento
+const REST_T = (secs, nextEx) => ({ kind: "rest", secs, nextEx });
+function routine(warm, main, cool, wT, mT, rT, cT) {
+  const out = []; warm.forEach(e => out.push({ kind: "ex", secs: wT, ex: e }));
+  main.forEach((e, k) => { out.push(REST_T(k ? rT : 10, e)); out.push({ kind: "ex", secs: mT, ex: e }); });
+  cool.forEach((e, k) => { out.push(REST_T(k ? 5 : 10, e)); out.push({ kind: "ex", secs: cT, ex: e }); });
+  return out;
+}
+const DAY = {
+  w5: [EXC.marcha, ...pickDay("calentamiento", 1, 0, ["marcha"])], w10: [EXC.marcha, ...pickDay("calentamiento", 2, 1, ["marcha"])],
+  m5: [pickDay("piernas", 1)[0], pickDay("abdomen", 1)[0], (D % 2 ? pickDay("brazos", 1) : pickDay("cardio", 1))[0]],
+  m10: [...pickDay("piernas", 2, 2), ...pickDay("abdomen", 2, 1), pickDay("brazos", 1, 2)[0], pickDay("cardio", 1, 1)[0]],
+  c5: pickDay("estirar", 2), c10: pickDay("estirar", 3, 2),
+};
+const names = l => l.map(e => e.name.toLowerCase()).join(", ");
 const PLANS = {
-  uno: { what: "1 minuto", steps: () => [prep(3), ...circuit([EXS[0], EXS[1], STRETCH], 20, 0)], intro: () => "Un minuto, nada más: tres ejercicios de 20 segundos. Hasta un minuto cuenta.",
-    done: "¡Un minuto hecho! Lo importante es que no dejaste ganar a la flojera." },
-  cinco: { what: "los 5 minutos", steps: () => [prep(5), ...circuit([...EXS, STRETCH], WORK, PAUSE)], intro: () => `Hoy hacemos 5 ejercicios: ${[...EXS, STRETCH].map(e => e.name.toLowerCase()).join(", ")}. ¡Yo los hago contigo!`,
-    done: "¡LO HICISTE! 5 minutos que valen oro." },
-  diez: { what: "10 minutos", steps: () => [prep(5), ...circuit([...EXS, ...EXS, STRETCH], 50, 15)], intro: () => "Dos vueltas a los 4 ejercicios del día y un estiramiento al final. Vamos con calma.",
-    done: "¡10 minutos! Eso ya es un entrenamiento de verdad. Te amo, campeona." },
-  estirar: { what: "5 minutos de estiramiento", steps: () => [prep(3), ...circuit(STRETCHES, 45, 5)], intro: () => "Hoy nada de saltos: solo estirar suavecito. Tu cuerpo te lo va a agradecer.",
-    done: "Estiraste todo. Tu cuerpo te da las gracias, y yo también." },
+  uno: { what: "1 minuto", steps: () => [prep(3), { kind: "ex", secs: 15, ex: EXC.marcha }, { kind: "ex", secs: 25, ex: DAY.m5[0] }, { kind: "ex", secs: 20, ex: DAY.c5[0] }],
+    intro: () => `Un minuto, nada más: ${names([EXC.marcha, DAY.m5[0], DAY.c5[0]])}. Hasta un minuto cuenta.`, done: "¡Un minuto hecho! Lo importante es que no dejaste ganar a la flojera." },
+  cinco: { what: "los 5 minutos", steps: () => [prep(5), ...routine(DAY.w5, DAY.m5, DAY.c5, 30, 40, 15, 30)],
+    intro: () => `Calentamos con ${names(DAY.w5)}; después ${names(DAY.m5)}, y estiramos al final. ¡Mini Maite y yo lo hacemos contigo!`, done: "¡LO HICISTE! 5 minutos que valen oro." },
+  diez: { what: "10 minutos", steps: () => [prep(5), ...routine(DAY.w10, DAY.m10, DAY.c10, 30, 45, 15, 30)],
+    intro: () => `Diez minutos de verdad: calentamiento, ${names(DAY.m10)} y estiramiento. Vamos con calma, mi chiquitita.`, done: "¡10 minutos! Eso ya es un entrenamiento de verdad. Te amo, campeona." },
+  estirar: { what: "5 minutos de estiramiento", steps: () => [prep(3), ...circuit(["respiracion", "cielo", "gatoVaca", "nino", "isquios", "cuadriceps", "brazoCruzado"].map(k => EXC[k]), 40, 5)],
+    intro: () => "Hoy nada de saltos: solo estirar suavecito. Tu cuerpo te lo va a agradecer.", done: "Estiraste todo. Tu cuerpo te da las gracias, y yo también." },
 };
 PLANS.duo = { what: "la rutina de a dos", steps: () => [prep(5), ...circuit(DUO.slice(0, 5), 40, 15), { kind: "rest", secs: 15, nextEx: DUO[5] }, { kind: "ex", secs: 30, ex: DUO[5] }],
   intro: () => "Rutina de a dos, para hacerla juntos cuando estemos. Mini Maite y yo les mostramos cómo, cachai.",
@@ -1460,7 +1667,7 @@ function setBtns(list) {
   list.forEach(([id, , , fn]) => $("#" + id).addEventListener("click", fn));
 }
 function runClock() { mtJoin(); scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); rt.on = true; rt.paused = false; rt.active = 0; rt.minSaid = 0; rt.since = 0; rt.seriesT = 0; clearInterval(rt.timer); rt.last = performance.now(); rt.timer = setInterval(rtTick, 100); show("#routine"); $("#rtBarBox").hidden = false; }
-function stopTimer() { rt.close = false; rt.on = false; rt.running = false; clearInterval(rt.timer); setBase("daily"); SND.musicOff(); }
+function stopTimer() { rt.close = false; rt.side = false; rt.on = false; rt.running = false; clearInterval(rt.timer); setBase("daily"); SND.musicOff(); }
 function musicFor() {
   const btn = $("#rtMus"); btn.setAttribute("aria-pressed", st.music); btn.textContent = st.music ? "♫ MÚSICA" : "♫ SIN MÚSICA";
   if (!rt.on || rt.paused || !st.music) return SND.musicOff();
@@ -1491,13 +1698,14 @@ function nextStep() {
   rt.i++; const s = rt.steps[rt.i];
   if (!s) return endTimer(true);
   rt.left = s.secs; rt.beeped = 4; rt.since = 0; setTimeout(musicFor, 0);
-  rt.close = rt.plan === "duo" && s.kind === "ex" && s.ex.anim === "duoHug"; if (mt.vis) mt.tx = rt.close ? 42 : 35;
+  rt.close = rt.plan === "duo" && s.kind === "ex" && s.ex.anim === "duoHug"; rt.side = s.kind === "ex" && !!ANIM[s.ex.anim]?.side;
+  if (mt.vis) mt.tx = rt.close ? 42 : rt.side ? (rt.plan === "duo" ? 34 : 27) : 35;
   const cur = s.kind === "ex" ? s.n : (rt.steps.slice(rt.i).find(x => x.kind === "ex")?.n ?? 99);   // el ejercicio que toca (o el que viene)
   [...$("#rtDots").children].forEach((d, k) => { d.className = k < cur ? "done" : k === cur && s.kind === "ex" ? "now" : ""; });
   $("#rtBarBox").classList.toggle("rest", s.kind === "rest" || s.kind === "prep");
   dg.until = 0;
   if (s.kind === "prep") { $("#rtStep").textContent = "¡PREPÁRATE!"; setBase("idle"); act("wave", 1500); say(rt.mode === "walk" ? `Vamos a caminar ${s === rt.steps[0] ? rt.steps[1].min : ""} minutos. Cada minuto te voy a decir algo. Si quieres, ponte audífonos con tu música.` : PLANS[rt.plan].intro(), { greet: "Mini Maite vino a entrenar con nosotros" }); }
-  else if (s.kind === "ex") { $("#rtStep").textContent = `EJERCICIO ${s.n + 1} DE ${s.total}`; SND.go(); buzz(30); setBase(s.ex.anim); baseAnim(true); say(`${s.ex.name}. ${s.ex.tip}`, { greet: s.n === s.total - 1 ? "El último" : s.n === 0 ? "¡Partimos!" : s.n === Math.floor(s.total / 2) ? "¡Vas en la mitad!" : "" }); }
+  else if (s.kind === "ex") { $("#rtStep").textContent = `EJERCICIO ${s.n + 1} DE ${s.total}`; SND.go(); buzz(30); setBase(s.ex.anim); baseAnim(true); say(`${s.ex.name}. ${s.ex.tip}`, { greet: s.ex.cat === "calentamiento" ? "Calentamiento" : s.ex.cat === "estirar" ? "Estiramiento: ya casi" : s.n === s.total - 1 ? "El último" : s.n === 0 ? "¡Partimos!" : s.n === Math.floor(s.total / 2) ? "¡Vas en la mitad!" : "" }); }
   else if (s.kind === "rest") { $("#rtStep").textContent = s.secs > 5 ? "DESCANSO" : "CAMBIAMOS"; SND.soft(); setBase(s.secs > 5 ? "drink" : "idle"); baseAnim(true); say(s.secs > 5 ? `Toma agüita y respira. Lo que viene: ${s.nextEx.name.toLowerCase()}.` : `Ahora: ${s.nextEx.name.toLowerCase()}.`, { greet: s.secs > 5 ? BOOSTS[md(D * 13 + rt.i * 3, BOOSTS.length)] : "" }); }
   else if (s.kind === "walk") { SND.go(); buzz(30); setBase("walkslow"); baseAnim(true); say(`¡A caminar! ${WALK_LINES[md(D, WALK_LINES.length)]}`, { greet: `Caminata de ${s.min} minutos` }); }
   rtRender();
@@ -1551,6 +1759,7 @@ function rtTick() {
       say(m === s.min - 1 ? "¡Último minuto! Termina con todo, mi amor." : m * 2 === s.min ? "¡Mitad del camino! Lo que queda es de bajada." : m % 2 ? MINUTE_LINES[md(D * 11 + m * 7, MINUTE_LINES.length)] : WALK_LINES[md(D + m, WALK_LINES.length)], { greet: `Minuto ${m} de ${s.min}` }); minuteFx(); }
   }
   if (s && s.kind !== "walk" && s.kind !== "prep") { rt.since += dt; const m = Math.floor(rt.active / 60); if (m > rt.minSaid && rt.since >= 3 && rt.left >= 4) { rt.minSaid = m; minuteLine(m, s.kind === "ex" ? s.ex.name : ""); } }
+  if (rt.left <= 0 && s?.kind === "ex" && s.ex.cat) { st.stats.cat[s.ex.cat] = (st.stats.cat[s.ex.cat] || 0) + 1; persist(); }
   if (rt.left <= 0) nextStep(); else rtRender();
 }
 function endTimer(done) {
@@ -1657,6 +1866,8 @@ const BADGE_TEST = {
   temprano: () => st.stats.early, madrugadora5: () => (st.stats.earlyN || 0) >= 5, noche: () => st.stats.late, descanso: () => (st.stats.rests || 0) >= 1,
   dia30: () => dayNumber() >= 30, fiel: () => Object.keys(st.visits).length >= 7, visitas30: () => Object.keys(st.visits).length >= 30,
   flor: () => plantStage() >= 6, parejaFit: () => st.stats.done.duo, duo5: () => CNT("duo") >= 5, closet: () => st.stats.closet, diario7: () => Object.keys(st.moods).length >= 7,
+  atumanera: () => st.stats.done.custom, entrenadora: () => CNT("custom") >= 5, core: () => (st.stats.cat.abdomen || 0) >= 20, piernasAcero: () => (st.stats.cat.piernas || 0) >= 20,
+  brazosFuertes: () => (st.stats.cat.brazos || 0) >= 20, calentadita: () => (st.stats.cat.calentamiento || 0) >= 20,
   medallas20: () => Object.keys(st.badges).length >= 20, medallas40: () => Object.keys(st.badges).length >= 40, todas: () => BADGES.every(([id]) => id === "todas" || st.badges[id]),
 };
 const totalMins = () => Object.values(st.mins).reduce((a, b) => a + b, 0);
@@ -1742,6 +1953,57 @@ function renderDiary() {
   const top = Object.entries(cnt).sort((a, b) => b[1] - a[1])[0];
   $("#moodTxt").textContent = top ? `Esta semana te sentiste más: ${MOODS.find(x => x[0] === top[0])[1].toLowerCase()}.` : "Cuando termines de entrenar, cuéntale a mini Diego cómo te sentiste y aquí queda tu semana.";
 }
+// arma tu rutina: ella elige los ejercicios y el orden
+const pick = { sel: [], work: 40, rest: 15, warm: true, ...(st.myRoutine || {}) };
+pick.sel = pick.sel.filter(id => EXC[id]);
+function previewEx(c, ex) {
+  const k = c.getContext("2d"), old = g, fl = { ...flags }, an = ANIM[ex.anim], t0 = an.fn ? 300 : an.d;
+  k.clearRect(0, 0, c.width, c.height); k.save(); k.translate(c.width / 2 - 50, c.height - 2 - (GROUND + 1) + OY); g = k; flags.hearts = flags.blush = false;
+  try { const ps = poseAt(ex.anim, t0); if (an.side) drawSide(50, ps, "d", an, 0, 1); else drawDiego(50, ps, an, 0, t0); } finally { g = old; Object.assign(flags, fl); k.restore(); }
+}
+let sheetDone = false;
+function renderSheet() {
+  $("#zonas").innerHTML = [...ZONES.map(([n]) => n), ...(st.myRoutine?.sel?.length ? ["Mi última rutina"] : [])].map(n => `<button class="zona" data-z="${n}" aria-pressed="false">${n}</button>`).join("");
+  $("#zonas").querySelectorAll(".zona").forEach(b => b.addEventListener("click", () => { SND.click(); const z = ZONES.find(x => x[0] === b.dataset.z);
+    pick.sel = z ? [...z[1]] : [...st.myRoutine.sel]; $("#zonas").querySelectorAll(".zona").forEach(x => x.setAttribute("aria-pressed", x === b)); syncSheet(); }));
+  const seg = (id, opts, key, fmt) => { $(id).innerHTML = opts.map(v => `<button data-v="${v}" aria-pressed="false">${fmt(v)}</button>`).join("");
+    $(id).querySelectorAll("button").forEach(b => b.addEventListener("click", () => { SND.click(); const v = b.dataset.v; pick[key] = key === "warm" ? v === "1" : +v; syncSheet(); })); };
+  seg("#segWork", [30, 40, 60], "work", v => `${v} S`); seg("#segRest", [10, 15, 30], "rest", v => `${v} S`); seg("#segWarm", [1, 0], "warm", v => v ? "SÍ" : "NO");
+  if (!sheetDone) {
+    $("#exList").innerHTML = EX_CATS.map(([c, title]) => `<p class="ex-cat">${title}</p><div class="ex-grid">${BY(c).map(e => `<button class="ex" data-e="${e.id}" aria-pressed="false"><canvas width="40" height="34" aria-hidden="true"></canvas><span>${e.name}</span></button>`).join("")}</div>`).join("");
+    $("#exList").querySelectorAll(".ex").forEach(b => { previewEx(b.querySelector("canvas"), EXC[b.dataset.e]);
+      b.addEventListener("click", () => { const id = b.dataset.e, i = pick.sel.indexOf(id); if (i >= 0) pick.sel.splice(i, 1); else pick.sel.push(id); SND.click(); buzz(6);
+        $("#zonas").querySelectorAll(".zona").forEach(x => x.setAttribute("aria-pressed", "false")); syncSheet(); }); });
+    sheetDone = true;
+  }
+  syncSheet();
+}
+function syncSheet() {
+  $("#exList").querySelectorAll(".ex").forEach(b => { const i = pick.sel.indexOf(b.dataset.e); b.classList.toggle("on", i >= 0); b.setAttribute("aria-pressed", i >= 0); b.querySelector(".num")?.remove();
+    if (i >= 0) b.insertAdjacentHTML("beforeend", `<span class="num">${i + 1}</span>`); });
+  $("#segWork").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.v === pick.work));
+  $("#segRest").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.v === pick.rest));
+  $("#segWarm").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", (b.dataset.v === "1") === pick.warm));
+  const n = pick.sel.length, secs = 5 + (pick.warm ? 60 + 10 + 60 + 15 : 0) + n * pick.work + Math.max(0, n - 1) * pick.rest + 10;
+  $("#shSum").textContent = n ? `${n} ejercicio${n === 1 ? "" : "s"} · unos ${Math.max(1, Math.round(secs / 60))} min` : "Elige al menos 1 ejercicio"; $("#shGo").disabled = !n;
+}
+function customExtras() {   // el calentamiento y el estiramiento van con lo que eligió
+  const cnt = {}; pick.sel.forEach(id => { const c = EXC[id].cat; cnt[c] = (cnt[c] || 0) + 1; });
+  const top = Object.entries(cnt).sort((a, b) => b[1] - a[1])[0]?.[0];
+  const W = { piernas: "cadera", abdomen: "tronco", brazos: "brazos", cardio: "talones" }[top] || "cadera";
+  const Cl = { piernas: ["cuadriceps", "isquios"], abdomen: ["gatoVaca", "nino"], brazos: ["brazoCruzado", "cielo"], cardio: ["cuadriceps", "respiracion"] }[top] || ["cielo", "isquios"];
+  return { warm: [EXC.marcha, EXC[W]], cool: Cl.map(k => EXC[k]) };
+}
+PLANS.custom = { what: "tu propia rutina",
+  steps: () => { const x = customExtras(), main = pick.sel.map(id => EXC[id]); return [prep(5), ...routine(pick.warm ? x.warm : [], main, pick.warm ? x.cool : [], 30, pick.work, pick.rest, 30)]; },
+  intro: () => `Tu rutina: ${names(pick.sel.map(id => EXC[id]))}${pick.warm ? ", con calentamiento y estiramiento" : ""}. ¡Mini Maite y yo la hacemos contigo, mi reina!`,
+  done: "¡Terminaste tu rutina! La armaste tú y la hiciste tú, mi chiquitita. Te amo con todo mi ser." };
+function openSheet() { renderSheet(); $("#sheet").hidden = false; document.body.style.overflow = "hidden"; SND.click(); }
+function closeSheet() { $("#sheet").hidden = true; document.body.style.overflow = ""; }
+$("#bArma").addEventListener("click", openSheet);
+$("#shClose").addEventListener("click", () => { SND.click(); closeSheet(); });
+$("#sheet").addEventListener("click", e => { if (e.target.id === "sheet") closeSheet(); });
+$("#shGo").addEventListener("click", () => { if (!pick.sel.length) return; st.myRoutine = { sel: [...pick.sel], work: pick.work, rest: pick.rest, warm: pick.warm }; persist(); closeSheet(); startPlan("custom"); });
 function renderFoot() {
   const n = now(), m = new Date(n); m.setHours(24, 0, 0, 0); const mins = Math.max(1, Math.round((m - n) / 60000));
   $("#foot").innerHTML = `Mañana mini Diego trae un mensaje nuevo · <b>${mins >= 60 ? `${Math.floor(mins / 60)} h ${mins % 60} min` : `${mins} min`}</b>`;
