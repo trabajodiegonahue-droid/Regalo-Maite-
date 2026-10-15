@@ -164,10 +164,14 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 .foot { margin: 0; text-align: center; font: 500 .95rem/1.4 var(--f-body); color: var(--muted); }
 .foot b { font: 700 .7rem/1 var(--f-pix); color: var(--rose); }
 
+#flash { position: fixed; inset: 0; pointer-events: none; opacity: 0; z-index: 50; --fx: 50%; --fy: 30%;
+  background: radial-gradient(circle at var(--fx) var(--fy), #ffffff 0 10%, #dff9ff 18%, #9fe8ff 30%, rgba(63, 169, 255, .55) 48%, rgba(63, 169, 255, 0) 72%),
+    repeating-conic-gradient(from 0deg at var(--fx) var(--fy), rgba(255, 255, 255, .6) 0 4deg, rgba(255, 255, 255, 0) 4deg 15deg); }
 @media (prefers-reduced-motion: reduce) { .led, .more, .say .caret, .key--gold { animation: none; } }
 @media (max-width: 360px) { .key { font-size: .92rem; grid-template-columns: 24px 1fr; gap: 6px; } .key .ic { width: 24px; height: 24px; } }
 </style>
 
+<div id="flash" aria-hidden="true"></div>
 <div class="wrap">
   <header class="top">
     <div class="brand"><span class="logo">MINI DIEGO</span><span class="sub" id="fecha"></span></div>
@@ -679,6 +683,15 @@ const SND = (() => {
     musicOff() { if (!mus) return; const m = mus; mus = null; clearInterval(m.timer); m.d.gain.setTargetAtTime(0, ctx.currentTime, .15); setTimeout(() => m.d.disconnect(), 700); },
     muteAll(on) { if (mus) mus.d.gain.setTargetAtTime(on ? 0 : .5, ctx.currentTime, .1); },
     glug() { seq([79, 74, 71], .05, .04, "sine"); },
+    syl(i) { if (ok()) tone(N([67, 71, 74, 79][i] || 79), ctx.currentTime, .14, .06, "square"); },   // ka, me, ha, me
+    beam() {   // ¡HAAAA!: ruido que se abre, un láser que baja y un bombazo
+      if (!ok()) return; const t = ctx.currentTime;
+      const n = ctx.createBufferSource(), b = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 1.2), ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+      const f = ctx.createBiquadFilter(), g = ctx.createGain(); f.type = "bandpass"; f.Q.value = 2; f.frequency.setValueAtTime(400, t); f.frequency.exponentialRampToValueAtTime(3000, t + .4); f.frequency.exponentialRampToValueAtTime(600, t + 1.1);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.35, t + .05); g.gain.exponentialRampToValueAtTime(.001, t + 1.15); n.buffer = b; n.connect(f); f.connect(g); g.connect(out); n.start(t);
+      const o = ctx.createOscillator(), og = ctx.createGain(); o.type = "sawtooth"; o.frequency.setValueAtTime(1400, t); o.frequency.exponentialRampToValueAtTime(180, t + .9); og.gain.setValueAtTime(.07, t); og.gain.exponentialRampToValueAtTime(.001, t + 1);
+      o.connect(og); og.connect(out); o.start(t); o.stop(t + 1.05); kick(t + .42, out); kick(t + .5, out);
+    },
     yupi() {   // "yu-pi-iiiii": tres sílabas que suben, la última con vibrato
       if (!ok()) return; const t = ctx.currentTime;
       const v = (f0, f1, t0, d, vol = .07) => { const o = ctx.createOscillator(), g = ctx.createGain(), l = ctx.createOscillator(), lg = ctx.createGain();
@@ -726,7 +739,7 @@ const DAILY = rot(["pesas", "jacks", "squat", "box", "run", "flex", "jumprope", 
 const SIGN = rot(["TE AMO", "TÚ PUEDES"], 1);
 
 function hourNow() { return now().getHours(); }
-const scn = { bird: 0, star: 0, beat: 0, plant: 0, yupi: -1e9 };   // cuándo se tocó cada cosa de la pieza
+const scn = { bird: 0, star: 0, beat: 0, plant: 0, yupi: -1e9, beam: -1e9 };   // cuándo se tocó cada cosa de la pieza
 const HEART7 = [".XX.XX.", "XXXXXXX", "XXXXXXX", ".XXXXX.", "..XXX..", "...X..."];
 function drawRoom(t) {
   const h = hourNow(), night = h >= 21 || h < 6, eve = h >= 18 && h < 21, morn = h >= 6 && h < 11;
@@ -807,6 +820,10 @@ const POSES = {
   dance1: P({ dx: -1, kL: [-3, 6], fL: [-4, 12], kR: [1, 6], fR: [2, 12], eL: [-8, -12], hL: [-6, -18], eR: [7, -4], hR: [9, 0], mouth: "grin", hy: -0.5 }),
   dance2: P({ dx: 1, kL: [-1, 6], fL: [-2, 12], kR: [3, 6], fR: [4, 12], eR: [8, -12], hR: [6, -18], eL: [-7, -4], hL: [-9, 0], mouth: "grin", hy: 0.5 }),
   thumb1: P({ eR: [8, -6], hR: [11, -10], mouth: "grin" }), thumb2: P({ eR: [8, -7], hR: [11, -12], mouth: "grin", y: -1 }),
+  kame1: P({ y: 3, kL: [-5, 4], fL: [-6, 9], kR: [5, 4], fR: [6, 9], eL: [-1, -6], hL: [6, -3], eR: [8, -5], hR: [8, -1], mouth: "tired" }),
+  kame2: P({ y: 3, kL: [-5, 4], fL: [-6, 9], kR: [5, 4], fR: [6, 9], eL: [-1, -6], hL: [6, -2], eR: [8, -5], hR: [8, 0], mouth: "tired", hy: .5 }),
+  kameF1: P({ y: 2, kL: [-5, 5], fL: [-7, 10], kR: [5, 5], fR: [7, 10], eL: [-6, -7], hL: [-1, -8], eR: [6, -7], hR: [1, -8], mouth: "grin" }),
+  kameF2: P({ y: 2, kL: [-5, 5], fL: [-7, 10], kR: [5, 5], fR: [7, 10], eL: [-6, -7], hL: [-1, -9], eR: [6, -7], hR: [1, -9], mouth: "grin" }),
   kiss1: P({ eR: [6, -7], hR: [1, -14], mouth: "kiss", blush: true }), kiss2: P({ eR: [9, -10], hR: [14, -13], mouth: "kiss", blush: true }),
 };
 const A = (f, d, extra = {}) => ({ f: f.map(k => POSES[k]), d, ...extra });
@@ -817,7 +834,8 @@ const ANIM = {
   pesas: A(["curl1", "curl2"], 650, { prop: "dumbbell", sweat: true }), bottles: A(["curl1", "curl2"], 650, { prop: "bottle", sweat: true }),
   stretch: A(["stretchUp", "stretchL", "stretchUp", "stretchR"], 1100),
   cheer: A(["cheer1", "cheer2"], 230, { prop: "pompom" }), sign: A(["sign1", "sign2"], 500, { prop: "sign" }),
-  hug: A(["hug", "hug"], 900), charge: A(["charge1", "charge2"], 70, { aura: true }), rest: A(["sit1", "sit2"], 1300, { zzz: true }),
+  hug: A(["hug", "hug"], 900), charge: A(["charge1", "charge2"], 70, { aura: true }),
+  kame: A(["kame1", "kame2"], 70, { aura: true, auraC: "#9fe8ff", prop: "kiball" }), kameFire: A(["kameF1", "kameF2"], 80), rest: A(["sit1", "sit2"], 1300, { zzz: true }),
   heartHands: A(["heart1", "heart2"], 520, { prop: "heartSign" }), dance: A(["dance1", "dance2"], 300), thumbs: A(["thumb1", "thumb2"], 480, { prop: "thumb" }),
   jumprope: { f: [POSES.idle], d: 600, prop: "rope", sweat: true, fn: t => { const ph = t / 600 * Math.PI * 2;
     return P({ eL: [-6, -3], hL: [-8, 1], eR: [6, -3], hR: [8, 1], kL: [-1, 6], fL: [-1, 12], kR: [1, 6], fR: [1, 12], mouth: "grin", y: -3 * Math.pow(Math.max(0, -Math.cos(ph)), 2) }); } },
@@ -839,11 +857,12 @@ function poseAt(name, t) {
 const PIXFONT = { T: ["XXX", ".X.", ".X.", ".X.", ".X."], E: ["XXX", "X..", "XX.", "X..", "XXX"], A: [".X.", "X.X", "XXX", "X.X", "X.X"], M: ["X.X", "XXX", "X.X", "X.X", "X.X"],
   O: ["XXX", "X.X", "X.X", "X.X", "XXX"], U: ["X.X", "X.X", "X.X", "X.X", "XXX"], "Ú": ["X.X", "X.X", "X.X", "X.X", "XXX"], P: ["XX.", "X.X", "XX.", "X..", "X.."],
   D: ["XX.", "X.X", "X.X", "X.X", "XX."], S: [".XX", "X..", ".X.", "..X", "XX."], Y: ["X.X", "X.X", ".X.", ".X.", ".X."], I: ["XXX", ".X.", ".X.", ".X.", "XXX"],
-  "!": [".X.", ".X.", ".X.", "...", ".X."], "¡": [".X.", "...", ".X.", ".X.", ".X."] };
+  "!": [".X.", ".X.", ".X.", "...", ".X."], K: ["X.X", "X.X", "XX.", "X.X", "X.X"], H: ["X.X", "X.X", "XXX", "X.X", "X.X"], "¡": [".X.", "...", ".X.", ".X.", ".X."] };
 // letras gigantes que saltan, de colores (para el súper yupi)
-function bigText(str, cx0, y0, t) {
+const KAME_COLS = ["#ffffff", "#9fe8ff", "#3fa9ff", "#bff3ff", "#7fd0ff"];
+function bigText(str, cx0, y0, t, cols = FW) {
   const chars = [...str], w = chars.length * 8 - 2; let x = Math.round(cx0 - w / 2);
-  chars.forEach((ch, i) => { const gph = PIXFONT[ch]; if (gph) { const dy = Math.round(-Math.abs(Math.sin(t / 110 + i * .7)) * 5), col = FW[(i + Math.floor(t / 150)) % 5];
+  chars.forEach((ch, i) => { const gph = PIXFONT[ch]; if (gph) { const dy = Math.round(-Math.abs(Math.sin(t / 110 + i * .7)) * 5), col = cols[(i + Math.floor(t / 150)) % 5];
     for (const [ox, oy, c] of [[-1, 0, "#3b1838"], [1, 0, "#3b1838"], [0, -1, "#3b1838"], [0, 1, "#3b1838"], [0, 0, col]]) gph.forEach((r, j) => [...r].forEach((v, q) => { if (v === "X") px(x + q * 2 + ox, y0 + dy + j * 2 + oy, 2, 2, c); })); }
     x += 8; });
 }
@@ -882,8 +901,16 @@ function drawDiego(x0, ps, a, t, at) {
     if (ACC === "munequeras") { const m = [lerp(el[0], ha[0], .72), lerp(el[1], ha[1], .72)]; px(m[0] - 1, m[1] - 1, 3, 2, C.Y); }
     handProp(a, sx, ha, bx, by, ps, at, C.S);
   }
+  if (a.prop === "kiball") kiBall(bx, by, ps, t);
 }
 
+// un círculo de pixeles (la bola y el rayo)
+function disc(cx0, cy0, r, c) { r = Math.max(.6, r); const R = Math.ceil(r); for (let y = -R; y <= R; y++) { const hw = Math.sqrt(Math.max(0, r * r - y * y)); if (hw >= .5) px(cx0 - hw, cy0 + y, Math.round(hw * 2), 1, c); } }
+function kiBall(bx, by, ps, t) {
+  const cxb = bx + (ps.hL[0] + ps.hR[0]) / 2 + 1, cyb = by + (ps.hL[1] + ps.hR[1]) / 2, r = 1.2 + dg.charge * 4.5 + Math.sin(t / 40) * .5;
+  g.globalAlpha = .5; disc(cxb, cyb, r + 2, "#3fa9ff"); g.globalAlpha = 1; disc(cxb, cyb, r, "#9fe8ff"); disc(cxb, cyb, r * .5, "#ffffff");
+  if (Math.random() < .5) { const an = Math.random() * 6.283; line([cxb, cyb], [cxb + Math.cos(an) * (r + 4), cyb + Math.sin(an) * (r + 4)], 1, "#ffffff"); }
+}
 // lo que tienen en las manos (sirve para los dos)
 function handProp(a, sx, ha, bx, by, ps, at, skin) {
   if (a.prop === "dumbbell") { px(ha[0] - 3, ha[1] - 1, 6, 1, "#8e95a8"); px(ha[0] - 4, ha[1] - 2, 2, 3, "#3b3f52"); px(ha[0] + 2, ha[1] - 2, 2, 3, "#3b3f52"); }
@@ -942,7 +969,7 @@ function drawParts() {
     else if (p.type === "z") { p.x += Math.sin(p.life / 12) * .2; rows(p.big ? ["XXXX", "..X.", ".X..", "XXXX"] : ["XXX", ".X.", "XXX"], Math.round(p.x), Math.round(p.y), { X: "#ffffff" }); }
     else if (p.type === "fire") { p.x += Math.sin((p.life + p.x) / 5) * .2; const k = p.life / p.max; px(p.x, p.y, 1, 2, k < .3 ? "#fff3b0" : k < .6 ? "#ffc93d" : "#ff7a3d"); }
     else if (p.type === "fw") { p.vy += .02; p.vx *= .97; px(p.x, p.y, 1, 1, p.life % 5 < 3 ? p.c : "#ffffff"); }
-    else if (p.type === "aura") { px(p.x, p.y, 1, 2, p.life % 6 < 3 ? "#ffe066" : "#ffffff"); }
+    else if (p.type === "aura") { px(p.x, p.y, 1, 2, p.life % 6 < 3 ? (p.c || "#ffe066") : "#ffffff"); }
     else if (p.type === "spark") { const s = p.life % 8 < 4; px(p.x, p.y, 1, 1, "#fff6b0"); if (s) { px(p.x - 1, p.y, 1, 1, "#fff6b0"); px(p.x + 1, p.y, 1, 1, "#fff6b0"); px(p.x, p.y - 1, 1, 1, "#fff6b0"); px(p.x, p.y + 1, 1, 1, "#fff6b0"); } }
   }
   parts = parts.filter(p => p.life < p.max && p.y < LH + 6 && p.y > -30);
@@ -950,7 +977,7 @@ function drawParts() {
 
 // qué está haciendo mini Diego
 const flags = { hearts: false, blush: false };
-const dg = { x: -14, anim: "walk", t0: 0, base: "daily", until: 0, next: null, charge: 0, lock: false, ready: false };
+const dg = { syl: -1, x: -14, anim: "walk", t0: 0, base: "daily", until: 0, next: null, charge: 0, lock: false, ready: false };
 const mt = { x: -16, tx: -16, vis: false, timer: 0 };   // mini Maite: llega a entrenar y a celebrar
 function mtJoin() { clearTimeout(mt.timer); mt.vis = true; mt.tx = 35; }
 function mtLeave(ms = 0) { clearTimeout(mt.timer); mt.timer = setTimeout(() => { if (!rt.on) { mt.vis = false; mt.tx = -18; } }, ms); }
@@ -975,17 +1002,27 @@ function tickDiego(t) {
   const a = ANIM[dg.anim];
   if (a.sweat && Math.random() < .02) spawn({ type: "drop", x: dg.x + (Math.random() < .5 ? -6 : 6), y: 38, vx: (Math.random() - .5) * .6, vy: -.6, max: 30 });
   if (a.zzz && Math.random() < .012) spawn({ type: "z", x: dg.x + 6, y: 40, vy: -.18, max: 110, big: Math.random() < .5 });
-  if (a.aura) { if (Math.random() < .6) spawn({ type: "aura", x: dg.x + (Math.random() - .5) * 26, y: GROUND - Math.random() * 30, vy: -.5 - Math.random() * .5, max: 26 }); }
+  if (a.aura) { if (Math.random() < .6) spawn({ type: "aura", x: dg.x + (Math.random() - .5) * 26, y: GROUND - Math.random() * 30, vy: -.5 - Math.random() * .5, max: 26, c: a.auraC }); }
 }
 function frame(t) {
   tickDiego(t);
   drawRoom(t);
   const a = ANIM[dg.anim], ps = poseAt(dg.anim, t - dg.t0);
-  if (a.aura) { const k = .4 + dg.charge * .6; g.globalAlpha = .35 * k; px(dg.x - 12, 30, 24, 40, "#ffe066"); g.globalAlpha = 1; }
+  if (a.aura) { const k = .4 + dg.charge * .6, w = Math.sin(t / 60) * 1.2; g.globalAlpha = .18 * k; disc(dg.x, GROUND - 18, 17 + dg.charge * 4 + w, a.auraC || "#ffe066"); g.globalAlpha = .28 * k; disc(dg.x, GROUND - 18, 11 + dg.charge * 3 - w, a.auraC || "#ffe066"); g.globalAlpha = 1; }   // brillo alrededor
   if (mt.x > -15) { const mv = Math.abs(mt.x - mt.tx) > .4; drawMaite(mt.x, mv ? poseAt("walk", t) : ps, mv ? ANIM.walk : a, t, t - dg.t0); }
   const dmv = dg.ready && Math.abs(dg.x - DX()) > .4;
   drawDiego(dg.x + (a.aura ? (Math.random() - .5) * dg.charge * 1.2 : 0), dmv ? poseAt("walk", t) : ps, dmv ? ANIM.walk : a, t, t - dg.t0);
   drawParts();
+  if (dg.anim === "kame") bigText(["KA", "KA ME", "KA ME HA", "KA ME HA ME"][Math.max(0, dg.syl)], 50, 10, t, KAME_COLS);
+  const bt = t - scn.beam;
+  if (bt < 1500) {   // el rayo de luz crece hacia ella, sale de la pantallita y termina en un destello
+    const hx2 = dg.x, hy2 = GROUND - 18;
+    if (bt < 620) { const k = bt / 620, R = 3 + k * k * 95;
+      for (let i = 0; i < 16; i++) { const an = i / 16 * 6.283 + bt / 90; line([hx2, hy2], [hx2 + Math.cos(an) * (R + 14), hy2 + Math.sin(an) * (R + 14)], 1, i % 2 ? "#ffffff" : "#bff3ff"); }
+      g.globalAlpha = .55; disc(hx2, hy2, R, "#3fa9ff"); g.globalAlpha = .85; disc(hx2, hy2, R * .75, "#9fe8ff"); g.globalAlpha = 1; disc(hx2, hy2, R * .45, "#ffffff");
+    } else { g.globalAlpha = Math.max(0, 1 - (bt - 620) / 880); px(0, OY, LW, LH, "#ffffff"); g.globalAlpha = 1; }
+    if (bt < 1100) bigText("¡HAAAA!", 50, 10, t, KAME_COLS);
+  }
   if (t - scn.yupi < 3400) { bigText("¡YUPIIII!", 50, 10, t); if (Math.random() < .25) confetti(2); if (Math.random() < .03) fireworks(1); }
   cx.imageSmoothingEnabled = false; cx.drawImage(lo, 0, 0, cv.width, cv.height);
   requestAnimationFrame(frame);
@@ -1023,18 +1060,26 @@ $("#bAnimo").addEventListener("click", () => {
   const an = ["flex", "cheer", "heartHands", "dance", "thumbs"][boostI % 5]; act(an, 1900, null, an === "heartHands" ? { blush: true } : {}); heartPop(dg.x, 30, 5); say(txt);
 });
 
+// el destello: el rayo sale de la pantallita y llena toda la pantalla del celular
+function flashScreen() {
+  const r = cv.getBoundingClientRect(), f = $("#flash"), x = r.left + dg.x / LW * r.width, y = r.top + (GROUND - 18 - OY) / LH * r.height;
+  f.style.setProperty("--fx", x + "px"); f.style.setProperty("--fy", y + "px"); f.style.transformOrigin = `${x}px ${y}px`;
+  f.animate(reduced ? [{ opacity: 0 }, { opacity: .6 }, { opacity: 0 }] : [{ opacity: 0, transform: "scale(.3)" }, { opacity: 1, transform: "scale(1)", offset: .3 }, { opacity: .85, transform: "scale(1.5)", offset: .55 }, { opacity: 0, transform: "scale(2)" }], { duration: 1100, easing: "ease-out" });
+  if (!reduced) $(".wrap").animate([{ transform: "translate(-4px, 2px)" }, { transform: "translate(4px, -2px)" }, { transform: "translate(-3px, 1px)" }, { transform: "none" }], { duration: 450 });
+}
 // cargar energía: hay que mantener apretado
 let chargeRaf = 0, chargeLast = 0, chargeDone = false, warned = false;
 const bC = $("#bCarga");
 function chargeLoop(t) {
-  const dt = Math.min(50, t - chargeLast); chargeLast = t;
-  if (bC.classList.contains("held")) dg.charge = Math.min(1, dg.charge + dt / (2200 / speed()));
+  const dt = Math.max(0, Math.min(50, t - chargeLast)); chargeLast = t;
+  if (bC.classList.contains("held")) { dg.charge = Math.min(1, dg.charge + dt / (2200 / speed())); const sy = Math.min(3, Math.floor(dg.charge * 4)); if (sy > dg.syl) { dg.syl = sy; SND.syl(sy); buzz(12); } }
   else dg.charge = Math.max(0, dg.charge - dt / 500);
   $("#cargaFill").style.width = dg.charge * 100 + "%"; SND.chargeLevel(dg.charge);
   if (dg.charge >= 1 && !chargeDone) {
-    chargeDone = true; dg.lock = false; bC.classList.remove("held"); SND.chargeOff(); SND.fanfare(); buzz([40, 30, 80]);
-    for (let i = 0; i < 18; i++) spawn({ type: "spark", x: dg.x, y: 46, vx: Math.cos(i / 18 * 6.28) * 1.4, vy: Math.sin(i / 18 * 6.28) * 1.4, max: 40 });
-    heartPop(dg.x, 34, 14); confetti(30); fireworks(2); act(Math.random() < .5 ? "cheer" : "dance", 2200); say(rot(CHARGE, 5));
+    chargeDone = true; dg.lock = false; bC.classList.remove("held"); SND.chargeOff(); dg.syl = -1;
+    act("kameFire", 1700); scn.beam = performance.now(); SND.beam(); buzz([30, 20, 220, 60, 120]); setTimeout(flashScreen, 420);
+    setTimeout(() => { SND.fanfare(); heartPop(dg.x, 34, 14); confetti(30); fireworks(2); act(Math.random() < .5 ? "cheer" : "dance", 2200); }, 1700);
+    say(rot(CHARGE, 5), { greet: "¡KA-ME-HA-ME-HAAAA!" });
     st.stats.charges++; persist(); checkBadges();
   }
   if (dg.charge > 0 || bC.classList.contains("held")) chargeRaf = requestAnimationFrame(chargeLoop);
@@ -1042,11 +1087,11 @@ function chargeLoop(t) {
 }
 bC.addEventListener("pointerdown", e => {
   e.preventDefault(); try { bC.setPointerCapture(e.pointerId); } catch {} bC.classList.add("held"); dg.lock = true; chargeDone = false; dg.charge = Math.max(dg.charge, 0);
-  SND.chargeOn(); buzz(10); act("charge", 0); if (!chargeRaf) { chargeLast = performance.now(); chargeRaf = requestAnimationFrame(chargeLoop); }
+  SND.chargeOn(); buzz(10); dg.syl = -1; act("kame", 0); if (!chargeRaf) { chargeLast = performance.now(); chargeRaf = requestAnimationFrame(chargeLoop); }
 });
 const release = () => {
   if (!bC.classList.contains("held")) return; bC.classList.remove("held"); dg.lock = false; SND.chargeOff();
-  if (!chargeDone) { baseAnim(true); if (!warned || dg.charge > .15) { warned = true; say("¡No sueltes! Mantén apretado hasta que se llene la barra."); } }
+  if (!chargeDone) { dg.syl = -1; baseAnim(true); if (!warned || dg.charge > .15) { warned = true; say("¡No sueltes! Mantén apretado hasta que se llene la barra."); } }
 };
 bC.addEventListener("pointerup", release); bC.addEventListener("pointercancel", release); bC.addEventListener("lostpointercapture", release);
 bC.addEventListener("contextmenu", e => e.preventDefault());
