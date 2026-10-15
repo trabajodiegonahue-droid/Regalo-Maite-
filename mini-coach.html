@@ -168,6 +168,21 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 .chip { text-decoration: none; padding: 9px 11px; background: var(--bg); color: var(--text); font: 600 .95rem/1.1 var(--f-body);
   box-shadow: 0 -2px 0 0 var(--card-line), 0 2px 0 0 var(--card-line), -2px 0 0 0 var(--card-line), 2px 0 0 0 var(--card-line); }
 .chip:active { transform: translateY(2px); }
+.ropa { display: flex; gap: 8px; overflow-x: auto; padding: 4px 3px 8px; scroll-snap-type: x proximity; }
+.prenda { flex: none; width: 76px; display: grid; justify-items: center; align-content: start; gap: 4px; padding: 8px 4px 7px; border: 0; background: var(--bg); color: var(--text); font: 700 .46rem/1.2 var(--f-pix); text-align: center; scroll-snap-align: start; }
+.prenda canvas { width: 36px; height: 66px; image-rendering: pixelated; }
+.prenda.locked canvas { opacity: .3; filter: grayscale(1); }
+.prenda.locked { color: var(--muted); }
+.prenda small { font: 700 .5rem/1 var(--f-pix); color: var(--gold); }
+.prenda.sel { box-shadow: 0 -2px 0 0 var(--rose), 0 2px 0 0 var(--rose), -2px 0 0 0 var(--rose), 2px 0 0 0 var(--rose); }
+.card .cl-who { font: 700 .62rem/1 var(--f-pix); letter-spacing: .08em; color: var(--rose); }
+.card .cl-info { color: var(--text); min-height: 1.4em; }
+.pad--mood { grid-template-columns: 1fr; }
+.mood-q { margin: 0; text-align: center; font: 700 .7rem/1 var(--f-pix); letter-spacing: .06em; color: var(--plum); }
+.moods { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.mood { border: 0; background: var(--paper); color: var(--plum); display: grid; justify-items: center; gap: 5px; padding: 8px 1px 7px; font: 700 .42rem/1.15 var(--f-pix); text-align: center;
+  box-shadow: 0 -2px 0 0 var(--plum), 0 2px 0 0 var(--plum), -2px 0 0 0 var(--plum), 2px 0 0 0 var(--plum), inset 0 -3px 0 #f6dbe8; }
+.mood canvas { width: 28px; height: 28px; image-rendering: pixelated; }
 .foot { margin: 0; text-align: center; font: 500 .95rem/1.4 var(--f-body); color: var(--muted); }
 .foot b { font: 700 .7rem/1 var(--f-pix); color: var(--rose); }
 
@@ -217,6 +232,7 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
       <button class="key key--sun" id="bUp"><canvas class="ic" data-ic="clock" width="8" height="8"></canvas><span>Cronómetro<small>Tú pones el ritmo</small></span></button>
       <button class="key" id="bSeries"><canvas class="ic" data-ic="dumbbell" width="8" height="8"></canvas><span>Entre series<small>Para el gym</small></span></button>
       <button class="key key--lav" id="bRest"><canvas class="ic" data-ic="moon" width="8" height="8"></canvas><span>Descansar<small>Sin culpa</small></span></button>
+      <button class="key key--wide" data-plan="duo"><canvas class="ic" data-ic="heart" width="8" height="8"></canvas><span>Rutina de a dos<small>Para hacerla juntos cuando estemos</small></span></button>
       <button class="key key--ghost key--wide" id="bBack1">◀ VOLVER</button>
     </div>
 
@@ -230,6 +246,12 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
     <div class="pad" id="padDone" hidden>
       <button class="key key--mint key--wide" id="bVoy2"><canvas class="ic" data-ic="shoe" width="8" height="8"></canvas><span>¡Ahora sí voy al gym!</span></button>
       <button class="key key--ghost key--wide" id="bBack2">LISTO POR HOY ♥</button>
+    </div>
+
+    <div class="pad pad--mood" id="padMood" hidden>
+      <p class="mood-q">¿CÓMO TE SENTISTE?</p>
+      <div class="moods" id="moods"></div>
+      <button class="key key--ghost key--wide" id="bMoodSkip">SALTAR</button>
     </div>
 
     <div class="routine" id="routine" hidden>
@@ -246,6 +268,7 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
     <div class="week" id="week" aria-label="Esta semana"></div>
     <p class="streak"><canvas id="flameIc" width="8" height="8" aria-hidden="true"></canvas><span id="streakTxt"></span></p>
     <p class="resumen" id="rachaInfo"></p>
+    <p class="resumen" id="plantInfo"></p>
     <p class="resumen" id="resumen"></p>
     <div class="next">
       <div class="next-row"><span id="nextTxt"></span><b id="nextNum"></b></div>
@@ -254,10 +277,26 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
     <ul class="vales" id="vales"></ul>
   </section>
 
+  <section class="card" aria-labelledby="clTitle">
+    <h2 id="clTitle">EL CLÓSET</h2>
+    <p>Con tus estrellas se desbloquea ropa nueva para los dos. Toca una para vestirlos.</p>
+    <p class="cl-who">MINI DIEGO</p>
+    <div class="ropa" id="ropaD"></div>
+    <p class="cl-who">MINI MAITE</p>
+    <div class="ropa" id="ropaM"></div>
+    <p class="cl-info" id="clInfo" aria-live="polite"></p>
+  </section>
+
   <section class="card" aria-labelledby="awTitle">
     <h2 id="awTitle">AGÜITA DE HOY</h2>
     <div class="vasos" id="vasos"></div>
     <p class="aw-msg" id="awMsg" aria-live="polite">Toca un vaso cada vez que tomes agua. La meta son 8.</p>
+  </section>
+
+  <section class="card" aria-labelledby="diTitle">
+    <h2 id="diTitle">CÓMO TE HAS SENTIDO</h2>
+    <div class="week" id="moodWeek" aria-label="Cómo te sentiste esta semana"></div>
+    <p class="resumen" id="moodTxt"></p>
   </section>
 
   <section class="card" aria-labelledby="wsTitle">
@@ -591,6 +630,7 @@ const BADGES = [
   ["volviste", "Volviste", "heart", "Volver a ganar estrella después de 3 días o más sin estrellas.", "Volviste, mi wawita mosha. Lo importante no es caerse, es volver. Te amo con todo lo que soy.", "constancia"],
   ["finde", "Finde activo", "sun", "Ganar una estrella un sábado o un domingo.", "Hasta el fin de semana te moviste, mi reina. Te adoro, cachai.", "constancia"],
   ["lunes", "Le ganó al lunes", "bolt", "Ganar una estrella un lunes.", "Le ganaste al lunes, mi chiquitita. Eso es de valiente. Te amo.", "constancia"],
+  ["flor", "Plantita florecida", "heart", "Hacer que tu plantita florezca.", "Tu plantita floreció, mi reina. Así floreces tú cada vez que te cuidas.", "constancia"],
   ["gym5", "Gym x5", "dumbbell", "Ir 5 veces al gym.", "Cinco veces al gym, mi amor. Ya eres de las que no faltan, cachai.", "gym"],
   ["gym15", "Gym x15", "dumbbell", "Ir 15 veces al gym.", "Quince veces al gym, mi princesa. Eres mi atleta favorita de todos los tiempos.", "gym"],
   ["gym30", "Gym x30", "dumbbell", "Ir 30 veces al gym.", "Treinta veces, mi vida. Te superas y me haces superarme. Te amo con todo.", "gym"],
@@ -619,6 +659,8 @@ const BADGES = [
   ["mil", "1000 minutos", "trophy", "Sumar 1000 minutos con mini Diego.", "¡Mil minutos, mi todo! Eres todo para mí. Te amo, te adoro, eres la mejor.", "crono"],
   ["todos", "De todo un poco", "star", "Completar cada tipo de cronómetro al menos una vez.", "Probaste todos los cronómetros, mi chiquitita. No hay nada que no puedas hacer.", "crono"],
   ["musica", "Bailarina", "note", "Terminar un cronómetro con la música puesta.", "Entrenaste con musiquita, mi amor. Te imagino bailando y me derrito.", "crono"],
+  ["parejaFit", "Pareja fit", "heart", "Terminar la rutina de a dos.", "Rutina de a dos completa, mi amor. Somos el mejor equipo del mundo, cachai.", "crono"],
+  ["duo5", "Inseparables fit", "heart", "Terminar 5 veces la rutina de a dos.", "Cinco rutinas juntos, mi vida. Entrenar contigo es mi parte favorita.", "crono"],
   ["hidratada", "Hidratada", "drop", "Tomar 8 vasos de agua en un día.", "Ocho vasos en un día, mi reina. Hidratada y preciosa.", "agua"],
   ["agua3", "Hidratada x3", "drop", "Tomar 8 vasos en 3 días distintos.", "Tres días hidratadita, mi wawita mosha. Tu cuerpito te lo agradece.", "agua"],
   ["agua7", "Plantita feliz", "drop", "Tomar 8 vasos en 7 días distintos.", "Siete días de agüita completa, mi vida. Eres una plantita feliz, cachai.", "agua"],
@@ -636,6 +678,7 @@ const BADGES = [
   ["vale", "Cobradora", "ticket", "Cobrar tu primer vale.", "Cobraste tu primer vale, mi vida. Prepárate, que Diego cumple.", "carino"],
   ["vales3", "Cobradora pro", "ticket", "Cobrar 3 vales.", "Tres vales cobrados, mi princesa. Me tienes trabajando feliz.", "carino"],
   ["todosVales", "Me debes todo", "ticket", "Cobrar los 5 vales.", "Cobraste todos los vales, mi alma. Igual te debo la vida entera.", "carino"],
+  ["closet", "A la moda", "star", "Vestir a los dos con ropa nueva del clóset.", "Nos vestiste a los dos, mi princesa. Somos la pareja más linda de la pieza.", "carino"],
   ["temprano", "Madrugadora", "sun", "Ganar una estrella antes de las 9 de la mañana.", "Madrugaste para quererte, mi chiquitita. Eso es amor del bueno.", "especial"],
   ["madrugadora5", "Gallito", "sun", "Ganar 5 estrellas antes de las 9 de la mañana.", "Cinco madrugadas, mi amor. Eres más temprana que el gallo, cachai.", "especial"],
   ["noche", "Búho", "moon", "Ganar una estrella después de las 9 de la noche.", "Hasta de noche te moviste, mi reina. Eres increíble.", "especial"],
@@ -643,6 +686,7 @@ const BADGES = [
   ["dia30", "Un mes con mini Coach", "calendar", "Cumplir un mes desde que abriste Mini Coach.", "Un mes juntos aquí, mi todo. Eres todo, te amo, te adoro.", "especial"],
   ["fiel", "Fiel", "heart", "Abrir Mini Coach 7 días distintos.", "Siete días viniendo a verme, mi princesa. Yo te espero siempre.", "especial"],
   ["visitas30", "Inseparables", "heart", "Abrir Mini Coach 30 días distintos.", "Treinta días, mi wawita mosha. Somos inseparables, cachai.", "especial"],
+  ["diario7", "Mi diario", "calendar", "Contarle a mini Diego cómo te sentiste 7 días distintos.", "Siete días contándome cómo te sientes, mi wawita mosha. Me encanta saber de ti.", "especial"],
   ["medallas20", "Coleccionista", "medal", "Ganar 20 medallas.", "Veinte medallas, mi chiquitita. Ya no te cabe el orgullo en el pecho, y a mí tampoco.", "especial"],
   ["medallas40", "Coleccionista pro", "medal", "Ganar 40 medallas.", "Cuarenta medallas, mi reina. Te amo con mi corazón, alma, cuerpo y energía.", "especial"],
   ["todas", "¡Todas!", "trophy", "Ganar todas las demás medallas.", "¡Todas las medallas, mi alma! Eres todo. Te amo, te adoro, eres la mejor. Para siempre.", "especial"],
@@ -666,6 +710,44 @@ const FUI = [
 const RACHA_LINES = { 2: "¡Dos días seguidos! Ya empezó la racha.", 3: "¡Tres días seguidos! Estás que ardes.", 5: "¡Cinco días seguidos! Nadie te para.",
   7: "¡Una semana entera! Soy el pololo más orgulloso del mundo.", 10: "¡Diez días seguidos! Esto ya es costumbre de campeona.", 14: "¡Dos semanas seguidas! Te admiro muchísimo.",
   21: "¡Tres semanas! Ya es un hábito, y tú eres una máquina.", 30: "¡Un mes entero de racha! Te amo infinito." };
+// el clóset: se desbloquea con estrellas
+const OUTFITS = {
+  d: [
+    { id: "normal", name: "Como siempre", stars: 0, line: "Así me conociste, mi amor: lentes, polera gris y jeans." },
+    { id: "futbol", name: "Futbolista", stars: 2, line: "Camiseta 10 de mediocampista, mi chiquitita. Hoy juego para ti." },
+    { id: "pijama", name: "Pijama", stars: 5, line: "Pijamita de estrellas para regalonear contigo, mi wawita mosha." },
+    { id: "invierno", name: "Invierno en Temuco", stars: 8, line: "Gorro, bufanda y parka: listo para la lluvia de Temuco, mi vida." },
+    { id: "heroe", name: "Superhéroe", stars: 12, line: "Súper Diego al rescate, mi princesa. Mi superpoder es amarte." },
+    { id: "terno", name: "De terno", stars: 18, line: "De terno y humita para nuestra próxima cita, mi reina." },
+    { id: "fiesta", name: "De fiesta", stars: 25, line: "¡Gorrito de fiesta! Hoy celebramos lo bacán que eres, mi todo." },
+  ],
+  m: [
+    { id: "normal", name: "Como siempre", stars: 0, line: "Mini Maite con su gorrito de lunares, igualita a la foto de chiquitita." },
+    { id: "deporte", name: "Deportiva", stars: 2, line: "Mini Maite lista para el gym, con su cintillo. Preciosa." },
+    { id: "pijama", name: "Pijama", stars: 5, line: "Mini Maite en pijama de nubes. Dan ganas de abrazarla, como a ti." },
+    { id: "invierno", name: "Invierno en Temuco", stars: 8, line: "Mini Maite abrigadita con gorro de pompón. Así te quiero, calentita." },
+    { id: "heroina", name: "Superheroína", stars: 12, line: "Súper Maite: su superpoder es hacerme feliz." },
+    { id: "vestido", name: "Vestido de cita", stars: 18, line: "Mini Maite con vestido rojo y una flor en el pelo. Me enamoro otra vez." },
+    { id: "fiesta", name: "De fiesta", stars: 25, line: "Mini Maite de fiesta. ¡La más linda de la celebración!" },
+  ],
+};
+// cómo me sentí: [id, nombre, color, lo que responde mini Diego]
+const MOODS = [
+  ["feliz", "Feliz", "#ffc93d", ["¡Me encanta que estés feliz, mi chiquitita! Esa sonrisa es mi premio favorito.", "Feliz tú, feliz yo. Así funciona esto, mi amor.", "Guarda esa felicidad, mi reina. Es tuya y te la ganaste."]],
+  ["orgullosa", "Orgullosa", "#ff5c98", ["Y yo estoy orgullosísimo de ti, mi princesa. Te lo ganaste.", "Tienes todo el derecho a sentirte orgullosa, mi vida. Yo también lo estoy.", "Orgullosa y preciosa. Te amo con todo mi ser."]],
+  ["energia", "Con energía", "#3fd4a6", ["¡Esa energía es tuya, mi amor! Guárdala para mañana también.", "Mírate, llena de energía. Eres un sol, mi wawita mosha.", "Con esa energía te comes el mundo, cachai."]],
+  ["cansada", "Cansada", "#a68cff", ["Cansadita pero lo hiciste, mi wawita mosha. Ahora agüita y a regalonear.", "Es normal estar cansada, mi alma. Descansa rico, te lo mereces.", "El cansancio de hoy es la fuerza de mañana, mi reina. Duerme rico."]],
+  ["costo", "Me costó", "#ff7a3d", ["Que te haya costado y lo hiciste igual vale el doble, mi princesa. Te admiro.", "Los días que cuestan son los que más valen, mi amor.", "Te costó, pero no te rendiste. Eso es de valiente, mi todo."]],
+];
+// rutina de a dos: para hacerla juntos (mini Maite hace todo en espejo)
+const DUO = [
+  { name: "Sentadillas con choque de manos", tip: "Uno al lado del otro: bajan juntos y al subir chocan las manos.", anim: "duoSquat" },
+  { name: "Saltos sincronizados", tip: "Saltos de tijera al mismo tiempo. ¡El que se descoordina da un beso!", anim: "duoJacks" },
+  { name: "El espejo", tip: "Uno mueve los brazos y el otro lo imita como espejo. A la mitad cambian.", anim: "espejo" },
+  { name: "Rodillas de la mano", tip: "Tomados de la mano, suban las rodillas por turnos.", anim: "duoKnees" },
+  { name: "Choque de puños", tip: "Frente a frente, golpecitos suaves que chocan en el medio.", anim: "duoPunch" },
+  { name: "Abrazo final", tip: "Brazos al cielo, respiren hondo... y abrazo apretado de 30 segundos.", anim: "duoHug" },
+];
 // agüita: lo que dice mini Diego con cada vaso
 const AGUA = [
   "Primer vasito. Tu cuerpo ya te está diciendo gracias.", "Dos vasos. Vas regando tu plantita interior.", "Tres. Así me gusta, hidratadita.",
@@ -716,6 +798,7 @@ st.badges = { ...(st.badges || {}) }; st.water = { ...(st.water || {}) }; st.min
 st.voy = { ...(st.voy || {}) }; st.visits = { ...(st.visits || {}) }; st.visits[KEY] = true;
 st.stats = { charges: 0, series: 0, libreMax: 0, early: false, late: false, ...(st.stats || {}) }; st.stats.done = { ...(st.stats.done || {}) };
 st.stats.cnt = { ...(st.stats.cnt || {}) }; st.stats.spots = { ...(st.stats.spots || {}) };
+st.outfit = { d: "normal", m: "normal", ...(st.outfit || {}) }; st.moods = { ...(st.moods || {}) };
 const persist = () => { try { localStorage.setItem("mini_diego", JSON.stringify(st)); } catch {} };
 const firstTime = !st.seen; st.seen = true; persist();
 const starCount = () => Object.values(st.days).filter(v => v === "gym" || v === "mini").length;
@@ -784,7 +867,7 @@ addEventListener("pointerdown", () => SND.wake(), { capture: true });
 
 /* ====================== la escena en pixeles ====================== */
 const LW = 100, LH = 72, GROUND = 68, OY = 4;   // OY: la pantalla muestra la pieza sin las 4 filas de más arriba
-const lo = document.createElement("canvas"); lo.width = LW; lo.height = LH; const g = lo.getContext("2d");
+const lo = document.createElement("canvas"); lo.width = LW; lo.height = LH; let g = lo.getContext("2d");
 const cv = $("#scene"), cx = cv.getContext("2d");
 function fit() {
   const w = cv.parentElement.clientWidth - 16, d = devicePixelRatio || 1;
@@ -809,6 +892,25 @@ const DAILY = rot(["pesas", "jacks", "squat", "box", "run", "flex", "jumprope", 
 const SIGN = rot(["TE AMO", "TÚ PUEDES"], 1);
 
 function hourNow() { return now().getHours(); }
+// la plantita crece con las estrellas; nunca se muere, si un día no hay estrella solo espera
+const PLANT = [[0, "como semillita"], [1, "con un brote"], [3, "chiquitita"], [6, "creciendo"], [10, "grande"], [15, "con botones"], [25, "florecida"], [40, "hecha un jardín de amor"]];
+const plantStage = () => { const n = starCount(); let s = 0; PLANT.forEach(([m], i) => { if (n >= m) s = i; }); return s; };
+const plantLine = () => { const s = plantStage(), nx = PLANT[s + 1], f = nx ? nx[0] - starCount() : 0; return `Tu plantita está ${PLANT[s][1]}. ${nx ? `Con ${f} estrella${f === 1 ? "" : "s"} más, crece otra vez.` : "Ya floreció entera, igual que tú, mi chiquitita."}`; };
+function drawPlant(t) {
+  const s = plantStage(), sw = Math.floor(t / (scn.plant > t ? 140 : 900)) % 2, G1 = "#3fae6a", G2 = "#2f8f55", top = 60, FL = ["X.X", "XXX", ".X."];
+  if (s === 0) { px(6, 60, 6, 1, "#7a4a2a"); px(9, 59, 1, 1, "#c98a4a"); if (Math.floor(t / 700) % 2) px(9, 58, 1, 1, G1); }
+  else {
+    const h = [0, 3, 6, 9, 13, 16, 18, 20][s];
+    px(9, top - h, 1, h, G2);   // tallo
+    for (let y = top - 2, k = 0; y > top - h + 1; y -= 3, k++) { const L = k % 2 === 0; px(L ? 7 - sw : 10 + sw, y, 2, 1, G1); px(L ? 6 - sw : 11 + sw, y - 1, 2, 1, G1); }
+    if (s >= 4) { px(5 - sw, top - h + 6, 3, 2, G1); px(11 + sw, top - h + 4, 3, 2, G1); }   // ramitas
+    const ty = top - h - 1;
+    if (s === 5) px(8, ty, 3, 2, "#ff8fb8");   // botón
+    if (s >= 6) { rows(FL, 8 + sw, ty - 1, { X: "#ff4f8b" }); px(9 + sw, ty - 1, 1, 1, "#ffd1e6"); }   // flor de corazón
+    if (s >= 7) { rows(FL, 4 - sw, ty + 5, { X: "#ff8fb8" }); rows(FL, 12 + sw, ty + 3, { X: "#ffc93d" }); if (Math.random() < .006) heartPop(9, ty, 1); }
+  }
+  px(5, 61, 8, 7, "#d9774f"); px(5, 61, 8, 1, "#ef9a74");   // macetero
+}
 const scn = { bird: 0, star: 0, beat: 0, plant: 0, yupi: -1e9, beam: -1e9 };   // cuándo se tocó cada cosa de la pieza
 const HEART7 = [".XX.XX.", "XXXXXXX", "XXXXXXX", ".XXXXX.", "..XXX..", "...X..."];
 function drawRoom(t) {
@@ -837,7 +939,7 @@ function drawRoom(t) {
   // piso de madera
   px(0, 54, LW, 22, "#e7b085"); for (let y = 58; y < LH + OY; y += 5) px(0, y, LW, 1, "#d39a6c"); for (let y = 54, k = 0; y < LH + OY; y += 5, k++) for (let x = (k % 2) * 13; x < LW; x += 26) px(x, y, 1, 5, "#d39a6c");
   // plantita
-  px(5, 61, 8, 7, "#d9774f"); px(5, 61, 8, 1, "#ef9a74"); const sw = Math.floor(t / (scn.plant > t ? 140 : 900)) % 2; px(6 - sw, 54, 2, 3, "#3fae6a"); px(6, 57, 2, 4, "#3fae6a"); px(9 + sw, 52, 2, 4, "#2f8f55"); px(9, 56, 2, 5, "#2f8f55"); px(11, 56, 2, 5, "#3fae6a"); px(4, 57, 2, 2, "#3fae6a");
+  drawPlant(t);
   // pesitas en el piso
   px(80, 64, 14, 2, "#8e95a8"); px(78, 62, 3, 6, "#3b3f52"); px(93, 62, 3, 6, "#3b3f52"); px(84, 69, 8, 1, "#8e95a8"); px(83, 68, 2, 3, "#ff5c98"); px(91, 68, 2, 3, "#ff5c98");
   // la colchoneta del día
@@ -894,6 +996,12 @@ const POSES = {
   kame2: P({ y: 3, kL: [-5, 4], fL: [-6, 9], kR: [5, 4], fR: [6, 9], eL: [-1, -6], hL: [6, -2], eR: [8, -5], hR: [8, 0], mouth: "tired", hy: .5 }),
   kameF1: P({ y: 2, kL: [-5, 5], fL: [-7, 10], kR: [5, 5], fR: [7, 10], eL: [-6, -7], hL: [-1, -8], eR: [6, -7], hR: [1, -8], mouth: "grin" }),
   kameF2: P({ y: 2, kL: [-5, 5], fL: [-7, 10], kR: [5, 5], fR: [7, 10], eL: [-6, -7], hL: [-1, -9], eR: [6, -7], hR: [1, -9], mouth: "grin" }),
+  hfUp: P({ eL: [-9, -12], hL: [-14, -15], eR: [6, -4], hR: [6, 1], mouth: "grin" }),
+  espejo1: P({ eR: [8, -12], hR: [9, -18] }), espejo2: P({ eL: [-8, -12], hL: [-9, -18] }),
+  duoKnee1: P({ y: -1, kL: [-3, 2], fL: [-3, 7], eL: [-9, -4], hL: [-14, -2], eR: [7, -6], hR: [5, -11], mouth: "grin" }),
+  duoKnee2: P({ y: -1, kR: [3, 2], fR: [3, 7], eL: [-9, -4], hL: [-14, -2], eR: [7, -4], hR: [7, 1], mouth: "grin" }),
+  duoPunch: P({ kL: [-3, 6], fL: [-4, 12], eL: [-9, -10], hL: [-14, -12], eR: [6, -6], hR: [3, -12], mouth: "grin" }),
+  duoHug: P({ eL: [-8, -10], hL: [-15, -9], eR: [6, -4], hR: [6, 1], mouth: "smile", blush: true }), duoHug2: P({ eL: [-8, -10], hL: [-15, -10], eR: [6, -4], hR: [6, 0], mouth: "smile", blush: true, hy: .5 }),
   kiss1: P({ eR: [6, -7], hR: [1, -14], mouth: "kiss", blush: true }), kiss2: P({ eR: [9, -10], hR: [14, -13], mouth: "kiss", blush: true }),
 };
 const A = (f, d, extra = {}) => ({ f: f.map(k => POSES[k]), d, ...extra });
@@ -911,6 +1019,9 @@ const ANIM = {
     return P({ eL: [-6, -3], hL: [-8, 1], eR: [6, -3], hR: [8, 1], kL: [-1, 6], fL: [-1, 12], kR: [1, 6], fR: [1, 12], mouth: "grin", y: -3 * Math.pow(Math.max(0, -Math.cos(ph)), 2) }); } },
   superjump: { f: [POSES.idle], d: 700, prop: "pompom", fn: t => { const up = Math.sin((t % 700) / 700 * Math.PI);
     return P({ y: -10 * up, kL: [-3, 6 - up * 3], fL: [-3 + up, 12 - up * 4], kR: [3, 6 - up * 3], fR: [3 - up, 12 - up * 4], eL: [-8, -12 - up * 2], hL: [-9, -18 - up * 3], eR: [8, -12 - up * 2], hR: [9, -18 - up * 3], mouth: "grin" }); } },
+  duoSquat: A(["squat1", "hfUp"], 700, { mirror: true, sweat: true }), duoJacks: A(["jack1", "jack2"], 330, { mirror: true, sweat: true }),
+  espejo: A(["espejo1", "espejo2"], 900, { mirror: true }), duoKnees: A(["duoKnee1", "duoKnee2"], 420, { mirror: true, sweat: true }),
+  duoPunch: A(["guard", "duoPunch"], 260, { mirror: true }), duoHug: A(["duoHug", "duoHug2"], 900, { mirror: true, love: true }),
   kiss: A(["kiss1", "kiss2"], 360), walk: A(["run1", "run2"], 200), walkslow: A(["run1", "run2"], 420),
   breathe: A(["breatheDown", "breatheUp"], 2400), armcross: A(["armcross1", "armcross1", "armcross2", "armcross2"], 1400),
   quad: A(["quad1", "quad1", "quad2", "quad2"], 1400), toes: A(["toes1", "toes2"], 1300), drink: A(["idle", "idle2"], 900, { prop: "bottleR" }),
@@ -941,38 +1052,45 @@ function pixText(s, cx0, y, c) {
   for (const ch of s) { if (PIXFONT[ch]) { rows(PIXFONT[ch], x, y, { X: c }); if (ch === "Ú") px(x + 1, y - 2, 2, 1, c); } x += 4; }
   return w;
 }
-function drawDiego(x0, ps, a, t, at) {
-  const bx = Math.round(x0 + (ps.dx || 0)), by = Math.round(GROUND - 12 + (ps.y || 0));
+function drawDiego(x0, ps, a, t, at, F = FIT_D[st.outfit.d] || FIT_D.normal) {
+  const bx = Math.round(x0 + (ps.dx || 0)), by = Math.round(GROUND - 12 + (ps.y || 0)), acc = F.acc ? ACC : "";
   const J = ([x, y]) => [bx + x, by + y];
-  // sombra
-  px(bx - 7, GROUND + 1, 14, 1, "rgba(59,24,56,.18)");
-  // piernas y zapatillas
-  line(J([-2, 0]), J(ps.kL), 3, C.J); line(J(ps.kL), J(ps.fL), 3, C.J);
-  line(J([2, 0]), J(ps.kR), 3, C.j); line(J(ps.kR), J(ps.fR), 3, C.j);
-  for (const f of [ps.fL, ps.fR]) { const [fx, fy] = J(f); px(fx - 2, fy - 1, 4, 2, C.B); px(fx - 2, fy + 1, 4, 1, C.w); }
-  // polera gris con el dibujo rojo
-  px(bx - 4, by - 10, 9, 10, C.T); px(bx + 4, by - 10, 1, 10, C.t); px(bx - 2, by - 7, 4, 3, C.R); px(bx + 1, by - 7, 1, 1, C.Y); px(bx - 1, by - 5, 1, 1, C.Y);
-  px(bx - 4, by - 1, 9, 2, C.J);
-  if (ACC === "toalla") { px(bx - 4, by - 11, 9, 2, C.W); px(bx - 4, by - 9, 2, 4, C.W); px(bx + 3, by - 9, 2, 3, C.W); px(bx - 4, by - 7, 2, 1, "#9fd8ff"); }
+  px(bx - 7, GROUND + 1, 14, 1, "rgba(59,24,56,.18)");   // sombra
+  if (F.cape) cape(bx, by, t, F);
+  // piernas y zapatos
+  line(J([-2, 0]), J(ps.kL), 3, F.legT); line(J(ps.kL), J(ps.fL), 3, F.legB);
+  line(J([2, 0]), J(ps.kR), 3, F.legT2); line(J(ps.kR), J(ps.fR), 3, F.legB2);
+  for (const f of [ps.fL, ps.fR]) { const [fx, fy] = J(f); if (F.socks) px(fx - 1, fy - 3, 3, 2, F.socks); px(fx - 2, fy - 1, 4, 2, F.shoe); px(fx - 2, fy + 1, 4, 1, F.sole); }
+  // polera (o lo que tenga puesto)
+  px(bx - 4, by - 10, 9, 10, F.shirt); px(bx + 4, by - 10, 1, 10, F.shade); F.chest?.(bx, by);
+  px(bx - 4, by - 1, 9, 2, F.legT);
+  if (acc === "toalla") { px(bx - 4, by - 11, 9, 2, C.W); px(bx - 4, by - 9, 2, 4, C.W); px(bx + 3, by - 9, 2, 3, C.W); px(bx - 4, by - 7, 2, 1, "#9fd8ff"); }
   // cabeza
   const hx = bx - 5, hy = Math.round(by - 21 + (ps.hy || 0));
-  px(bx - 1, by - 11, 3, 1, C.S);
-  rows(headRows({ mouth: ps.mouth, hearts: ps.hearts || flags.hearts, blush: ps.blush || flags.blush, glint: Math.floor(t / 1600) % 4 === 0, acc: ACC }), hx, hy, C);
-  if (ACC === "cintillo") { px(hx + 10, hy + 3, 1, 1, C.R); px(hx + 11, hy + 4, 1, 1, C.R); }
-  if (ACC === "jockey") { px(hx - 1, hy + 3, 1, 1, C.r); px(hx + 10, hy + 3, 1, 1, C.r); }
+  px(bx - 1, by - 11, 3, 1, C.S); F.neck?.(bx, by);
+  const hr = headRows({ mouth: ps.mouth, hearts: ps.hearts || flags.hearts, blush: ps.blush || flags.blush, glint: Math.floor(t / 1600) % 4 === 0, acc });
+  if (F.hat === "knit") { hr[0] = "..RRRRRR.."; hr[1] = ".RRRRRRRR."; hr[2] = "WWWWWWWWWW"; }
+  rows(hr, hx, hy, C);
+  if (F.hat === "knit") px(hx + 4, hy - 2, 2, 2, C.W);
+  if (F.hat === "party") partyHat(hx, hy);
+  if (acc === "cintillo") { px(hx + 10, hy + 3, 1, 1, C.R); px(hx + 11, hy + 4, 1, 1, C.R); }
+  if (acc === "jockey") { px(hx - 1, hy + 3, 1, 1, C.r); px(hx + 10, hy + 3, 1, 1, C.r); }
   // el cartel va detrás de las manos
   if (a.prop === "sign") { const sy = Math.round(by + ps.hL[1] - 10), w = SIGN.length * 4 + 5; px(bx - w / 2 - 1, sy - 1, w + 2, 11, "#3b1838"); px(bx - w / 2, sy, w, 9, "#fffafc"); pixText(SIGN, bx, sy + 2, "#ff2d6f"); }
   if (a.prop === "heartSign") { const hy2 = Math.round(by + ps.hL[1]); rows([".XX.XX.", "XXXXXXX", "XXXXXXX", ".XXXXX.", "..XXX..", "...X..."], bx - 3, hy2 - 7, { X: "#ff2d6f" }); px(bx - 2, hy2 - 6, 1, 1, "#ffd1e6"); }
-  // brazos: manga gris y después piel
+  // brazos: manga y después piel
   for (const [sx, e, h] of [[-5, ps.eL, ps.hL], [5, ps.eR, ps.hR]]) {
     const sh = J([sx, -9]), el = J(e), ha = J(h);
-    line(sh, el, 2, C.S); line(el, ha, 2, C.S); line(sh, [lerp(sh[0], el[0], .45), lerp(sh[1], el[1], .45)], 3, C.T);
+    line(sh, el, 2, C.S); line(el, ha, 2, C.S); line(sh, [lerp(sh[0], el[0], .45), lerp(sh[1], el[1], .45)], 3, F.shirt);
     px(ha[0] - 1, ha[1] - 1, 2, 2, C.S);
-    if (ACC === "munequeras") { const m = [lerp(el[0], ha[0], .72), lerp(el[1], ha[1], .72)]; px(m[0] - 1, m[1] - 1, 3, 2, C.Y); }
+    if (acc === "munequeras") { const m = [lerp(el[0], ha[0], .72), lerp(el[1], ha[1], .72)]; px(m[0] - 1, m[1] - 1, 3, 2, C.Y); }
     handProp(a, sx, ha, bx, by, ps, at, C.S);
   }
   if (a.prop === "kiball") kiBall(bx, by, ps, t);
 }
+// capa de superhéroe (va detrás) y gorrito de fiesta (sirven para los dos)
+function cape(bx, by, t, F) { const fl = Math.round(Math.sin(t / 160) * 1.5); for (let y = 0; y < 16; y++) { const w = 9 + Math.floor(y / 2); px(bx - Math.floor(w / 2) + (y > 9 ? fl : 0), by - 10 + y, w, 1, y % 5 === 4 ? F.cape2 : F.cape); } }
+function partyHat(hx, hy) { const P1 = "#ff5c98", P2 = "#ffd84d"; px(hx + 4, hy - 5, 2, 1, P1); px(hx + 3, hy - 4, 4, 1, P2); px(hx + 3, hy - 3, 4, 1, P1); px(hx + 2, hy - 2, 6, 1, P2); px(hx + 2, hy - 1, 6, 1, P1); px(hx + 4, hy - 7, 2, 2, "#ffffff"); }
 
 // un círculo de pixeles (la bola y el rayo)
 function disc(cx0, cy0, r, c) { r = Math.max(.6, r); const R = Math.ceil(r); for (let y = -R; y <= R; y++) { const hw = Math.sqrt(Math.max(0, r * r - y * y)); if (hw >= .5) px(cx0 - hw, cy0 + y, Math.round(hw * 2), 1, c); } }
@@ -993,29 +1111,74 @@ function handProp(a, sx, ha, bx, by, ps, at, skin) {
 // ---- mini Maite: gorrito morado con lunares (como en la foto de chiquititos), pelo largo, polera rosada con corazón y calzas ----
 const CM = { K: "#4a2c1f", S: "#f2c4a0", E: "#2a1a10", M: "#c2185b", p: "#ff8fa3", b: "#f49a9a", H: "#8e6bc9", h: "#f2ecff", R: "#ff2d6f", P: "#ff6fae", Q: "#e0528f", L: "#6a4bc4", l: "#5a3db0", W: "#ffffff", Z: "#f5f0ff" };
 const MMOUTH = { smile: ["KSMSSSSMSK", "KKSMMMMSKK"], grin: ["KSMMMMMMSK", "KKSMppMSKK"], kiss: ["KSSSMMSSSK", "KKSSMMSSKK"], tired: ["KSSSMMSSSK", "KKSSSSSSKK"], oh: ["KSSSMMSSSK", "KKSSMMSSKK"] };
-function maiteHead(o) {
-  const r = ["..HHHHHH..", ".HhHHhHHh.", "HHHHHHHHHH", "KSSSSSSSSK", o.hearts ? "KSRSSSSRSK" : "KSESSSSESK", "KSSSSSSSSK", ...(MMOUTH[o.mouth] || MMOUTH.smile), "KK.SSSS.KK", "KK......KK"];
+// la ropa de cada uno: colores y detalles
+const FIT_D = {
+  normal: { shirt: C.T, shade: C.t, legT: C.J, legT2: C.j, legB: C.J, legB2: C.j, shoe: C.B, sole: C.w, acc: true,
+    chest(bx, by) { px(bx - 2, by - 7, 4, 3, C.R); px(bx + 1, by - 7, 1, 1, C.Y); px(bx - 1, by - 5, 1, 1, C.Y); } },
+  futbol: { shirt: "#d62828", shade: "#a81c1c", legT: "#1a1a22", legT2: "#111118", legB: C.S, legB2: C.S, socks: "#ffffff", shoe: "#1a1a22", sole: "#ffffff",
+    chest(bx, by) { const w = "#ffffff"; px(bx - 4, by - 10, 9, 1, w); px(bx - 2, by - 8, 1, 4, w); px(bx, by - 8, 3, 1, w); px(bx, by - 5, 3, 1, w); px(bx, by - 8, 1, 4, w); px(bx + 2, by - 8, 1, 4, w); } },
+  pijama: { shirt: "#9fd8ff", shade: "#7cc0f0", legT: "#9fd8ff", legT2: "#7cc0f0", legB: "#9fd8ff", legB2: "#7cc0f0", shoe: "#f7a8c8", sole: "#ffffff",
+    chest(bx, by) { const y = "#ffe066"; px(bx - 3, by - 8, 1, 1, y); px(bx + 1, by - 7, 1, 1, y); px(bx - 1, by - 4, 1, 1, y); px(bx + 3, by - 3, 1, 1, y); } },
+  invierno: { shirt: "#2f8f55", shade: "#24724a", legT: C.J, legT2: C.j, legB: C.J, legB2: C.j, shoe: "#6b4226", sole: "#4a2c18", hat: "knit",
+    chest(bx, by) { px(bx, by - 10, 1, 10, "#1f5f3e"); }, neck(bx, by) { px(bx - 4, by - 11, 9, 2, "#d62828"); px(bx + 2, by - 9, 2, 4, "#d62828"); px(bx + 2, by - 6, 2, 1, "#ffd84d"); } },
+  heroe: { shirt: "#3f6fd8", shade: "#2f58b8", legT: "#3f6fd8", legT2: "#2f58b8", legB: "#3f6fd8", legB2: "#2f58b8", shoe: "#d62828", sole: "#a81c1c", cape: "#d62828", cape2: "#a81c1c",
+    chest(bx, by) { rows(["X.X", "XXX", ".X."], bx - 1, by - 8, { X: "#ffd84d" }); } },
+  terno: { shirt: "#22222c", shade: "#15151c", legT: "#22222c", legT2: "#15151c", legB: "#22222c", legB2: "#15151c", shoe: "#0d0d12", sole: "#3b3f52",
+    chest(bx, by) { px(bx - 1, by - 10, 3, 3, "#ffffff"); px(bx, by - 7, 1, 5, "#ffffff"); }, neck(bx, by) { px(bx - 2, by - 10, 2, 1, "#d62828"); px(bx + 1, by - 10, 2, 1, "#d62828"); px(bx, by - 10, 1, 1, "#a81c1c"); } },
+  fiesta: { shirt: "#ffd84d", shade: "#e0b800", legT: C.J, legT2: C.j, legB: C.J, legB2: C.j, shoe: C.B, sole: C.w, hat: "party",
+    chest(bx, by) { px(bx - 3, by - 8, 1, 1, "#ff5c98"); px(bx + 2, by - 7, 1, 1, "#3fd4a6"); px(bx - 1, by - 5, 1, 1, "#6cc0ff"); px(bx + 1, by - 3, 1, 1, "#ff5c98"); } },
+};
+const FIT_M = {
+  normal: { hat: "dots", shirt: CM.P, shade: CM.Q, legT: CM.L, legT2: CM.l, legB: CM.L, legB2: CM.l, shoe: CM.Z, sole: CM.R, chest(bx, by) { rows(["X.X", "XXX", ".X."], bx - 1, by - 7, { X: CM.W }); } },
+  deporte: { hat: "none", band: "#3fd4a6", shirt: "#bba6ff", shade: "#8a70e0", legT: "#1a1a22", legT2: "#111118", legB: CM.S, legB2: CM.S, socks: "#ffffff", shoe: "#ffffff", sole: "#3fd4a6", chest(bx, by) { px(bx - 4, by - 6, 9, 1, "#ffffff"); } },
+  pijama: { hat: "none", band: "#3b1838", shirt: "#ffc4dd", shade: "#f2a6c6", legT: "#ffc4dd", legT2: "#f2a6c6", legB: "#ffc4dd", legB2: "#f2a6c6", shoe: "#bba6ff", sole: "#ffffff",
+    chest(bx, by) { px(bx - 3, by - 8, 2, 1, "#ffffff"); px(bx + 1, by - 5, 2, 1, "#ffffff"); px(bx - 2, by - 3, 2, 1, "#ffffff"); } },
+  invierno: { hat: "knit", knit: "#ff6fae", shirt: "#e0528f", shade: "#c2185b", legT: "#3b3f52", legT2: "#2c3040", legB: "#3b3f52", legB2: "#2c3040", shoe: "#6b4226", sole: "#4a2c18",
+    chest(bx, by) { px(bx, by - 10, 1, 10, "#ffffff"); }, neck(bx, by) { px(bx - 4, by - 11, 9, 2, "#ffffff"); px(bx - 3, by - 9, 2, 3, "#ffffff"); } },
+  heroina: { hat: "none", band: "#ffd84d", shirt: "#ff5c98", shade: "#e0528f", legT: "#ff5c98", legT2: "#e0528f", legB: "#ff5c98", legB2: "#e0528f", shoe: "#7d4fd0", sole: "#5a3399", cape: "#7d4fd0", cape2: "#5a3399",
+    chest(bx, by) { rows(["X.X", "XXX", ".X."], bx - 1, by - 8, { X: "#ffd84d" }); } },
+  vestido: { hat: "none", flower: "#d62828", shirt: "#d62828", shade: "#a81c1c", skirt: "#d62828", skirt2: "#a81c1c", legT: CM.S, legT2: CM.S, legB: CM.S, legB2: CM.S, shoe: "#d62828", sole: "#a81c1c",
+    chest(bx, by) { px(bx - 2, by - 10, 5, 1, "#ff8fa3"); } },
+  fiesta: { hat: "party", shirt: "#ffd84d", shade: "#e0b800", skirt: "#ffd84d", skirt2: "#e0b800", legT: CM.S, legT2: CM.S, legB: CM.S, legB2: CM.S, shoe: "#ff5c98", sole: "#c92e68",
+    chest(bx, by) { px(bx - 2, by - 7, 1, 1, "#ff5c98"); px(bx + 2, by - 6, 1, 1, "#3fd4a6"); px(bx, by - 4, 1, 1, "#6cc0ff"); } },
+};
+function maiteHead(o, F = FIT_M.normal) {
+  const top = F.hat === "dots" ? ["..HHHHHH..", ".HhHHhHHh.", "HHHHHHHHHH"] : F.hat === "knit" ? ["..NNNNNN..", ".NNNNNNNN.", "nnnnnnnnnn"] : ["..KKKKKK..", ".KKKKKKKK.", F.band ? "BBBBBBBBBB" : "KKKKKKKKKK"];
+  const r = [...top, "KSSSSSSSSK", o.hearts ? "KSRSSSSRSK" : "KSESSSSESK", "KSSSSSSSSK", ...(MMOUTH[o.mouth] || MMOUTH.smile), "KK.SSSS.KK", "KK......KK"];
   if (o.blush) r[5] = "KSbSSSSbSK";
   return r;
 }
-function drawMaite(x0, ps, a, t, at) {
+function drawMaite(x0, ps, a, t, at, F = FIT_M[st.outfit.m] || FIT_M.normal) {
   const bx = Math.round(x0 + (ps.dx || 0)), by = Math.round(GROUND - 12 + (ps.y || 0)), J = ([x, y]) => [bx + x, by + y];
   px(bx - 7, GROUND + 1, 14, 1, "rgba(59,24,56,.18)");
-  line(J([-2, 0]), J(ps.kL), 3, CM.L); line(J(ps.kL), J(ps.fL), 3, CM.L);
-  line(J([2, 0]), J(ps.kR), 3, CM.l); line(J(ps.kR), J(ps.fR), 3, CM.l);
-  for (const f of [ps.fL, ps.fR]) { const [fx, fy] = J(f); px(fx - 2, fy - 1, 4, 2, CM.Z); px(fx - 2, fy + 1, 4, 1, CM.R); }
-  px(bx - 4, by - 10, 9, 10, CM.P); px(bx + 4, by - 10, 1, 10, CM.Q); rows(["X.X", "XXX", ".X."], bx - 1, by - 7, { X: CM.W });
-  px(bx - 4, by - 1, 9, 2, CM.L);
+  if (F.cape) cape(bx, by, t, F);
+  line(J([-2, 0]), J(ps.kL), 3, F.legT); line(J(ps.kL), J(ps.fL), 3, F.legB);
+  line(J([2, 0]), J(ps.kR), 3, F.legT2); line(J(ps.kR), J(ps.fR), 3, F.legB2);
+  for (const f of [ps.fL, ps.fR]) { const [fx, fy] = J(f); if (F.socks) px(fx - 1, fy - 3, 3, 2, F.socks); px(fx - 2, fy - 1, 4, 2, F.shoe); px(fx - 2, fy + 1, 4, 1, F.sole); }
+  px(bx - 4, by - 10, 9, 10, F.shirt); px(bx + 4, by - 10, 1, 10, F.shade); F.chest?.(bx, by);
+  px(bx - 4, by - 1, 9, 2, F.skirt || F.legT);
+  if (F.skirt) for (let y = 0; y < 6; y++) { const w = 9 + y; px(bx - Math.floor(w / 2), by - 1 + y, w, 1, y === 5 ? F.skirt2 : F.skirt); }   // falda
   const hx = bx - 5, hy = Math.round(by - 21 + (ps.hy || 0));
-  px(bx - 1, by - 11, 3, 1, CM.S);
-  rows(maiteHead({ mouth: ps.mouth, hearts: ps.hearts || flags.hearts, blush: ps.blush || flags.blush }), hx, hy, CM);
+  px(bx - 1, by - 11, 3, 1, CM.S); F.neck?.(bx, by);
+  rows(maiteHead({ mouth: ps.mouth, hearts: ps.hearts || flags.hearts, blush: ps.blush || flags.blush }, F), hx, hy, { ...CM, B: F.band || "#3fd4a6", N: F.knit || "#ff6fae", n: "#ffffff" });
+  if (F.hat === "knit") px(hx + 4, hy - 2, 2, 2, "#ffffff");
+  if (F.hat === "party") partyHat(hx, hy);
+  if (F.flower) { px(hx + 8, hy + 2, 2, 2, F.flower); px(hx + 8, hy + 2, 1, 1, "#ffd84d"); }
   if (a.prop === "heartSign") { const hy2 = Math.round(by + ps.hL[1]); rows(HEART7, bx - 3, hy2 - 7, { X: "#ff2d6f" }); }
   for (const [sx, e, h] of [[-5, ps.eL, ps.hL], [5, ps.eR, ps.hR]]) {
     const sh = J([sx, -9]), el = J(e), ha = J(h);
-    line(sh, el, 2, CM.S); line(el, ha, 2, CM.S); line(sh, [lerp(sh[0], el[0], .45), lerp(sh[1], el[1], .45)], 3, CM.P);
+    line(sh, el, 2, CM.S); line(el, ha, 2, CM.S); line(sh, [lerp(sh[0], el[0], .45), lerp(sh[1], el[1], .45)], 3, F.shirt);
     px(ha[0] - 1, ha[1] - 1, 2, 2, CM.S);
     handProp(a, sx, ha, bx, by, ps, at, CM.S);
   }
+}
+// mini Maite hace los ejercicios de a dos "en espejo"
+const flipX = ps => ({ ...ps, dx: -(ps.dx || 0), kL: [-ps.kR[0], ps.kR[1]], kR: [-ps.kL[0], ps.kL[1]], fL: [-ps.fR[0], ps.fR[1]], fR: [-ps.fL[0], ps.fL[1]],
+  eL: [-ps.eR[0], ps.eR[1]], eR: [-ps.eL[0], ps.eL[1]], hL: [-ps.hR[0], ps.hR[1]], hR: [-ps.hL[0], ps.hL[1]] });
+// vista previa del clóset: dibuja al personaje en un canvas chiquito
+function previewFit(cvs, who, id) {
+  const k = cvs.getContext("2d"), old = g, fl = { ...flags }; k.clearRect(0, 0, cvs.width, cvs.height); k.save(); k.translate(12 - 50, -(GROUND - 41 - OY)); g = k; flags.hearts = flags.blush = false;
+  try { if (who === "d") drawDiego(50, POSES.idle, ANIM.idle, 0, 0, FIT_D[id]); else drawMaite(50, POSES.idle, ANIM.idle, 0, 0, FIT_M[id]); } finally { g = old; Object.assign(flags, fl); k.restore(); }
 }
 // la cuerda de saltar: pasa por arriba de la cabeza y por debajo de los pies
 function drawRope(bx, by, ps, at) {
@@ -1051,7 +1214,7 @@ const dg = { syl: -1, x: -14, anim: "walk", t0: 0, base: "daily", until: 0, next
 const mt = { x: -16, tx: -16, vis: false, timer: 0 };   // mini Maite: llega a entrenar y a celebrar
 function mtJoin() { clearTimeout(mt.timer); mt.vis = true; mt.tx = 35; }
 function mtLeave(ms = 0) { clearTimeout(mt.timer); mt.timer = setTimeout(() => { if (!rt.on) { mt.vis = false; mt.tx = -18; } }, ms); }
-const DX = () => mt.vis ? 63 : 50;   // dónde se para mini Diego
+const DX = () => rt.close ? 56 : mt.vis ? 63 : 50;   // dónde se para mini Diego (más cerquita para el abrazo)
 let dailyPhase = 0, dailyAt = 0;
 const DAILY_LOOP = [[DAILY, 4200], ["idle", 1500], ["wave", 1400], ["idle", 1200], ["sign", 2600], ["idle", 1200], ["heartHands", 2200], ["idle", 1300],
   ["dance", 2600], ["idle", 1300], ["thumbs", 1500], ["idle", 1200], ["jumprope", 3000], ["idle", 1200], ["flex", 1500]];
@@ -1071,6 +1234,7 @@ function tickDiego(t) {
   if (!dg.until && !dg.lock && dg.base === "daily" && t - dailyAt > DAILY_LOOP[dailyPhase][1]) { dailyPhase = (dailyPhase + 1) % DAILY_LOOP.length; dailyAt = t; baseAnim(false); }
   const a = ANIM[dg.anim];
   if (a.sweat && Math.random() < .02) spawn({ type: "drop", x: dg.x + (Math.random() < .5 ? -6 : 6), y: 38, vx: (Math.random() - .5) * .6, vy: -.6, max: 30 });
+  if (a.love && Math.random() < .05) heartPop((dg.x + mt.x) / 2, 30, 1);
   if (a.zzz && Math.random() < .012) spawn({ type: "z", x: dg.x + 6, y: 40, vy: -.18, max: 110, big: Math.random() < .5 });
   if (a.aura) { if (Math.random() < .6) spawn({ type: "aura", x: dg.x + (Math.random() - .5) * 26, y: GROUND - Math.random() * 30, vy: -.5 - Math.random() * .5, max: 26, c: a.auraC }); }
 }
@@ -1079,7 +1243,7 @@ function frame(t) {
   drawRoom(t);
   const a = ANIM[dg.anim], ps = poseAt(dg.anim, t - dg.t0);
   if (a.aura) { const k = .4 + dg.charge * .6, w = Math.sin(t / 60) * 1.2; g.globalAlpha = .18 * k; disc(dg.x, GROUND - 18, 17 + dg.charge * 4 + w, a.auraC || "#ffe066"); g.globalAlpha = .28 * k; disc(dg.x, GROUND - 18, 11 + dg.charge * 3 - w, a.auraC || "#ffe066"); g.globalAlpha = 1; }   // brillo alrededor
-  if (mt.x > -15) { const mv = Math.abs(mt.x - mt.tx) > .4; drawMaite(mt.x, mv ? poseAt("walk", t) : ps, mv ? ANIM.walk : a, t, t - dg.t0); }
+  if (mt.x > -15) { const mv = Math.abs(mt.x - mt.tx) > .4; drawMaite(mt.x, mv ? poseAt("walk", t) : a.mirror ? flipX(ps) : ps, mv ? ANIM.walk : a, t, t - dg.t0); }
   const dmv = dg.ready && Math.abs(dg.x - DX()) > .4;
   drawDiego(dg.x + (a.aura ? (Math.random() - .5) * dg.charge * 1.2 : 0), dmv ? poseAt("walk", t) : ps, dmv ? ANIM.walk : a, t, t - dg.t0);
   drawParts();
@@ -1119,7 +1283,9 @@ $("#bubble").addEventListener("click", e => {
 });
 
 /* ====================== botones ====================== */
-const show = id => { for (const p of ["#pad", "#padNo", "#padWalk", "#padDone", "#routine"]) $(p).hidden = p !== id; };
+const show = id => { for (const p of ["#pad", "#padNo", "#padWalk", "#padDone", "#padMood", "#routine"]) $(p).hidden = p !== id; };
+let moodNext = "#pad";
+function askMood(next) { moodNext = next; show("#padMood"); }
 const greetText = () => { const h = hourNow(); return `${h >= 5 && h < 12 ? "¡Buenos días" : h >= 12 && h < 20 ? "¡Buenas tardes" : "¡Buenas noches"}, ${rot(PETS, 2)}! ${WEEK[TODAY.getDay()]}`; };
 const showDaily = () => say(rot(MSGS, 37, 11), { greet: greetText() });
 
@@ -1169,7 +1335,7 @@ bC.addEventListener("keydown", e => { if ((e.key === " " || e.key === "Enter") &
 bC.addEventListener("keyup", e => { if (e.key === " " || e.key === "Enter") release(); });
 
 function markDay(kind) {   // una estrella por día como máximo; "gym" le gana a "mini"
-  const prev = st.days[KEY], had = prev === "gym" || prev === "mini";
+  const prev = st.days[KEY], had = prev === "gym" || prev === "mini", planta0 = plantStage();
   if (kind === "gym" || !had) st.days[KEY] = kind;
   const nueva = !had && (kind === "gym" || kind === "mini");
   if (nueva) {
@@ -1187,6 +1353,17 @@ function markDay(kind) {   // una estrella por día como máximo; "gym" le gana 
       act("flex", 1800); say(RACHA_LINES[sk] || `Llevas ${sk} días seguidos. ¡No pares, que vas preciosa!`, { greet: `🔥 Racha de ${sk} días seguidos` }); };
     f.auto = true; queue.push(f);
   }
+  if (nueva && plantStage() > planta0) {   // la plantita creció
+    const f = () => { SND.boost(); scn.plant = performance.now() + 2500; for (let i = 0; i < 10; i++) spawn({ type: "spark", x: 9 + (Math.random() - .5) * 10, y: 50 - Math.random() * 14, vx: (Math.random() - .5) * .4, vy: -.3, max: 40 }); act("wave", 1600);
+      say(`${plantLine()} Crece contigo, mi chiquitita.`, { greet: "🌱 ¡Tu plantita creció!" }); };
+    f.auto = true; queue.push(f);
+  }
+  const nuevaRopa = nueva ? [...OUTFITS.d, ...OUTFITS.m].filter(o => o.stars === starCount() && o.stars > 0) : [];
+  if (nuevaRopa.length) {   // ropa nueva en el clóset
+    const f = () => { SND.fanfare(); confetti(30); act("flex", 1800); say(`Desbloqueaste "${nuevaRopa[0].name}" para los dos, mi amor. Anda al clóset a vestirnos.`, { greet: "👕 ¡Ropa nueva en el clóset!" }); };
+    f.auto = true; queue.push(f);
+  }
+  if (nueva) renderCloset();
   return nueva;
 }
 function celebrate(line, waText) {
@@ -1212,7 +1389,7 @@ function fuiGym() {
   $(".bezel").animate([{ transform: "translate(-3px, 0)" }, { transform: "translate(3px, -1px)" }, { transform: "translate(-2px, 1px)" }, { transform: "none" }], { duration: 420 });
   say(yaFui ? "¡Otro yupi! Ya sé que fuiste, pero me encanta celebrarte. Cada vez te superas y haces que yo me supere más. Te amo." : FUI[(Object.keys(st.fui).length - 1) % FUI.length], { greet: "¡¡SÚPER YUPIIIIII!!" });
   const w = $("#waLink"); w.href = wa(`¡FUI AL GYM! 🏆 Mini Diego me dio un súper yupi.${sk > 1 ? ` Llevo ${sk} días seguidos 🔥` : ""}`); w.textContent = "CONTARLE A DIEGO 💬"; w.hidden = false;
-  show("#pad"); checkBadges();
+  askMood("#pad"); checkBadges();
 }
 $("#bFui").addEventListener("click", fuiGym);
 $("#bVoy").addEventListener("click", goGym);
@@ -1235,7 +1412,7 @@ const SPOTS = [
   { k: "cuadro", x0: 72, x1: 91, y0: 8, y1: 28, n: 0, fn() { scn.beat = performance.now() + 1800; heartPop(81, 16, 4); SND.kiss();
     return ["Ese corazón late por ti. Siempre.", "Es nuestro cuadro. Lo pinté pensando en ti.", "Cuando late rápido es porque me miraste."][this.n++ % 3]; } },
   { k: "planta", x0: 2, x1: 15, y0: 50, y1: 69, n: 0, fn() { scn.plant = performance.now() + 1500;
-    return ["Mi plantita crece de a poquito, igual que tu fuerza.", "La riego todos los días, como mi amor por ti.", "Shhh, la plantita también te está haciendo barra."][this.n++ % 3]; } },
+    return [plantLine(), "La riego todos los días, como mi amor por ti.", "Crece contigo, mi wawita mosha: cada estrella tuya es agüita para ella."][this.n++ % 3]; } },
   { k: "pesas", x0: 76, x1: 98, y0: 60, y1: 72, n: 0, fn() { if (!rt.on) act("pesas", 2400);
     return ["¿Las levantamos juntos? Uf, pesan. Tú eres más fuerte que yo.", "Esas pesitas te tienen miedo.", "Algún día vas a levantar más que yo. Bueno, ya lo haces."][this.n++ % 3]; } },
 ];
@@ -1271,7 +1448,10 @@ const PLANS = {
   estirar: { what: "5 minutos de estiramiento", steps: () => [prep(3), ...circuit(STRETCHES, 45, 5)], intro: () => "Hoy nada de saltos: solo estirar suavecito. Tu cuerpo te lo va a agradecer.",
     done: "Estiraste todo. Tu cuerpo te da las gracias, y yo también." },
 };
-const rt = { on: false, mode: "", plan: "", steps: [], i: 0, left: 0, up: 0, active: 0, paused: false, timer: 0, last: 0, walkMin: 0, serie: 0, running: false, restSecs: 60 };
+PLANS.duo = { what: "la rutina de a dos", steps: () => [prep(5), ...circuit(DUO.slice(0, 5), 40, 15), { kind: "rest", secs: 15, nextEx: DUO[5] }, { kind: "ex", secs: 30, ex: DUO[5] }],
+  intro: () => "Rutina de a dos, para hacerla juntos cuando estemos. Mini Maite y yo les mostramos cómo, cachai.",
+  done: "¡Rutina de a dos completa! El mejor equipo del mundo somos nosotros. Te amo con todo mi ser." };
+const rt = { close: false, on: false, mode: "", plan: "", steps: [], i: 0, left: 0, up: 0, active: 0, paused: false, timer: 0, last: 0, walkMin: 0, serie: 0, running: false, restSecs: 60 };
 const fmtT = s => { const c = Math.max(0, Math.ceil(s)); return `${Math.floor(c / 60)}:${String(c % 60).padStart(2, "0")}`; };
 const fmtUp = s => { const c = Math.max(0, Math.floor(s)); return `${Math.floor(c / 60)}:${String(c % 60).padStart(2, "0")}`; };
 function setBtns(list) {
@@ -1280,7 +1460,7 @@ function setBtns(list) {
   list.forEach(([id, , , fn]) => $("#" + id).addEventListener("click", fn));
 }
 function runClock() { mtJoin(); scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); rt.on = true; rt.paused = false; rt.active = 0; rt.minSaid = 0; rt.since = 0; rt.seriesT = 0; clearInterval(rt.timer); rt.last = performance.now(); rt.timer = setInterval(rtTick, 100); show("#routine"); $("#rtBarBox").hidden = false; }
-function stopTimer() { rt.on = false; rt.running = false; clearInterval(rt.timer); setBase("daily"); SND.musicOff(); }
+function stopTimer() { rt.close = false; rt.on = false; rt.running = false; clearInterval(rt.timer); setBase("daily"); SND.musicOff(); }
 function musicFor() {
   const btn = $("#rtMus"); btn.setAttribute("aria-pressed", st.music); btn.textContent = st.music ? "♫ MÚSICA" : "♫ SIN MÚSICA";
   if (!rt.on || rt.paused || !st.music) return SND.musicOff();
@@ -1311,6 +1491,7 @@ function nextStep() {
   rt.i++; const s = rt.steps[rt.i];
   if (!s) return endTimer(true);
   rt.left = s.secs; rt.beeped = 4; rt.since = 0; setTimeout(musicFor, 0);
+  rt.close = rt.plan === "duo" && s.kind === "ex" && s.ex.anim === "duoHug"; if (mt.vis) mt.tx = rt.close ? 42 : 35;
   const cur = s.kind === "ex" ? s.n : (rt.steps.slice(rt.i).find(x => x.kind === "ex")?.n ?? 99);   // el ejercicio que toca (o el que viene)
   [...$("#rtDots").children].forEach((d, k) => { d.className = k < cur ? "done" : k === cur && s.kind === "ex" ? "now" : ""; });
   $("#rtBarBox").classList.toggle("rest", s.kind === "rest" || s.kind === "prep");
@@ -1383,7 +1564,7 @@ function endTimer(done) {
   if (done && st.music) st.stats.musica = true;
   if (mode === "up") st.stats.libreMax = Math.max(st.stats.libreMax, secs);
   persist();
-  const nuevo = markDay("mini"), mins = Math.round(secs / 60); show("#padDone");
+  const nuevo = markDay("mini"), mins = Math.round(secs / 60); askMood("#padDone");
   const what = mode === "walk" ? `${mins} minutos de caminata` : mode === "up" ? `${fmtUp(secs)} de ejercicio` : PLANS[plan].what;
   const line = !done ? `Hiciste ${fmtUp(secs)} y eso igual cuenta.` : mode === "walk" ? `¡Caminaste ${mins} minutos! Cada paso fue para ti, y yo te aplaudí todo el camino.` : mode === "up" ? `¡${fmtUp(secs)} de puro esfuerzo! Te amo y te admiro.` : PLANS[plan].done;
   celebrate(`${line}${nuevo ? " Te ganaste una estrella." : ""} Si te quedaron ganas, el gym te espera. Si no, ya cumpliste y te amo igual.`, `¡Hice ${what} con mini Diego! 💪 Llevo ${starCount()} ⭐`);
@@ -1408,6 +1589,11 @@ const ICONS = {
   flame: ["...X....", "...XX...", "..XXX...", ".XXXX.X.", ".XXXXXX.", "XXXOOXXX", "XXOOOOXX", ".XXXXXX."],
   sun: ["...X....", ".X.X.X..", "..XXX...", "XXXXXXX.", "..XXX...", ".X.X.X..", "...X....", "........"],
   ticket: ["........", "XXXXXXXX", "X.X..X.X", "XXX..XXX", "XXX..XXX", "X.X..X.X", "XXXXXXXX", "........"],
+  m_feliz: ["..XXXX..", ".XXXXXX.", "XXOXXOXX", "XXXXXXXX", "XOXXXXOX", "XXOOOOXX", ".XXXXXX.", "..XXXX.."],
+  m_orgullosa: ["..XXXX..", ".XXXXXX.", "XOOXXOOX", "XXXXXXXX", "XXXXXXXX", "XXOOOOXX", ".XXOOXX.", "..XXXX.."],
+  m_energia: ["..XXXX..", ".XXXXXX.", "XXOXXOXX", "XXXXXXXX", "XXXOOXXX", "XXXOOXXX", ".XXXXXX.", "..XXXX.."],
+  m_cansada: ["..XXXX..", ".XXXXXX.", "XXXXXXXX", "XOOXXOOX", "XXXXXXXX", "XXXOOXXX", ".XXXXXX.", "..XXXX.."],
+  m_costo: ["..XXXX..", ".XXXXXX.", "XXOXXOXX", "XXXXXXXX", "XXXXXXXX", "XOXOXOXX", ".XXXXXX.", "..XXXX.."],
   calendar: ["XXXXXXXX", "X.X..X.X", "XXXXXXXX", "X......X", "X.XX.X.X", "X......X", "XXXXXXXX", "........"],
   note: ["...XXXX.", "...X..X.", "...X..X.", "...X..X.", ".XXX.XX.", "XXXXXXX.", ".XX..XX.", "........"],
   medal: ["XX....XX", ".XX..XX.", "..XXXX..", ".XXXXXX.", "XXXOOXXX", "XXOOOOXX", ".XXXXXX.", "..XXXX.."],
@@ -1435,6 +1621,7 @@ function renderStars() {
   $("#streakTxt").textContent = sk ? `Racha: ${sk} día${sk > 1 ? "s" : ""} seguido${sk > 1 ? "s" : ""}` : "Gana una estrella hoy para empezar tu racha.";
   const entrenados = Object.values(st.days).filter(isStar).length, fuis = Object.keys(st.fui).length;
   $("#rachaInfo").textContent = `Mejor racha: ${Math.max(st.best || 0, sk)} día${Math.max(st.best || 0, sk) === 1 ? "" : "s"}. Días que entrenaste: ${entrenados}. Súper yupis: ${fuis}.`;
+  $("#plantInfo").textContent = plantLine();
   const wkDays = DOW.map((_, i) => { const d = new Date(mon); d.setDate(mon.getDate() + i); return ymd(d); });
   const wkStars = wkDays.filter(k => isStar(st.days[k])).length, wkMin = Math.round(wkDays.reduce((a, k) => a + (st.mins[k] || 0), 0)), tot = Math.round(totalMins());
   $("#resumen").textContent = `Esta semana: ${wkStars} estrella${wkStars === 1 ? "" : "s"} y ${wkMin} minuto${wkMin === 1 ? "" : "s"} con mini Diego. En total: ${tot} minuto${tot === 1 ? "" : "s"}.`;
@@ -1469,6 +1656,7 @@ const BADGE_TEST = {
   vale: () => Object.keys(st.claimed).length >= 1, vales3: () => Object.keys(st.claimed).length >= 3, todosVales: () => Object.keys(st.claimed).length >= VALES.length,
   temprano: () => st.stats.early, madrugadora5: () => (st.stats.earlyN || 0) >= 5, noche: () => st.stats.late, descanso: () => (st.stats.rests || 0) >= 1,
   dia30: () => dayNumber() >= 30, fiel: () => Object.keys(st.visits).length >= 7, visitas30: () => Object.keys(st.visits).length >= 30,
+  flor: () => plantStage() >= 6, parejaFit: () => st.stats.done.duo, duo5: () => CNT("duo") >= 5, closet: () => st.stats.closet, diario7: () => Object.keys(st.moods).length >= 7,
   medallas20: () => Object.keys(st.badges).length >= 20, medallas40: () => Object.keys(st.badges).length >= 40, todas: () => BADGES.every(([id]) => id === "todas" || st.badges[id]),
 };
 const totalMins = () => Object.values(st.mins).reduce((a, b) => a + b, 0);
@@ -1515,6 +1703,45 @@ function renderChips() {
   $("#chips").innerHTML = CHIPS.map(([l, m]) => `<a class="chip" href="${wa(m)}" target="_blank" rel="noopener">${l}</a>`).join("");
   $("#chips").querySelectorAll("a").forEach(a => a.addEventListener("click", () => { st.stats.msgs = (st.stats.msgs || 0) + 1; persist(); SND.kiss(); setTimeout(checkBadges, 300); }));
 }
+function renderCloset() {
+  const n = starCount();
+  for (const who of ["d", "m"]) {
+    const box = $(who === "d" ? "#ropaD" : "#ropaM");
+    box.innerHTML = OUTFITS[who].map(o => { const open = n >= o.stars, sel = st.outfit[who] === o.id;
+      return `<button class="prenda${sel ? " sel" : ""}${open ? "" : " locked"}" data-w="${who}" data-o="${o.id}" aria-pressed="${sel}"><canvas width="24" height="44" aria-hidden="true"></canvas><span>${o.name}</span>${open ? "" : `<small>★ ${o.stars}</small>`}</button>`; }).join("");
+    box.querySelectorAll(".prenda").forEach(b => { previewFit(b.querySelector("canvas"), who, b.dataset.o); b.addEventListener("click", () => wear(who, b.dataset.o)); });
+  }
+}
+function wear(who, id) {
+  const o = OUTFITS[who].find(x => x.id === id), n = starCount();
+  if (n < o.stars) { SND.soft(); $("#clInfo").textContent = `Te faltan ${o.stars - n} estrella${o.stars - n === 1 ? "" : "s"} para "${o.name}".`; return; }
+  st.outfit[who] = id; if (st.outfit.d !== "normal" && st.outfit.m !== "normal") st.stats.closet = true; persist(); SND.boost(); buzz(10);
+  const sx = [$("#ropaD").scrollLeft, $("#ropaM").scrollLeft]; renderCloset(); $("#ropaD").scrollLeft = sx[0]; $("#ropaM").scrollLeft = sx[1];
+  $("#clInfo").textContent = o.line;
+  if (!rt.on) { if (who === "m") { mtJoin(); mtLeave(6000); } act(who === "d" ? "flex" : "wave", 1600, null, { blush: true }); }
+  checkBadges();
+}
+function renderMoods() {
+  $("#moods").innerHTML = MOODS.map(([id, name]) => `<button class="mood" data-m="${id}"><canvas width="8" height="8" aria-hidden="true"></canvas><span>${name}</span></button>`).join("");
+  $("#moods").querySelectorAll(".mood").forEach(b => { const m = MOODS.find(x => x[0] === b.dataset.m); paintIcon(b.querySelector("canvas"), "m_" + m[0], m[2], "#3b1838"); b.addEventListener("click", () => pickMood(m)); });
+}
+function pickMood(m) {
+  const [id, name, , lines] = m; st.moods[KEY] = id; persist(); renderDiary(); SND.kiss(); buzz(15);
+  act({ feliz: "dance", orgullosa: "heartHands", energia: "cheer", cansada: "hug", costo: "hug" }[id], 2200, null, { blush: true, hearts: id === "orgullosa" }); heartPop(dg.x, 30, 5);
+  say(lines[md(D + Object.keys(st.moods).length, lines.length)], { greet: `Te sentiste: ${name.toLowerCase()}`, keepWa: true });
+  show(moodNext); checkBadges();
+}
+$("#bMoodSkip").addEventListener("click", () => { SND.click(); show(moodNext); });
+function renderDiary() {
+  const mon = new Date(TODAY), muted = getComputedStyle(document.documentElement).getPropertyValue("--muted").trim() || "#8a5a7f"; mon.setDate(TODAY.getDate() - md(TODAY.getDay() - 1, 7));
+  const days = DOW.map((_, i) => { const d = new Date(mon); d.setDate(mon.getDate() + i); return ymd(d); });
+  $("#moodWeek").innerHTML = days.map((k, i) => `<div class="day${k === KEY ? " today" : ""}"><span>${DOW[i]}</span><canvas width="8" height="8" data-k="${k}"></canvas></div>`).join("");
+  $("#moodWeek").querySelectorAll("canvas").forEach(c => { const m = MOODS.find(x => x[0] === st.moods[c.dataset.k]);
+    if (m) paintIcon(c, "m_" + m[0], m[2], "#3b1838"); else paintIcon(c, "dot", muted); c.setAttribute("role", "img"); c.setAttribute("aria-label", m ? m[1] : "sin registro"); });
+  const cnt = {}; days.forEach(k => { if (st.moods[k]) cnt[st.moods[k]] = (cnt[st.moods[k]] || 0) + 1; });
+  const top = Object.entries(cnt).sort((a, b) => b[1] - a[1])[0];
+  $("#moodTxt").textContent = top ? `Esta semana te sentiste más: ${MOODS.find(x => x[0] === top[0])[1].toLowerCase()}.` : "Cuando termines de entrenar, cuéntale a mini Diego cómo te sentiste y aquí queda tu semana.";
+}
 function renderFoot() {
   const n = now(), m = new Date(n); m.setHours(24, 0, 0, 0); const mins = Math.max(1, Math.round((m - n) / 60000));
   $("#foot").innerHTML = `Mañana mini Diego trae un mensaje nuevo · <b>${mins >= 60 ? `${Math.floor(mins / 60)} h ${mins % 60} min` : `${mins} min`}</b>`;
@@ -1526,7 +1753,7 @@ const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "
 $("#fecha").textContent = `${DIAS[TODAY.getDay()]} ${TODAY.getDate()} de ${MESES[TODAY.getMonth()]}`;
 $("#muteBtn").addEventListener("click", () => { st.mute = !st.mute; persist(); SND.muteAll(st.mute); $("#muteBtn").setAttribute("aria-pressed", st.mute); $("#muteBtn").setAttribute("aria-label", st.mute ? "Activar sonidos" : "Silenciar sonidos"); if (!st.mute) SND.click(); });
 $("#muteBtn").setAttribute("aria-pressed", st.mute);
-fit(); renderStars(); renderBadges(); renderWater(); renderChips(); renderFoot(); setInterval(renderFoot, 30000);
+fit(); renderStars(); renderBadges(); renderWater(); renderChips(); renderCloset(); renderMoods(); renderDiary(); renderFoot(); setInterval(renderFoot, 30000);
 if (firstTime) { say(INTRO, { greet: "¡Hola!" }); queue.push(showDaily); } else showDaily();
 if (checkBadges()) queue.push(showDaily);   // después de las medallas, se puede volver al mensaje del día
 requestAnimationFrame(frame);
