@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mini Diego</title>
+<title>Mini Coach</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -146,7 +146,14 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 .badge.locked { color: var(--muted); }
 .badge.locked canvas { opacity: .35; }
 .badge[aria-pressed="true"] { box-shadow: 0 -2px 0 0 var(--rose), 0 2px 0 0 var(--rose), -2px 0 0 0 var(--rose), 2px 0 0 0 var(--rose); }
-.card .badge-info { min-height: 2.8em; color: var(--text); }
+.bcats { display: grid; gap: 6px; }
+.bcat summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 2px; font: 700 .66rem/1.2 var(--f-pix); letter-spacing: .06em; color: var(--text); border-top: 2px dashed var(--card-line); }
+.bcat summary::-webkit-details-marker { display: none; }
+.bcat summary::before { content: "▸"; margin-right: 6px; color: var(--rose); }
+.bcat[open] summary::before { content: "▾"; }
+.bcat summary span { margin-left: auto; color: var(--gold); }
+.bcat .badges { padding: 2px 0 8px; }
+.card .badge-info { margin: 6px 0 8px; color: var(--text); }
 .md-count { color: var(--gold); }
 .rt-sub { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 22px; }
 .mus { border: 0; padding: 5px 8px; background: var(--shell-lt); color: var(--plum); font: 700 .55rem/1 var(--f-pix); box-shadow: 0 -2px 0 0 var(--plum), 0 2px 0 0 var(--plum), -2px 0 0 0 var(--plum), 2px 0 0 0 var(--plum); }
@@ -174,12 +181,12 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 <div id="flash" aria-hidden="true"></div>
 <div class="wrap">
   <header class="top">
-    <div class="brand"><span class="logo">MINI DIEGO</span><span class="sub" id="fecha"></span></div>
+    <div class="brand"><span class="logo">MINI COACH</span><span class="sub" id="fecha"></span></div>
     <div class="tools"><button class="icon" id="clockBtn" aria-label="Cronómetros"><canvas class="ic hdr" data-ic="clock" width="8" height="8" style="width:20px;height:20px;image-rendering:pixelated"></canvas></button><button class="icon" id="muteBtn" aria-label="Silenciar sonidos" aria-pressed="false">♪</button></div>
   </header>
 
-  <section class="device" aria-label="Mini Diego, tu entrenador de bolsillo">
-    <div class="dev-top"><span class="led" aria-hidden="true"></span><span class="dev-name">MINI·DIEGO</span><span class="grill" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
+  <section class="device" aria-label="Mini Coach: mini Diego, tu entrenador de bolsillo">
+    <div class="dev-top"><span class="led" aria-hidden="true"></span><span class="dev-name">MINI·COACH</span><span class="grill" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
     <div class="bezel">
       <canvas id="scene" width="300" height="216" aria-label="Mini Diego en pixeles. Tócalo y reacciona."></canvas>
       <div class="hud" aria-hidden="true"><span id="hudDay">DÍA 1</span><span><span id="hudStars">★ 0</span><span class="hud-r" id="hudRacha" hidden><canvas id="hudFlame" width="8" height="8"></canvas><b id="hudRachaN">0</b></span></span></div>
@@ -261,8 +268,9 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 
   <section class="card" aria-labelledby="mdTitle">
     <h2 id="mdTitle">MEDALLAS <span class="md-count" id="mdCount"></span></h2>
-    <div class="badges" id="badges"></div>
-    <p class="badge-info" id="badgeInfo" aria-live="polite">Toca una medalla para ver cómo se gana.</p>
+    <div class="meter" aria-hidden="true"><i id="mdMeter"></i></div>
+    <p>Toca una medalla para ver cómo se gana y lo que te dice mini Diego.</p>
+    <div class="bcats" id="badges"></div>
   </section>
 
   <p class="foot" id="foot"></p>
@@ -409,6 +417,16 @@ const BOOSTS = [
   "Te mereces sentirte así de fuerte siempre.",
   "¡Pura actitud!",
   "Lo estás haciendo increíble, de verdad.",
+  "Te amo con todo mi ser, mi chiquitita. Vamos que se puede.",
+  "Eres todo, mi amor. Te amo, te adoro, eres la mejor.",
+  "Cachai que eres más fuerte que la flojera, ¿cierto?",
+  "Mi reina no se rinde. Mi reina entrena.",
+  "Te amo con mi corazón, alma, cuerpo y energía. Ahora a moverse.",
+  "Mi princesa, hoy brillas tú.",
+  "Vamos, mi alma. Yo te acompaño en cada paso.",
+  "Mi todo, mi vida, mi wawita mosha: ¡tú puedes!",
+  "Eres la mejor del mundo, cachai. Demuéstraselo a la flojera.",
+  "Te adoro, mi chiquitita. Una serie más y me lo demuestras.",
 ];
 const BOOST_END = "Ya te di todo el ánimo de hoy. ¡Ahora te toca a ti!";
 const CELEB = [
@@ -550,34 +568,84 @@ const WEEK = [
   "Martes: lo peor de la semana ya pasó.", "Miércoles: mitad de semana, mitad de camino.", "Jueves: casi viernes. Que el cuerpo lo celebre moviéndose.",
   "Viernes: cerremos la semana con broche de oro.", "Sábado: entrenas sin apuro y después regaloneamos.",
 ];
-const PETS = ["mi wawita mosha", "mi amor", "preciosa", "bonita", "mi niña linda", "mi vida", "mi polola favorita", "mi amorcito", "mi cosita linda"];
-const INTRO = "Hola, mi amor. Soy mini Diego, tu entrenador de bolsillo para los días que no tienes ganas. Todos los días te voy a decir algo distinto. Usa los botones de abajo cuando me necesites.";
-// medallas: [id, nombre, ícono, cómo se gana, lo que dice mini Diego]
+const PETS = ["mi wawita mosha", "mi chiquitita", "mi princesa", "mi reina", "mi amor", "mi vida", "mi todo", "mi alma", "mi niña linda", "preciosa", "mi polola favorita"];
+const INTRO = "Hola, mi amor. Soy mini Diego, tu Mini Coach de bolsillo para los días que no tienes ganas. Todos los días te voy a decir algo distinto. Usa los botones de abajo cuando me necesites.";
+// medallas: [id, nombre, ícono, cómo se gana, lo que dice mini Diego, categoría]
+const BADGE_CATS = [["constancia", "CONSTANCIA"], ["gym", "GYM"], ["crono", "CRONÓMETROS"], ["agua", "AGÜITA"], ["carino", "CARIÑO"], ["especial", "ESPECIALES"]];
 const BADGES = [
-  ["primera", "Primera estrella", "star", "Ganar tu primera estrella.", "Tu primera estrella. La primera de muchas, ya vas a ver."],
-  ["racha3", "Tres seguidos", "flame", "Ganar estrella 3 días seguidos.", "Tres días seguidos. Te estás volviendo imparable, mi amor."],
-  ["racha7", "Semana perfecta", "flame", "Ganar estrella 7 días seguidos.", "¡Una semana entera! No sabes lo orgulloso que estoy."],
-  ["gym5", "Gym x5", "dumbbell", "Ir 5 veces al gym.", "Cinco veces al gym. Ya eres de las que no faltan."],
-  ["gym15", "Gym x15", "dumbbell", "Ir 15 veces al gym.", "¡Quince veces al gym! Eres mi atleta favorita de todos los tiempos."],
-  ["uno", "Valiente", "bolt", "Terminar el cronómetro de 1 minuto.", "Un minuto en un día sin ganas también es valentía. Te admiro."],
-  ["diez", "Diez de diez", "star", "Terminar los 10 minutos.", "Diez minutos completos. Qué orgullo, preciosa."],
-  ["estirar", "Elástica", "person", "Terminar el estiramiento.", "Te estiraste enterita. Tu cuerpo y yo te damos las gracias."],
-  ["caminata", "Caminante", "shoe", "Terminar una caminata.", "Una caminata completa. Cada paso valió la pena."],
-  ["libre20", "Resistencia", "clock", "Llegar a 20 minutos en el cronómetro libre.", "Veinte minutos sin parar. Eres pura resistencia."],
-  ["series20", "Máquina", "dumbbell", "Hacer 20 series con el descanso de mini Diego.", "Veinte series con mini Diego contándote el descanso. ¡Eres una máquina!"],
-  ["temprano", "Madrugadora", "sun", "Ganar una estrella antes de las 9 de la mañana.", "Madrugaste para quererte. Eso es amor del bueno."],
-  ["noche", "Búho", "moon", "Ganar una estrella después de las 9 de la noche.", "Hasta de noche te moviste. Eres increíble."],
-  ["carinosa", "Cariñosa", "heart", "Hacerle cariño a mini Diego 25 veces.", "Me has hecho cariño 25 veces. Mini Diego está derretido."],
-  ["energia", "Pila cargada", "bolt", "Cargar energía 10 veces.", "Cargaste energía 10 veces. Mi batería siempre es para ti."],
-  ["vale", "Cobradora", "ticket", "Cobrar tu primer vale.", "Cobraste tu primer vale. Prepárate, que Diego cumple."],
-  ["hidratada", "Hidratada", "drop", "Tomar 8 vasos de agua en un día.", "Ocho vasos en un día. Hidratada y preciosa."],
-  ["cien", "100 minutos", "clock", "Sumar 100 minutos con mini Diego.", "Cien minutos entrenando conmigo. Qué orgullo más grande."],
-  ["quinientos", "500 minutos", "star", "Sumar 500 minutos con mini Diego.", "¡Quinientos minutos! Eres oficialmente mi campeona."],
-  ["mensajito", "Mensajito", "chat", "Escribirle a Diego desde aquí.", "Le escribiste a Diego. Seguro sonrió al tiro."],
-  ["superyupi", "Súper yupi", "trophy", "Apretar ¡Fui al gym! por primera vez.", "Tu primer súper yupi. Te lo mereces todito."],
-  ["fui10", "Fui x10", "trophy", "Apretar ¡Fui al gym! en 10 días distintos.", "Diez súper yupis. Tú te superas y me haces superarme, siempre."],
-  ["racha14", "Dos semanas", "flame", "Ganar estrella 14 días seguidos.", "Catorce días seguidos. Te admiro con el alma."],
-  ["racha30", "Un mes", "flame", "Ganar estrella 30 días seguidos.", "Un mes entero sin parar. Te amo infinito."],
+  ["primera", "Primera estrella", "star", "Ganar tu primera estrella.", "¡Tu primera estrella, mi chiquitita! La primera de muchas, cachai. Te amo con todo mi ser.", "constancia"],
+  ["racha3", "Tres seguidos", "flame", "Ganar estrella 3 días seguidos.", "Tres días seguidos, mi amor. Estás que ardes y yo más enamorado que nunca.", "constancia"],
+  ["racha5", "Cinco al hilo", "flame", "Ganar estrella 5 días seguidos.", "¡Cinco días al hilo, mi princesa! Nadie te para, cachai. Eres la mejor.", "constancia"],
+  ["racha7", "Semana perfecta", "flame", "Ganar estrella 7 días seguidos.", "Una semana entera, mi reina. Te amo con mi corazón, mi alma, mi cuerpo y toda mi energía.", "constancia"],
+  ["racha10", "Diez al hilo", "flame", "Ganar estrella 10 días seguidos.", "Diez días seguidos, mi vida. Eres una máquina y eres mi todo.", "constancia"],
+  ["racha14", "Dos semanas", "flame", "Ganar estrella 14 días seguidos.", "Dos semanas sin parar, mi wawita mosha. Te admiro con el alma, te adoro.", "constancia"],
+  ["racha21", "Tres semanas", "flame", "Ganar estrella 21 días seguidos.", "Tres semanas, mi amor. Ya es costumbre de campeona, cachai.", "constancia"],
+  ["racha30", "Un mes", "flame", "Ganar estrella 30 días seguidos.", "¡Un mes entero de racha, mi todo! Te amo infinito.", "constancia"],
+  ["racha50", "Cincuenta días", "flame", "Ganar estrella 50 días seguidos.", "Cincuenta días seguidos, mi reina. No tengo palabras: eres todo para mí.", "constancia"],
+  ["racha100", "Cien días", "flame", "Ganar estrella 100 días seguidos.", "¡CIEN DÍAS, mi alma! Eres la persona más constante y linda del mundo. Te amo, te adoro.", "constancia"],
+  ["estrellas10", "10 estrellas", "star", "Juntar 10 estrellas.", "Diez estrellitas, mi chiquitita. Vas brillando más que todas ellas.", "constancia"],
+  ["estrellas25", "25 estrellas", "star", "Juntar 25 estrellas.", "Veinticinco estrellas, mi princesa. Tu cielo está lleno, igual que mi corazón.", "constancia"],
+  ["estrellas50", "50 estrellas", "star", "Juntar 50 estrellas.", "Cincuenta estrellas, cachai. Eres mi constelación favorita, mi vida.", "constancia"],
+  ["estrellas100", "100 estrellas", "star", "Juntar 100 estrellas.", "¡Cien estrellas, mi todo! Te amo con mi corazón, alma, cuerpo y energía.", "constancia"],
+  ["semana4", "Semana activa", "calendar", "Ganar 4 estrellas en una misma semana.", "Cuatro días en una semana, mi amor. Así se hace, eres la mejor.", "constancia"],
+  ["volviste", "Volviste", "heart", "Volver a ganar estrella después de 3 días o más sin estrellas.", "Volviste, mi wawita mosha. Lo importante no es caerse, es volver. Te amo con todo lo que soy.", "constancia"],
+  ["finde", "Finde activo", "sun", "Ganar una estrella un sábado o un domingo.", "Hasta el fin de semana te moviste, mi reina. Te adoro, cachai.", "constancia"],
+  ["lunes", "Le ganó al lunes", "bolt", "Ganar una estrella un lunes.", "Le ganaste al lunes, mi chiquitita. Eso es de valiente. Te amo.", "constancia"],
+  ["gym5", "Gym x5", "dumbbell", "Ir 5 veces al gym.", "Cinco veces al gym, mi amor. Ya eres de las que no faltan, cachai.", "gym"],
+  ["gym15", "Gym x15", "dumbbell", "Ir 15 veces al gym.", "Quince veces al gym, mi princesa. Eres mi atleta favorita de todos los tiempos.", "gym"],
+  ["gym30", "Gym x30", "dumbbell", "Ir 30 veces al gym.", "Treinta veces, mi vida. Te superas y me haces superarme. Te amo con todo.", "gym"],
+  ["gym50", "Gym x50", "dumbbell", "Ir 50 veces al gym.", "¡Cincuenta veces al gym, mi reina! Eres todo, te adoro.", "gym"],
+  ["gym100", "Gym x100", "trophy", "Ir 100 veces al gym.", "Cien veces al gym, mi alma. Te amo con cada latido de mi corazón.", "gym"],
+  ["superyupi", "Súper yupi", "trophy", "Apretar ¡Fui al gym! por primera vez.", "Tu primer súper yupi, mi chiquitita. Te lo mereces todito, todito.", "gym"],
+  ["fui10", "Fui x10", "trophy", "Apretar ¡Fui al gym! en 10 días distintos.", "Diez súper yupis, mi amor. Cada vez te superas y haces que yo me supere más.", "gym"],
+  ["fui25", "Fui x25", "trophy", "Apretar ¡Fui al gym! en 25 días distintos.", "Veinticinco yupis, mi wawita mosha. Ya no me alcanza la voz para gritarlos.", "gym"],
+  ["fui50", "Fui x50", "trophy", "Apretar ¡Fui al gym! en 50 días distintos.", "Cincuenta yupis, mi todo. Eres la mejor del mundo, cachai.", "gym"],
+  ["voyfui", "Dicho y hecho", "shoe", "Apretar ¡Voy al gym! y después ¡Fui al gym! el mismo día.", "Dijiste que ibas y fuiste, mi princesa. Dicho y hecho. Te adoro.", "gym"],
+  ["series20", "Máquina", "dumbbell", "Hacer 20 series con el descanso de mini Diego.", "Veinte series, mi reina. ¡Eres una máquina, cachai!", "gym"],
+  ["series100", "Máquina total", "dumbbell", "Hacer 100 series con el descanso de mini Diego.", "Cien series, mi vida. Máquina hermosa, te amo con todo mi ser.", "gym"],
+  ["uno", "Valiente", "bolt", "Terminar el cronómetro de 1 minuto.", "Un minuto en un día sin ganas también es valentía, mi chiquitita. Te admiro.", "crono"],
+  ["uno5", "Cero excusas", "bolt", "Terminar 5 veces el de 1 minuto.", "Cinco veces el minutito, mi amor. Ni la flojera puede contigo.", "crono"],
+  ["cinco", "Cinco minutitos", "heart", "Terminar los 5 minutos.", "Cinco minutos completitos, mi princesa. Lo hicimos juntos, cachai.", "crono"],
+  ["diez", "Diez de diez", "star", "Terminar los 10 minutos.", "Diez minutos, mi reina. Diez de diez, como tú.", "crono"],
+  ["estirar", "Elástica", "person", "Terminar el estiramiento.", "Te estiraste enterita, mi vida. Tu cuerpo y yo te damos las gracias.", "crono"],
+  ["estirar5", "Elástica pro", "person", "Terminar 5 veces el estiramiento.", "Cinco estiramientos, mi wawita mosha. Flexible y preciosa.", "crono"],
+  ["caminata", "Caminante", "shoe", "Terminar una caminata.", "Una caminata completa, mi amor. Cada paso valió la pena.", "crono"],
+  ["caminatas5", "Pata de perro", "shoe", "Terminar 5 caminatas.", "Cinco caminatas, mi chiquitita. Eres terrible de pata de perro, y te amo así.", "crono"],
+  ["caminata30", "Maratonista", "shoe", "Terminar la caminata de 30 minutos.", "Treinta minutos caminando, mi todo. Iría contigo hasta el fin del mundo.", "crono"],
+  ["libre20", "Resistencia", "clock", "Llegar a 20 minutos en el cronómetro libre.", "Veinte minutos sin parar, mi reina. Eres pura resistencia.", "crono"],
+  ["libre60", "Una hora", "clock", "Llegar a 60 minutos en el cronómetro libre.", "¡Una hora entera, mi alma! No sé de dónde sacas tanta fuerza, pero te amo con toda la mía.", "crono"],
+  ["cien", "100 minutos", "clock", "Sumar 100 minutos con mini Diego.", "Cien minutos entrenando conmigo, mi vida. Qué orgullo más grande.", "crono"],
+  ["quinientos", "500 minutos", "star", "Sumar 500 minutos con mini Diego.", "Quinientos minutos, mi princesa. Oficialmente mi campeona, cachai.", "crono"],
+  ["mil", "1000 minutos", "trophy", "Sumar 1000 minutos con mini Diego.", "¡Mil minutos, mi todo! Eres todo para mí. Te amo, te adoro, eres la mejor.", "crono"],
+  ["todos", "De todo un poco", "star", "Completar cada tipo de cronómetro al menos una vez.", "Probaste todos los cronómetros, mi chiquitita. No hay nada que no puedas hacer.", "crono"],
+  ["musica", "Bailarina", "note", "Terminar un cronómetro con la música puesta.", "Entrenaste con musiquita, mi amor. Te imagino bailando y me derrito.", "crono"],
+  ["hidratada", "Hidratada", "drop", "Tomar 8 vasos de agua en un día.", "Ocho vasos en un día, mi reina. Hidratada y preciosa.", "agua"],
+  ["agua3", "Hidratada x3", "drop", "Tomar 8 vasos en 3 días distintos.", "Tres días hidratadita, mi wawita mosha. Tu cuerpito te lo agradece.", "agua"],
+  ["agua7", "Plantita feliz", "drop", "Tomar 8 vasos en 7 días distintos.", "Siete días de agüita completa, mi vida. Eres una plantita feliz, cachai.", "agua"],
+  ["agua100", "100 vasitos", "drop", "Tomar 100 vasos de agua en total.", "Cien vasitos de agua, mi princesa. Bien hidratada y bien amada.", "agua"],
+  ["carinosa", "Cariñosa", "heart", "Hacerle cariño a mini Diego 25 veces.", "Me has hecho cariño 25 veces, mi chiquitita. Mini Diego está derretido.", "carino"],
+  ["carinosa100", "Regalona", "heart", "Hacerle cariño a mini Diego 100 veces.", "Cien cariños, mi amor. Eres la más regalona y te adoro por eso.", "carino"],
+  ["maite", "Somos equipo", "heart", "Tocar a mini Maite 5 veces.", "Tocaste a mini Maite cinco veces, mi reina. Somos el mejor equipo, cachai.", "carino"],
+  ["energia", "Pila cargada", "bolt", "Cargar energía 10 veces.", "Diez cargas de energía, mi vida. Mi batería siempre es para ti.", "carino"],
+  ["kame", "Kamehameha", "bolt", "Lanzar tu primer kamehameha.", "Tu primer kamehameha, mi todo. Te llegó toda mi energía directo al corazón.", "carino"],
+  ["kame25", "Súper saiyajin", "bolt", "Lanzar 25 kamehamehas.", "Veinticinco kamehamehas, mi princesa. Eres oficialmente súper saiyajin.", "carino"],
+  ["animo", "Pura buena onda", "heart", "Apretar Dame ánimo 20 veces.", "Veinte ánimos, mi wawita mosha. Cuando quieras, te doy mil más.", "carino"],
+  ["escenas", "Exploradora", "star", "Tocar la ventana, el cuadro, la plantita y las pesas.", "Exploraste toda la pieza, mi chiquitita. Cada rincón es tuyo.", "carino"],
+  ["mensajito", "Mensajito", "chat", "Escribirle a Diego desde aquí.", "Le escribiste a Diego, mi amor. Seguro sonrió al tiro.", "carino"],
+  ["mensajes10", "Pololita comunicativa", "chat", "Escribirle a Diego 10 veces desde aquí.", "Diez mensajitos, mi reina. Me encanta que me escribas, cachai.", "carino"],
+  ["vale", "Cobradora", "ticket", "Cobrar tu primer vale.", "Cobraste tu primer vale, mi vida. Prepárate, que Diego cumple.", "carino"],
+  ["vales3", "Cobradora pro", "ticket", "Cobrar 3 vales.", "Tres vales cobrados, mi princesa. Me tienes trabajando feliz.", "carino"],
+  ["todosVales", "Me debes todo", "ticket", "Cobrar los 5 vales.", "Cobraste todos los vales, mi alma. Igual te debo la vida entera.", "carino"],
+  ["temprano", "Madrugadora", "sun", "Ganar una estrella antes de las 9 de la mañana.", "Madrugaste para quererte, mi chiquitita. Eso es amor del bueno.", "especial"],
+  ["madrugadora5", "Gallito", "sun", "Ganar 5 estrellas antes de las 9 de la mañana.", "Cinco madrugadas, mi amor. Eres más temprana que el gallo, cachai.", "especial"],
+  ["noche", "Búho", "moon", "Ganar una estrella después de las 9 de la noche.", "Hasta de noche te moviste, mi reina. Eres increíble.", "especial"],
+  ["descanso", "Sabe descansar", "moon", "Elegir Descansar un día que lo necesitabas.", "Descansar también es quererte, mi vida. Te amo igualito, con todo mi ser.", "especial"],
+  ["dia30", "Un mes con mini Coach", "calendar", "Cumplir un mes desde que abriste Mini Coach.", "Un mes juntos aquí, mi todo. Eres todo, te amo, te adoro.", "especial"],
+  ["fiel", "Fiel", "heart", "Abrir Mini Coach 7 días distintos.", "Siete días viniendo a verme, mi princesa. Yo te espero siempre.", "especial"],
+  ["visitas30", "Inseparables", "heart", "Abrir Mini Coach 30 días distintos.", "Treinta días, mi wawita mosha. Somos inseparables, cachai.", "especial"],
+  ["medallas20", "Coleccionista", "medal", "Ganar 20 medallas.", "Veinte medallas, mi chiquitita. Ya no te cabe el orgullo en el pecho, y a mí tampoco.", "especial"],
+  ["medallas40", "Coleccionista pro", "medal", "Ganar 40 medallas.", "Cuarenta medallas, mi reina. Te amo con mi corazón, alma, cuerpo y energía.", "especial"],
+  ["todas", "¡Todas!", "trophy", "Ganar todas las demás medallas.", "¡Todas las medallas, mi alma! Eres todo. Te amo, te adoro, eres la mejor. Para siempre.", "especial"],
 ];
 // "¡Fui al gym!": el súper yupi y un te amo
 const FUI = [
@@ -645,7 +713,9 @@ const speed = () => window.__RAPIDO || 1;
 let st = { days: {}, first: KEY, mute: false, claimed: {}, seen: false, taps: 0 };
 try { const v = JSON.parse(localStorage.getItem("mini_diego") || "null"); if (v && typeof v === "object") st = { ...st, ...v, days: { ...(v.days || {}) }, claimed: { ...(v.claimed || {}) } }; } catch {}
 st.badges = { ...(st.badges || {}) }; st.water = { ...(st.water || {}) }; st.mins = { ...(st.mins || {}) }; if (st.music === undefined) st.music = true; st.fui = { ...(st.fui || {}) }; st.best = st.best || 0;
+st.voy = { ...(st.voy || {}) }; st.visits = { ...(st.visits || {}) }; st.visits[KEY] = true;
 st.stats = { charges: 0, series: 0, libreMax: 0, early: false, late: false, ...(st.stats || {}) }; st.stats.done = { ...(st.stats.done || {}) };
+st.stats.cnt = { ...(st.stats.cnt || {}) }; st.stats.spots = { ...(st.stats.spots || {}) };
 const persist = () => { try { localStorage.setItem("mini_diego", JSON.stringify(st)); } catch {} };
 const firstTime = !st.seen; st.seen = true; persist();
 const starCount = () => Object.values(st.days).filter(v => v === "gym" || v === "mini").length;
@@ -1055,7 +1125,7 @@ const showDaily = () => say(rot(MSGS, 37, 11), { greet: greetText() });
 
 let boostI = 0;
 $("#bAnimo").addEventListener("click", () => {
-  SND.boost(); buzz(15);
+  SND.boost(); buzz(15); st.stats.animo = (st.stats.animo || 0) + 1; persist(); checkBadges();
   const txt = boostI < 8 ? BOOSTS[md(D * 13 + boostI * 7, BOOSTS.length)] : BOOST_END; boostI = boostI < 8 ? boostI + 1 : 0;
   const an = ["flex", "cheer", "heartHands", "dance", "thumbs"][boostI % 5]; act(an, 1900, null, an === "heartHands" ? { blush: true } : {}); heartPop(dg.x, 30, 5); say(txt);
 });
@@ -1102,7 +1172,14 @@ function markDay(kind) {   // una estrella por día como máximo; "gym" le gana 
   const prev = st.days[KEY], had = prev === "gym" || prev === "mini";
   if (kind === "gym" || !had) st.days[KEY] = kind;
   const nueva = !had && (kind === "gym" || kind === "mini");
-  if (nueva) { const h = hourNow(); if (h < 9) st.stats.early = true; if (h >= 21) st.stats.late = true; }
+  if (nueva) {
+    const h = hourNow(), dw = TODAY.getDay(); if (h < 9) { st.stats.early = true; st.stats.earlyN = (st.stats.earlyN || 0) + 1; } if (h >= 21) st.stats.late = true;
+    if (dw === 0 || dw === 6) st.stats.finde = true; if (dw === 1) st.stats.lunes = true;
+    const antes = Object.keys(st.days).filter(k => k < KEY && isStar(st.days[k])).sort().pop();   // ¿volvió después de varios días?
+    if (antes && dayN(TODAY) - dayN(new Date(antes + "T12:00")) >= 4) st.stats.volviste = true;
+    const mon = new Date(TODAY); mon.setDate(TODAY.getDate() - md(dw - 1, 7));
+    if (Array.from({ length: 7 }, (_, i) => { const d = new Date(mon); d.setDate(mon.getDate() + i); return ymd(d); }).filter(k => isStar(st.days[k])).length >= 4) st.stats.semana4 = true;
+  }
   const sk = streak(); st.best = Math.max(st.best || 0, sk);
   persist(); renderStars();
   if (nueva && sk >= 2) {   // la racha creció: mini Diego lo celebra después de lo que esté diciendo
@@ -1117,6 +1194,7 @@ function celebrate(line, waText) {
   say(line); const w = $("#waLink"); w.href = wa(waText); w.hidden = false; checkBadges();
 }
 function goGym() {
+  st.voy[KEY] = true;
   mtJoin(); mtLeave(7000); setTimeout(() => heartPop(44, 30, 8), 900);
   const nuevo = markDay("gym");
   celebrate(nuevo ? rot(CELEB, 5) : "¡Ya estás marcada por hoy! Anda tranquila, que te espero con un abrazo.",
@@ -1126,7 +1204,7 @@ function goGym() {
 }
 // "¡Fui al gym!": súper yupi, te amo y racha
 function fuiGym() {
-  const yaFui = !!st.fui[KEY]; st.fui[KEY] = true; persist();
+  const yaFui = !!st.fui[KEY]; st.fui[KEY] = true; if (st.voy[KEY]) st.stats.voyfui = true; persist();
   markDay("gym"); const sk = streak();
   mtJoin(); mtLeave(8000);
   scn.yupi = performance.now(); SND.yupi(); setTimeout(() => SND.fanfare(), 1300); buzz([60, 40, 60, 40, 220]);
@@ -1145,29 +1223,29 @@ $("#clockBtn").addEventListener("click", () => { if (rt.on) { $(".device").scrol
 $("#bBack1").addEventListener("click", () => { SND.click(); show("#pad"); setBase("daily"); act("wave", 1200); showDaily(); });
 $("#bBack2").addEventListener("click", () => { SND.click(); show("#pad"); setBase("daily"); act("kiss", 1400, () => baseAnim(true)); setTimeout(() => heartPop(dg.x + 12, 30, 4), 400); say("Gracias por moverte conmigo hoy. Te amo, mi amor."); });
 $("#bRest").addEventListener("click", () => {
-  SND.soft(); if (!st.days[KEY]) { st.days[KEY] = "rest"; persist(); renderStars(); }
+  SND.soft(); st.stats.rests = (st.stats.rests || 0) + 1; if (!st.days[KEY]) st.days[KEY] = "rest"; persist(); renderStars(); checkBadges();
   setBase("rest"); act("rest", 0); say(rot(REST, 5)); show("#padNo"); $("#bRest").hidden = true;
 });
 
 // tocar las cosas de la pieza
 const SPOTS = [
-  { x0: 6, x1: 32, y0: 6, y1: 33, n: 0, fn() { const h = hourNow(), night = h >= 21 || h < 6; if (night) scn.star = performance.now(); else scn.bird = performance.now();
+  { k: "ventana", x0: 6, x1: 32, y0: 6, y1: 33, n: 0, fn() { const h = hourNow(), night = h >= 21 || h < 6; if (night) scn.star = performance.now(); else scn.bird = performance.now();
     return night ? ["¡Mira, una estrella fugaz! Ya pedí mi deseo: que nunca te vayas de mi lado.", "Mira la luna. Así de linda te veo yo.", "Hasta las estrellas salen a verte."][this.n++ % 3]
       : ["¿Viste el pajarito? Vino a darte ánimo.", "Qué lindo está afuera. ¿Salimos a caminar después?", "El sol salió solo para verte entrenar."][this.n++ % 3]; } },
-  { x0: 72, x1: 91, y0: 8, y1: 28, n: 0, fn() { scn.beat = performance.now() + 1800; heartPop(81, 16, 4); SND.kiss();
+  { k: "cuadro", x0: 72, x1: 91, y0: 8, y1: 28, n: 0, fn() { scn.beat = performance.now() + 1800; heartPop(81, 16, 4); SND.kiss();
     return ["Ese corazón late por ti. Siempre.", "Es nuestro cuadro. Lo pinté pensando en ti.", "Cuando late rápido es porque me miraste."][this.n++ % 3]; } },
-  { x0: 2, x1: 15, y0: 50, y1: 69, n: 0, fn() { scn.plant = performance.now() + 1500;
+  { k: "planta", x0: 2, x1: 15, y0: 50, y1: 69, n: 0, fn() { scn.plant = performance.now() + 1500;
     return ["Mi plantita crece de a poquito, igual que tu fuerza.", "La riego todos los días, como mi amor por ti.", "Shhh, la plantita también te está haciendo barra."][this.n++ % 3]; } },
-  { x0: 76, x1: 98, y0: 60, y1: 72, n: 0, fn() { if (!rt.on) act("pesas", 2400);
+  { k: "pesas", x0: 76, x1: 98, y0: 60, y1: 72, n: 0, fn() { if (!rt.on) act("pesas", 2400);
     return ["¿Las levantamos juntos? Uf, pesan. Tú eres más fuerte que yo.", "Esas pesitas te tienen miedo.", "Algún día vas a levantar más que yo. Bueno, ya lo haces."][this.n++ % 3]; } },
 ];
 const TAP_ANIMS = ["kiss", "heartHands", "dance", "thumbs", "flex", "wave"];
 cv.addEventListener("click", e => {
   if (!dg.ready) return;
   const r = cv.getBoundingClientRect(), lx = (e.clientX - r.left) / r.width * LW, ly = (e.clientY - r.top) / r.height * LH + OY;
-  if (mt.vis && e.clientX && Math.abs(lx - mt.x) < 8 && ly > 32 && ly < 72) { SND.kiss(); buzz(8); heartPop(mt.x, 32, 4); if (!rt.on) say(MT_TAPS[(st.taps = (st.taps || 0) + 1) % MT_TAPS.length]); persist(); return; }
+  if (mt.vis && e.clientX && Math.abs(lx - mt.x) < 8 && ly > 32 && ly < 72) { SND.kiss(); buzz(8); heartPop(mt.x, 32, 4); st.stats.mtTaps = (st.stats.mtTaps || 0) + 1; if (!rt.on) say(MT_TAPS[st.stats.mtTaps % MT_TAPS.length]); persist(); checkBadges(); return; }
   const spot = e.clientX ? SPOTS.find(q => lx >= q.x0 && lx <= q.x1 && ly >= q.y0 && ly <= q.y1) : null;
-  if (spot) { SND.click(); buzz(8); const line = spot.fn(); if (!rt.on) say(line); return; }
+  if (spot) { SND.click(); buzz(8); const line = spot.fn(); st.stats.spots[spot.k] = true; persist(); if (!rt.on) say(line); checkBadges(); return; }
   st.taps = (st.taps || 0) + 1; persist(); SND.kiss(); buzz(8);
   const an = TAP_ANIMS[st.taps % TAP_ANIMS.length];
   if (!rt.on) act(an, 1500, null, an === "kiss" || an === "heartHands" ? { hearts: true, blush: true } : { blush: true }); setTimeout(() => heartPop(dg.x + 6, 30, 3), 360);
@@ -1300,8 +1378,9 @@ function endTimer(done) {
   mtLeave(secs < 59.5 || mode === "series" ? 1800 : 7000);
   if (mode === "series") { show("#padNo"); say(`¡Bien entrenado! Hiciste ${rt.serie} serie${rt.serie === 1 ? "" : "s"}. Si todavía no lo marcas, aprieta ¡Voy al gym! para ganar tu estrella.`); return; }
   if (secs < 59.5) { show("#padNo"); act("hug", 2000, null, { hearts: true }); say("Está bien, mi amor. Desde 1 minuto ya ganas tu estrella; cuando quieras lo intentamos de nuevo."); return; }
-  if (done && mode === "plan") st.stats.done[plan] = true;
-  if (done && mode === "walk") st.stats.done.caminata = true;
+  if (done && mode === "plan") { st.stats.done[plan] = true; st.stats.cnt[plan] = CNT(plan) + 1; }
+  if (done && mode === "walk") { st.stats.done.caminata = true; st.stats.cnt.caminata = CNT("caminata") + 1; if (rt.steps[1]?.min >= 30) st.stats.done.caminata30 = true; }
+  if (done && st.music) st.stats.musica = true;
   if (mode === "up") st.stats.libreMax = Math.max(st.stats.libreMax, secs);
   persist();
   const nuevo = markDay("mini"), mins = Math.round(secs / 60); show("#padDone");
@@ -1329,6 +1408,9 @@ const ICONS = {
   flame: ["...X....", "...XX...", "..XXX...", ".XXXX.X.", ".XXXXXX.", "XXXOOXXX", "XXOOOOXX", ".XXXXXX."],
   sun: ["...X....", ".X.X.X..", "..XXX...", "XXXXXXX.", "..XXX...", ".X.X.X..", "...X....", "........"],
   ticket: ["........", "XXXXXXXX", "X.X..X.X", "XXX..XXX", "XXX..XXX", "X.X..X.X", "XXXXXXXX", "........"],
+  calendar: ["XXXXXXXX", "X.X..X.X", "XXXXXXXX", "X......X", "X.XX.X.X", "X......X", "XXXXXXXX", "........"],
+  note: ["...XXXX.", "...X..X.", "...X..X.", "...X..X.", ".XXX.XX.", "XXXXXXX.", ".XX..XX.", "........"],
+  medal: ["XX....XX", ".XX..XX.", "..XXXX..", ".XXXXXX.", "XXXOOXXX", "XXOOOOXX", ".XXXXXX.", "..XXXX.."],
   trophy: ["XXXXXXXX", "X.XXXX.X", ".XXXXXX.", "..XXXX..", "...XX...", "...XX...", "..XXXX..", ".XXXXXX."],
   drop: ["...X....", "...X....", "..XXX...", ".XXXXX..", ".XXOXX..", ".XXXXX..", "..XXX...", "........"],
   chat: ["XXXXXXX.", "X.....X.", "X.X.X.X.", "X.....X.", "XXXXXXX.", ".XX.....", "X.......", "........"],
@@ -1366,31 +1448,56 @@ function renderStars() {
 const isStar = v => v === "gym" || v === "mini";
 function streak() { const d = new Date(TODAY); if (!isStar(st.days[ymd(d)])) d.setDate(d.getDate() - 1); let n = 0; while (isStar(st.days[ymd(d)]) && n < 999) { n++; d.setDate(d.getDate() - 1); } return n; }
 const gymCount = () => Object.values(st.days).filter(v => v === "gym").length;
-const BADGE_TEST = { primera: () => starCount() >= 1, racha3: () => Math.max(streak(), st.best) >= 3, racha7: () => Math.max(streak(), st.best) >= 7,
-  racha14: () => Math.max(streak(), st.best) >= 14, racha30: () => Math.max(streak(), st.best) >= 30, superyupi: () => Object.keys(st.fui).length >= 1, fui10: () => Object.keys(st.fui).length >= 10, gym5: () => gymCount() >= 5, gym15: () => gymCount() >= 15,
-  uno: () => st.stats.done.uno, diez: () => st.stats.done.diez, estirar: () => st.stats.done.estirar, caminata: () => st.stats.done.caminata, libre20: () => st.stats.libreMax >= 1200,
-  series20: () => st.stats.series >= 20, temprano: () => st.stats.early, noche: () => st.stats.late, carinosa: () => (st.taps || 0) >= 25, energia: () => st.stats.charges >= 10,
-  vale: () => Object.keys(st.claimed).length > 0, hidratada: () => Object.values(st.water).some(v => v >= 8), cien: () => totalMins() >= 100,
-  quinientos: () => totalMins() >= 500, mensajito: () => (st.stats.msgs || 0) > 0 };
+const RK = () => Math.max(streak(), st.best || 0), FUIS = () => Object.keys(st.fui).length, CNT = k => st.stats.cnt[k] || 0;
+const water8 = () => Object.values(st.water).filter(v => v >= 8).length, waterTot = () => Object.values(st.water).reduce((a, b) => a + b, 0);
+const BADGE_TEST = {
+  primera: () => starCount() >= 1, racha3: () => RK() >= 3, racha5: () => RK() >= 5, racha7: () => RK() >= 7, racha10: () => RK() >= 10, racha14: () => RK() >= 14,
+  racha21: () => RK() >= 21, racha30: () => RK() >= 30, racha50: () => RK() >= 50, racha100: () => RK() >= 100,
+  estrellas10: () => starCount() >= 10, estrellas25: () => starCount() >= 25, estrellas50: () => starCount() >= 50, estrellas100: () => starCount() >= 100,
+  semana4: () => st.stats.semana4, volviste: () => st.stats.volviste, finde: () => st.stats.finde, lunes: () => st.stats.lunes,
+  gym5: () => gymCount() >= 5, gym15: () => gymCount() >= 15, gym30: () => gymCount() >= 30, gym50: () => gymCount() >= 50, gym100: () => gymCount() >= 100,
+  superyupi: () => FUIS() >= 1, fui10: () => FUIS() >= 10, fui25: () => FUIS() >= 25, fui50: () => FUIS() >= 50, voyfui: () => st.stats.voyfui,
+  series20: () => st.stats.series >= 20, series100: () => st.stats.series >= 100,
+  uno: () => st.stats.done.uno, uno5: () => CNT("uno") >= 5, cinco: () => st.stats.done.cinco, diez: () => st.stats.done.diez, estirar: () => st.stats.done.estirar,
+  estirar5: () => CNT("estirar") >= 5, caminata: () => st.stats.done.caminata, caminatas5: () => CNT("caminata") >= 5, caminata30: () => st.stats.done.caminata30,
+  libre20: () => st.stats.libreMax >= 1200, libre60: () => st.stats.libreMax >= 3600, cien: () => totalMins() >= 100, quinientos: () => totalMins() >= 500, mil: () => totalMins() >= 1000,
+  todos: () => ["uno", "cinco", "diez", "estirar", "caminata"].every(k => st.stats.done[k]) && st.stats.libreMax >= 60 && st.stats.series >= 1, musica: () => st.stats.musica,
+  hidratada: () => water8() >= 1, agua3: () => water8() >= 3, agua7: () => water8() >= 7, agua100: () => waterTot() >= 100,
+  carinosa: () => (st.taps || 0) >= 25, carinosa100: () => (st.taps || 0) >= 100, maite: () => (st.stats.mtTaps || 0) >= 5,
+  energia: () => st.stats.charges >= 10, kame: () => st.stats.charges >= 1, kame25: () => st.stats.charges >= 25, animo: () => (st.stats.animo || 0) >= 20,
+  escenas: () => ["ventana", "cuadro", "planta", "pesas"].every(k => st.stats.spots[k]), mensajito: () => (st.stats.msgs || 0) >= 1, mensajes10: () => (st.stats.msgs || 0) >= 10,
+  vale: () => Object.keys(st.claimed).length >= 1, vales3: () => Object.keys(st.claimed).length >= 3, todosVales: () => Object.keys(st.claimed).length >= VALES.length,
+  temprano: () => st.stats.early, madrugadora5: () => (st.stats.earlyN || 0) >= 5, noche: () => st.stats.late, descanso: () => (st.stats.rests || 0) >= 1,
+  dia30: () => dayNumber() >= 30, fiel: () => Object.keys(st.visits).length >= 7, visitas30: () => Object.keys(st.visits).length >= 30,
+  medallas20: () => Object.keys(st.badges).length >= 20, medallas40: () => Object.keys(st.badges).length >= 40, todas: () => BADGES.every(([id]) => id === "todas" || st.badges[id]),
+};
 const totalMins = () => Object.values(st.mins).reduce((a, b) => a + b, 0);
 function checkBadges() {   // las medallas nuevas se entregan en el globo, después de lo que esté diciendo mini Diego
-  const nuevas = BADGES.filter(([id]) => !st.badges[id] && BADGE_TEST[id]());
+  const nuevas = [];
+  for (let pass = 0; pass < 3; pass++) {   // varias pasadas: las de coleccionista dependen de las otras
+    const add = BADGES.filter(([id]) => !st.badges[id] && BADGE_TEST[id]()); if (!add.length) break;
+    add.forEach(([id]) => { st.badges[id] = KEY; }); nuevas.push(...add);
+  }
   if (!nuevas.length) return 0;
-  nuevas.forEach(([id]) => { st.badges[id] = KEY; }); persist(); renderBadges();
+  persist(); renderBadges();
   nuevas.forEach(([, name, , , line]) => { const f = () => { SND.fanfare(); buzz([30, 40, 30]); fireworks(3); confetti(30); act("heartHands", 2600, null, { blush: true }); say(line, { greet: `¡Medalla nueva: ${name}!` }); }; f.auto = true; queue.push(f); });
   if (!typing) afterType();
   return nuevas.length;
 }
-const BADGE_COL = { trophy: "#e8a400", drop: "#3f98dd", chat: "#ff5c98", star: "#e8a400", flame: "#ff7a3d", dumbbell: "#6c7a99", bolt: "#f2b705", person: "#8a70e0", shoe: "#2fbf94", clock: "#3f98dd", sun: "#ffb020", moon: "#8a70e0", heart: "#ff4f8b", ticket: "#ff5c98" };
+const BADGE_COL = { calendar: "#ff5c98", note: "#8a70e0", medal: "#e8a400", trophy: "#e8a400", drop: "#3f98dd", chat: "#ff5c98", star: "#e8a400", flame: "#ff7a3d", dumbbell: "#6c7a99", bolt: "#f2b705", person: "#8a70e0", shoe: "#2fbf94", clock: "#3f98dd", sun: "#ffb020", moon: "#8a70e0", heart: "#ff4f8b", ticket: "#ff5c98" };
 function renderBadges() {
   const got = BADGES.filter(([id]) => st.badges[id]).length, muted = getComputedStyle(document.documentElement).getPropertyValue("--muted").trim() || "#8a5a7f";
-  $("#mdCount").textContent = `${got}/${BADGES.length}`;
-  $("#badges").innerHTML = BADGES.map(([id, name, ic]) => `<button class="badge${st.badges[id] ? "" : " locked"}" data-b="${id}" aria-pressed="false"><canvas width="8" height="8" data-ic="${ic}" aria-hidden="true"></canvas><span>${st.badges[id] ? name : "???"}</span></button>`).join("");
+  const open = new Set([...document.querySelectorAll(".bcat[open]")].map(d => d.dataset.c)); if (!document.querySelector(".bcat")) open.add("constancia");
+  $("#mdCount").textContent = `${got}/${BADGES.length}`; $("#mdMeter").style.width = got / BADGES.length * 100 + "%";
+  $("#badges").innerHTML = BADGE_CATS.map(([c, title]) => { const list = BADGES.filter(x => x[5] === c), n = list.filter(([id]) => st.badges[id]).length;
+    return `<details class="bcat" data-c="${c}"${open.has(c) ? " open" : ""}><summary>${title}<span>${n}/${list.length}</span></summary><div class="badges">${list.map(([id, name, ic]) =>
+      `<button class="badge${st.badges[id] ? "" : " locked"}" data-b="${id}" aria-pressed="false"><canvas width="8" height="8" data-ic="${ic}" aria-hidden="true"></canvas><span>${st.badges[id] ? name : "???"}</span></button>`).join("")}</div><p class="badge-info" aria-live="polite" hidden></p></details>`; }).join("");
   $("#badges").querySelectorAll(".badge").forEach(b => {
     const [id, name, ic, how, line] = BADGES.find(x => x[0] === b.dataset.b), on = !!st.badges[id];
     paintIcon(b.querySelector("canvas"), ic, on ? BADGE_COL[ic] : muted, "#fff3c4");
     b.addEventListener("click", () => { SND.click(); $("#badges").querySelectorAll(".badge").forEach(x => x.setAttribute("aria-pressed", x === b)); const d = on ? new Date(st.badges[id] + "T12:00") : null;
-      $("#badgeInfo").textContent = on ? `${name}: ${line} Ganada el ${d.getDate()} de ${MESES[d.getMonth()]}.` : `Para ganarla: ${how}`; });
+      const info = b.closest(".bcat").querySelector(".badge-info"); info.hidden = false;
+      info.textContent = on ? `${name}: ${line} Ganada el ${d.getDate()} de ${MESES[d.getMonth()]}.` : `Para ganarla: ${how}`; });
   });
 }
 function renderWater() {
