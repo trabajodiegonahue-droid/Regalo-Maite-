@@ -359,395 +359,391 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 /* ====================== lo que dice mini Diego ====================== */
 // un mensaje distinto cada día (90 días sin repetir)
 const MSGS = [
-  "Sé que hoy la cama está más rica que nunca. Pero tú eres más fuerte que tu cama, y yo voy a estar aquí orgulloso de ti cuando vuelvas.",
-  "No tienes que tener ganas, solo tienes que empezar. Las ganas llegan después del calentamiento, te lo prometo.",
-  "Cada vez que vas aunque no quieras, te demuestras lo increíble que eres. Yo lo sé hace rato.",
-  "Hoy no te pido que lo hagas perfecto. Te pido que lo hagas. Lo demás lo celebramos juntos.",
-  "Imagínate saliendo del gym con la música a todo volumen y esa sensación de “lo logré”. Eso te está esperando.",
-  "Mi wawita mosha: no vas por obligación, vas porque te quieres. Y yo te quiero todavía más.",
-  "Un día flojo lo tiene cualquiera. Lo que te hace distinta es que igual te pones las zapatillas.",
-  "Si pudiera, te acompañaría a cada serie y te contaría las repeticiones con besos.",
-  "Tu yo de mañana te va a dar las gracias por lo que hagas hoy. Y yo también, con un abrazo apretado.",
-  "No se trata de ser la más rápida ni la más fuerte. Se trata de no rendirse, y en eso eres campeona.",
-  "Ponte esa playlist que te hace sentir protagonista de película. Hoy la protagonista eres tú.",
-  "Me encanta verte motivada: te brillan los ojos. Vamos a buscar ese brillo.",
-  "Hoy cuesta, sí. Pero mira todo lo que ya has logrado: nada de eso llegó fácil y aquí estás.",
-  "Te prometo que después del gym te vas a sentir liviana, feliz y con energía. Y si no, te debo un helado.",
-  "El cansancio de hoy es la fuerza de mañana. Y tu fuerza me encanta.",
-  "Eres la persona más valiente que conozco. Un par de pesas no van a poder contigo.",
-  "Respira hondo, amárrate el pelo y sal. Yo te espero con el corazón lleno de orgullo.",
-  "Hasta los días grises se ven mejor con endorfinas. Anda a buscar las tuyas.",
-  "No tienes que hacerlo todo hoy. Solo un poquito más que nada. Eso ya es ganar.",
-  "Cuando quieras rendirte, acuérdate de por qué empezaste. Y de que hay alguien que cree en ti a ciegas.",
-  "Preciosa, el gym no sabe lo que se le viene hoy.",
-  "Te amo cuando ganas, te amo cuando te cuesta, y te amo mucho más cuando lo intentas igual.",
-  "Que la flojera no te gane el partido. Yo juego de mediocampo y te paso la pelota: ahora te toca a ti.",
-  "Cada gota de sudor es una prueba de lo constante que eres. Y tu constancia es de lo más bonito que tienes, después de tu sonrisa.",
-  "Hoy entrena por ti, por tu salud y por esa versión tuya que sonríe más. Esa versión me tiene loco.",
-  "Si hoy vas lento, igual vas. Y eso vale muchísimo.",
-  "Tu cuerpo hace cosas increíbles por ti todos los días. Hoy devuélvele el cariño moviéndolo un rato.",
-  "No pienses en la hora completa. Piensa solo en llegar. Llegar ya es la mitad del entrenamiento.",
-  "Te imagino levantando pesas con cara seria y me da una ternura que no te imaginas.",
-  "Algún día vamos a entrenar juntos y te voy a dejar ganar. Mentira, vas a ganar sola. Anda a practicar.",
-  "La disciplina es quererte incluso cuando no tienes ganas. Y tú te mereces todo ese cariño.",
-  "Hoy es un buen día para sentirte fuerte. Mañana también, pero partamos por hoy.",
-  "No necesito que seas perfecta: me encantas tal como eres. El gym es para que tú te sientas increíble.",
-  "Vamos, mi amor. Una hora para ti, sin celular y sin preocupaciones. Te la mereces.",
-  "Las ganas son como el wifi: a veces se caen. Tú conéctate igual y ya van a volver.",
-  "Cuando termines, mándame una foto de tu cara de satisfacción. Es mi foto favorita.",
-  "Eres mi persona favorita en todo el mundo. Y mi persona favorita no se rinde.",
-  "Piensa en lo rico que vas a dormir hoy después de entrenar. Ese sueño te lo ganas en el gym.",
-  "Si pudiera, te cargaría todo el entrenamiento en la espalda. Como no puedo, te mando toda mi energía desde aquí.",
+  "Mi wawita mosha, vine por si hoy no tenías ganas de ir al gym. Aquí estoy para acompañarte, aunque sea de bolsillo.",
+  "Hay días en que cuesta salir del sillón. Por eso me hice chiquitito y me vine a tu celular: para darte ánimo justo ahí.",
+  "No tienes que tener ganas para empezar, mi amor. Las ganas llegan solitas cuando ya te estás moviendo.",
+  "Cada vez que vas aunque no quieras, me demuestras lo fuerte que eres. Y yo me enamoro un poquito más.",
+  "Hoy no te pido un entrenamiento perfecto, mi chiquitita. Te pido que lo intentes. Lo demás lo celebro yo.",
+  "Mi princesa, no vas al gym por obligación: vas porque te quieres. Y yo te quiero todavía más.",
+  "Si pudiera, te acompañaría a cada serie y te contaría las repeticiones con besitos.",
+  "Tu yo de mañana te va a dar las gracias por lo que hagas hoy. Y yo también, con un abrazo bien apretado.",
+  "No se trata de ser la más rápida ni la más fuerte, mi reina. Se trata de no rendirse, y en eso eres la mejor.",
+  "Cuando estás motivada te brillan los ojos, y ese brillo me tiene loco. Vamos a buscarlo hoy.",
+  "Hoy cuesta, lo sé. Pero mira todo lo que ya has logrado: nada de eso fue fácil y aquí estás, mi vida.",
+  "Te prometo que después de entrenar te vas a sentir tranquila, feliz y con energía. Y si no, te debo un helado.",
+  "Eres la persona más valiente que conozco, mi alma. Un par de pesas no van a poder contigo.",
+  "Respira hondo, amárrate el pelo y anda. Yo te espero con el corazón lleno de orgullo.",
+  "No tienes que hacerlo todo hoy. Con un poquito más que nada ya estás ganando, mi amor.",
+  "Cuando te den ganas de rendirte, acuérdate de que hay alguien que cree en ti con todo su ser. Ese soy yo.",
+  "Te amo cuando te sale fácil, te amo cuando te cuesta, y te amo todavía más cuando lo intentas igual.",
+  "Hoy entrena por tu salud, por tu energía y por esa Maite que sonríe más después del gym. Esa sonrisa me encanta.",
+  "Si hoy vas lento, igual vas, mi chiquitita. Y eso vale muchísimo.",
+  "Tu cuerpo hace cosas increíbles por ti todos los días. Hoy devuélvele el cariño moviéndolo un ratito.",
+  "No pienses en toda la rutina, mi reina. Piensa solo en llegar. Llegar ya es la mitad.",
+  "Te imagino entrenando con tu cara de concentración y sonrío como tontito.",
+  "La disciplina es quererte incluso cuando no tienes ganas. Y tú te mereces todo ese cariño, mi vida.",
+  "No necesito que seas perfecta, mi amor: para mí ya lo eres. El gym es para que tú te sientas increíble.",
+  "Una hora para ti, sin preocupaciones. Te la mereces, mi princesa.",
+  "Cuando termines, mándame una foto con tu cara de satisfacción. Es mi foto favorita de todas.",
+  "Eres mi persona favorita en el mundo, mi wawita mosha. Y mi persona favorita no se rinde.",
+  "Piensa en lo rico que vas a dormir hoy después de entrenar. Ese sueño te lo ganas moviéndote.",
+  "Si pudiera, te pasaría toda mi energía. Como no puedo, mantén apretado Dame energía y te mando un kamehameha.",
   "Pasitos chicos, todos los días. Así se construyen las cosas grandes, como lo nuestro.",
-  "No te compares con nadie. Tu única competencia es la Maite de ayer, y esa ya era increíble.",
-  "Hoy tu única tarea es moverte un rato y sonreír. Lo segundo te sale perfecto; vamos con lo primero.",
-  "Sé que estás cansada. Por eso mismo te admiro tanto cuando decides ir igual.",
-  "Aunque todavía no lo veas, cada entrenamiento suma. Yo sí lo veo: estás cada día más fuerte.",
-  "La flojera dice “mañana”. Tú y yo decimos “hoy”. Somos equipo.",
-  "Cuando entrenas también entrenas la cabeza: aprendes que puedes con todo. Y puedes.",
-  "Anda, ponte linda, aunque ya lo eres, y ve a romperla.",
+  "No te compares con nadie, mi alma. Tu única competencia es la Maite de ayer, y esa ya era increíble.",
+  "Sé que estás cansada, mi amor. Por eso mismo te admiro tanto cuando decides ir igual.",
+  "Aunque todavía no lo notes, cada entrenamiento suma. Yo sí lo noto: estás cada día más fuerte.",
+  "La flojera dice “mañana”. Tú y yo decimos “hoy”. Somos equipo, mi reina.",
+  "Cuando entrenas, también entrenas la cabeza: aprendes que puedes con todo. Y puedes con todo, mi vida.",
   "Te mando un beso en la frente para que te acompañe en cada repetición.",
-  "No cuentes los minutos que faltan. Haz que cada minuto cuente.",
-  "Mi parte favorita de tu día es cuando me cuentas que lo hiciste. Quiero escucharla hoy también.",
-  "Los días que no quieres ir son justo los que más te hacen crecer. Hoy es uno de esos días.",
-  "Eres fuego, preciosa. Que se note en el gym.",
-  "Haz una sentadilla por cada vez que te he dicho que te amo. Mejor no, no te alcanzaría la vida. Con una rutina basta.",
+  "Mi parte favorita del día es cuando me cuentas que fuiste. Quiero escucharla hoy también.",
+  "Los días que no quieres ir son justo los que más te hacen crecer, mi chiquitita.",
   "Tu salud es lo más importante para mí. Cuidarte es la forma más linda de quererte.",
-  "Hoy no busques motivación: busca empezar. La motivación siempre llega tarde, pero llega.",
-  "Te admiro por mil cosas, y una es que nunca te rindes del todo. Hoy tampoco.",
-  "Si el día está pesado, el gym es el lugar perfecto para soltarlo. Deja ahí lo malo y vuelve liviana.",
-  "El ejercicio más difícil es salir por la puerta. Después de eso, todo es más fácil.",
-  "Te quiero sana, feliz y fuerte. Las tres cosas se entrenan, y tú eres buenísima entrenando.",
-  "Vamos, mi wawita mosha. Hoy también te voy a estar esperando con un “bien hecho” y muchos besos.",
-  "Hoy no necesitas ser la mejor del gym. Solo tu mejor versión de hoy, aunque sea chiquitita.",
+  "Hoy no esperes a que llegue la motivación: empieza, y ella te alcanza en el camino.",
+  "Te admiro por mil cosas, mi princesa, y una es que nunca te rindes del todo. Hoy tampoco.",
+  "Si el día estuvo pesado, el gym es el lugar perfecto para soltarlo. Deja ahí lo malo y vuelve tranquila.",
+  "El ejercicio más difícil es salir por la puerta. Después de eso, todo se hace más fácil.",
+  "Te quiero sana, feliz y fuerte, mi amor. Y las tres cosas se entrenan.",
+  "Hoy también te voy a estar esperando con un “bien hecho” y muchos besitos, mi wawita mosha.",
+  "No necesitas ser la mejor del gym. Solo tu mejor versión de hoy, aunque sea chiquitita.",
   "Me encanta cuando llegas cansada pero feliz. Esa cara vale cualquier esfuerzo.",
-  "Entrenar es un regalo que te haces a ti misma. Ábrelo, preciosa.",
-  "Si hoy no hay fuerzas, que haya ternura contigo misma. Y después, un poquito de movimiento.",
-  "Tu constancia me inspira. A veces me motivo yo también solo de verte.",
+  "Si hoy no hay fuerzas, que haya cariño contigo misma. Y después, un poquito de movimiento.",
+  "Tu constancia me inspira, mi vida. Todos los días intento estar a tu nivel.",
   "Imagina que cada repetición es un abrazo que me das. ¿Cuántos me vas a dar hoy?",
-  "No importa si vas rápido o lento: lo importante es que no te detengas.",
-  "Un cuerpo fuerte, una mente tranquila y un pololo que te ama. Lo tercero ya lo tienes asegurado.",
-  "Ponte tus zapatillas favoritas, que hoy caminas hacia una versión tuya más feliz.",
+  "Un cuerpo fuerte, una cabeza tranquila y un pololo que te ama con todo su ser. Lo tercero ya lo tienes asegurado.",
   "Hoy celebro cada paso que des, aunque sea solo hasta la puerta.",
-  "Eres de las personas que se levantan aunque cueste. Por eso te admiro tanto.",
-  "Si te sientes floja, piensa en lo rica que se siente la ducha después del gym.",
   "Mi amor, no tienes que demostrarle nada a nadie. Esto es solo para ti.",
-  "Hoy el gym te espera, y yo te espero a la salida con un abrazo imaginario gigante.",
-  "La motivación va y viene. El cariño que te tengo, en cambio, se queda siempre.",
-  "Las cosas lindas toman tiempo. Tú y yo lo sabemos mejor que nadie.",
-  "Si hoy te cuesta, hazlo por la Maite que sonríe en el espejo después de entrenar.",
-  "Cada día que te mueves, le ganas una partida a la flojera. Vas ganando por goleada.",
-  "Sé que puedes, porque te he visto lograr cosas mucho más difíciles.",
-  "Respira profundo: hoy es tu día, y todo lo que hagas va a estar bien.",
+  "Las ganas van y vienen. Lo que siento por ti, en cambio, se queda para siempre.",
+  "Si hoy te cuesta, hazlo por la Maite que vuelve del gym con una sonrisa enorme.",
+  "Sé que puedes, mi reina, porque te he visto lograr cosas mucho más difíciles.",
   "Eres mi motivación favorita. Hoy déjame ser la tuya.",
-  "Una canción, dos zapatillas y muchas ganas de quererte. Con eso partimos.",
-  "No te preocupes por el resultado. Preocúpate de disfrutar el camino.",
-  "Me tienes completamente enamorado, y tu disciplina es parte de eso.",
-  "Haz de hoy un día del que te sientas orgullosa. Yo ya lo estoy.",
   "Cuando dudes de ti, préstame un ratito mis ojos: yo te veo increíble.",
-  "Tu energía es contagiosa. Anda a contagiársela al gym.",
-  "No es obligación, es amor propio. Y tú te mereces muchísimo amor.",
-  "Mientras tú entrenas, yo pienso en lo afortunado que soy.",
-  "Hoy vas a terminar cansada, orgullosa y feliz. Te lo firmo.",
+  "Mientras tú entrenas, yo pienso en lo afortunado que soy de tenerte.",
+  "Hoy vas a terminar cansada, orgullosa y feliz. Te lo firmo, mi todo.",
+  "Con tus mensajes me alegras el día. Hoy quiero uno que diga “fui al gym”.",
+  "Al verte se me acelera el corazón. Hoy que se te acelere el tuyo, pero entrenando.",
+  "No importa si hoy es un minuto o una hora: lo importante es que te elijas a ti.",
+  "Eres todo para mí, mi alma. Y quiero que te sientas tan fuerte como yo te veo.",
 ];
 // frases cortas del botón "Dame ánimo" (8 distintas cada día)
 const BOOSTS = [
-  "¡Vamos, preciosa! Tú puedes con todo.", "Una serie más y te ganas un beso.", "Eres más fuerte que la flojera. Lo sé, lo he visto.",
-  "¡Dale que se puede! Yo te hago barra desde aquí.", "Cinco minutos. Solo empieza cinco minutos.", "Tu sonrisa después del gym es mi cosa favorita.",
-  "¡Mira esos brazos! Ya, ya, anda a entrenarlos.", "Te amo. Ahora a mover ese cuerpecito.", "La Maite de mañana te está aplaudiendo.",
-  "¡Nadie levanta pesas como tú!", "Respira. Amárrate las zapatillas. Sal. Así de simple.", "Te mando un abrazo de energía: ¡fiuuum!",
-  "Hoy entrenas tú, mañana presumo yo.", "Eres mi atleta favorita del mundo mundial.", "¡Arriba, arriba! El sillón te va a esperar.",
-  "Una gotita de sudor, mil besos de premio.", "¡Campeona! Bueno, casi: falta que vayas.", "Si te cansas, descansas. Pero no te rindes.",
-  "Hoy es tu día. Todos lo son, pero hoy más.", "Tienes más fuerza de la que crees. Mucha más.", "Ponte tu polera favorita y ¡vamos!",
-  "Yo creo en ti incluso los días que tú no.", "Mientras más te cuesta, más orgulloso estoy.", "Primero las zapatillas. Lo demás viene solo.",
-  "¡Grrr! Modo bestia activado.", "Te pienso y me dan ganas de hacer flexiones. Mentira, me dan ganas de verte.", "Una hora de gym y veintitrés de regaloneo. Buen trato.",
-  "¡Ponle una canción fuerte y que tiemble el gym!", "Eres constante, fuerte y preciosa. En ese orden hoy.", "No hay día malo que una buena sudada no arregle.",
-  "Te espero al otro lado del entrenamiento con un abrazo.", "Agüita, toalla, música y actitud. ¡Lista!", "Tú no te rindes: tú descansas y vuelves.",
-  "¡Eso! Así me gusta, decidida.", "Un pasito a la vez. Pero hoy dalo.", "Si yo aguanto una pichanga entera, tú puedes con una rutina.",
-  "Que la flojera se quede en la cama. Tú no.", "Haz que tu playlist se sienta orgullosa.", "Cada repetición es un “te quiero” para ti misma.",
-  "¡Vamos que se puede! Y si no se puede, igual se puede.",
-  "¡Mi niña linda es imparable!",
-  "Tú y yo contra la flojera. Vamos ganando.",
-  "Un poquito hoy es mucho mañana.",
-  "Hazlo con cariño, como te cuido yo.",
-  "Tu esfuerzo me derrite.",
-  "¡Arriba esa energía, preciosa!",
-  "Eres pura fuerza y pura ternura.",
-  "Si dudas, mírate al espejo: ahí está la campeona.",
-  "Un último empujón y listo.",
-  "Te quiero fuerte y feliz.",
-  "Mueve el cuerpo, que el corazón ya me lo moviste tú.",
-  "No pares ahora, que vas preciosa.",
-  "Me encanta tu cara de concentración.",
-  "Cada gota cuenta. Cada minuto también.",
-  "Más fuerte que ayer, más linda que nunca.",
-  "La flojera no tiene nada que hacer contigo.",
-  "¡Así se hace, mi wawita mosha!",
-  "Ya casi, ya casi, ¡ya casi!",
-  "Tú puedes. Yo lo sé. Ahora que lo sepas tú.",
-  "Hoy brillas más que tus zapatillas.",
-  "Tus ganas valen oro.",
-  "Una más por mí. Y otra por ti.",
-  "Te estoy aplaudiendo desde aquí.",
-  "Eres la mejor parte de mi día.",
-  "Respira, sonríe y sigue.",
-  "Hasta mini Diego está sudando de verte.",
-  "Que nada te detenga, preciosa.",
-  "Te mereces sentirte así de fuerte siempre.",
-  "¡Pura actitud!",
-  "Lo estás haciendo increíble, de verdad.",
-  "Te amo con todo mi ser, mi chiquitita. Vamos que se puede.",
-  "Eres todo, mi amor. Te amo, te adoro, eres la mejor.",
-  "Cachai que eres más fuerte que la flojera, ¿cierto?",
-  "Mi reina no se rinde. Mi reina entrena.",
-  "Te amo con mi corazón, alma, cuerpo y energía. Ahora a moverse.",
-  "Mi princesa, hoy brillas tú.",
-  "Vamos, mi alma. Yo te acompaño en cada paso.",
-  "Mi todo, mi vida, mi wawita mosha: ¡tú puedes!",
-  "Eres la mejor del mundo, cachai. Demuéstraselo a la flojera.",
-  "Te adoro, mi chiquitita. Una serie más y me lo demuestras.",
+  "¡Aquí va tu ánimo, mi chiquitita! Tú puedes con esto y con mucho más.",
+  "Ánimo, mi amor. Yo creo en ti incluso los días que tú no.",
+  "Te mando todo mi ánimo y un abrazo apretado. Ahora sí, vamos.",
+  "Eres más fuerte que la flojera, mi reina. Lo he visto mil veces.",
+  "¿Necesitabas ánimo? Aquí estoy, mi vida. Siempre voy a estar.",
+  "Tú puedes, mi princesa. Y si dudas, yo lo creo por los dos.",
+  "Respira, mi alma. Empieza con poquito, que el resto llega solo.",
+  "Tu sonrisa después de entrenar es mi cosa favorita. Anda a buscarla.",
+  "Ánimo, mi wawita mosha. Hoy también vas a poder.",
+  "Mientras más te cuesta, más orgulloso estoy de ti.",
+  "Primero las zapatillas, mi amor. Lo demás viene solito.",
+  "Te amo con todo mi ser, y con ese amor te mando ánimo hasta donde estés.",
+  "Si te cansas, descansas. Pero no te rindes, mi chiquitita.",
+  "Tienes mucha más fuerza de la que crees, mi reina. Muchísima más.",
+  "Hoy no tienes que ser perfecta. Solo tienes que empezar.",
+  "Eres mi atleta favorita del mundo entero, mi vida.",
+  "Ponte tu canción favorita, mi amor, y deja que ella te lleve.",
+  "Yo te hago barra desde aquí. ¡Vamos, mi princesa!",
+  "Un pasito a la vez, mi alma. Pero hoy dalo.",
+  "Cada vez que te superas, me haces querer superarme a mí. Ánimo, mi amor.",
+  "Te admiro tanto, mi wawita mosha. Hoy dame un motivo más.",
+  "No estás sola: mini Diego está contigo en cada paso.",
+  "Si hoy cuesta, hazlo despacito. Despacito también cuenta.",
+  "Eres fuerte, constante y lo más lindo que tengo. Vamos, mi reina.",
+  "Tú no te rindes, mi chiquitita: tú descansas y vuelves.",
+  "Te amo, te adoro, eres la mejor. Y la mejor puede con esto.",
+  "Imagínate terminando y sintiéndote orgullosa. Ese momento te está esperando.",
+  "Ánimo, mi vida. Un ratito de ejercicio y un día entero de sentirte bien.",
+  "Deja a la flojera sola en el sillón, mi amor. Tú vienes conmigo.",
+  "Hasta mini Diego se puso las zapatillas por ti. ¡Vamos!",
+  "Con escuchar tu voz me calmo, y con verte entrenar me lleno de orgullo.",
+  "Te mando un besito, mi princesa, para que te acompañe todo el día.",
+  "Hoy me toca a mí motivarte, como tú me motivas todos los días.",
+  "Un poquito hoy es mucho mañana, mi alma.",
+  "No lo pienses tanto, mi amor. Párate, respira y empieza.",
+  "Eres pura fuerza y pura ternura, mi wawita mosha.",
+  "Te amo con mi corazón, alma, cuerpo y energía. Toda esa energía es para ti hoy.",
+  "Lo que hagas hoy, poquito o mucho, me va a hacer feliz. Pero sobre todo te va a hacer bien a ti.",
+  "Yo sé que puedes, mi amor. Ahora quiero que lo sepas tú.",
+  "Ánimo, mi chiquitita. Cada minuto que te mueves es un regalo para ti.",
+  "Eres todo, mi amor. Y conmigo al lado puedes con todo.",
+  "Me encanta tu cara cuando terminas. Quiero verla hoy, mi vida.",
+  "Vamos de a poquito, mi princesa. Yo voy contigo.",
+  "Más fuerte que ayer, mi alma. Siempre un poquito más.",
+  "Hoy la flojera pierde, mi amor, porque tú eres más porfiada que ella.",
+  "Te estoy aplaudiendo desde aquí, mi wawita mosha. ¡Tú puedes!",
+  "Hoy le ganamos juntos a la flojera. Tú y yo, mi reina.",
+  "Una sonrisa, un respiro hondo y a moverse. Así de simple, mi vida.",
 ];
-const BOOST_END = "Ya te di todo el ánimo de hoy. ¡Ahora te toca a ti!";
+const BOOST_END = "Ya te di todo mi ánimo de hoy, mi amor. Ahora te toca a ti, y yo te miro orgulloso.";
 const CELEB = [
-  "¡ESA ES MI POLOLA! Anda y rómpela.", "¡Sabía que ibas a ir! Te amo, te amo, te amo.", "¡Grande, mi amor! Ya ganaste la parte más difícil: decidirte.",
-  "¡Wiii! Mini Diego está bailando de felicidad.", "Me tienes orgullosísimo. Después me cuentas cómo te fue.", "¡Así se hace, preciosa! La flojera perdió por goleada.",
-  "Te ganaste una estrella y un beso en la frente.", "¡Eso! Ve tranquila, a tu ritmo, y disfrútalo.", "Mi atleta favorita va en camino. ¡Que tiemble el gym!",
-  "¡Vamos con todo! Y no te olvides de tu agüita.", "Te admiro tanto. Hoy de nuevo me demostraste por qué.", "¡Golazo! Ya quiero que me cuentes.",
-  "Decidirte cuando no tenías ganas es de valientes. Y tú lo eres.", "¡Lo sabía! Vas a volver sintiéndote increíble.",
-  "¡Mi campeona favorita en acción!",
-  "¡Eso, mi amor! Hoy le ganaste a la cama.",
-  "Te amo por mil cosas, y hoy por una más.",
-  "¡Vamos! Mini Diego ya está haciendo la ola.",
-  "¡Qué orgullo! Disfruta cada minuto.",
-  "Hoy elegiste quererte. Eso es lo más lindo.",
-  "¡Bien, preciosa! A la vuelta te espera un abrazo.",
-  "Tú brillando y la flojera mirando desde el sillón.",
-  "¡Así se hace! Ya quiero ver tu cara de felicidad después.",
-  "Ve con todo, y vuelve con más ganas de abrazarme.",
+  "¡Eso, mi amor! Ya hiciste lo más difícil: decidirte. Anda tranquila y disfrútalo.",
+  "¡Sabía que ibas a ir, mi chiquitita! Te amo, te amo, te amo.",
+  "¡Vas al gym! Mini Diego está saltando de felicidad. Después me cuentas cómo te fue.",
+  "Qué orgullo, mi reina. Lleva tu agüita y anda con todo.",
+  "Te ganaste tu estrella de hoy, mi princesa. Y un besito para el camino.",
+  "Decidirte cuando no tenías ganas es de valientes, mi vida. Y tú lo eres.",
+  "¡Le ganaste a la flojera, mi wawita mosha! Ahora a disfrutar el gym.",
+  "Ve a tu ritmo, mi alma. Lo importante es que vas.",
+  "¡Así se hace, mi amor! Te espero a la vuelta con un abrazo gigante.",
+  "Me encanta que vayas, mi chiquitita. Cuando salgas, aprieta ¡Fui al gym! y te doy tu súper yupi.",
+  "¡Vamos, mi reina! Ponte tu música favorita y que sea un buen entrenamiento.",
+  "Hoy elegiste quererte, mi princesa. Eso es lo más lindo que hay.",
+  "Te amo con todo mi ser, y hoy un poquito más por ir al gym.",
+  "¡Bien, mi vida! Vas a volver sintiéndote increíble, ya vas a ver.",
+  "Mini Maite y yo te despedimos en la puerta. ¡Que te vaya súper bien, mi amor!",
+  "Anda con cuidado, mi alma, y disfruta cada serie.",
+  "¡Mi atleta favorita va en camino! Que tengas un entrenamiento lindo, mi wawita mosha.",
+  "Cada vez que vas, me llenas de orgullo, mi amor.",
+  "¡Eso, mi chiquitita! A la vuelta quiero saberlo todo: qué hiciste y cómo te sentiste.",
+  "No te olvides de calentar y de tu agüita, mi reina. Te amo.",
 ];
 const DEAL = [
-  "Te entiendo, mi amor. Hagamos un trato: elige cuánto, aunque sea 1 minuto. Si al terminar sigues sin ganas, descansas sin culpa.",
-  "Está bien no tener ganas. ¿Me regalas aunque sea un minuto? Yo lo hago contigo.",
-  "Ya, no vayamos al gym. Pero muévete un ratito conmigo, en pijama si quieres.",
-  "Te propongo algo: empieza con poquito. Muchas veces las ganas aparecen en el minuto 3.",
-  "Hoy pesa, lo sé. Por eso te traje cronómetros chiquititos: elige uno y quedamos a mano.",
-  "Sin presión, preciosa. Elige lo que te acomode y yo te cuento los segundos.",
-  "No tienes que ir a ningún lado. Elige algo cortito aquí mismo y después decides.",
-  "La flojera es astuta, pero nosotros más. Un minuto y le ganamos.",
-  "Te confieso algo: yo también tengo flojera. Hagamos algo cortito juntos y nos sentimos campeones.",
-  "Un secreto: el entrenamiento más corto igual cuenta. Elige uno, aunque sea el de 1 minuto.",
+  "Te entiendo, mi amor. Hagamos un trato: elige algo cortito de abajo, aunque sea 1 minuto. Si sigues sin ganas, descansas sin culpa.",
+  "Está bien no tener ganas, mi chiquitita. ¿Me regalas un minuto? Yo lo hago contigo.",
+  "Ya, hoy no vamos al gym. Pero muévete un ratito conmigo aquí mismo, aunque sea en pijama.",
+  "Te propongo algo, mi reina: empieza con poquito. Muchas veces las ganas aparecen en el minuto tres.",
+  "Hoy pesa, lo sé. Por eso te traje cronómetros chiquititos: elige el que quieras, mi princesa.",
+  "Sin presión, mi vida. Elige lo que te acomode y yo te cuento los segundos.",
+  "No tienes que ir a ningún lado, mi alma. Elige algo cortito aquí abajo y después decides.",
+  "Un abrazo primero, mi wawita mosha. Después, si quieres, hacemos algo suavecito, como estirar.",
+  "Yo también tengo días así, mi amor. Hagamos algo cortito juntos y nos sentimos campeones.",
+  "Hasta el entrenamiento más corto cuenta, mi chiquitita. Elige uno, aunque sea el de 1 minuto.",
+  "Si hoy el cuerpo te pide descanso, también está bien. Abajo está Descansar, o algo cortito si te animas.",
+  "No te voy a obligar, mi reina. Solo te voy a acompañar en lo que elijas.",
 ];
 // mientras entrena: una frase tierna y motivadora cada minuto
 const MINUTE_LINES = [
-  "Un minuto más y yo cada vez más orgulloso de ti.",
-  "Respira, mi amor. Lo estás haciendo perfecto.",
-  "Si pudiera, te secaría la frente con un beso.",
-  "Eres fuerte y tierna, las dos cosas a la vez.",
+  "Un minuto más y yo cada vez más orgulloso de ti, mi amor.",
+  "Respira, mi chiquitita. Lo estás haciendo muy bien.",
+  "Si pudiera, te secaría la frente con un besito.",
+  "Eres fuerte y tierna, mi reina. Las dos cosas a la vez.",
   "Hace un rato no tenías ganas, y mírate ahora.",
-  "Te mando un abrazo apretado para este minuto.",
-  "Cada minuto que entrenas, me enamoras otro poquito.",
-  "Tu esfuerzo es lo más lindo que he visto hoy.",
+  "Te mando un abrazo apretado para este minuto, mi vida.",
+  "Cada minuto que te mueves, me enamoras otro poquito.",
+  "Tu esfuerzo es lo más lindo que he visto hoy, mi princesa.",
   "Sigue así, que te estoy mirando con cara de bobo.",
-  "Un minuto menos para terminar y un beso más que te debo.",
-  "Qué linda te ves cuando te esfuerzas.",
-  "Vas tan bien que mini Diego quiere aplaudirte con los pies.",
-  "No te apures: a tu ritmo es perfecto.",
-  "Me encanta saber que te estás cuidando.",
+  "Un minuto menos para terminar y un besito más que te debo.",
+  "A tu ritmo está perfecto, mi alma. No te apures.",
+  "Me encanta saber que te estás cuidando, mi wawita mosha.",
   "Tu corazón late fuerte. El mío también, por ti.",
-  "Eres valiente, preciosa. Muy valiente.",
+  "Eres valiente, mi amor. Muy valiente.",
   "Si te cansas, respira. Si respiras, sigues. Si sigues, ganas.",
-  "Te quiero mucho. Ah, y vas increíble.",
+  "Te amo, mi chiquitita. Ah, y vas increíble.",
   "Ojalá pudiera darte la mano en este momento.",
-  "Cada segundo de esto es amor propio. Me encanta.",
-  "Estás haciendo algo bonito por ti, y eso me hace feliz.",
-  "Ya no hay quien te pare, mi wawita mosha.",
-  "Toma agüita si la necesitas. Yo te espero.",
+  "Cada segundo de esto es quererte a ti misma. Me encanta.",
+  "Ya no hay quien te pare, mi reina.",
+  "Toma agüita si la necesitas, mi vida. Yo te espero.",
   "Te estoy guardando un abrazo para cuando termines.",
-  "Mira cómo sigues aquí. Eres increíble.",
   "Vas sumando minutos y yo sumando motivos para admirarte.",
-  "Eres mi campeona, hoy y siempre.",
-  "Un minuto más, mi amor. Yo lo hago contigo.",
+  "Eres mi campeona, mi princesa. Hoy y siempre.",
+  "Un minuto más, mi alma. Yo lo hago contigo.",
   "Tu cuerpo te está dando las gracias. Y yo también.",
   "Te imagino concentrada y me derrito de ternura.",
-  "Esto que estás haciendo es puro cariño hacia ti.",
-  "Respira hondo, suelta los hombros y sigue brillando.",
+  "Respira hondo, suelta los hombros y sigue, mi wawita mosha.",
   "No sabes lo bonito que es verte no rendirte.",
-  "Otro minuto para la colección. Vas preciosa.",
+  "Otro minuto para la colección, mi amor.",
   "Si la flojera te habla, dile que estás ocupada conmigo.",
-  "Te amo más que a la pelota. Y eso es decir mucho.",
-  "Cada minuto contigo, aunque sea así, es mi favorito.",
-  "Eres más fuerte de lo que sientes en este momento.",
-  "Lo estás logrando: paso a paso, minuto a minuto.",
+  "Eres más fuerte de lo que sientes en este momento, mi chiquitita.",
+  "Paso a paso, minuto a minuto. Lo estás logrando.",
   "Cuando termines, date un abrazo de mi parte.",
+  "Te amo con todo mi ser, mi reina, y ahora mismo también te admiro con todo mi ser.",
+  "Con cada minuto me demuestras lo constante que eres.",
+  "Mini Maite y yo seguimos contigo, mi vida. No pares.",
+  "Qué lindo es verte cuidarte así, mi princesa.",
+  "Ya llevas más de lo que creías, mi alma.",
+  "Mi todo, lo estás haciendo increíble.",
+  "Cada minuto tuyo vale oro, mi chiquitita.",
 ];
 // caminata: algo nuevo cada minuto
 const WALK_LINES = [
-  "Buen ritmo, sigue así.", "Mueve los brazos al caminar, que ayuda harto.", "Respira por la nariz y bota el aire por la boca.", "Cada paso es un paso más cerca de sentirte increíble.",
-  "Si ves algo bonito en el camino, mándame una foto.", "Sube un poquito el ritmo, solo un poquito.", "Derechita y con los hombros relajados. Así, preciosa.",
-  "Te imagino caminando y me dan ganas de acompañarte.", "Si tienes agüita a mano, toma un sorbito.", "Ya llevas más de lo que creías que ibas a hacer.",
-  "Camina como si vinieras a encontrarte conmigo.", "Vas increíble. De verdad, increíble.",
-  "Mira el cielo un ratito. Qué lindo está, ¿cierto?",
+  "Buen ritmo, mi amor. Sigue así.",
+  "Mueve los brazos al caminar, que ayuda harto.",
+  "Respira por la nariz y bota el aire por la boca, mi chiquitita.",
+  "Cada paso es un paso más cerca de sentirte increíble.",
+  "Si ves algo bonito en el camino, mándame una foto.",
+  "Sube un poquito el ritmo, mi reina. Solo un poquito.",
+  "Derechita y con los hombros sueltos. Así, mi vida.",
+  "Te imagino caminando y me dan ganas de ir a tu lado.",
+  "Si tienes agüita a mano, toma un sorbito.",
+  "Camina como si vinieras a encontrarte conmigo, mi princesa.",
+  "Mira el cielo un ratito, mi alma. Qué lindo está, ¿cierto?",
   "Con calma, pero sin parar.",
-  "Las mejores ideas llegan caminando. Las mías siempre terminan en ti.",
-  "Paso a paso se llega lejos. Como nosotros.",
-  "Siente el aire. Esto también es cuidarte.",
+  "Caminando se piensa bonito. Yo, cuando camino, siempre termino pensando en ti.",
+  "Paso a paso se llega lejos. Como nosotros, mi wawita mosha.",
+  "Siente el aire, mi amor. Esto también es cuidarte.",
   "Si te encuentras un perrito, salúdalo de mi parte.",
-  "Cada cuadra es una victoria chiquita.",
-  "Ya vas mucho más lejos que la flojera.",
+  "Cada cuadra es una victoria chiquitita.",
+  "Ya vas mucho más lejos que la flojera, mi reina.",
 ];
 // descanso entre series en el gym
 const SERIES_LINES = [
-  "Respira. Agüita. Ya viene la siguiente.", "Esa serie estuvo perfecta.", "Sacude los brazos y suelta los hombros.", "Descansa, que la próxima te sale mejor.",
-  "Te estoy mirando con cara de orgullo.", "Una serie menos para terminar.", "Mientras descansas, te mando un beso.", "Tú puedes con una más. Siempre puedes con una más.",
-  "Agüita y a la siguiente, campeona.",
-  "Esa última repetición fue de película.",
-  "Estírate un segundo mientras tanto.",
-  "Te estás poniendo cada día más fuerte.",
-  "Respira por la nariz, que ya viene.",
-  "La siguiente serie es tuya.",
+  "Respira, mi amor. Agüita, que ya viene la siguiente.",
+  "Esa serie estuvo perfecta, mi chiquitita.",
+  "Sacude los brazos y suelta los hombros.",
+  "Descansa, mi reina, que la próxima te sale mejor.",
+  "Te estoy mirando con cara de orgullo, mi vida.",
+  "Una serie menos para terminar.",
+  "Mientras descansas, te mando un besito.",
+  "Siempre puedes con una más, mi princesa.",
+  "Esa última repetición fue de película, mi alma.",
+  "Estírate un segundito mientras tanto.",
+  "Te estás poniendo cada día más fuerte, mi wawita mosha.",
+  "Respira por la nariz. La siguiente es tuya.",
 ];
+const SERIE_GO = ["Con todo, mi amor.", "Tú puedes, mi chiquitita.", "Esta serie es tuya, mi reina.", "Aprieta, que yo te miro orgulloso.", "Respira hondo y dale, mi vida.", "Una serie más cerca de terminar, mi princesa.", "Despacito y bien hecha, mi alma.", "Vamos, mi wawita mosha."];
+// el título chiquitito de los descansos en las rutinas
+const REST_GREET = ["Respira, mi amor", "Agüita, mi chiquitita", "Vas increíble, mi reina", "Suelta los hombros, mi vida", "Lo estás haciendo muy bien", "Un respiro y seguimos", "Qué orgullo, mi princesa", "Ya queda menos, mi alma", "Así se hace, mi wawita mosha", "Tú puedes con lo que viene"];
 // estiramientos suaves
 const REST = [
-  "Descansar también es entrenar. Toma agüita, duerme rico y mañana volvemos con todo.",
-  "Tu cuerpo te pide una pausa, y escucharlo también es quererte. Te amo igual de mucho.",
-  "Hoy descansa sin culpa, preciosa. Las campeonas también recargan pilas.",
-  "Está bien. Hoy regalonea, estira un poquito y acuéstate temprano. Mañana es otro día.",
-  "Un día de descanso no borra nada de lo que has logrado. Nada.",
-  "Hoy te toca mimarte. Mañana te toca brillar. Yo te acompaño en las dos.",
-  "Recarga energía, mi amor. Mañana mini Diego te espera con el mejor ánimo.",
-  "Si estás cansada, duerme. Los músculos crecen descansando, y el amor también.",
-  "Hoy te abrazo desde aquí. Descansa, que mañana te acompaño otra vez.",
-  "Ponte cómoda, abrígate y regalonea. Te lo ganaste.",
-  "Descansar no es rendirse: es prepararse para volver más fuerte.",
-  "Duerme rico, mi amor. Mini Diego cuida tus sueños.",
+  "Descansar también es entrenar, mi amor. Agüita, algo rico y mañana volvemos con todo.",
+  "Tu cuerpo te pide una pausa, y escucharlo también es quererte. Te amo igualito, mi chiquitita.",
+  "Hoy descansa sin culpa, mi reina. Las campeonas también recargan pilas.",
+  "Está bien, mi vida. Hoy regalonea, estira un poquito y acuéstate temprano.",
+  "Un día de descanso no borra nada de lo que has logrado, mi princesa. Nada.",
+  "Hoy te toca mimarte. Mañana te toca brillar. Yo te acompaño en las dos, mi alma.",
+  "Recarga energía, mi wawita mosha. Mañana mini Diego te espera con todo el ánimo del mundo.",
+  "Los músculos se hacen fuertes mientras descansas, mi amor. Hoy deja que trabajen solitos.",
+  "Te abrazo desde aquí, mi chiquitita. Descansa, que mañana te acompaño otra vez.",
+  "Ponte cómoda, abrígate y regalonea, mi reina. Te lo ganaste.",
+  "Descansar no es rendirse, mi vida: es prepararse para volver más fuerte.",
+  "Que sueñes bonito, mi princesa. Mini Diego cuida tus sueños.",
 ];
 const CHARGE = [
-  "¡Listo! Te pasé toda mi energía. Ahora anda a usarla.", "Energía al 100%. Efectos secundarios: ganas de entrenar y de darme besos.",
-  "¡Cargada! Ahora eres oficialmente imparable.", "Ahí va toda mi buena onda. No la desperdicies en el sillón.",
-  "¡Batería llena! Ya no hay excusa, mi amor.", "Te mandé energía, amor y un poquito de mis ganas de verte.",
-  "¡Fiuuum! Energía entregada. Mini Diego quedó cansadito por ti.", "Ya estás cargada al máximo. ¡A brillar!",
-  "¡Ka-chow! Energía de Rayo McQueen activada.",
-  "Recarga completa: ahora tienes poderes de pololo enamorado.",
-  "¡Pum! Te llegó mi energía directo al corazón.",
-  "Energía cargada. Advertencia: puedes salir volando al gym.",
-  "Listo, ahora tienes la fuerza de dos personas: la tuya y la mía.",
-  "¡Turbo activado! Úsalo con cariño.",
+  "¡Te llegó toda mi energía, mi amor! La de mi corazón, mi alma y mi cuerpo. Ahora úsala.",
+  "¡Kamehameha directo a tu pantalla, mi chiquitita! Ya tienes energía para todo el día.",
+  "Te pasé toda mi energía, mi reina. Yo quedé cansadito, pero feliz.",
+  "Energía al cien, mi princesa. Ahora no hay flojera que te pare.",
+  "¡Ese rayo era puro amor, mi vida! Te tendría que llegar hasta los pies.",
+  "Listo, mi alma: ahora tienes la fuerza de los dos, la tuya y la mía.",
+  "¡Cargada, mi wawita mosha! Esa energía es para que vayas con todo.",
+  "Te mandé energía y un poquito de mis ganas de verte, mi amor.",
+  "¡Pum! Mi energía ya está contigo, mi chiquitita. Siéntela.",
+  "Te amo con mi corazón, alma, cuerpo y energía, y la energía te la acabo de mandar completita.",
+  "Batería llena, mi reina. Úsala en el gym o en un ratito de ejercicio aquí conmigo.",
+  "Cada vez que me pidas energía, te la mando. Para eso estoy, mi vida.",
+  "¡Te llegó el kamehameha, mi princesa! Ahora eres la más fuerte del universo.",
+  "Ahí va mi energía, mi alma. Ojalá te dure hasta que vuelvas del gym.",
 ];
-const TAPS = ["¡Ay! Me hiciste cosquillas.", "Te amo. ¿Ya te lo dije hoy?", "Oye, deja de tocarme y anda al gym.", "Mua. Ese beso es para el camino.", "Soy chiquitito, pero te quiero en grande.", "¡Oye! Esas cosquillas son trampa.", "¿Me extrañabas? Yo a ti, siempre.", "Un abrazo chiquitito, pero con todo el amor.", "Me pongo rojo cada vez que me tocas.", "¿Vamos al gym juntos? Bueno, yo te miro desde aquí.", "Mini Diego reportándose: te amo.", "Si me tocas de nuevo, te mando otro beso.", "Soy tu fan número uno.", "Eres lo más lindo de mi pantalla."];
+const TAPS = ["¡Ay! Me hiciste cosquillas, mi amor.", "Te amo. ¿Ya te lo dije hoy, mi chiquitita?", "Mua. Ese besito es para ti, mi reina.", "Soy chiquitito, pero te amo en grande.", "Cada vez que me haces cariño, sonrío como tontito.", "¿Me extrañabas, mi vida? Yo a ti siempre.", "Un abrazo chiquitito, pero con todo mi amor.", "Me pongo rojo cada vez que me haces cariño, mi princesa.", "Mini Diego reportándose: te amo, mi alma.", "Si me haces cariño otra vez, te mando otro besito.", "Soy tu fan número uno, mi wawita mosha.", "Eres lo más lindo que aparece en esta pantalla.", "Soy pura ternura cuando me haces cariño, mi vida.", "Te adoro, mi amor. Sigue, que me encanta tu cariño."];
 const WEEK = [
-  "Domingo: para recargar, o para sorprenderte a ti misma.", "Los lunes cuestan, pero empezar la semana entrenando es de otro nivel.",
-  "Martes: lo peor de la semana ya pasó.", "Miércoles: mitad de semana, mitad de camino.", "Jueves: casi viernes. Que el cuerpo lo celebre moviéndose.",
-  "Viernes: cerremos la semana con broche de oro.", "Sábado: entrenas sin apuro y después regaloneamos.",
+  "Hoy es domingo: día para regalonear o para sorprenderte a ti misma.",
+  "Es lunes, y empezar la semana moviéndote es lo mejor que te puedes regalar.",
+  "Martes: el lunes ya pasó y tú sigues aquí, con todo.",
+  "Miércoles: ya vas en la mitad de la semana.",
+  "Jueves: queda poquito para el finde.",
+  "Viernes: cerremos la semana con todo.",
+  "Sábado: entrena sin apuro y después a descansar rico.",
 ];
-const PETS = ["mi wawita mosha", "mi chiquitita", "mi princesa", "mi reina", "mi amor", "mi vida", "mi todo", "mi alma", "mi niña linda", "preciosa", "mi polola favorita"];
-const INTRO = "Hola, mi amor. Soy mini Diego, tu Mini Coach de bolsillo para los días que no tienes ganas. Todos los días te voy a decir algo distinto. Usa los botones de abajo cuando me necesites.";
+const PETS = ["mi wawita mosha", "mi chiquitita", "mi princesa", "mi reina", "mi amor", "mi vida", "mi todo", "mi alma"];
+const INTRO = "Hola, mi wawita mosha. Soy mini Diego, tu coach de bolsillo para los días sin ganas. Abajo me pides ánimo o energía, o me cuentas si vas o si fuiste al gym.";
 // medallas: [id, nombre, ícono, cómo se gana, lo que dice mini Diego, categoría]
 const BADGE_CATS = [["constancia", "CONSTANCIA"], ["gym", "GYM"], ["crono", "CRONÓMETROS"], ["agua", "AGÜITA"], ["carino", "CARIÑO"], ["especial", "ESPECIALES"]];
 const BADGES = [
-  ["primera", "Primera estrella", "star", "Ganar tu primera estrella.", "¡Tu primera estrella, mi chiquitita! La primera de muchas, cachai. Te amo con todo mi ser.", "constancia"],
-  ["racha3", "Tres seguidos", "flame", "Ganar estrella 3 días seguidos.", "Tres días seguidos, mi amor. Estás que ardes y yo más enamorado que nunca.", "constancia"],
-  ["racha5", "Cinco al hilo", "flame", "Ganar estrella 5 días seguidos.", "¡Cinco días al hilo, mi princesa! Nadie te para, cachai. Eres la mejor.", "constancia"],
-  ["racha7", "Semana perfecta", "flame", "Ganar estrella 7 días seguidos.", "Una semana entera, mi reina. Te amo con mi corazón, mi alma, mi cuerpo y toda mi energía.", "constancia"],
-  ["racha10", "Diez al hilo", "flame", "Ganar estrella 10 días seguidos.", "Diez días seguidos, mi vida. Eres una máquina y eres mi todo.", "constancia"],
-  ["racha14", "Dos semanas", "flame", "Ganar estrella 14 días seguidos.", "Dos semanas sin parar, mi wawita mosha. Te admiro con el alma, te adoro.", "constancia"],
-  ["racha21", "Tres semanas", "flame", "Ganar estrella 21 días seguidos.", "Tres semanas, mi amor. Ya es costumbre de campeona, cachai.", "constancia"],
-  ["racha30", "Un mes", "flame", "Ganar estrella 30 días seguidos.", "¡Un mes entero de racha, mi todo! Te amo infinito.", "constancia"],
-  ["racha50", "Cincuenta días", "flame", "Ganar estrella 50 días seguidos.", "Cincuenta días seguidos, mi reina. No tengo palabras: eres todo para mí.", "constancia"],
+  ["primera", "Primera estrella", "star", "Ganar tu primera estrella.", "¡Tu primera estrella, mi chiquitita! La primera de muchas. Te amo con todo mi ser.", "constancia"],
+  ["racha3", "Tres seguidos", "flame", "Ganar estrella 3 días seguidos.", "Estás que ardes, mi amor, y yo más enamorado que nunca.", "constancia"],
+  ["racha5", "Cinco al hilo", "flame", "Ganar estrella 5 días seguidos.", "¡Nadie te para, mi princesa! Eres la mejor.", "constancia"],
+  ["racha7", "Semana perfecta", "flame", "Ganar estrella 7 días seguidos.", "Una semana perfecta, mi reina, igual que tú.", "constancia"],
+  ["racha10", "Diez al hilo", "flame", "Ganar estrella 10 días seguidos.", "Eres una máquina, mi vida, y eres mi todo.", "constancia"],
+  ["racha14", "Dos semanas", "flame", "Ganar estrella 14 días seguidos.", "Te admiro con el alma, mi wawita mosha. Te adoro.", "constancia"],
+  ["racha21", "Tres semanas", "flame", "Ganar estrella 21 días seguidos.", "Esto ya es un hábito de campeona, mi amor.", "constancia"],
+  ["racha30", "Un mes", "flame", "Ganar estrella 30 días seguidos.", "No sé cómo lo haces, mi princesa, pero te admiro con todo.", "constancia"],
+  ["racha50", "Cincuenta días", "flame", "Ganar estrella 50 días seguidos.", "No tengo palabras, mi reina: eres todo para mí.", "constancia"],
   ["racha100", "Cien días", "flame", "Ganar estrella 100 días seguidos.", "¡CIEN DÍAS, mi alma! Eres la persona más constante y linda del mundo. Te amo, te adoro.", "constancia"],
-  ["estrellas10", "10 estrellas", "star", "Juntar 10 estrellas.", "Diez estrellitas, mi chiquitita. Vas brillando más que todas ellas.", "constancia"],
+  ["estrellas10", "10 estrellas", "star", "Juntar 10 estrellas.", "Diez estrellitas, mi chiquitita. Y tú brillas más que todas juntas.", "constancia"],
   ["estrellas25", "25 estrellas", "star", "Juntar 25 estrellas.", "Veinticinco estrellas, mi princesa. Tu cielo está lleno, igual que mi corazón.", "constancia"],
-  ["estrellas50", "50 estrellas", "star", "Juntar 50 estrellas.", "Cincuenta estrellas, cachai. Eres mi constelación favorita, mi vida.", "constancia"],
-  ["estrellas100", "100 estrellas", "star", "Juntar 100 estrellas.", "¡Cien estrellas, mi todo! Te amo con mi corazón, alma, cuerpo y energía.", "constancia"],
-  ["semana4", "Semana activa", "calendar", "Ganar 4 estrellas en una misma semana.", "Cuatro días en una semana, mi amor. Así se hace, eres la mejor.", "constancia"],
+  ["estrellas50", "50 estrellas", "star", "Juntar 50 estrellas.", "Cincuenta estrellas, mi vida. Eres mi constelación favorita.", "constancia"],
+  ["estrellas100", "100 estrellas", "star", "Juntar 100 estrellas.", "¡Cien estrellas, mi todo! Ya no me quedan palabras, solo besitos para darte.", "constancia"],
+  ["semana4", "Semana activa", "calendar", "Ganar 4 estrellas en una misma semana.", "Cuatro días en una semana, mi amor. Así se hace.", "constancia"],
   ["volviste", "Volviste", "heart", "Volver a ganar estrella después de 3 días o más sin estrellas.", "Volviste, mi wawita mosha. Lo importante no es caerse, es volver. Te amo con todo lo que soy.", "constancia"],
-  ["finde", "Finde activo", "sun", "Ganar una estrella un sábado o un domingo.", "Hasta el fin de semana te moviste, mi reina. Te adoro, cachai.", "constancia"],
-  ["lunes", "Le ganó al lunes", "bolt", "Ganar una estrella un lunes.", "Le ganaste al lunes, mi chiquitita. Eso es de valiente. Te amo.", "constancia"],
-  ["flor", "Plantita florecida", "heart", "Hacer que tu plantita florezca.", "Tu plantita floreció, mi reina. Así floreces tú cada vez que te cuidas.", "constancia"],
-  ["gym5", "Gym x5", "dumbbell", "Ir 5 veces al gym.", "Cinco veces al gym, mi amor. Ya eres de las que no faltan, cachai.", "gym"],
+  ["finde", "Finde activo", "sun", "Ganar una estrella un sábado o un domingo.", "Hasta el fin de semana te moviste, mi reina. Te adoro.", "constancia"],
+  ["lunes", "Le ganó al lunes", "bolt", "Ganar una estrella un lunes.", "Le ganaste al lunes, mi chiquitita. Eso es de valiente.", "constancia"],
+  ["flor", "Plantita florecida", "heart", "Hacer que tu plantita florezca.", "Tu plantita floreció, mi princesa. Así floreces tú cada vez que te cuidas.", "constancia"],
+  ["gym5", "Gym x5", "dumbbell", "Ir 5 veces al gym.", "Cinco veces al gym, mi amor. Ya eres de las que no faltan.", "gym"],
   ["gym15", "Gym x15", "dumbbell", "Ir 15 veces al gym.", "Quince veces al gym, mi princesa. Eres mi atleta favorita de todos los tiempos.", "gym"],
-  ["gym30", "Gym x30", "dumbbell", "Ir 30 veces al gym.", "Treinta veces, mi vida. Te superas y me haces superarme. Te amo con todo.", "gym"],
+  ["gym30", "Gym x30", "dumbbell", "Ir 30 veces al gym.", "Treinta veces al gym, mi vida. Te superas y me haces superarme. Te amo con todo.", "gym"],
   ["gym50", "Gym x50", "dumbbell", "Ir 50 veces al gym.", "¡Cincuenta veces al gym, mi reina! Eres todo, te adoro.", "gym"],
   ["gym100", "Gym x100", "trophy", "Ir 100 veces al gym.", "Cien veces al gym, mi alma. Te amo con cada latido de mi corazón.", "gym"],
   ["superyupi", "Súper yupi", "trophy", "Apretar ¡Fui al gym! por primera vez.", "Tu primer súper yupi, mi chiquitita. Te lo mereces todito, todito.", "gym"],
   ["fui10", "Fui x10", "trophy", "Apretar ¡Fui al gym! en 10 días distintos.", "Diez súper yupis, mi amor. Cada vez te superas y haces que yo me supere más.", "gym"],
   ["fui25", "Fui x25", "trophy", "Apretar ¡Fui al gym! en 25 días distintos.", "Veinticinco yupis, mi wawita mosha. Ya no me alcanza la voz para gritarlos.", "gym"],
-  ["fui50", "Fui x50", "trophy", "Apretar ¡Fui al gym! en 50 días distintos.", "Cincuenta yupis, mi todo. Eres la mejor del mundo, cachai.", "gym"],
+  ["fui50", "Fui x50", "trophy", "Apretar ¡Fui al gym! en 50 días distintos.", "Cincuenta yupis, mi todo. Ya perdí la cuenta de cuánto te admiro.", "gym"],
   ["voyfui", "Dicho y hecho", "shoe", "Apretar ¡Voy al gym! y después ¡Fui al gym! el mismo día.", "Dijiste que ibas y fuiste, mi princesa. Dicho y hecho. Te adoro.", "gym"],
-  ["series20", "Máquina", "dumbbell", "Hacer 20 series con el descanso de mini Diego.", "Veinte series, mi reina. ¡Eres una máquina, cachai!", "gym"],
-  ["series100", "Máquina total", "dumbbell", "Hacer 100 series con el descanso de mini Diego.", "Cien series, mi vida. Máquina hermosa, te amo con todo mi ser.", "gym"],
+  ["series20", "Máquina", "dumbbell", "Hacer 20 series con el descanso de mini Diego.", "Veinte series con mi descanso, mi reina. Eres una máquina.", "gym"],
+  ["series100", "Máquina total", "dumbbell", "Hacer 100 series con el descanso de mini Diego.", "Cien series, mi vida. Mi máquina hermosa, te amo con todo mi ser.", "gym"],
   ["uno", "Valiente", "bolt", "Terminar el cronómetro de 1 minuto.", "Un minuto en un día sin ganas también es valentía, mi chiquitita. Te admiro.", "crono"],
   ["uno5", "Cero excusas", "bolt", "Terminar 5 veces el de 1 minuto.", "Cinco veces el minutito, mi amor. Ni la flojera puede contigo.", "crono"],
-  ["cinco", "Cinco minutitos", "heart", "Terminar los 5 minutos.", "Cinco minutos completitos, mi princesa. Lo hicimos juntos, cachai.", "crono"],
+  ["cinco", "Cinco minutitos", "heart", "Terminar los 5 minutos.", "Cinco minutos completitos, mi princesa. Los hicimos juntos.", "crono"],
   ["diez", "Diez de diez", "star", "Terminar los 10 minutos.", "Diez minutos, mi reina. Diez de diez, como tú.", "crono"],
   ["estirar", "Elástica", "person", "Terminar el estiramiento.", "Te estiraste enterita, mi vida. Tu cuerpo y yo te damos las gracias.", "crono"],
-  ["estirar5", "Elástica pro", "person", "Terminar 5 veces el estiramiento.", "Cinco estiramientos, mi wawita mosha. Flexible y preciosa.", "crono"],
+  ["estirar5", "Elástica pro", "person", "Terminar 5 veces el estiramiento.", "Cinco estiramientos, mi wawita mosha. Flexible y feliz.", "crono"],
   ["caminata", "Caminante", "shoe", "Terminar una caminata.", "Una caminata completa, mi amor. Cada paso valió la pena.", "crono"],
-  ["caminatas5", "Pata de perro", "shoe", "Terminar 5 caminatas.", "Cinco caminatas, mi chiquitita. Eres terrible de pata de perro, y te amo así.", "crono"],
-  ["caminata30", "Maratonista", "shoe", "Terminar la caminata de 30 minutos.", "Treinta minutos caminando, mi todo. Iría contigo hasta el fin del mundo.", "crono"],
+  ["caminatas5", "Caminadora", "shoe", "Terminar 5 caminatas.", "Cinco caminatas, mi chiquitita. Me encanta que salgas a caminar.", "crono"],
+  ["caminata30", "Maratonista", "shoe", "Terminar la caminata de 30 minutos.", "Treinta minutos caminando, mi todo. Contigo caminaría hasta el fin del mundo.", "crono"],
   ["libre20", "Resistencia", "clock", "Llegar a 20 minutos en el cronómetro libre.", "Veinte minutos sin parar, mi reina. Eres pura resistencia.", "crono"],
   ["libre60", "Una hora", "clock", "Llegar a 60 minutos en el cronómetro libre.", "¡Una hora entera, mi alma! No sé de dónde sacas tanta fuerza, pero te amo con toda la mía.", "crono"],
   ["cien", "100 minutos", "clock", "Sumar 100 minutos con mini Diego.", "Cien minutos entrenando conmigo, mi vida. Qué orgullo más grande.", "crono"],
-  ["quinientos", "500 minutos", "star", "Sumar 500 minutos con mini Diego.", "Quinientos minutos, mi princesa. Oficialmente mi campeona, cachai.", "crono"],
-  ["mil", "1000 minutos", "trophy", "Sumar 1000 minutos con mini Diego.", "¡Mil minutos, mi todo! Eres todo para mí. Te amo, te adoro, eres la mejor.", "crono"],
+  ["quinientos", "500 minutos", "star", "Sumar 500 minutos con mini Diego.", "Quinientos minutos, mi princesa. Oficialmente mi campeona.", "crono"],
+  ["mil", "1000 minutos", "trophy", "Sumar 1000 minutos con mini Diego.", "¡Mil minutos, mi todo! Te amo con mi corazón, alma, cuerpo y energía.", "crono"],
   ["todos", "De todo un poco", "star", "Completar cada tipo de cronómetro al menos una vez.", "Probaste todos los cronómetros, mi chiquitita. No hay nada que no puedas hacer.", "crono"],
-  ["musica", "Bailarina", "note", "Terminar un cronómetro con la música puesta.", "Entrenaste con musiquita, mi amor. Te imagino bailando y me derrito.", "crono"],
-  ["parejaFit", "Pareja fit", "heart", "Terminar la rutina de a dos.", "Rutina de a dos completa, mi amor. Somos el mejor equipo del mundo, cachai.", "crono"],
-  ["duo5", "Inseparables fit", "heart", "Terminar 5 veces la rutina de a dos.", "Cinco rutinas juntos, mi vida. Entrenar contigo es mi parte favorita.", "crono"],
-  ["atumanera", "A tu manera", "star", "Terminar una rutina armada por ti.", "Armaste tu propia rutina y la hiciste, mi reina. Eres tu propia coach, cachai.", "crono"],
-  ["entrenadora", "Entrenadora", "trophy", "Terminar 5 rutinas armadas por ti.", "Cinco rutinas tuyas, mi amor. Ya podrías entrenarme a mí.", "crono"],
+  ["musica", "Bailarina", "note", "Terminar un cronómetro con la música puesta.", "Entrenaste con musiquita, mi amor. Te imagino moviéndote al ritmo y me derrito.", "crono"],
+  ["parejaFit", "Pareja fit", "heart", "Terminar la rutina de a dos.", "Terminaste la rutina de a dos, mi vida. Ahora nos falta hacerla juntos de verdad.", "crono"],
+  ["duo5", "Inseparables fit", "heart", "Terminar 5 veces la rutina de a dos.", "Cinco rutinas de a dos, mi wawita mosha. Entrenar contigo es mi parte favorita.", "crono"],
+  ["atumanera", "A tu manera", "star", "Terminar una rutina armada por ti.", "Armaste tu propia rutina y la hiciste, mi reina. Eres tu propia coach.", "crono"],
+  ["entrenadora", "Entrenadora", "trophy", "Terminar 5 rutinas armadas por ti.", "Cinco rutinas armadas por ti, mi amor. Ya podrías entrenarme a mí.", "crono"],
   ["core", "Abdomen de acero", "flame", "Hacer 20 ejercicios de abdomen.", "Veinte ejercicios de abdomen, mi princesa. Fuerte por dentro y por fuera.", "crono"],
-  ["piernasAcero", "Piernas de acero", "flame", "Hacer 20 ejercicios de piernas y glúteos.", "Veinte de piernas, mi vida. Con esas piernas llegas a donde quieras.", "crono"],
-  ["brazosFuertes", "Brazos fuertes", "dumbbell", "Hacer 20 ejercicios de brazos y espalda.", "Veinte de brazos, mi chiquitita. Ahora tus abrazos son más apretados todavía.", "crono"],
+  ["piernasAcero", "Piernas de acero", "flame", "Hacer 20 ejercicios de piernas y glúteos.", "Veinte ejercicios de piernas, mi vida. Con esas piernas llegas a donde quieras.", "crono"],
+  ["brazosFuertes", "Brazos fuertes", "dumbbell", "Hacer 20 ejercicios de brazos y espalda.", "Veinte de brazos, mi chiquitita. Ahora tus abrazos van a ser más apretados todavía.", "crono"],
   ["calentadita", "Bien calentadita", "sun", "Hacer 20 ejercicios de calentamiento.", "Veinte calentamientos, mi wawita mosha. Así se cuida el cuerpo. Te adoro.", "crono"],
-  ["hidratada", "Hidratada", "drop", "Tomar 8 vasos de agua en un día.", "Ocho vasos en un día, mi reina. Hidratada y preciosa.", "agua"],
-  ["agua3", "Hidratada x3", "drop", "Tomar 8 vasos en 3 días distintos.", "Tres días hidratadita, mi wawita mosha. Tu cuerpito te lo agradece.", "agua"],
-  ["agua7", "Plantita feliz", "drop", "Tomar 8 vasos en 7 días distintos.", "Siete días de agüita completa, mi vida. Eres una plantita feliz, cachai.", "agua"],
+  ["hidratada", "Hidratada", "drop", "Tomar 8 vasos de agua en un día.", "Ocho vasos en un día, mi reina. Tu cuerpo te lo agradece.", "agua"],
+  ["agua3", "Hidratada x3", "drop", "Tomar 8 vasos en 3 días distintos.", "Tres días tomando toda tu agüita, mi wawita mosha. Así se hace.", "agua"],
+  ["agua7", "Plantita feliz", "drop", "Tomar 8 vasos en 7 días distintos.", "Siete días de agüita completa, mi vida. Eres una plantita feliz.", "agua"],
   ["agua100", "100 vasitos", "drop", "Tomar 100 vasos de agua en total.", "Cien vasitos de agua, mi princesa. Bien hidratada y bien amada.", "agua"],
   ["carinosa", "Cariñosa", "heart", "Hacerle cariño a mini Diego 25 veces.", "Me has hecho cariño 25 veces, mi chiquitita. Mini Diego está derretido.", "carino"],
   ["carinosa100", "Regalona", "heart", "Hacerle cariño a mini Diego 100 veces.", "Cien cariños, mi amor. Eres la más regalona y te adoro por eso.", "carino"],
-  ["maite", "Somos equipo", "heart", "Tocar a mini Maite 5 veces.", "Tocaste a mini Maite cinco veces, mi reina. Somos el mejor equipo, cachai.", "carino"],
+  ["maite", "Somos equipo", "heart", "Tocar a mini Maite 5 veces.", "Le hiciste cariño a mini Maite cinco veces, mi reina. Ella está feliz y yo también.", "carino"],
   ["energia", "Pila cargada", "bolt", "Cargar energía 10 veces.", "Diez cargas de energía, mi vida. Mi batería siempre es para ti.", "carino"],
-  ["kame", "Kamehameha", "bolt", "Lanzar tu primer kamehameha.", "Tu primer kamehameha, mi todo. Te llegó toda mi energía directo al corazón.", "carino"],
-  ["kame25", "Súper saiyajin", "bolt", "Lanzar 25 kamehamehas.", "Veinticinco kamehamehas, mi princesa. Eres oficialmente súper saiyajin.", "carino"],
-  ["animo", "Pura buena onda", "heart", "Apretar Dame ánimo 20 veces.", "Veinte ánimos, mi wawita mosha. Cuando quieras, te doy mil más.", "carino"],
+  ["kame", "Kamehameha", "bolt", "Lanzar tu primer kamehameha.", "Tu primer kamehameha, mi todo. Desde hoy mi energía también es tuya.", "carino"],
+  ["kame25", "Súper saiyajin", "bolt", "Lanzar 25 kamehamehas.", "Veinticinco kamehamehas, mi princesa. Ya eres más poderosa que Goku.", "carino"],
+  ["animo", "Pura buena onda", "heart", "Apretar Dame ánimo 20 veces.", "Veinte veces me pediste ánimo, mi wawita mosha. Cuando quieras, te doy mil más.", "carino"],
   ["escenas", "Exploradora", "star", "Tocar la ventana, el cuadro, la plantita y las pesas.", "Exploraste toda la pieza, mi chiquitita. Cada rincón es tuyo.", "carino"],
   ["mensajito", "Mensajito", "chat", "Escribirle a Diego desde aquí.", "Le escribiste a Diego, mi amor. Seguro sonrió al tiro.", "carino"],
-  ["mensajes10", "Pololita comunicativa", "chat", "Escribirle a Diego 10 veces desde aquí.", "Diez mensajitos, mi reina. Me encanta que me escribas, cachai.", "carino"],
+  ["mensajes10", "Pololita comunicativa", "chat", "Escribirle a Diego 10 veces desde aquí.", "Diez mensajitos, mi reina. Cada uno me saca una sonrisa.", "carino"],
   ["vale", "Cobradora", "ticket", "Cobrar tu primer vale.", "Cobraste tu primer vale, mi vida. Prepárate, que Diego cumple.", "carino"],
   ["vales3", "Cobradora pro", "ticket", "Cobrar 3 vales.", "Tres vales cobrados, mi princesa. Me tienes trabajando feliz.", "carino"],
   ["todosVales", "Me debes todo", "ticket", "Cobrar los 5 vales.", "Cobraste todos los vales, mi alma. Igual te debo la vida entera.", "carino"],
-  ["closet", "A la moda", "star", "Vestir a los dos con ropa nueva del clóset.", "Nos vestiste a los dos, mi princesa. Somos la pareja más linda de la pieza.", "carino"],
+  ["closet", "A la moda", "star", "Vestir a los dos con ropa nueva del clóset.", "Nos vestiste a los dos, mi amor. Somos la pareja más linda de la pieza.", "carino"],
   ["temprano", "Madrugadora", "sun", "Ganar una estrella antes de las 9 de la mañana.", "Madrugaste para quererte, mi chiquitita. Eso es amor del bueno.", "especial"],
-  ["madrugadora5", "Gallito", "sun", "Ganar 5 estrellas antes de las 9 de la mañana.", "Cinco madrugadas, mi amor. Eres más temprana que el gallo, cachai.", "especial"],
-  ["noche", "Búho", "moon", "Ganar una estrella después de las 9 de la noche.", "Hasta de noche te moviste, mi reina. Eres increíble.", "especial"],
-  ["descanso", "Sabe descansar", "moon", "Elegir Descansar un día que lo necesitabas.", "Descansar también es quererte, mi vida. Te amo igualito, con todo mi ser.", "especial"],
-  ["dia30", "Un mes con mini Coach", "calendar", "Cumplir un mes desde que abriste Mini Coach.", "Un mes juntos aquí, mi todo. Eres todo, te amo, te adoro.", "especial"],
+  ["madrugadora5", "Madrugadora pro", "sun", "Ganar 5 estrellas antes de las 9 de la mañana.", "Cinco madrugadas, mi amor. Le ganas hasta al sol.", "especial"],
+  ["noche", "Búho", "moon", "Ganar una estrella después de las 9 de la noche.", "Entrenaste de noche, mi vida. Ni el sueño te ganó.", "especial"],
+  ["descanso", "Sabe descansar", "moon", "Elegir Descansar un día que lo necesitabas.", "Saber descansar también es quererte, mi vida. Estoy orgulloso de ti.", "especial"],
+  ["dia30", "Un mes con mini Coach", "calendar", "Cumplir un mes desde que abriste Mini Coach.", "Un mes juntos aquí, mi todo. Gracias por dejarme acompañarte.", "especial"],
   ["fiel", "Fiel", "heart", "Abrir Mini Coach 7 días distintos.", "Siete días viniendo a verme, mi princesa. Yo te espero siempre.", "especial"],
-  ["visitas30", "Inseparables", "heart", "Abrir Mini Coach 30 días distintos.", "Treinta días, mi wawita mosha. Somos inseparables, cachai.", "especial"],
-  ["diario7", "Mi diario", "calendar", "Contarle a mini Diego cómo te sentiste 7 días distintos.", "Siete días contándome cómo te sientes, mi wawita mosha. Me encanta saber de ti.", "especial"],
+  ["visitas30", "Inseparables", "heart", "Abrir Mini Coach 30 días distintos.", "Treinta días viniendo a verme, mi wawita mosha. Somos inseparables.", "especial"],
+  ["diario7", "Mi diario", "calendar", "Contarle a mini Diego cómo te sentiste 7 días distintos.", "Siete días contándome cómo te sientes, mi amor. Me encanta saber de ti.", "especial"],
   ["medallas20", "Coleccionista", "medal", "Ganar 20 medallas.", "Veinte medallas, mi chiquitita. Ya no te cabe el orgullo en el pecho, y a mí tampoco.", "especial"],
-  ["medallas40", "Coleccionista pro", "medal", "Ganar 40 medallas.", "Cuarenta medallas, mi reina. Te amo con mi corazón, alma, cuerpo y energía.", "especial"],
+  ["medallas40", "Coleccionista pro", "medal", "Ganar 40 medallas.", "Cuarenta medallas, mi reina. Ya casi no te caben en la pieza.", "especial"],
   ["todas", "¡Todas!", "trophy", "Ganar todas las demás medallas.", "¡Todas las medallas, mi alma! Eres todo. Te amo, te adoro, eres la mejor. Para siempre.", "especial"],
 ];
 // "¡Fui al gym!": el súper yupi y un te amo
 const FUI = [
-  "¡YUPIIII! Te amo. Cada vez te superas, y haces que yo me supere más. Te amo, te amo, te amo.",
-  "Fuiste aunque costara. Cada vez que te superas, me dan ganas de ser mejor para ti. Te amo.",
-  "¡Lo hiciste! Me inspiras a superarme todos los días. Te amo con todo.",
-  "Eres increíble: te superas a ti misma y me empujas a superarme a mí. Equipo perfecto. Te amo.",
-  "¡Campeona! Cada día eres más fuerte, y yo quiero estar a tu altura. Te amo muchísimo.",
-  "Me tienes orgullosísimo. Tú te superas y yo me supero contigo. Así somos nosotros. Te amo.",
-  "Hoy le ganaste a la flojera otra vez. Verte crecer me hace crecer a mí. Te amo, mi amor.",
-  "¡Grande, mi wawita mosha! Cada vez que te superas me enamoras más, y me haces querer ser mejor. Te amo.",
-  "Volviste del gym y yo estoy saltando de felicidad. Tú te superas, yo me supero y nos amamos. Te amo.",
-  "No sabes cuánto me inspiras. Cada logro tuyo me da ganas de lograr más. Te amo, preciosa.",
-  "Otro día más superándote, y otro día más en que me haces mejor persona. Te amo.",
-  "Lo lograste, y te amo un poquito más que ayer. Cada vez te superas y me haces superarme.",
+  "¡YUPIIII, mi amor! Fuiste al gym. Cada vez te superas y haces que yo me supere más. Te amo.",
+  "¡Lo hiciste, mi chiquitita! Fuiste aunque costara, y eso me da ganas de ser mejor para ti. Te amo con todo mi ser.",
+  "¡Fuiste, mi reina! Me inspiras a superarme todos los días. Te amo, te adoro, eres la mejor.",
+  "¡Súper yupi para mi princesa! Tú te superas y me empujas a superarme a mí. Te amo.",
+  "¡Grande, mi vida! Cada día eres más fuerte, y yo me esfuerzo por seguirte el ritmo. Te amo muchísimo.",
+  "¡Volviste del gym, mi alma! Tú te superas y yo me supero contigo. Así somos nosotros. Te amo.",
+  "¡Otra vez le ganaste a la flojera, mi todo! Verte crecer me hace crecer a mí. Te amo.",
+  "¡YUPIII! Cada vez que te superas me enamoras más, mi amor, y me haces querer ser mejor.",
+  "¡Fuiste al gym! Estoy saltando de felicidad, mi chiquitita. Tú te superas, yo me supero y nos amamos.",
+  "Me inspiras tanto, mi reina. Cada logro tuyo me da ganas de lograr más. Te amo con mi corazón, alma, cuerpo y energía.",
+  "¡Otro día superándote, mi princesa! Y otro día en que me haces mejor persona. Te amo.",
+  "¡Lo lograste, mi vida! Te amo un poquito más que ayer. Cada vez te superas y me haces superarme.",
+  "¡Súper yupi, mi alma! Eres todo para mí, y hoy fuiste al gym. No quepo de orgullo.",
+  "¡Fuiste, mi wawita mosha! Ahora estira un poquito y date un premio. Te amo.",
 ];
 // la racha: lo que dice mini Diego cuando crece
-const RACHA_LINES = { 2: "¡Dos días seguidos! Ya empezó la racha.", 3: "¡Tres días seguidos! Estás que ardes.", 5: "¡Cinco días seguidos! Nadie te para.",
-  7: "¡Una semana entera! Soy el pololo más orgulloso del mundo.", 10: "¡Diez días seguidos! Esto ya es costumbre de campeona.", 14: "¡Dos semanas seguidas! Te admiro muchísimo.",
-  21: "¡Tres semanas! Ya es un hábito, y tú eres una máquina.", 30: "¡Un mes entero de racha! Te amo infinito." };
+const RACHA_LINES = { 2: "¡Dos días seguidos, mi amor! Ya empezó tu racha.", 3: "¡Tres días seguidos, mi chiquitita! Esto ya va en serio.", 5: "¡Cinco días seguidos, mi reina! Qué constancia más linda.", 7: "¡Una semana entera, mi princesa! Soy el pololo más orgulloso del mundo.", 10: "¡Diez días seguidos, mi vida! Me tienes con la boca abierta.", 14: "¡Dos semanas seguidas, mi alma! Ya no te para nadie.", 21: "¡Tres semanas, mi wawita mosha! Esto ya es parte de ti.", 30: "¡Treinta días seguidos, mi todo! Te amo, te adoro, eres la mejor." };
 // el clóset: se desbloquea con estrellas
 const OUTFITS = {
   d: [
@@ -761,7 +757,7 @@ const OUTFITS = {
   ],
   m: [
     { id: "normal", name: "Como siempre", stars: 0, line: "Mini Maite con su gorrito de lunares, igualita a la foto de chiquitita." },
-    { id: "deporte", name: "Deportiva", stars: 2, line: "Mini Maite lista para el gym, con su cintillo. Preciosa." },
+    { id: "deporte", name: "Deportiva", stars: 2, line: "Mini Maite lista para el gym, con su cintillo. Igualita a ti." },
     { id: "pijama", name: "Pijama", stars: 5, line: "Mini Maite en pijama de nubes. Dan ganas de abrazarla, como a ti." },
     { id: "invierno", name: "Invierno en Temuco", stars: 8, line: "Mini Maite abrigadita con gorro de pompón. Así te quiero, calentita." },
     { id: "heroina", name: "Superheroína", stars: 12, line: "Súper Maite: su superpoder es hacerme feliz." },
@@ -771,10 +767,10 @@ const OUTFITS = {
 };
 // cómo me sentí: [id, nombre, color, lo que responde mini Diego]
 const MOODS = [
-  ["feliz", "Feliz", "#ffc93d", ["¡Me encanta que estés feliz, mi chiquitita! Esa sonrisa es mi premio favorito.", "Feliz tú, feliz yo. Así funciona esto, mi amor.", "Guarda esa felicidad, mi reina. Es tuya y te la ganaste."]],
-  ["orgullosa", "Orgullosa", "#ff5c98", ["Y yo estoy orgullosísimo de ti, mi princesa. Te lo ganaste.", "Tienes todo el derecho a sentirte orgullosa, mi vida. Yo también lo estoy.", "Orgullosa y preciosa. Te amo con todo mi ser."]],
-  ["energia", "Con energía", "#3fd4a6", ["¡Esa energía es tuya, mi amor! Guárdala para mañana también.", "Mírate, llena de energía. Eres un sol, mi wawita mosha.", "Con esa energía te comes el mundo, cachai."]],
-  ["cansada", "Cansada", "#a68cff", ["Cansadita pero lo hiciste, mi wawita mosha. Ahora agüita y a regalonear.", "Es normal estar cansada, mi alma. Descansa rico, te lo mereces.", "El cansancio de hoy es la fuerza de mañana, mi reina. Duerme rico."]],
+  ["feliz", "Feliz", "#ffc93d", ["¡Me encanta que estés feliz, mi chiquitita! Esa sonrisa es mi premio favorito.", "Feliz tú, feliz yo. Así funciona esto, mi amor.", "Guarda esa felicidad, mi reina. Te la ganaste."]],
+  ["orgullosa", "Orgullosa", "#ff5c98", ["Y yo estoy orgullosísimo de ti, mi princesa.", "Tienes todo el derecho a sentirte orgullosa, mi vida. Yo también lo estoy.", "Orgullosa y linda. Te amo con todo mi ser."]],
+  ["energia", "Con energía", "#3fd4a6", ["¡Esa energía es tuya, mi amor! Guárdala para mañana también.", "Mírate, llena de energía. Eres un sol, mi wawita mosha.", "Con esa energía puedes con todo, mi alma."]],
+  ["cansada", "Cansada", "#a68cff", ["Cansadita, pero lo hiciste, mi wawita mosha. Ahora descansa, que te lo ganaste.", "Es normal estar cansada, mi vida. Descansa rico, te lo mereces.", "El cansancio de hoy es la fuerza de mañana, mi reina."]],
   ["costo", "Me costó", "#ff7a3d", ["Que te haya costado y lo hiciste igual vale el doble, mi princesa. Te admiro.", "Los días que cuestan son los que más valen, mi amor.", "Te costó, pero no te rendiste. Eso es de valiente, mi todo."]],
 ];
 // rutina de a dos: para hacerla juntos (mini Maite hace todo en espejo)
@@ -787,11 +783,7 @@ const DUO = [
   { name: "Abrazo final", tip: "Brazos al cielo, respiren hondo... y abrazo apretado de 30 segundos.", anim: "duoHug" },
 ];
 // agüita: lo que dice mini Diego con cada vaso
-const AGUA = [
-  "Primer vasito. Tu cuerpo ya te está diciendo gracias.", "Dos vasos. Vas regando tu plantita interior.", "Tres. Así me gusta, hidratadita.",
-  "La mitad. Eres más constante que la lluvia de Temuco.", "Cinco vasos. Tu piel brilla, y no es solo por mí.", "Seis. Ya casi, preciosa.",
-  "Siete. Uno más y eres oficialmente una plantita feliz.", "¡Ocho vasos! Hidratada y preciosa. Te amo.",
-];
+const AGUA = ["Primer vasito, mi amor. Tu cuerpo ya te está diciendo gracias.", "Dos vasos. Vas regando tu plantita por dentro.", "Tres. Así me gusta, hidratadita.", "La mitad, mi chiquitita. Más constante que la lluvia de Temuco.", "Cinco vasos. Cada uno es cariño para tu cuerpo.", "Seis, mi reina. Ya casi.", "Siete. Uno más y llegas a la meta.", "¡Ocho vasos! Hidratada y feliz. Te amo, mi vida."];
 // mensajitos rápidos para el Diego de verdad
 const CHIPS = [
   ["Necesito ánimo", "Mini Diego me mandó a pedirte ánimo 🥺 Hoy no tengo ganas de entrenar."], ["¡Ya entrené!", "¡Ya entrené! 💪 Mini Diego está orgulloso, ¿y tú?"],
@@ -799,9 +791,9 @@ const CHIPS = [
   ["¿Me llamas?", "¿Me llamas un ratito? 📞"],
 ];
 // lo que dice mini Diego si tocan a mini Maite
-const MT_TAPS = ["Esa es mi polola: la más linda del mundo, hasta en pixeles.", "Mini Maite dice que vamos con todo.", "Mírala, entrenando conmigo. Igualita a ti de linda.", "Mini Maite me tiene igual de enamorado que tú."];
+const MT_TAPS = ["Esa es mi polola: la más linda del mundo, hasta en pixeles.", "Mini Maite dice que hoy entrenan juntas, tú y ella.", "Mírala, mi amor: igualita a ti de linda.", "Mini Maite me tiene igual de enamorado que tú, mi chiquitita.", "Le hiciste cariño a mini Maite. Ahora está más motivada que nunca.", "Mini Maite y tú son mi equipo favorito."];
 // vales que se desbloquean con las estrellas
-const VALES = [[3, "Un masajito de piernas después del gym"], [7, "Un heladito extra, sí, otro más"], [12, "Una cita donde tú eliges todo"], [20, "Un día entero de regaloneo"], [30, "Lo que tú quieras, dentro de lo legal"]];
+const VALES = [[3, "Un masajito de piernas después del gym"], [7, "Un heladito extra, sí, otro más"], [12, "Una cita donde tú eliges todo"], [20, "Un día entero de regaloneo"], [30, "Lo que tú quieras, sin preguntar"]];
 // catálogo de ejercicios reales: [id, grupo, nombre, cómo se hace, animación]
 const EX_CATS = [["calentamiento", "CALENTAMIENTO"], ["piernas", "PIERNAS Y GLÚTEOS"], ["abdomen", "ABDOMEN"], ["brazos", "BRAZOS Y ESPALDA"], ["cardio", "CARDIO"], ["estirar", "ESTIRAMIENTO"]];
 const EXC = {};
@@ -1479,7 +1471,7 @@ $("#bubble").addEventListener("click", e => {
 const show = id => { for (const p of ["#pad", "#padNo", "#padWalk", "#padDone", "#padMood", "#routine"]) $(p).hidden = p !== id; };
 let moodNext = "#pad";
 function askMood(next) { moodNext = next; show("#padMood"); }
-const greetText = () => { const h = hourNow(); return `${h >= 5 && h < 12 ? "¡Buenos días" : h >= 12 && h < 20 ? "¡Buenas tardes" : "¡Buenas noches"}, ${rot(PETS, 2)}! ${WEEK[TODAY.getDay()]}`; };
+const greetText = () => { const h = hourNow(); return `${h >= 5 && h < 12 ? "¡Buenos días" : h >= 12 && h < 20 ? "¡Buenas tardes" : "¡Buenas noches"}, ${rot(PETS, 3)}! ${WEEK[TODAY.getDay()]}`; };
 const showDaily = () => say(rot(MSGS, 37, 11), { greet: greetText() });
 
 let boostI = 0;
@@ -1508,7 +1500,7 @@ function chargeLoop(t) {
     chargeDone = true; dg.lock = false; bC.classList.remove("held"); SND.chargeOff(); dg.syl = -1;
     act("kameFire", 1700); scn.beam = performance.now(); SND.beam(); buzz([30, 20, 220, 60, 120]); setTimeout(flashScreen, 420);
     setTimeout(() => { SND.fanfare(); heartPop(dg.x, 34, 14); confetti(30); fireworks(2); act(Math.random() < .5 ? "cheer" : "dance", 2200); }, 1700);
-    say(rot(CHARGE, 5), { greet: "¡KA-ME-HA-ME-HAAAA!" });
+    say(CHARGE[md(D * 5 + st.stats.charges, CHARGE.length)], { greet: "¡KA-ME-HA-ME-HAAAA!" });
     st.stats.charges++; persist(); checkBadges();
   }
   if (dg.charge > 0 || bC.classList.contains("held")) chargeRaf = requestAnimationFrame(chargeLoop);
@@ -1543,7 +1535,7 @@ function markDay(kind) {   // una estrella por día como máximo; "gym" le gana 
   persist(); renderStars();
   if (nueva && sk >= 2) {   // la racha creció: mini Diego lo celebra después de lo que esté diciendo
     const f = () => { SND.boost(); buzz([20, 30, 20]); for (let i = 0; i < 16; i++) spawn({ type: "fire", x: dg.x + (Math.random() - .5) * 30, y: GROUND - Math.random() * 6, vy: -.4 - Math.random() * .5, max: 40 + Math.random() * 20 });
-      act("flex", 1800); say(RACHA_LINES[sk] || `Llevas ${sk} días seguidos. ¡No pares, que vas preciosa!`, { greet: `🔥 Racha de ${sk} días seguidos` }); };
+      act("flex", 1800); say(RACHA_LINES[sk] || `Llevas ${sk} días seguidos, mi amor. ¡No pares, que vas increíble!`, { greet: `🔥 Racha de ${sk} días seguidos` }); };
     f.auto = true; queue.push(f);
   }
   if (nueva && plantStage() > planta0) {   // la plantita creció
@@ -1567,7 +1559,7 @@ function goGym() {
   st.voy[KEY] = true;
   mtJoin(); mtLeave(7000); setTimeout(() => heartPop(44, 30, 8), 900);
   const nuevo = markDay("gym");
-  celebrate(nuevo ? rot(CELEB, 5) : "¡Ya estás marcada por hoy! Anda tranquila, que te espero con un abrazo.",
+  celebrate(nuevo ? rot(CELEB, 5) : "Ya tienes tu estrella de hoy, mi amor. Anda tranquila, que te espero a la vuelta con un abrazo.",
     `¡Voy al gym! 💪 Aunque no tenía ganas, mini Diego me convenció. Llevo ${starCount()} ⭐`);
   $("#waLink").textContent = "AVISARLE A DIEGO 💬";
   show("#pad");
@@ -1580,7 +1572,7 @@ function fuiGym() {
   scn.yupi = performance.now(); SND.yupi(); setTimeout(() => SND.fanfare(), 1300); buzz([60, 40, 60, 40, 220]);
   act("superjump", 3600, null, { blush: true }); confetti(90); fireworks(5); setTimeout(() => heartPop((dg.x + mt.x) / 2, 28, 14), 600);
   $(".bezel").animate([{ transform: "translate(-3px, 0)" }, { transform: "translate(3px, -1px)" }, { transform: "translate(-2px, 1px)" }, { transform: "none" }], { duration: 420 });
-  say(yaFui ? "¡Otro yupi! Ya sé que fuiste, pero me encanta celebrarte. Cada vez te superas y haces que yo me supere más. Te amo." : FUI[(Object.keys(st.fui).length - 1) % FUI.length], { greet: "¡¡SÚPER YUPIIIIII!!" });
+  say(yaFui ? "¡Otro súper yupi, mi amor! Ya sé que fuiste, pero me encanta celebrarte. Cada vez te superas y haces que yo me supere más." : FUI[(Object.keys(st.fui).length - 1) % FUI.length], { greet: "¡¡SÚPER YUPIIIIII!!" });
   const w = $("#waLink"); w.href = wa(`¡FUI AL GYM! 🏆 Mini Diego me dio un súper yupi.${sk > 1 ? ` Llevo ${sk} días seguidos 🔥` : ""}`); w.textContent = "CONTARLE A DIEGO 💬"; w.hidden = false;
   askMood("#pad"); checkBadges();
 }
@@ -1588,10 +1580,11 @@ $("#bFui").addEventListener("click", fuiGym);
 $("#bVoy").addEventListener("click", goGym);
 $("#bVoy2").addEventListener("click", goGym);
 function openMenu(line) { $("#bRest").hidden = false; setBase("daily"); show("#padNo"); say(line); setTimeout(() => $("#padNo").scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" }), 60); }
-$("#bNo").addEventListener("click", () => { SND.soft(); buzz(10); openMenu(rot(DEAL, 3)); act("hug", 2600, null, { hearts: true, blush: true }); heartPop(dg.x, 32, 4); });
-$("#clockBtn").addEventListener("click", () => { if (rt.on) { $(".device").scrollIntoView({ block: "nearest", behavior: "smooth" }); return; } SND.click(); openMenu("¿Qué hacemos hoy? Elige un cronómetro: desde 1 minuto hasta una caminata larga."); act("wave", 1400); });
+let dealI = 0;
+$("#bNo").addEventListener("click", () => { SND.soft(); buzz(10); openMenu(DEAL[md(D * 3 + dealI++, DEAL.length)]); act("hug", 2600, null, { hearts: true, blush: true }); heartPop(dg.x, 32, 4); });
+$("#clockBtn").addEventListener("click", () => { if (rt.on) { $(".device").scrollIntoView({ block: "nearest", behavior: "smooth" }); return; } SND.click(); openMenu("¿Qué hacemos hoy, mi amor? Elige lo que quieras: desde 1 minuto hasta una caminata larga, o arma tu propia rutina."); act("wave", 1400); });
 $("#bBack1").addEventListener("click", () => { SND.click(); show("#pad"); setBase("daily"); act("wave", 1200); showDaily(); });
-$("#bBack2").addEventListener("click", () => { SND.click(); show("#pad"); setBase("daily"); act("kiss", 1400, () => baseAnim(true)); setTimeout(() => heartPop(dg.x + 12, 30, 4), 400); say("Gracias por moverte conmigo hoy. Te amo, mi amor."); });
+$("#bBack2").addEventListener("click", () => { SND.click(); show("#pad"); setBase("daily"); act("kiss", 1400, () => baseAnim(true)); setTimeout(() => heartPop(dg.x + 12, 30, 4), 400); say("Gracias por moverte conmigo hoy, mi wawita mosha. Te amo."); });
 $("#bRest").addEventListener("click", () => {
   SND.soft(); st.stats.rests = (st.stats.rests || 0) + 1; if (!st.days[KEY]) st.days[KEY] = "rest"; persist(); renderStars(); checkBadges();
   setBase("rest"); act("rest", 0); say(rot(REST, 5)); show("#padNo"); $("#bRest").hidden = true;
@@ -1600,14 +1593,14 @@ $("#bRest").addEventListener("click", () => {
 // tocar las cosas de la pieza
 const SPOTS = [
   { k: "ventana", x0: 6, x1: 32, y0: 6, y1: 33, n: 0, fn() { const h = hourNow(), night = h >= 21 || h < 6; if (night) scn.star = performance.now(); else scn.bird = performance.now();
-    return night ? ["¡Mira, una estrella fugaz! Ya pedí mi deseo: que nunca te vayas de mi lado.", "Mira la luna. Así de linda te veo yo.", "Hasta las estrellas salen a verte."][this.n++ % 3]
-      : ["¿Viste el pajarito? Vino a darte ánimo.", "Qué lindo está afuera. ¿Salimos a caminar después?", "El sol salió solo para verte entrenar."][this.n++ % 3]; } },
+    return night ? ["¡Mira, una estrella fugaz! Ya pedí mi deseo: estar contigo siempre.", "Mira la luna, mi amor. Así de linda te veo yo.", "Hasta las estrellas salieron a verte, mi chiquitita."][this.n++ % 3]
+      : ["¿Viste el pajarito? Vino a darte ánimo, mi reina.", "Qué lindo está afuera. Si quieres caminar, está en los cronómetros.", "El sol salió para acompañarte hoy, mi vida."][this.n++ % 3]; } },
   { k: "cuadro", x0: 72, x1: 91, y0: 8, y1: 28, n: 0, fn() { scn.beat = performance.now() + 1800; heartPop(81, 16, 4); SND.kiss();
-    return ["Ese corazón late por ti. Siempre.", "Es nuestro cuadro. Lo pinté pensando en ti.", "Cuando late rápido es porque me miraste."][this.n++ % 3]; } },
+    return ["Ese corazón late por ti. Siempre.", "Es nuestro cuadro, mi amor. Lo pinté pensando en ti.", "Cuando late así de rápido es porque me miraste."][this.n++ % 3]; } },
   { k: "planta", x0: 2, x1: 15, y0: 50, y1: 69, n: 0, fn() { scn.plant = performance.now() + 1500;
-    return [plantLine(), "La riego todos los días, como mi amor por ti.", "Crece contigo, mi wawita mosha: cada estrella tuya es agüita para ella."][this.n++ % 3]; } },
+    return [plantLine(), "La cuido todos los días, igual que te cuido a ti.", "Cada estrella tuya es agüita para ella, mi wawita mosha."][this.n++ % 3]; } },
   { k: "pesas", x0: 76, x1: 98, y0: 60, y1: 72, n: 0, fn() { if (!rt.on) act("pesas", 2400);
-    return ["¿Las levantamos juntos? Uf, pesan. Tú eres más fuerte que yo.", "Esas pesitas te tienen miedo.", "Algún día vas a levantar más que yo. Bueno, ya lo haces."][this.n++ % 3]; } },
+    return ["¿Las levantamos juntos? Uf, pesan. Tú eres más fuerte que yo, mi amor.", "Esas pesitas te tienen miedo, mi chiquitita.", "Algún día vas a levantar más que yo, y yo voy a estar aplaudiendo."][this.n++ % 3]; } },
 ];
 const TAP_ANIMS = ["kiss", "heartHands", "dance", "thumbs", "flex", "wave"];
 cv.addEventListener("click", e => {
@@ -1619,7 +1612,7 @@ cv.addEventListener("click", e => {
   st.taps = (st.taps || 0) + 1; persist(); SND.kiss(); buzz(8);
   const an = TAP_ANIMS[st.taps % TAP_ANIMS.length];
   if (!rt.on) act(an, 1500, null, an === "kiss" || an === "heartHands" ? { hearts: true, blush: true } : { blush: true }); setTimeout(() => heartPop(dg.x + 6, 30, 3), 360);
-  if (!rt.on) say(st.taps % 10 === 0 ? "Ya po, deja de hacerme cariño y anda al gym." : TAPS[st.taps % TAPS.length]);
+  if (!rt.on) say(st.taps % 10 === 0 ? "Diez cariños seguidos, mi chiquitita. Me vas a dejar más rojo que el corazón del cuadro." : TAPS[st.taps % TAPS.length]);
   checkBadges();
 });
 
@@ -1647,17 +1640,17 @@ const DAY = {
 const names = l => l.map(e => e.name.toLowerCase()).join(", ");
 const PLANS = {
   uno: { what: "1 minuto", steps: () => [prep(3), { kind: "ex", secs: 15, ex: EXC.marcha }, { kind: "ex", secs: 25, ex: DAY.m5[0] }, { kind: "ex", secs: 20, ex: DAY.c5[0] }],
-    intro: () => `Un minuto, nada más: ${names([EXC.marcha, DAY.m5[0], DAY.c5[0]])}. Hasta un minuto cuenta.`, done: "¡Un minuto hecho! Lo importante es que no dejaste ganar a la flojera." },
+    intro: () => `Un minuto, nada más, mi amor: ${names([EXC.marcha, DAY.m5[0], DAY.c5[0]])}. Hasta un minuto cuenta.`, done: "¡Un minuto hecho, mi chiquitita! Lo importante es que no dejaste ganar a la flojera." },
   cinco: { what: "los 5 minutos", steps: () => [prep(5), ...routine(DAY.w5, DAY.m5, DAY.c5, 30, 40, 15, 30)],
-    intro: () => `Calentamos con ${names(DAY.w5)}; después ${names(DAY.m5)}, y estiramos al final. ¡Mini Maite y yo lo hacemos contigo!`, done: "¡LO HICISTE! 5 minutos que valen oro." },
+    intro: () => `Calentamos con ${names(DAY.w5)}; después ${names(DAY.m5)}, y al final estiramos. Mini Maite y yo lo hacemos contigo, mi reina.`, done: "¡Lo hiciste, mi princesa! Cinco minutos que valen oro." },
   diez: { what: "10 minutos", steps: () => [prep(5), ...routine(DAY.w10, DAY.m10, DAY.c10, 30, 45, 15, 30)],
-    intro: () => `Diez minutos de verdad: calentamiento, ${names(DAY.m10)} y estiramiento. Vamos con calma, mi chiquitita.`, done: "¡10 minutos! Eso ya es un entrenamiento de verdad. Te amo, campeona." },
+    intro: () => `Diez minutos de verdad: calentamiento, ${names(DAY.m10)} y estiramiento. Vamos con calma, mi chiquitita.`, done: "¡Diez minutos, mi vida! Eso ya es un entrenamiento de verdad. Te amo." },
   estirar: { what: "5 minutos de estiramiento", steps: () => [prep(3), ...circuit(["respiracion", "cielo", "gatoVaca", "nino", "isquios", "cuadriceps", "brazoCruzado"].map(k => EXC[k]), 40, 5)],
-    intro: () => "Hoy nada de saltos: solo estirar suavecito. Tu cuerpo te lo va a agradecer.", done: "Estiraste todo. Tu cuerpo te da las gracias, y yo también." },
+    intro: () => "Hoy nada de saltos, mi amor: solo estirar suavecito. Tu cuerpo te lo va a agradecer.", done: "¡Estiramiento listo, mi alma! Ahora a descansar suavecito." },
 };
 PLANS.duo = { what: "la rutina de a dos", steps: () => [prep(5), ...circuit(DUO.slice(0, 5), 40, 15), { kind: "rest", secs: 15, nextEx: DUO[5] }, { kind: "ex", secs: 30, ex: DUO[5] }],
-  intro: () => "Rutina de a dos, para hacerla juntos cuando estemos. Mini Maite y yo les mostramos cómo, cachai.",
-  done: "¡Rutina de a dos completa! El mejor equipo del mundo somos nosotros. Te amo con todo mi ser." };
+  intro: () => "Rutina de a dos, para hacerla juntos cuando estemos. Mini Maite y yo les mostramos cómo, mi wawita mosha.",
+  done: "¡Rutina de a dos completa! Somos el mejor equipo, mi amor. Te amo con todo mi ser." };
 const rt = { close: false, on: false, mode: "", plan: "", steps: [], i: 0, left: 0, up: 0, active: 0, paused: false, timer: 0, last: 0, walkMin: 0, serie: 0, running: false, restSecs: 60 };
 const fmtT = s => { const c = Math.max(0, Math.ceil(s)); return `${Math.floor(c / 60)}:${String(c % 60).padStart(2, "0")}`; };
 const fmtUp = s => { const c = Math.max(0, Math.floor(s)); return `${Math.floor(c / 60)}:${String(c % 60).padStart(2, "0")}`; };
@@ -1704,9 +1697,9 @@ function nextStep() {
   [...$("#rtDots").children].forEach((d, k) => { d.className = k < cur ? "done" : k === cur && s.kind === "ex" ? "now" : ""; });
   $("#rtBarBox").classList.toggle("rest", s.kind === "rest" || s.kind === "prep");
   dg.until = 0;
-  if (s.kind === "prep") { $("#rtStep").textContent = "¡PREPÁRATE!"; setBase("idle"); act("wave", 1500); say(rt.mode === "walk" ? `Vamos a caminar ${s === rt.steps[0] ? rt.steps[1].min : ""} minutos. Cada minuto te voy a decir algo. Si quieres, ponte audífonos con tu música.` : PLANS[rt.plan].intro(), { greet: "Mini Maite vino a entrenar con nosotros" }); }
+  if (s.kind === "prep") { $("#rtStep").textContent = "¡PREPÁRATE!"; setBase("idle"); act("wave", 1500); say(rt.mode === "walk" ? `Vamos a caminar ${s === rt.steps[0] ? rt.steps[1].min : ""} minutos, mi amor. Cada minuto te voy a decir algo. Si quieres, ponte audífonos con tu música.` : PLANS[rt.plan].intro(), { greet: "Mini Maite vino a entrenar con nosotros" }); }
   else if (s.kind === "ex") { $("#rtStep").textContent = `EJERCICIO ${s.n + 1} DE ${s.total}`; SND.go(); buzz(30); setBase(s.ex.anim); baseAnim(true); say(`${s.ex.name}. ${s.ex.tip}`, { greet: s.ex.cat === "calentamiento" ? "Calentamiento" : s.ex.cat === "estirar" ? "Estiramiento: ya casi" : s.n === s.total - 1 ? "El último" : s.n === 0 ? "¡Partimos!" : s.n === Math.floor(s.total / 2) ? "¡Vas en la mitad!" : "" }); }
-  else if (s.kind === "rest") { $("#rtStep").textContent = s.secs > 5 ? "DESCANSO" : "CAMBIAMOS"; SND.soft(); setBase(s.secs > 5 ? "drink" : "idle"); baseAnim(true); say(s.secs > 5 ? `Toma agüita y respira. Lo que viene: ${s.nextEx.name.toLowerCase()}.` : `Ahora: ${s.nextEx.name.toLowerCase()}.`, { greet: s.secs > 5 ? BOOSTS[md(D * 13 + rt.i * 3, BOOSTS.length)] : "" }); }
+  else if (s.kind === "rest") { $("#rtStep").textContent = s.secs > 5 ? "DESCANSO" : "CAMBIAMOS"; SND.soft(); setBase(s.secs > 5 ? "drink" : "idle"); baseAnim(true); say(s.secs > 5 ? `Toma agüita y respira. Lo que viene: ${s.nextEx.name.toLowerCase()}.` : `Ahora: ${s.nextEx.name.toLowerCase()}.`, { greet: s.secs > 5 ? REST_GREET[md(D * 7 + rt.i, REST_GREET.length)] : "" }); }
   else if (s.kind === "walk") { SND.go(); buzz(30); setBase("walkslow"); baseAnim(true); say(`¡A caminar! ${WALK_LINES[md(D, WALK_LINES.length)]}`, { greet: `Caminata de ${s.min} minutos` }); }
   rtRender();
 }
@@ -1715,7 +1708,7 @@ function startUp() {
   rt.mode = "up"; rt.plan = ""; rt.steps = []; rt.up = 0; rt.walkMin = 0; $("#rtDots").innerHTML = ""; $("#rtBarBox").classList.remove("rest");
   setBtns([["rtPause", "PAUSA", "key--sun", togglePause], ["rtReset", "REINICIAR", "key--ghost", () => { SND.click(); rt.up = 0; rt.active = 0; rt.walkMin = 0; rtRender(); say("Desde cero. ¡Vamos de nuevo!"); }], ["rtExit", "TERMINAR", "key--mint", () => endTimer(true)]]);
   runClock(); musicFor(); $("#rtStep").textContent = "CRONÓMETRO"; dg.until = 0; setBase(DAILY); baseAnim(true);
-  say("Tú pones el ritmo: haz lo que quieras y yo te cuento el tiempo. Desde 1 minuto ganas tu estrella."); rtRender();
+  say("Tú pones el ritmo, mi reina: haz lo que quieras y yo te cuento el tiempo. Desde 1 minuto ganas tu estrella."); rtRender();
 }
 // descanso entre series (para usarlo en el gym)
 function startSeries() {
@@ -1747,7 +1740,7 @@ function rtTick() {
     if (mm > rt.minSaid && rt.since >= 4 && (!rt.running || rt.left >= 4)) { rt.minSaid = mm; minuteLine(mm, "en el gym"); }
     if (!rt.running) return rtRender(); rt.left -= dt; const c = Math.ceil(rt.left);
     if (c <= 3 && c >= 1 && c < rt.beeped) { rt.beeped = c; SND.beep(); }
-    if (rt.left <= 0) { rt.running = false; rt.since = 0; musicFor(); SND.go(); buzz([200, 100, 200]); act("cheer", 1600); setBase("pesas"); $("#rtStep").textContent = `SERIE ${rt.serie + 1}`; say(`¡A la siguiente serie! ${BOOSTS[md(D * 5 + rt.serie, BOOSTS.length)]}`); seriesBtns(); }
+    if (rt.left <= 0) { rt.running = false; rt.since = 0; musicFor(); SND.go(); buzz([200, 100, 200]); act("cheer", 1600); setBase("pesas"); $("#rtStep").textContent = `SERIE ${rt.serie + 1}`; say(`¡A la siguiente serie! ${SERIE_GO[md(D * 5 + rt.serie, SERIE_GO.length)]}`); seriesBtns(); }
     return rtRender();
   }
   const s = rt.steps[rt.i]; rt.left -= dt; if (s && s.kind !== "prep") rt.active += dt;
@@ -1756,7 +1749,7 @@ function rtTick() {
   if (s?.kind === "walk") {
     const m = Math.floor((s.secs - rt.left) / 60);
     if (m > rt.walkMin && rt.left > 0) { rt.walkMin = m;
-      say(m === s.min - 1 ? "¡Último minuto! Termina con todo, mi amor." : m * 2 === s.min ? "¡Mitad del camino! Lo que queda es de bajada." : m % 2 ? MINUTE_LINES[md(D * 11 + m * 7, MINUTE_LINES.length)] : WALK_LINES[md(D + m, WALK_LINES.length)], { greet: `Minuto ${m} de ${s.min}` }); minuteFx(); }
+      say(m === s.min - 1 ? "¡Último minuto! Termina con todo, mi amor." : m * 2 === s.min ? "¡Mitad del camino, mi chiquitita! Lo que queda es de bajada." : m % 2 ? MINUTE_LINES[md(D * 11 + m * 7, MINUTE_LINES.length)] : WALK_LINES[md(D + m, WALK_LINES.length)], { greet: `Minuto ${m} de ${s.min}` }); minuteFx(); }
   }
   if (s && s.kind !== "walk" && s.kind !== "prep") { rt.since += dt; const m = Math.floor(rt.active / 60); if (m > rt.minSaid && rt.since >= 3 && rt.left >= 4) { rt.minSaid = m; minuteLine(m, s.kind === "ex" ? s.ex.name : ""); } }
   if (rt.left <= 0 && s?.kind === "ex" && s.ex.cat) { st.stats.cat[s.ex.cat] = (st.stats.cat[s.ex.cat] || 0) + 1; persist(); }
@@ -1766,8 +1759,8 @@ function endTimer(done) {
   const secs = rt.active, mode = rt.mode, plan = rt.plan; stopTimer();
   if (mode !== "series") { st.mins[KEY] = (st.mins[KEY] || 0) + secs / 60; persist(); renderStars(); }   // minutos con mini Diego
   mtLeave(secs < 59.5 || mode === "series" ? 1800 : 7000);
-  if (mode === "series") { show("#padNo"); say(`¡Bien entrenado! Hiciste ${rt.serie} serie${rt.serie === 1 ? "" : "s"}. Si todavía no lo marcas, aprieta ¡Voy al gym! para ganar tu estrella.`); return; }
-  if (secs < 59.5) { show("#padNo"); act("hug", 2000, null, { hearts: true }); say("Está bien, mi amor. Desde 1 minuto ya ganas tu estrella; cuando quieras lo intentamos de nuevo."); return; }
+  if (mode === "series") { show("#padNo"); say(`¡Bien entrenado, mi amor! Hiciste ${rt.serie} serie${rt.serie === 1 ? "" : "s"}. Cuando salgas, aprieta ¡Fui al gym! y te doy tu súper yupi.`); return; }
+  if (secs < 59.5) { show("#padNo"); act("hug", 2000, null, { hearts: true }); say("Está bien, mi amor. Desde 1 minuto ya ganas tu estrella; cuando quieras lo intentamos de nuevo, sin apuro."); return; }
   if (done && mode === "plan") { st.stats.done[plan] = true; st.stats.cnt[plan] = CNT(plan) + 1; }
   if (done && mode === "walk") { st.stats.done.caminata = true; st.stats.cnt.caminata = CNT("caminata") + 1; if (rt.steps[1]?.min >= 30) st.stats.done.caminata30 = true; }
   if (done && st.music) st.stats.musica = true;
@@ -1775,13 +1768,13 @@ function endTimer(done) {
   persist();
   const nuevo = markDay("mini"), mins = Math.round(secs / 60); askMood("#padDone");
   const what = mode === "walk" ? `${mins} minutos de caminata` : mode === "up" ? `${fmtUp(secs)} de ejercicio` : PLANS[plan].what;
-  const line = !done ? `Hiciste ${fmtUp(secs)} y eso igual cuenta.` : mode === "walk" ? `¡Caminaste ${mins} minutos! Cada paso fue para ti, y yo te aplaudí todo el camino.` : mode === "up" ? `¡${fmtUp(secs)} de puro esfuerzo! Te amo y te admiro.` : PLANS[plan].done;
+  const line = !done ? `Hiciste ${fmtUp(secs)}, mi amor, y eso igual cuenta.` : mode === "walk" ? `¡Caminaste ${mins} minutos, mi vida! Cada paso fue para ti, y yo te acompañé todo el camino.` : mode === "up" ? `¡${fmtUp(secs)} de puro esfuerzo, mi reina! Te amo y te admiro.` : PLANS[plan].done;
   celebrate(`${line}${nuevo ? " Te ganaste una estrella." : ""} Si te quedaron ganas, el gym te espera. Si no, ya cumpliste y te amo igual.`, `¡Hice ${what} con mini Diego! 💪 Llevo ${starCount()} ⭐`);
 }
 document.querySelectorAll("[data-plan]").forEach(b => b.addEventListener("click", () => { SND.click(); startPlan(b.dataset.plan); }));
-$("#bWalk").addEventListener("click", () => { SND.click(); show("#padWalk"); say("¿Cuánto caminamos? Elige y yo te acompaño minuto a minuto."); setBase("walkslow"); baseAnim(true); });
+$("#bWalk").addEventListener("click", () => { SND.click(); show("#padWalk"); say("¿Cuánto caminamos, mi vida? Elige y yo te acompaño minuto a minuto."); setBase("walkslow"); baseAnim(true); });
 document.querySelectorAll("[data-walk]").forEach(b => b.addEventListener("click", () => { SND.click(); startWalk(+b.dataset.walk); }));
-$("#bBack3").addEventListener("click", () => { SND.click(); show("#padNo"); setBase("daily"); say("Elige otro cronómetro, el que te acomode."); });
+$("#bBack3").addEventListener("click", () => { SND.click(); show("#padNo"); setBase("daily"); say("Elige otro, mi amor, el que más te acomode."); });
 $("#bUp").addEventListener("click", () => { SND.click(); startUp(); });
 $("#bSeries").addEventListener("click", () => { SND.click(); startSeries(); });
 
@@ -1996,8 +1989,8 @@ function customExtras() {   // el calentamiento y el estiramiento van con lo que
 }
 PLANS.custom = { what: "tu propia rutina",
   steps: () => { const x = customExtras(), main = pick.sel.map(id => EXC[id]); return [prep(5), ...routine(pick.warm ? x.warm : [], main, pick.warm ? x.cool : [], 30, pick.work, pick.rest, 30)]; },
-  intro: () => `Tu rutina: ${names(pick.sel.map(id => EXC[id]))}${pick.warm ? ", con calentamiento y estiramiento" : ""}. ¡Mini Maite y yo la hacemos contigo, mi reina!`,
-  done: "¡Terminaste tu rutina! La armaste tú y la hiciste tú, mi chiquitita. Te amo con todo mi ser." };
+  intro: () => `Tu rutina: ${names(pick.sel.map(id => EXC[id]))}${pick.warm ? ", con calentamiento y estiramiento" : ""}. Mini Maite y yo la hacemos contigo, mi reina.`,
+  done: "¡Terminaste tu rutina, mi chiquitita! La armaste tú y la hiciste tú. Me tienes orgulloso hasta la luna." };
 function openSheet() { renderSheet(); $("#sheet").hidden = false; document.body.style.overflow = "hidden"; SND.click(); }
 function closeSheet() { $("#sheet").hidden = true; document.body.style.overflow = ""; }
 $("#bArma").addEventListener("click", openSheet);
