@@ -131,6 +131,16 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 .next-row b { font: 700 .75rem/1.3 var(--f-pix); color: var(--gold); white-space: nowrap; }
 .meter { height: 12px; background: var(--bg); box-shadow: 0 -2px 0 0 var(--card-line), 0 2px 0 0 var(--card-line), -2px 0 0 0 var(--card-line), 2px 0 0 0 var(--card-line); }
 .meter i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(90deg, var(--sun) 0 6px, #ffe08a 6px 8px); transition: width .6s steps(8); }
+.sq-head { display: flex; align-items: baseline; gap: 8px; font: 700 .75rem/1 var(--f-pix); color: var(--muted); }
+.sq-head b { font: 700 2.4rem/1 var(--f-pix); color: var(--text); }
+.sq-head .sq-racha { margin-left: auto; color: var(--text); white-space: nowrap; }
+.sq-meter i { background: repeating-linear-gradient(90deg, var(--mint) 0 6px, #9ff0d4 6px 8px); }
+.sq-lbl { font: 700 .62rem/1.3 var(--f-pix) !important; letter-spacing: .06em; color: var(--rose) !important; }
+.sq-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.sq-row .zona { font-weight: 700; }
+.sq-row .zona.go { background: var(--mint); color: var(--plum); box-shadow: 0 -2px 0 0 var(--plum), 0 2px 0 0 var(--plum), -2px 0 0 0 var(--plum), 2px 0 0 0 var(--plum); }
+.sq-pop { animation: sqpop .35s steps(3); }
+@keyframes sqpop { 50% { transform: scale(1.18); } }
 .vales { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .vale { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 10px; padding: 8px 10px; background: var(--bg); min-width: 0; }
 .vale .n { font: 700 .72rem/1 var(--f-pix); color: var(--gold); text-align: center; }
@@ -300,6 +310,21 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
       <div class="rt-sub"><div class="rt-dots" id="rtDots" aria-hidden="true"></div><button class="mus" id="rtMus" aria-pressed="true">♫ MÚSICA</button></div>
       <div class="rt-btns" id="rtBtns"></div>
     </div>
+  </section>
+
+  <section class="card" aria-labelledby="sqTitle">
+    <h2 id="sqTitle">RETO 100 SENTADILLAS</h2>
+    <div class="sq-head"><b id="sqNum">0</b><span>/ 100 HOY</span><span class="sq-racha" id="sqRacha"></span></div>
+    <div class="meter sq-meter" aria-hidden="true"><i id="sqMeter"></i></div>
+    <p id="sqInfo"></p>
+    <p class="sq-lbl">HAZLAS CON NOSOTROS</p>
+    <div class="sq-row" id="sqGo"></div>
+    <div class="sh-row"><span>Ritmo</span><div class="seg" id="sqPace"></div></div>
+    <p class="sq-lbl">¿LAS HICISTE POR TU CUENTA? SÚMALAS</p>
+    <div class="sq-row" id="sqAdd"></div>
+    <div class="week" id="sqWeek" aria-label="El reto esta semana"></div>
+    <p class="resumen" id="sqTot"></p>
+    <a class="wa" id="sqWa" href="#" target="_blank" rel="noopener" hidden>CONTARLE A DIEGO 💬</a>
   </section>
 
   <section class="card" aria-labelledby="stTitle">
@@ -486,7 +511,7 @@ const WEEK = ["Domingo tranquilo.", "Lunes con todo.", "Martes con ganas.", "Mi�
 const PETS = ["mi wawita", "mi mujer", "mi vida", "mi dama", "mi muñequita", "mi reina", "mi princesa"];
 const INTRO = "Soy mini Diego, mi wawita. Aprieta un botón cuando me necesites. Te amo.";
 // medallas: [id, nombre, ícono, cómo se gana, lo que dice mini Diego, categoría]
-const BADGE_CATS = [["constancia", "CONSTANCIA"], ["gym", "GYM"], ["crono", "CRONÓMETROS"], ["agua", "AGÜITA"], ["carino", "CARIÑO"], ["especial", "ESPECIALES"]];
+const BADGE_CATS = [["constancia", "CONSTANCIA"], ["gym", "GYM"], ["crono", "CRONÓMETROS"], ["reto", "RETO 100"], ["agua", "AGÜITA"], ["carino", "CARIÑO"], ["especial", "ESPECIALES"]];
 const BADGES = [
   ["primera", "Primera estrella", "star", "Ganar tu primera estrella.", "¡Tu primera estrella, mi princesa! Te amo.", "constancia"],
   ["racha3", "Tres seguidos", "flame", "Ganar una estrella 3 días seguidos.", "Tres seguidos, mi wawita. ¡Vamos!", "constancia"],
@@ -543,6 +568,13 @@ const BADGES = [
   ["piernasAcero", "Piernas de acero", "flame", "Hacer 20 ejercicios de piernas y glúteos.", "Veinte de piernas, mi vida. ¡Con todo!", "crono"],
   ["brazosFuertes", "Brazos fuertes", "dumbbell", "Hacer 20 ejercicios de brazos y espalda.", "Veinte de brazos, mi dama. Abrazos más fuertes.", "crono"],
   ["calentadita", "Entrada en calor", "sun", "Hacer 20 ejercicios de calentamiento.", "Veinte calentamientos, mi muñequita.", "crono"],
+  ["sq100", "Primeras 100", "star", "Completar el reto de 100 sentadillas en un día.", "¡Tus primeras 100, mi princesa! Te amo.", "reto"],
+  ["sq3", "Reto x3", "flame", "Cumplir el reto 3 días seguidos.", "Tres días de reto, mi wawita. ¡Vamos!", "reto"],
+  ["sq7", "Semana del reto", "flame", "Cumplir el reto 7 días seguidos.", "Una semana de reto, mi reina. Imparable.", "reto"],
+  ["sq30", "Mes del reto", "flame", "Cumplir el reto 30 días seguidos.", "Treinta días de reto, mi vida. Te admiro.", "reto"],
+  ["sqJuntos", "Al ritmo de los dos", "heart", "Hacer 100 sentadillas en un día con mini Diego y mini Maite.", "Las hiciste con nosotros, mi mujer. Te amo.", "reto"],
+  ["sq1000", "Mil sentadillas", "trophy", "Sumar 1.000 sentadillas.", "Mil sentadillas, mi muñequita. Pura fuerza.", "reto"],
+  ["sq10000", "Diez mil", "trophy", "Sumar 10.000 sentadillas.", "Diez mil, mi dama. Eres una leyenda.", "reto"],
   ["hidratada", "Hidratada", "drop", "Tomar 8 vasos de agua en un día.", "Ocho vasos, mi mujer. Así se hace.", "agua"],
   ["agua3", "Hidratada x3", "drop", "Tomar 8 vasos en 3 días distintos.", "Tres días hidratada, mi princesa.", "agua"],
   ["agua7", "Plantita feliz", "drop", "Tomar 8 vasos en 7 días distintos.", "Siete días con agüita, mi wawita.", "agua"],
@@ -714,7 +746,7 @@ st.badges = { ...(st.badges || {}) }; st.water = { ...(st.water || {}) }; st.min
 st.voy = { ...(st.voy || {}) }; st.visits = { ...(st.visits || {}) }; st.visits[KEY] = true;
 st.stats = { charges: 0, series: 0, libreMax: 0, early: false, late: false, ...(st.stats || {}) }; st.stats.done = { ...(st.stats.done || {}) };
 st.stats.cnt = { ...(st.stats.cnt || {}) }; st.stats.cat = { ...(st.stats.cat || {}) }; st.stats.spots = { ...(st.stats.spots || {}) };
-st.outfit = { d: "normal", m: "normal", ...(st.outfit || {}) }; st.moods = { ...(st.moods || {}) };
+st.outfit = { d: "normal", m: "normal", ...(st.outfit || {}) }; st.moods = { ...(st.moods || {}) }; st.sq = { ...(st.sq || {}) }; st.sqG = { ...(st.sqG || {}) };
 const persist = () => { try { localStorage.setItem("mini_diego", JSON.stringify(st)); } catch {} };
 const firstTime = !st.seen; st.seen = true; persist();
 const starCount = () => Object.values(st.days).filter(v => v === "gym" || v === "mini").length;
@@ -984,7 +1016,7 @@ const SIDE = {
 const As = (f, d, extra = {}) => ({ f: f.map(k => SIDE[k]), d, side: true, ...extra });
 const ANIM = {
   idle: A(["idle", "idle2"], 800), wave: A(["wave1", "wave2"], 230), flex: A(["flex1", "flex2"], 380),
-  jacks: A(["jack1", "jack2"], 330, { sweat: true }), squat: A(["squat0", "squat1"], 700, { sweat: true }), run: A(["run1", "run2"], 230, { sweat: true }),
+  jacks: A(["jack1", "jack2"], 330, { sweat: true }), squat: A(["squat0", "squat1"], 700, { sweat: true }), sqRep: A(["squat0", "squat1"], 1000, { sweat: true }), run: A(["run1", "run2"], 230, { sweat: true }),
   knees: A(["knee1", "knee2"], 170, { sweat: true }), box: A(["guard", "punchR", "guard", "punchL"], 210, { sweat: true }),
   pesas: A(["curl1", "curl2"], 650, { prop: "dumbbell", sweat: true }), bottles: A(["curl1", "curl2"], 650, { prop: "bottle", sweat: true }),
   stretch: A(["stretchUp", "stretchL", "stretchUp", "stretchR"], 1100),
@@ -1507,7 +1539,7 @@ function setBtns(list) {
 }
 function runClock() { mtJoin(); scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); rt.on = true; rt.paused = false; rt.active = 0; rt.minSaid = 0; rt.since = 0; rt.seriesT = 0; rt.credited = 0; rt.star = false; rt.gotStar = false; rt.later = []; clearInterval(rt.timer); rt.last = performance.now(); rt.timer = setInterval(rtTick, 100); show("#routine"); $("#rtBarBox").hidden = false; wake(true); }
 // que la pantalla no se apague sola en medio de una rutina guiada (si el celular lo permite)
-async function wake(on) { try { if (on && rt.on && rt.mode === "plan" && !rt.wl && navigator.wakeLock && document.visibilityState === "visible") { const l = await navigator.wakeLock.request("screen"); rt.wl = l; l.addEventListener("release", () => { if (rt.wl === l) rt.wl = null; }); } else if (!on && rt.wl) { const l = rt.wl; rt.wl = null; await l.release(); } } catch { rt.wl = null; } }
+async function wake(on) { try { if (on && rt.on && (rt.mode === "plan" || rt.mode === "sq") && !rt.wl && navigator.wakeLock && document.visibilityState === "visible") { const l = await navigator.wakeLock.request("screen"); rt.wl = l; l.addEventListener("release", () => { if (rt.wl === l) rt.wl = null; }); } else if (!on && rt.wl) { const l = rt.wl; rt.wl = null; await l.release(); } } catch { rt.wl = null; } }
 // todo lo que va haciendo queda guardado al tiro: minutos, estrella y en qué parte iba
 function credit() {
   if (!rt.on || rt.mode === "series") return;
@@ -1516,7 +1548,7 @@ function credit() {
 }
 const exRef = e => e.id || "duo:" + DUO.indexOf(e), exGet = r => String(r).startsWith("duo:") ? DUO[+String(r).slice(4)] : EXC[r];
 function saveCur() {
-  if (!rt.on) return; credit();
+  if (!rt.on) return; credit(); if (rt.mode === "sq") return persist();   // las sentadillas se guardan una por una
   st.cur = { mode: rt.mode, plan: rt.plan, i: rt.i, left: rt.left, up: rt.up, active: rt.active, credited: rt.credited, star: rt.star, gotStar: rt.gotStar, walkMin: rt.walkMin, minSaid: rt.minSaid,
     serie: rt.serie, restSecs: rt.restSecs, seriesT: rt.seriesT, day: KEY, paused: rt.paused, at: Date.now(), steps: rt.steps.map(x => ({ ...x, ex: x.ex && exRef(x.ex), nextEx: x.nextEx && exRef(x.nextEx) })) };
   persist();
@@ -1531,14 +1563,14 @@ function musicFor() {
 $("#rtMus").addEventListener("click", () => { st.music = !st.music; persist(); SND.click(); musicFor(); });
 function togglePause() {
   rt.paused = !rt.paused; SND.click(); $("#rtPause").textContent = rt.paused ? "SEGUIR" : "PAUSA"; musicFor();
-  if (rt.paused) { setBase("idle"); baseAnim(true); say("Pausa. Aquí te espero."); } else { setBase(curAnim()); baseAnim(true); }
+  if (rt.paused) { setBase("idle"); baseAnim(true); say("Pausa. Aquí te espero."); } else { if (rt.mode === "sq" && rt.sqT > 0) rt.sqT = 0; setBase(curAnim()); baseAnim(true); }   // al seguir, la cuenta parte de pie, junto con los minis
   saveCur();
 }
 function pauseQuiet(line) {
   if (!rt.on || rt.paused || rt.mode === "series") return; rt.paused = true; const b = $("#rtPause"); if (b) b.textContent = "SEGUIR"; musicFor(); setBase("idle"); baseAnim(true);
   say(line || "Te pausé, mi princesa. Aprieta SEGUIR cuando vuelvas."); saveCur();
 }
-function curAnim() { const s = rt.steps[rt.i]; if (rt.mode === "up") return DAILY; if (!s) return "idle"; return s.kind === "ex" ? s.ex.anim : s.kind === "rest" ? (s.secs > 5 ? "drink" : "idle") : s.kind === "walk" ? "walkslow" : "idle"; }
+function curAnim() { const s = rt.steps[rt.i]; if (rt.mode === "up") return DAILY; if (rt.mode === "sq") return rt.sqT < 0 ? "idle" : "sqRep"; if (!s) return "idle"; return s.kind === "ex" ? s.ex.anim : s.kind === "rest" ? (s.secs > 5 ? "drink" : "idle") : s.kind === "walk" ? "walkslow" : "idle"; }
 
 // rutinas guiadas: 1, 5 y 10 minutos, y estiramiento
 function startPlan(key) {
@@ -1595,6 +1627,7 @@ function seriesBtns() {
     ["rtExit", "SALIR", "key--ghost big", () => endTimer(false)]]);
 }
 function rtRender() {
+  if (rt.mode === "sq") { $("#rtTime").textContent = `${rt.sqDone}/${rt.sqGoal}`; $("#rtBar").style.width = rt.sqDone / rt.sqGoal * 100 + "%"; $("#rtStep").textContent = `HOY ${sqToday()}/${SQ_GOAL}`; return; }
   if (rt.mode === "up") { $("#rtTime").textContent = fmtUp(rt.up); $("#rtBar").style.width = (rt.up % 60) / 60 * 100 + "%"; return; }
   if (rt.mode === "series") { $("#rtTime").textContent = fmtT(rt.running ? rt.left : rt.restSecs); $("#rtBar").style.width = rt.running ? (1 - rt.left / rt.restSecs) * 100 + "%" : "0"; return; }
   const s = rt.steps[rt.i]; if (!s) return; $("#rtTime").textContent = fmtT(rt.left); $("#rtBar").style.width = (1 - rt.left / s.secs) * 100 + "%";
@@ -1615,6 +1648,16 @@ function rtTick() {
     if (!rt.running) return rtRender(); rt.left -= dt; const c = Math.ceil(rt.left);
     if (c <= 3 && c >= 1 && c < rt.beeped) { rt.beeped = c; SND.beep(); }
     if (rt.left <= 0) { rt.running = false; rt.since = 0; musicFor(); SND.go(); buzz([200, 100, 200]); act("cheer", 1600); setBase("pesas"); $("#rtStep").textContent = `SERIE ${rt.serie + 1}`; say(`¡A la siguiente serie! ${SERIE_GO[md(D * 5 + rt.serie, SERIE_GO.length)]}`); seriesBtns(); }
+    return rtRender();
+  }
+  if (rt.mode === "sq") {
+    const was = rt.sqT; rt.sqT += dt; if (rt.sqT > 0) rt.active += Math.min(dt, rt.sqT);
+    if (was < 0 && rt.sqT >= 0) { rt.sqT = 0; SND.go(); buzz(30); setBase("sqRep"); baseAnim(true); }   // listos: parten los tres juntos
+    while (rt.sqT >= rt.sqP && rt.sqDone < rt.sqGoal) {
+      rt.sqT -= rt.sqP; rt.sqDone++; sqAdd(1, true); buzz(8);
+      if (rt.sqDone % 10 === 0) { SND.beep(); if (rt.sqDone < rt.sqGoal) { say(`¡${rt.sqDone}! ${SQ_LINES[md(D + rt.sqDone / 10, SQ_LINES.length)]}`, { greet: `Hoy llevas ${sqToday()}` }); minuteFx(); } } else SND.pop();
+    }
+    if (rt.sqDone >= rt.sqGoal) return endSq();
     return rtRender();
   }
   const s = rt.steps[rt.i], used = Math.min(dt, Math.max(0, rt.left)); rt.left -= dt; if (s && s.kind !== "prep") rt.active += used;
@@ -1736,6 +1779,8 @@ const BADGE_TEST = {
   flor: () => plantStage() >= 6, parejaFit: () => st.stats.done.duo, duo5: () => CNT("duo") >= 5, closet: () => st.stats.closet, diario7: () => Object.keys(st.moods).length >= 7,
   atumanera: () => st.stats.done.custom, entrenadora: () => CNT("custom") >= 5, core: () => (st.stats.cat.abdomen || 0) >= 20, piernasAcero: () => (st.stats.cat.piernas || 0) >= 20,
   brazosFuertes: () => (st.stats.cat.brazos || 0) >= 20, calentadita: () => (st.stats.cat.calentamiento || 0) >= 20,
+  sq100: () => Object.values(st.sq).some(v => v >= SQ_GOAL), sq3: () => (st.sqBest || 0) >= 3, sq7: () => (st.sqBest || 0) >= 7, sq30: () => (st.sqBest || 0) >= 30,
+  sqJuntos: () => Object.values(st.sqG).some(v => v >= SQ_GOAL), sq1000: () => sqTotal() >= 1000, sq10000: () => sqTotal() >= 10000,
   medallas20: () => Object.keys(st.badges).length >= 20, medallas40: () => Object.keys(st.badges).length >= 40, todas: () => BADGES.every(([id]) => id === "todas" || st.badges[id]),
 };
 const totalMins = () => Object.values(st.mins).reduce((a, b) => a + b, 0);
@@ -1872,6 +1917,64 @@ $("#bArma").addEventListener("click", openSheet);
 $("#shClose").addEventListener("click", () => { SND.click(); closeSheet(); });
 $("#sheet").addEventListener("click", e => { if (e.target.id === "sheet") closeSheet(); });
 $("#shGo").addEventListener("click", () => { if (!pick.sel.length) return; st.myRoutine = { sel: [...pick.sel], work: pick.work, rest: pick.rest, warm: pick.warm }; persist(); closeSheet(); startPlan("custom"); });
+// reto de 100 sentadillas todos los días (Diego también lo hace)
+const SQ_GOAL = 100, SQ_PACE = [["suave", "SUAVE", 2.6], ["normal", "NORMAL", 2], ["rapido", "RÁPIDO", 1.5]];
+const SQ_LINES = ["Bajamos juntos, mi princesa.", "Piernas firmes, mi wawita.", "Espalda derechita, mi reina.", "Qué fuerte, mi dama.", "Eso, mi muñequita. Sigue.", "Respira y baja, mi vida.", "Te amo, mi mujer. ¡Dale!"];
+const SQ_DONE = ["¡100 sentadillas, mi princesa! Te amo.", "¡Reto cumplido, mi wawita! Qué orgullo.", "¡Las 100, mi reina! Eres la mejor.", "¡Cien, mi vida! Te amo con todo mi corazón.",
+  "¡Lo lograste, mi dama! Mañana otra vez.", "¡Reto del día listo, mi muñequita!", "¡100! Eres una máquina, mi mujer."];
+const sqToday = () => st.sq[KEY] || 0, sqDay = k => (st.sq[k] || 0) >= SQ_GOAL, sqTotal = () => Object.values(st.sq).reduce((a, b) => a + b, 0);
+function sqStreak() { const d = new Date(TODAY); if (!sqDay(ymd(d))) d.setDate(d.getDate() - 1); let n = 0; while (sqDay(ymd(d)) && n < 9999) { n++; d.setDate(d.getDate() - 1); } return n; }
+const sqWa = () => { const sk = sqStreak(); return wa(`¡Hice mis 100 sentadillas de hoy! 💪${sk > 1 ? ` Llevo ${sk} días de reto.` : ""} ¿Y tú, Diego? 😏`); };
+function renderSq(pop) {
+  const n = sqToday(), left = Math.max(0, SQ_GOAL - n), sk = sqStreak();
+  $("#sqNum").textContent = n; $("#sqMeter").style.width = Math.min(100, n) + "%"; $("#sqRacha").textContent = sk ? `🔥 ${sk} DÍA${sk > 1 ? "S" : ""}` : "";
+  if (pop) { const b = $("#sqNum"); b.classList.remove("sq-pop"); void b.offsetWidth; b.classList.add("sq-pop"); }
+  $("#sqInfo").textContent = !n ? "Diego también hace las suyas hoy. Las puedes repartir en el día." : left ? `Te falta${left === 1 ? "" : "n"} ${left}. Vas muy bien.` : n > SQ_GOAL ? `¡Reto cumplido! Hoy llevas ${n}.` : "¡Reto de hoy cumplido!";
+  const opts = [10, 25, 50]; if (left && !opts.includes(left)) opts.push(left);
+  $("#sqGo").innerHTML = opts.map(v => `<button class="zona go" data-go="${v}">${v === left && v > 50 ? `LAS ${v}` : v === left ? `LAS ${v} QUE FALTAN` : v}</button>`).join("");
+  $("#sqPace").innerHTML = SQ_PACE.map(([id, l]) => `<button data-p="${id}" aria-pressed="${(st.sqPace || "normal") === id}">${l}</button>`).join("");
+  $("#sqAdd").innerHTML = [1, 5, 10, 25, -1].map(v => `<button class="zona" data-add="${v}" aria-label="${v > 0 ? "Sumar" : "Restar"} ${Math.abs(v)}">${v > 0 ? "+" + v : "−1"}</button>`).join("");
+  const mon = new Date(TODAY); mon.setDate(TODAY.getDate() - md(TODAY.getDay() - 1, 7)); const cs = getComputedStyle(document.documentElement);
+  $("#sqWeek").innerHTML = DOW.map((l, i) => { const d = new Date(mon); d.setDate(mon.getDate() + i); const k = ymd(d); return `<div class="day${k === KEY ? " today" : ""}"><span>${l}</span><canvas width="8" height="8" data-k="${k}"></canvas></div>`; }).join("");
+  $("#sqWeek").querySelectorAll("canvas").forEach(c => { const v = st.sq[c.dataset.k] || 0;
+    if (v >= SQ_GOAL) paintIcon(c, "flame", "#ff7a3d", "#ffd166"); else paintIcon(c, "dot", v ? "#2fbf94" : (cs.getPropertyValue("--muted").trim() || "#8a5a7f"));
+    c.setAttribute("role", "img"); c.setAttribute("aria-label", v >= SQ_GOAL ? "reto cumplido" : v ? `${v} sentadillas` : "sin sentadillas"); });
+  const tot = sqTotal(); $("#sqTot").textContent = tot ? `Mejor racha del reto: ${Math.max(st.sqBest || 0, sk)} día${Math.max(st.sqBest || 0, sk) === 1 ? "" : "s"}. En total: ${tot.toLocaleString("es-CL")} sentadillas.` : "";
+  const w = $("#sqWa"); w.hidden = n < SQ_GOAL; w.href = sqWa();
+}
+function sqAdd(n, guided) {
+  const before = sqToday(), after = Math.max(0, before + n); if (after) st.sq[KEY] = after; else delete st.sq[KEY];
+  if (guided) st.sqG[KEY] = (st.sqG[KEY] || 0) + n;
+  st.sqBest = Math.max(st.sqBest || 0, sqStreak()); persist(); renderSq(true);
+  if (before < SQ_GOAL && after >= SQ_GOAL) { if (guided) rt.sqHit = true; else sqCelebrate(markDay("mini")); }
+}
+function sqCelebrate(nuevo) {
+  scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); show("#pad"); mtJoin(); mtLeave(7000);
+  celebrate(`${SQ_DONE[md(D + Object.keys(st.sq).length, SQ_DONE.length)]}${nuevo ? " Ganaste tu estrella." : ""}`, "");
+  const w = $("#waLink"); w.href = sqWa(); w.textContent = "CONTARLE A DIEGO 💬";
+}
+function startSq(goal) {
+  if (rt.on) { scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); say("Primero terminemos esto, mi princesa."); return; }
+  SND.click(); rt.mode = "sq"; rt.plan = ""; rt.steps = []; rt.sqGoal = goal; rt.sqDone = 0; rt.sqHit = false;
+  rt.sqP = (SQ_PACE.find(p => p[0] === st.sqPace) || SQ_PACE[1])[2]; ANIM.sqRep.d = rt.sqP * 500;
+  $("#rtDots").innerHTML = ""; $("#rtBarBox").classList.remove("rest");
+  setBtns([["rtPause", "PAUSA", "key--sun", togglePause], ["rtExit", "TERMINAR", "key--ghost", () => endSq()]]);
+  runClock(); rt.sqT = -3; musicFor(); dg.until = 0; setBase("idle"); act("wave", 1500); rtRender();
+  say(`${goal} sentadillas juntos, mi princesa. Bajamos cuando bajen los minis.`, { greet: "Reto 100 sentadillas" });
+}
+function endSq() {
+  credit(); const n = rt.sqDone, hit = rt.sqHit, later = rt.later || [], gotStar = rt.gotStar; stopTimer(); clearCur(); mtLeave(n ? 6000 : 1500);
+  show("#pad"); renderStars(); renderSq(); queue.push(...later);
+  if (!n) { say("Cuando quieras las hacemos, mi princesa."); checkBadges(); return; }
+  if (hit) return sqCelebrate(gotStar || markDay("mini"));
+  const left = SQ_GOAL - sqToday(), pet = rot(PETS, 5, n);
+  act("cheer", 1800); heartPop(dg.x, 30, 6); SND.boost();
+  say(left > 0 ? `¡${n} listas, ${pet}! Te falta${left === 1 ? "" : "n"} ${left}.` : `¡${n} más, ${pet}! Ya llevas ${sqToday()} hoy.`, { greet: gotStar ? "Ganaste tu estrella" : "Reto 100 sentadillas" });
+  checkBadges();
+}
+$("#sqGo").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) startSq(+b.dataset.go); });
+$("#sqPace").addEventListener("click", e => { const b = e.target.closest("[data-p]"); if (!b) return; st.sqPace = b.dataset.p; persist(); SND.click(); renderSq(); });
+$("#sqAdd").addEventListener("click", e => { const b = e.target.closest("[data-add]"); if (!b) return; const v = +b.dataset.add; if (v < 0 && !sqToday()) return; SND[v > 0 ? "pop" : "click"](); buzz(8); sqAdd(v, false); checkBadges(); });
 function renderFoot() {
   const n = now(), m = new Date(n); m.setHours(24, 0, 0, 0); const mins = Math.max(1, Math.round((m - n) / 60000));
   $("#foot").innerHTML = `Mañana mini Diego trae un mensaje nuevo · <b>${mins >= 60 ? `${Math.floor(mins / 60)} h ${mins % 60} min` : `${mins} min`}</b>`;
@@ -1880,7 +1983,7 @@ function renderFoot() {
 // si sale de la app, se apaga la pantalla o se cierra: queda todo guardado
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState !== "hidden") return;
-  if (rt.on && rt.mode === "plan") pauseQuiet("Te pausé porque saliste, mi princesa. Aprieta SEGUIR y seguimos.");   // la caminata, el cronómetro y las series siguen contando
+  if (rt.on && (rt.mode === "plan" || rt.mode === "sq")) pauseQuiet("Te pausé porque saliste, mi princesa. Aprieta SEGUIR y seguimos.");   // la caminata, el cronómetro y las series siguen contando
   saveCur();   // solo escribe si hay algo en curso: así una pestaña vieja no pisa lo nuevo
 });
 addEventListener("pagehide", () => saveCur());
@@ -1923,7 +2026,7 @@ const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "
 $("#fecha").textContent = `${DIAS[TODAY.getDay()]} ${TODAY.getDate()} de ${MESES[TODAY.getMonth()]}`;
 $("#muteBtn").addEventListener("click", () => { st.mute = !st.mute; persist(); SND.muteAll(st.mute); $("#muteBtn").setAttribute("aria-pressed", st.mute); $("#muteBtn").setAttribute("aria-label", st.mute ? "Activar sonidos" : "Silenciar sonidos"); if (!st.mute) SND.click(); });
 $("#muteBtn").setAttribute("aria-pressed", st.mute);
-fit(); renderStars(); renderBadges(); renderWater(); renderChips(); renderCloset(); renderMoods(); renderDiary(); renderFoot(); setInterval(() => { renderFoot(); if (!rt.on) newDay(); }, 30000);
+fit(); renderStars(); renderBadges(); renderWater(); renderChips(); renderCloset(); renderMoods(); renderDiary(); renderSq(); renderFoot(); setInterval(() => { renderFoot(); if (!rt.on) newDay(); }, 30000);
 const resumed = resumeCur();
 if (!resumed) { if (firstTime) { say(INTRO, { greet: "¡Hola!" }); queue.push(showDaily); } else showDaily(); }
 if (checkBadges() && !resumed) queue.push(showDaily);   // después de las medallas, se puede volver al mensaje del día
