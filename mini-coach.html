@@ -1505,7 +1505,21 @@ function setBtns(list) {
   box.innerHTML = list.map(([id, label, cls]) => `<button class="key ${cls || ""}" id="${id}">${label}</button>`).join("");
   list.forEach(([id, , , fn]) => $("#" + id).addEventListener("click", fn));
 }
-function runClock() { mtJoin(); scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); rt.on = true; rt.paused = false; rt.active = 0; rt.minSaid = 0; rt.since = 0; rt.seriesT = 0; clearInterval(rt.timer); rt.last = performance.now(); rt.timer = setInterval(rtTick, 100); show("#routine"); $("#rtBarBox").hidden = false; }
+function runClock() { mtJoin(); scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); rt.on = true; rt.paused = false; rt.active = 0; rt.minSaid = 0; rt.since = 0; rt.seriesT = 0; rt.credited = 0; rt.star = false; rt.gotStar = false; rt.later = []; clearInterval(rt.timer); rt.last = performance.now(); rt.timer = setInterval(rtTick, 100); show("#routine"); $("#rtBarBox").hidden = false; }
+// todo lo que va haciendo queda guardado al tiro: minutos, estrella y en qué parte iba
+function credit() {
+  if (!rt.on || rt.mode === "series") return;
+  const d = rt.active - (rt.credited || 0); if (d > 0) { st.mins[KEY] = (st.mins[KEY] || 0) + d / 60; rt.credited = rt.active; }
+  if (!rt.star && rt.active >= 59.5) { rt.star = true; const q0 = queue.length; rt.gotStar = markDay("mini"); rt.later = queue.splice(q0); }   // la estrella se gana al minuto, aunque no termine
+}
+const exRef = e => e.id || "duo:" + DUO.indexOf(e), exGet = r => String(r).startsWith("duo:") ? DUO[+String(r).slice(4)] : EXC[r];
+function saveCur() {
+  if (!rt.on) return; credit();
+  st.cur = { mode: rt.mode, plan: rt.plan, i: rt.i, left: rt.left, up: rt.up, active: rt.active, credited: rt.credited, star: rt.star, gotStar: rt.gotStar, walkMin: rt.walkMin, minSaid: rt.minSaid,
+    serie: rt.serie, restSecs: rt.restSecs, seriesT: rt.seriesT, at: Date.now(), steps: rt.steps.map(x => ({ ...x, ex: x.ex && exRef(x.ex), nextEx: x.nextEx && exRef(x.nextEx) })) };
+  persist();
+}
+function clearCur() { if (st.cur) { delete st.cur; persist(); } }
 function stopTimer() { rt.close = false; rt.side = false; rt.on = false; rt.running = false; clearInterval(rt.timer); setBase("daily"); SND.musicOff(); }
 function musicFor() {
   const btn = $("#rtMus"); btn.setAttribute("aria-pressed", st.music); btn.textContent = st.music ? "♫ MÚSICA" : "♫ SIN MÚSICA";
@@ -1516,6 +1530,11 @@ $("#rtMus").addEventListener("click", () => { st.music = !st.music; persist(); S
 function togglePause() {
   rt.paused = !rt.paused; SND.click(); $("#rtPause").textContent = rt.paused ? "SEGUIR" : "PAUSA"; musicFor();
   if (rt.paused) { setBase("idle"); baseAnim(true); say("Pausa. Aquí te espero."); } else { setBase(curAnim()); baseAnim(true); }
+  saveCur();
+}
+function pauseQuiet(line) {
+  if (!rt.on || rt.paused) return; rt.paused = true; const b = $("#rtPause"); if (b) b.textContent = "SEGUIR"; musicFor(); setBase("idle"); baseAnim(true);
+  say(line || "Te pausé, mi princesa. Aprieta SEGUIR cuando vuelvas."); saveCur();
 }
 function curAnim() { const s = rt.steps[rt.i]; if (rt.mode === "up") return DAILY; if (!s) return "idle"; return s.kind === "ex" ? s.ex.anim : s.kind === "rest" ? (s.secs > 5 ? "drink" : "idle") : s.kind === "walk" ? "walkslow" : "idle"; }
 
@@ -1523,20 +1542,22 @@ function curAnim() { const s = rt.steps[rt.i]; if (rt.mode === "up") return DAIL
 function startPlan(key) {
   rt.mode = "plan"; rt.plan = key; rt.steps = PLANS[key].steps(); rt.i = -1;
   const exs = rt.steps.filter(x => x.kind === "ex"); exs.forEach((x, k) => { x.n = k; x.total = exs.length; });
-  $("#rtDots").innerHTML = exs.map(() => "<i></i>").join("");
+  planUI(); runClock(); nextStep();
+}
+function planUI() {
+  $("#rtDots").innerHTML = rt.steps.filter(x => x.kind === "ex").map(() => "<i></i>").join("");
   setBtns([["rtPause", "PAUSA", "key--sun", togglePause], ["rtNext", "SIGUIENTE", "key--mint", () => { SND.click(); if (rt.paused) togglePause(); nextStep(); }], ["rtExit", "SALIR", "key--ghost", () => endTimer(false)]]);
-  runClock(); nextStep();
 }
 // caminata
 function startWalk(min) {
-  rt.mode = "walk"; rt.plan = ""; rt.steps = [prep(3), { kind: "walk", secs: min * 60, min }]; rt.i = -1; rt.walkMin = 0; $("#rtDots").innerHTML = "";
-  setBtns([["rtPause", "PAUSA", "key--sun", togglePause], ["rtExit", "TERMINAR", "key--ghost", () => endTimer(false)]]);
-  runClock(); nextStep();
+  rt.mode = "walk"; rt.plan = ""; rt.steps = [prep(3), { kind: "walk", secs: min * 60, min }]; rt.i = -1; rt.walkMin = 0;
+  walkUI(); runClock(); nextStep();
 }
-function nextStep() {
-  rt.i++; const s = rt.steps[rt.i];
+function walkUI() { $("#rtDots").innerHTML = ""; setBtns([["rtPause", "PAUSA", "key--sun", togglePause], ["rtExit", "TERMINAR", "key--ghost", () => endTimer(false)]]); }
+function nextStep(resume) {
+  if (!resume) rt.i++; const s = rt.steps[rt.i];
   if (!s) return endTimer(true);
-  rt.left = s.secs; rt.beeped = 4; rt.since = 0; setTimeout(musicFor, 0);
+  if (!resume) rt.left = s.secs; rt.beeped = 4; rt.since = 0; setTimeout(musicFor, 0);
   rt.close = rt.plan === "duo" && s.kind === "ex" && s.ex.anim === "duoHug"; rt.side = s.kind === "ex" && !!ANIM[s.ex.anim]?.side;
   if (mt.vis) mt.tx = rt.close ? 42 : rt.side ? (rt.plan === "duo" ? 34 : 27) : 35;
   const cur = s.kind === "ex" ? s.n : (rt.steps.slice(rt.i).find(x => x.kind === "ex")?.n ?? 99);   // el ejercicio que toca (o el que viene)
@@ -1547,14 +1568,17 @@ function nextStep() {
   else if (s.kind === "ex") { $("#rtStep").textContent = `EJERCICIO ${s.n + 1} DE ${s.total}`; SND.go(); buzz(30); setBase(s.ex.anim); baseAnim(true); say(`${s.ex.name}. ${s.ex.tip}`, { greet: s.ex.cat === "calentamiento" ? "Calentamiento" : s.ex.cat === "estirar" ? "Estiramiento: ya casi" : s.n === s.total - 1 ? "El último" : s.n === 0 ? "¡Partimos!" : s.n === Math.floor(s.total / 2) ? "¡Vas en la mitad!" : "" }); }
   else if (s.kind === "rest") { $("#rtStep").textContent = s.secs > 5 ? "DESCANSO" : "CAMBIAMOS"; SND.soft(); setBase(s.secs > 5 ? "drink" : "idle"); baseAnim(true); say(s.secs > 5 ? `Agüita. Ahora viene: ${s.nextEx.name.toLowerCase()}.` : `Ahora: ${s.nextEx.name.toLowerCase()}.`, { greet: s.secs > 5 ? REST_GREET[md(D * 7 + rt.i, REST_GREET.length)] : "" }); }
   else if (s.kind === "walk") { SND.go(); buzz(30); setBase("walkslow"); baseAnim(true); say(`¡A caminar! ${WALK_LINES[md(D, WALK_LINES.length)]}`, { greet: `Caminata de ${s.min} minutos` }); }
-  rtRender();
+  rtRender(); if (!resume) saveCur();
 }
 // cronómetro libre (cuenta hacia arriba)
 function startUp() {
-  rt.mode = "up"; rt.plan = ""; rt.steps = []; rt.up = 0; rt.walkMin = 0; $("#rtDots").innerHTML = ""; $("#rtBarBox").classList.remove("rest");
-  setBtns([["rtPause", "PAUSA", "key--sun", togglePause], ["rtReset", "REINICIAR", "key--ghost", () => { SND.click(); rt.up = 0; rt.active = 0; rt.walkMin = 0; rtRender(); say("Desde cero. ¡Vamos!"); }], ["rtExit", "TERMINAR", "key--mint", () => endTimer(true)]]);
-  runClock(); musicFor(); $("#rtStep").textContent = "CRONÓMETRO"; dg.until = 0; setBase(DAILY); baseAnim(true);
+  rt.mode = "up"; rt.plan = ""; rt.steps = []; rt.up = 0; rt.walkMin = 0;
+  upUI(); runClock(); musicFor(); $("#rtStep").textContent = "CRONÓMETRO"; dg.until = 0; setBase(DAILY); baseAnim(true);
   say("Tú pones el ritmo, mi reina. Yo cuento el tiempo."); rtRender();
+}
+function upUI() {
+  $("#rtDots").innerHTML = ""; $("#rtBarBox").classList.remove("rest");
+  setBtns([["rtPause", "PAUSA", "key--sun", togglePause], ["rtReset", "REINICIAR", "key--ghost", () => { SND.click(); credit(); rt.up = 0; rt.active = 0; rt.credited = 0; rt.walkMin = 0; rtRender(); say("Desde cero. ¡Vamos!"); saveCur(); }], ["rtExit", "TERMINAR", "key--mint", () => endTimer(true)]]);
 }
 // descanso entre series (para usarlo en el gym)
 function startSeries() {
@@ -1564,7 +1588,7 @@ function startSeries() {
 }
 function seriesBtns() {
   setBtns([...[45, 60, 90].map(n => [`rtS${n}`, `${n} S`, rt.restSecs === n ? "sel" : "key--ghost", () => { SND.click(); rt.restSecs = n; st.serie = n; persist(); if (rt.running) rt.left = n; seriesBtns(); rtRender(); }]),
-    ["rtGo", rt.running ? "SALTAR" : "DESCANSAR", "key--mint big", () => { if (rt.running) { rt.left = 0; return; } rt.serie++; rt.running = true; rt.left = rt.restSecs; rt.beeped = 4; rt.since = 0; st.stats.series++; persist(); checkBadges(); SND.soft(); setBase("drink"); baseAnim(true);
+    ["rtGo", rt.running ? "SALTAR" : "DESCANSAR", "key--mint big", () => { if (rt.running) { rt.left = 0; return; } rt.serie++; rt.running = true; rt.left = rt.restSecs; rt.beeped = 4; rt.since = 0; st.stats.series++; saveCur(); checkBadges(); SND.soft(); setBase("drink"); baseAnim(true);
       $("#rtStep").textContent = `DESCANSO · SERIE ${rt.serie}`; musicFor(); say(SERIES_LINES[md(D + rt.serie, SERIES_LINES.length)]); seriesBtns(); rtRender(); }],
     ["rtExit", "SALIR", "key--ghost big", () => endTimer(false)]]);
 }
@@ -1575,7 +1599,9 @@ function rtRender() {
   if (s.kind === "walk") $("#rtStep").textContent = `CAMINATA · MINUTO ${Math.min(s.min, rt.walkMin + 1)} DE ${s.min}`;
 }
 function rtTick() {
-  const t = performance.now(), dt = (t - rt.last) / 1000 * speed(); rt.last = t; if (!rt.on || rt.paused) return;
+  const t = performance.now(), gap = t - rt.last, dt = gap / 1000 * speed(); rt.last = t; if (!rt.on || rt.paused) return;
+  if (gap > 90 * 60000) return pauseQuiet("Te pausé, mi princesa. Aquí quedamos.");   // más de hora y media fuera: no cuento ese tiempo
+  if (t - (rt.savedAt || 0) > 2000) { rt.savedAt = t; saveCur(); }
   if (rt.mode === "up") {
     rt.up += dt; rt.active += dt; const m = Math.floor(rt.up / 60);
     if (m > rt.walkMin) { rt.walkMin = m; act("cheer", 1500); say(MINUTE_LINES[md(D * 11 + m * 11, MINUTE_LINES.length)], { greet: `¡${m} minuto${m > 1 ? "s" : ""}!${m === 1 ? " Ya ganaste tu estrella de hoy" : ""}` }); minuteFx(); }
@@ -1602,8 +1628,8 @@ function rtTick() {
   if (rt.left <= 0) nextStep(); else rtRender();
 }
 function endTimer(done) {
-  const secs = rt.active, mode = rt.mode, plan = rt.plan; stopTimer();
-  if (mode !== "series") { st.mins[KEY] = (st.mins[KEY] || 0) + secs / 60; persist(); renderStars(); }   // minutos con mini Diego
+  credit(); const secs = rt.active, mode = rt.mode, plan = rt.plan, later = rt.later || []; stopTimer(); clearCur();
+  if (mode !== "series") renderStars();   // los minutos con mini Diego ya quedaron guardados mientras entrenaba
   mtLeave(secs < 59.5 || mode === "series" ? 1800 : 7000);
   if (mode === "series") { show("#padNo"); say(`¡Bien, mi muñequita! ${rt.serie} serie${rt.serie === 1 ? "" : "s"}. Al salir, aprieta ¡Fui al gym!`); return; }
   if (secs < 59.5) { show("#padNo"); act("hug", 2000, null, { hearts: true }); say("Está bien, mi mujer. Cuando quieras, lo intentamos de nuevo."); return; }
@@ -1612,7 +1638,7 @@ function endTimer(done) {
   if (done && st.music) st.stats.musica = true;
   if (mode === "up") st.stats.libreMax = Math.max(st.stats.libreMax, secs);
   persist();
-  const nuevo = markDay("mini"), mins = Math.round(secs / 60); askMood("#padDone");
+  const nuevo = rt.gotStar || markDay("mini"), mins = Math.round(secs / 60); askMood("#padDone"); queue.push(...later);
   const what = mode === "walk" ? `${mins} minutos de caminata` : mode === "up" ? `${fmtUp(secs)} de ejercicio` : PLANS[plan].what;
   const line = !done ? `Hiciste ${fmtUp(secs)}, mi dama. Igual cuenta.` : mode === "walk" ? `¡${mins} minutos caminando, mi vida! Te amo.` : mode === "up" ? `¡${fmtUp(secs)} de ejercicio, mi reina! Te amo.` : PLANS[plan].done;
   celebrate(`${line}${nuevo ? " Ganaste tu estrella." : ""}`, `¡Hice ${what} con mini Diego! 💪 Llevo ${starCount()} ⭐`);
@@ -1848,6 +1874,33 @@ function renderFoot() {
   $("#foot").innerHTML = `Mañana mini Diego trae un mensaje nuevo · <b>${mins >= 60 ? `${Math.floor(mins / 60)} h ${mins % 60} min` : `${mins} min`}</b>`;
 }
 
+// si sale de la app, se apaga la pantalla o se cierra: queda todo guardado
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "hidden") return;
+  if (rt.on && rt.mode === "plan") pauseQuiet("Te pausé porque saliste, mi princesa. Aprieta SEGUIR y seguimos.");   // la caminata, el cronómetro y las series siguen contando
+  saveCur();   // solo escribe si hay algo en curso: así una pestaña vieja no pisa lo nuevo
+});
+addEventListener("pagehide", () => saveCur());
+// si se cerró a la mitad, vuelve justo donde quedó
+function resumeCur() {
+  const c = st.cur; if (!c || !c.mode) return false;
+  if (!(Date.now() - (c.at || 0) < 864e5)) { clearCur(); return false; }   // de hace más de un día: lo hecho ya quedó guardado
+  const steps = (c.steps || []).map(x => ({ ...x, ex: x.ex && exGet(x.ex), nextEx: x.nextEx && exGet(x.nextEx) }));
+  if (steps.some(x => (x.kind === "ex" && !x.ex) || (x.kind === "rest" && !x.nextEx)) || (c.mode !== "up" && c.mode !== "series" && !steps[c.i])) { clearCur(); return false; }
+  rt.mode = c.mode; rt.plan = c.plan || ""; rt.steps = steps;
+  if (rt.mode === "plan") planUI(); else if (rt.mode === "walk") walkUI(); else if (rt.mode === "up") upUI();
+  runClock();
+  Object.assign(rt, { i: c.i, left: c.left, up: c.up || 0, active: c.active || 0, credited: c.credited || 0, star: !!c.star, gotStar: !!c.gotStar, walkMin: c.walkMin || 0, minSaid: c.minSaid || 0,
+    serie: c.serie || 0, restSecs: c.restSecs || 60, seriesT: c.seriesT || 0, running: false });
+  if (rt.mode === "series") rt.minSaid = Math.floor(rt.seriesT / 60);   // no repetir el minuto que ya dijo
+  if (rt.mode === "series") { $("#rtDots").innerHTML = ""; $("#rtBarBox").classList.add("rest"); seriesBtns(); $("#rtStep").textContent = `SERIE ${rt.serie + 1}`; setBase("pesas"); baseAnim(true); rtRender();
+    say("Aquí quedamos, mi princesa. Seguimos con las series.", { greet: "Seguimos donde quedamos" }); return true; }
+  if (rt.mode === "up") { $("#rtStep").textContent = "CRONÓMETRO"; rtRender(); } else nextStep(true);
+  rt.paused = true; $("#rtPause").textContent = "SEGUIR"; musicFor(); setBase("idle"); baseAnim(true);
+  say("Aquí quedamos, mi princesa. Aprieta SEGUIR cuando quieras.", { greet: "Seguimos donde quedamos" });
+  return true;
+}
+
 /* ====================== partida ====================== */
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
@@ -1855,8 +1908,9 @@ $("#fecha").textContent = `${DIAS[TODAY.getDay()]} ${TODAY.getDate()} de ${MESES
 $("#muteBtn").addEventListener("click", () => { st.mute = !st.mute; persist(); SND.muteAll(st.mute); $("#muteBtn").setAttribute("aria-pressed", st.mute); $("#muteBtn").setAttribute("aria-label", st.mute ? "Activar sonidos" : "Silenciar sonidos"); if (!st.mute) SND.click(); });
 $("#muteBtn").setAttribute("aria-pressed", st.mute);
 fit(); renderStars(); renderBadges(); renderWater(); renderChips(); renderCloset(); renderMoods(); renderDiary(); renderFoot(); setInterval(renderFoot, 30000);
-if (firstTime) { say(INTRO, { greet: "¡Hola!" }); queue.push(showDaily); } else showDaily();
-if (checkBadges()) queue.push(showDaily);   // después de las medallas, se puede volver al mensaje del día
+const resumed = resumeCur();
+if (!resumed) { if (firstTime) { say(INTRO, { greet: "¡Hola!" }); queue.push(showDaily); } else showDaily(); }
+if (checkBadges() && !resumed) queue.push(showDaily);   // después de las medallas, se puede volver al mensaje del día
 requestAnimationFrame(frame);
 </script>
 </html>
