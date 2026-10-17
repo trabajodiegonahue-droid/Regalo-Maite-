@@ -222,7 +222,7 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
 <div class="sheet" id="sheet" hidden>
   <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="shTitle">
     <div class="sh-head"><h2 id="shTitle">ARMA TU RUTINA</h2><button class="icon" id="shClose" aria-label="Cerrar">✕</button></div>
-    <p class="sh-sub">Elige una zona o toca los ejercicios que quieras, en el orden que quieras. Mini Diego y mini Maite hacen todo contigo.</p>
+    <p class="sh-sub">Elige una zona o toca los ejercicios en el orden que quieras. Mini Diego y mini Maite hacen todo contigo.</p>
     <div class="zonas" id="zonas"></div>
     <div class="sh-opts">
       <div class="sh-row"><span>Tiempo por ejercicio</span><div class="seg" id="segWork"></div></div>
@@ -242,7 +242,7 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
   <section class="device" aria-label="Mini Coach: mini Diego, tu entrenador de bolsillo">
     <div class="dev-top"><span class="led" aria-hidden="true"></span><span class="dev-name">MINI·COACH</span><span class="grill" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
     <div class="bezel">
-      <canvas id="scene" width="300" height="216" aria-label="Mini Diego en pixeles. Tócalo y reacciona."></canvas>
+      <canvas id="scene" width="300" height="216" aria-label="Mini Diego en píxeles. Tócalo y reacciona."></canvas>
       <div class="hud" aria-hidden="true"><span id="hudDay">DÍA 1</span><span><span id="hudStars">★ 0</span><span class="hud-r" id="hudRacha" hidden><canvas id="hudFlame" width="8" height="8"></canvas><b id="hudRachaN">0</b></span></span></div>
     </div>
 
@@ -272,7 +272,7 @@ button:focus-visible, a:focus-visible { outline: 3px dashed var(--rose); outline
       <button class="key key--sun" id="bUp"><canvas class="ic" data-ic="clock" width="8" height="8"></canvas><span>Cronómetro<small>Tú pones el ritmo</small></span></button>
       <button class="key" id="bSeries"><canvas class="ic" data-ic="dumbbell" width="8" height="8"></canvas><span>Entre series<small>Para el gym</small></span></button>
       <button class="key key--lav" id="bRest"><canvas class="ic" data-ic="moon" width="8" height="8"></canvas><span>Descansar<small>Sin culpa</small></span></button>
-      <button class="key key--wide" data-plan="duo"><canvas class="ic" data-ic="heart" width="8" height="8"></canvas><span>Rutina de a dos<small>Para hacerla juntos cuando estemos</small></span></button>
+      <button class="key key--wide" data-plan="duo"><canvas class="ic" data-ic="heart" width="8" height="8"></canvas><span>Rutina de a dos<small>Para cuando estemos juntos</small></span></button>
       <button class="key key--ghost key--wide" id="bBack1">◀ VOLVER</button>
     </div>
 
@@ -363,7 +363,7 @@ const MSGS = [
   "Si no tienes ganas, empieza con poquito. Yo voy contigo.",
   "Vamos, mi wawita. Un ratito y listo.",
   "No tienes que ser perfecta. Solo empezar, mi reina.",
-  "Si hoy no quieres ir, está bien. Te amo igual.",
+  "Hoy haz lo que puedas. Con eso basta.",
   "Hoy vamos con todo, mi vida. Te amo.",
   "Tú puedes con esto y con todo, mi dama.",
   "Un pasito hoy, mi muñequita. Mañana otro.",
@@ -385,7 +385,7 @@ const MSGS = [
   "Tu sonrisa después del gym es lo más lindo.",
   "Hoy te toca brillar, mi reina.",
   "Si estás cansada, descansa. Te amo igualito.",
-  "Con todo mi ser, te amo. Vamos, mi vida.",
+  "Te amo tanto, mi vida. Vamos.",
   "Tú y yo contra la flojera, mi dama.",
   "Hoy un ratito para ti, mi muñequita.",
   "Eres todo, mi mujer. Y hoy también puedes.",
@@ -397,7 +397,7 @@ const MSGS = [
   "Tu salud es lo primero, mi dama. Cuídate.",
   "Hoy vamos de a poquito, mi muñequita.",
   "Estoy orgulloso de ti, mi mujer. Siempre.",
-  "Vamos, tú puedes, mi princesa.",
+  "Vamos, mi princesa. Yo te acompaño.",
   "Mañana me lo agradeces, mi wawita. Vamos.",
 ];
 // frases cortas del botón "Dame ánimo" (8 distintas cada día)
@@ -405,16 +405,16 @@ const BOOSTS = [
   "Vamos, tú puedes, mi princesa. Te amo.",
   "Tú puedes, mi wawita. Te amo.",
   "Ánimo, mi reina. Yo creo en ti.",
-  "Vamos, mi vida. Con todo mi corazón.",
-  "Eres fuerte, mi dama. Mucho.",
+  "Dale, mi vida. Te amo más que ayer.",
+  "Eres fuertísima, mi dama.",
   "Tú puedes con todo, mi muñequita.",
   "Arriba, mi mujer. Vamos.",
   "Te amo. Ahora a moverse, mi princesa.",
   "Ánimo, mi wawita. Yo estoy contigo.",
   "Un poquito más, mi reina. Tú puedes.",
-  "Vamos, mi vida. Te espero con un abrazo.",
+  "Vamos, mi vida. Tú brillas.",
   "Eres la mejor, mi dama. Vamos.",
-  "Con todo mi ser, ánimo, mi muñequita.",
+  "Ánimo, mi muñequita. Hoy es tu día.",
   "No te rindas, mi mujer. Te amo.",
   "Tú puedes, mi princesa. Siempre.",
   "Vamos juntos, mi wawita.",
@@ -424,11 +424,11 @@ const BOOSTS = [
   "Yo te hago barra, mi muñequita.",
   "Fuerza, mi mujer. Te amo.",
   "Un pasito, mi princesa. Después otro.",
-  "Vamos, mi wawita. Te amo con todo mi corazón.",
+  "Vamos, mi wawita. Te amo infinito.",
   "Eres más fuerte de lo que crees, mi reina.",
   "Respira, mi vida. Y vamos.",
   "Me tienes orgulloso, mi dama.",
-  "Dale, mi muñequita. Yo creo en ti.",
+  "Dale, mi muñequita. Confío en ti.",
   "Vamos, mi mujer. Hoy se puede.",
   "Te amo, mi princesa. Tú puedes con esto.",
   "Ánimo, mi wawita. Eres mi orgullo.",
@@ -436,15 +436,15 @@ const BOOSTS = [
   "Contigo siempre, mi vida. Vamos.",
 ];
 const BOOST_END = "Ya te di todo mi ánimo, mi dama. Ahora tú. Te amo.";
-const CELEB = ["¡Eso, mi princesa! Anda con todo.", "¡Bien, mi wawita! Te amo.", "¡Vamos, mi reina! Disfrútalo.", "Qué orgullo, mi vida. Anda tranquila.", "¡Así se hace, mi dama!", "¡Esa es mi muñequita! Con todo.", "Anda con todo, mi mujer. Te espero.", "¡Bien! Lleva tu agüita, mi princesa.", "Te amo, mi wawita. Que te vaya súper.", "¡Le ganaste a la flojera, mi reina!", "Anda a tu ritmo, mi vida. Te amo.", "Al salir, aprieta ¡Fui al gym!, mi dama.", "¡Vamos, mi muñequita! Tú puedes.", "Te espero con un abrazo, mi mujer.", "Me haces feliz, mi princesa. Anda.", "¡Eso! Después me cuentas, mi wawita."];
-const DEAL = ["Si no quieres ir, no vayas. Está bien, te amo igual.", "Si no quieres ir, hagamos algo los dos aquí.", "Está bien, mi princesa. Elige algo cortito abajo.", "No pasa nada, mi wawita. Igualmente te amo.", "¿Un minuto conmigo, mi reina? Solo uno.", "Tranquila, mi vida. Hagamos algo suavecito.", "Si hoy no, está bien. Te amo igual, mi dama.", "Hagamos algo juntos aquí, mi muñequita.", "Sin presión, mi mujer. Tú eliges.", "Te amo igual, mi princesa. ¿Estiramos un poquito?"];
+const CELEB = ["¡Eso, mi princesa! Anda con todo.", "¡Bien, mi wawita! Te amo.", "¡Vamos, mi reina! Disfrútalo.", "Qué orgullo, mi vida. Anda tranquila.", "¡Así se hace, mi dama!", "¡Esa es mi muñequita! Con todo.", "Anda feliz, mi mujer. Te espero.", "¡Bien! Lleva tu agüita, mi princesa.", "Te amo, mi wawita. Que te vaya súper.", "¡Le ganaste a la flojera, mi reina!", "Anda a tu ritmo, mi vida. Te amo.", "Cuando vuelvas, aprieta ¡Fui al gym!, mi dama.", "¡Vamos, mi muñequita! Tú puedes.", "A la vuelta, besitos, mi mujer.", "Me haces feliz, mi princesa. Anda.", "¡Eso! Después me cuentas, mi wawita."];
+const DEAL = ["Si no quieres ir, no vayas. Está bien, te amo igual.", "Si no quieres ir, hagamos algo los dos aquí.", "Está bien, mi princesa. Elige algo cortito abajo.", "No pasa nada, mi wawita. Igualmente te amo.", "¿Un minuto conmigo, mi reina? Solo uno.", "Tranquila, mi vida. Hagamos algo suavecito.", "Si hoy no, está bien, mi dama. Descansar también vale.", "Hagamos algo juntos aquí, mi muñequita.", "Sin presión, mi mujer. Tú eliges.", "Te amo igual, mi princesa. ¿Estiramos un poquito?"];
 // mientras entrena: una frase tierna y motivadora cada minuto
 const MINUTE_LINES = [
-  "Un minuto más, mi princesa. Vas bien.",
+  "Sumaste otro minuto, mi princesa. Vas bien.",
   "Respira, mi wawita. Lo haces increíble.",
   "Sigue así, mi reina. Te amo.",
   "Cada minuto cuenta, mi vida.",
-  "Tú puedes, mi dama. Ya casi.",
+  "Tú puedes, mi dama. Vas súper bien.",
   "Me encantas, mi muñequita.",
   "Vamos, mi mujer. Con todo.",
   "Otro minuto, mi princesa. Te amo.",
@@ -455,11 +455,11 @@ const MINUTE_LINES = [
   "Toma agüita si quieres, mi muñequita.",
   "Vas increíble, mi mujer.",
   "Te amo con todo mi corazón, mi princesa.",
-  "Un poquito más, mi wawita.",
+  "Dale que vas bien, mi wawita.",
   "Lo estás logrando, mi reina.",
   "Así se hace, mi vida.",
   "Yo lo hago contigo, mi dama.",
-  "Eres la mejor, mi muñequita.",
+  "Eres seca, mi muñequita.",
   "Respira hondo, mi mujer. Sigue.",
   "Te guardo un abrazo, mi princesa.",
   "Minuto a minuto, mi wawita.",
@@ -467,9 +467,9 @@ const MINUTE_LINES = [
   "Ya llevas harto, mi vida.",
   "Qué lindo verte así, mi dama.",
   "Mini Maite y yo contigo, mi muñequita.",
-  "Eres todo, mi mujer. Sigue.",
-  "Con todo mi ser, mi princesa. Vamos.",
-  "Falta menos, mi wawita.",
+  "Eres una crack, mi mujer. Sigue.",
+  "Sigue, mi princesa. Eres una máquina.",
+  "Vas como avión, mi wawita.",
 ];
 // caminata: algo nuevo cada minuto
 const WALK_LINES = ["Buen ritmo, mi princesa.", "Mueve los brazos, mi wawita.", "Respira tranquila, mi reina.", "Mira el cielo un ratito, mi vida.", "Paso a paso, mi dama.", "Sube un poquito el ritmo, mi muñequita.", "Hombros sueltos, mi mujer.", "Si ves algo lindo, mándame foto.", "Un sorbito de agüita, mi princesa.", "Camina como si vinieras a verme.", "Con calma, pero sin parar.", "Cada cuadra cuenta, mi wawita."];
@@ -477,51 +477,51 @@ const WALK_LINES = ["Buen ritmo, mi princesa.", "Mueve los brazos, mi wawita.", 
 const SERIES_LINES = ["Descansa, mi princesa. Ya viene otra.", "Esa serie estuvo perfecta, mi wawita.", "Agüita, mi reina.", "Suelta los brazos, mi vida.", "Respira, mi dama. Tú puedes.", "Una serie menos, mi muñequita.", "Te mando un besito, mi mujer.", "Qué fuerte estás, mi princesa.", "La siguiente es tuya, mi wawita.", "Muy bien, mi reina. Te amo."];
 const SERIE_GO = ["Con todo, mi princesa.", "Tú puedes, mi wawita.", "Dale, mi reina.", "Vamos, mi vida.", "Fuerza, mi dama.", "Aprieta, mi muñequita.", "Con todo mi corazón, mi mujer."];
 // el título chiquitito de los descansos en las rutinas
-const REST_GREET = ["Respira, mi princesa", "Agüita, mi wawita", "Vas increíble, mi reina", "Muy bien, mi vida", "Un respiro, mi dama", "Qué orgullo, mi muñequita", "Ya queda menos, mi mujer"];
+const REST_GREET = ["Respira, mi princesa", "Recupera el aire, mi wawita", "Qué bien lo haces, mi reina", "Muy bien, mi vida", "Un respiro, mi dama", "Qué orgullo, mi muñequita", "Ya queda menos, mi mujer"];
 // estiramientos suaves
-const REST = ["Descansa, mi princesa. Te amo igual.", "Está bien descansar, mi wawita.", "Hoy descansa, mi reina. Mañana vamos.", "Duerme rico, mi vida. Te amo.", "Escucha tu cuerpo, mi dama. Te amo.", "Regalonea hoy, mi muñequita. Te lo ganaste.", "Recarga pilas, mi mujer. Te amo con todo mi corazón.", "Sin culpa, mi princesa. Descansa.", "Mañana volvemos, mi wawita. Hoy a descansar.", "Te amo igualito, mi reina. Descansa."];
-const CHARGE = ["¡Te llegó mi energía, mi princesa!", "Toda mi energía para ti, mi wawita.", "¡Cargada, mi reina! Ahora vamos.", "Energía al cien, mi vida.", "Con todo mi corazón, mi dama. ¡Toma!", "¡Kamehameha de amor, mi muñequita!", "Ahora tienes mi fuerza, mi mujer.", "¡Pum! Energía para ti, mi princesa.", "Te mando todo, mi wawita. Te amo.", "¡Batería llena, mi reina!", "Úsala con todo, mi vida.", "Mi energía es tuya, mi dama."];
+const REST = ["Descansa, mi princesa. Te amo igual.", "Está bien descansar, mi wawita.", "Hoy descansa, mi reina. Mañana vamos.", "Descansa rico, mi vida. Te amo.", "Escucha tu cuerpo, mi dama. Te amo.", "Regalonea hoy, mi muñequita. Te lo mereces.", "Recarga las pilas, mi mujer. Te adoro.", "Sin culpa, mi princesa. Descansa.", "Mañana volvemos, mi wawita. Hoy a descansar.", "Mañana es otro día, mi reina. Descansa."];
+const CHARGE = ["¡Te llegó mi energía, mi princesa!", "Toda mi energía para ti, mi wawita.", "¡Cargada, mi reina! Ahora vamos.", "Energía al cien, mi vida.", "Con todo mi corazón, mi dama. ¡Toma!", "¡Kamehameha de amor, mi muñequita!", "Ahora tienes mi fuerza, mi mujer.", "¡Pum! Directo al corazón, mi princesa.", "Te mando energía a full, mi wawita. Te amo.", "¡Batería llena, mi reina!", "Usa mi energía con todo, mi vida.", "Mi energía es tuya, mi dama."];
 const TAPS = ["¡Ay! Cosquillas, mi princesa.", "Te amo, mi wawita.", "Mua. Para ti, mi reina.", "Soy chiquitito, pero te amo en grande.", "Me tienes enamorado, mi vida.", "Te extrañaba, mi dama.", "Un abrazo, mi muñequita.", "Te adoro, mi mujer.", "Otro besito para ti, mi princesa.", "Me encanta tu cariño, mi wawita.", "Soy tu fan número uno, mi reina.", "Eres lo más lindo, mi vida."];
 const WEEK = ["Domingo tranquilo.", "Lunes con todo.", "Martes con ganas.", "Miércoles, mitad de semana.", "Jueves, ya casi.", "Viernes, a cerrar con todo.", "Sábado sin apuro."];
 const PETS = ["mi wawita", "mi mujer", "mi vida", "mi dama", "mi muñequita", "mi reina", "mi princesa"];
-const INTRO = "Hola, mi wawita. Soy mini Diego. Aprieta un botón cuando me necesites. Te amo.";
+const INTRO = "Soy mini Diego, mi wawita. Aprieta un botón cuando me necesites. Te amo.";
 // medallas: [id, nombre, ícono, cómo se gana, lo que dice mini Diego, categoría]
 const BADGE_CATS = [["constancia", "CONSTANCIA"], ["gym", "GYM"], ["crono", "CRONÓMETROS"], ["agua", "AGÜITA"], ["carino", "CARIÑO"], ["especial", "ESPECIALES"]];
 const BADGES = [
   ["primera", "Primera estrella", "star", "Ganar tu primera estrella.", "¡Tu primera estrella, mi princesa! Te amo.", "constancia"],
-  ["racha3", "Tres seguidos", "flame", "Ganar estrella 3 días seguidos.", "Tres seguidos, mi wawita. ¡Vamos!", "constancia"],
-  ["racha5", "Cinco al hilo", "flame", "Ganar estrella 5 días seguidos.", "Cinco al hilo, mi reina. Eres la mejor.", "constancia"],
-  ["racha7", "Semana perfecta", "flame", "Ganar estrella 7 días seguidos.", "Una semana perfecta, mi vida.", "constancia"],
-  ["racha10", "Diez al hilo", "flame", "Ganar estrella 10 días seguidos.", "Diez seguidos, mi dama. ¡Máquina!", "constancia"],
-  ["racha14", "Dos semanas", "flame", "Ganar estrella 14 días seguidos.", "Dos semanas, mi muñequita. Te admiro.", "constancia"],
-  ["racha21", "Tres semanas", "flame", "Ganar estrella 21 días seguidos.", "Tres semanas, mi mujer. Te adoro.", "constancia"],
-  ["racha30", "Un mes", "flame", "Ganar estrella 30 días seguidos.", "Un mes entero, mi princesa. Te amo con todo mi ser.", "constancia"],
-  ["racha50", "Cincuenta días", "flame", "Ganar estrella 50 días seguidos.", "Cincuenta días, mi wawita. Eres todo.", "constancia"],
-  ["racha100", "Cien días", "flame", "Ganar estrella 100 días seguidos.", "¡Cien días, mi reina! Te amo, te adoro.", "constancia"],
+  ["racha3", "Tres seguidos", "flame", "Ganar una estrella 3 días seguidos.", "Tres seguidos, mi wawita. ¡Vamos!", "constancia"],
+  ["racha5", "Cinco al hilo", "flame", "Ganar una estrella 5 días seguidos.", "Cinco al hilo, mi reina. Eres la mejor.", "constancia"],
+  ["racha7", "Semana perfecta", "flame", "Ganar una estrella 7 días seguidos.", "Una semana perfecta, mi vida.", "constancia"],
+  ["racha10", "Diez al hilo", "flame", "Ganar una estrella 10 días seguidos.", "Diez seguidos, mi dama. ¡Máquina!", "constancia"],
+  ["racha14", "Dos semanas", "flame", "Ganar una estrella 14 días seguidos.", "Dos semanas, mi muñequita. Te admiro.", "constancia"],
+  ["racha21", "Tres semanas", "flame", "Ganar una estrella 21 días seguidos.", "Tres semanas, mi mujer. Te adoro.", "constancia"],
+  ["racha30", "Un mes", "flame", "Ganar una estrella 30 días seguidos.", "Un mes entero, mi princesa. Te amo con todo mi ser.", "constancia"],
+  ["racha50", "Cincuenta días", "flame", "Ganar una estrella 50 días seguidos.", "Cincuenta días, mi wawita. Eres todo.", "constancia"],
+  ["racha100", "Cien días", "flame", "Ganar una estrella 100 días seguidos.", "¡Cien días, mi reina! Te amo, te adoro.", "constancia"],
   ["estrellas10", "10 estrellas", "star", "Juntar 10 estrellas.", "Diez estrellitas, mi vida. Brillas más tú.", "constancia"],
-  ["estrellas25", "25 estrellas", "star", "Juntar 25 estrellas.", "Veinticinco estrellas, mi dama. Mi cielo eres tú.", "constancia"],
+  ["estrellas25", "25 estrellas", "star", "Juntar 25 estrellas.", "Veinticinco estrellas, mi dama. Mi estrella favorita eres tú.", "constancia"],
   ["estrellas50", "50 estrellas", "star", "Juntar 50 estrellas.", "Cincuenta estrellas, mi muñequita. Te amo.", "constancia"],
   ["estrellas100", "100 estrellas", "star", "Juntar 100 estrellas.", "¡Cien estrellas, mi mujer! Eres la mejor.", "constancia"],
   ["semana4", "Semana activa", "calendar", "Ganar 4 estrellas en una misma semana.", "Cuatro días en una semana, mi princesa.", "constancia"],
   ["volviste", "Volviste", "heart", "Volver a ganar estrella después de 3 días o más sin estrellas.", "Volviste, mi wawita. Eso es lo que importa.", "constancia"],
-  ["finde", "Finde activo", "sun", "Ganar una estrella un sábado o un domingo.", "Hasta el finde, mi reina. Te adoro.", "constancia"],
+  ["finde", "Finde activo", "sun", "Ganar una estrella un sábado o un domingo.", "Entrenaste hasta en el finde, mi reina. Te adoro.", "constancia"],
   ["lunes", "Le ganó al lunes", "bolt", "Ganar una estrella un lunes.", "Le ganaste al lunes, mi vida.", "constancia"],
   ["flor", "Plantita florecida", "heart", "Hacer que tu plantita florezca.", "Floreció tu plantita, mi dama. Como tú.", "constancia"],
   ["gym5", "Gym x5", "dumbbell", "Ir 5 veces al gym.", "Cinco veces al gym, mi muñequita.", "gym"],
   ["gym15", "Gym x15", "dumbbell", "Ir 15 veces al gym.", "Quince veces, mi mujer. ¡Bien!", "gym"],
-  ["gym30", "Gym x30", "dumbbell", "Ir 30 veces al gym.", "Treinta veces, mi princesa. Me haces superarme.", "gym"],
+  ["gym30", "Gym x30", "dumbbell", "Ir 30 veces al gym.", "Treinta veces, mi princesa. Me inspiras.", "gym"],
   ["gym50", "Gym x50", "dumbbell", "Ir 50 veces al gym.", "Cincuenta veces, mi wawita. Te adoro.", "gym"],
   ["gym100", "Gym x100", "trophy", "Ir 100 veces al gym.", "¡Cien veces al gym, mi reina! Te amo.", "gym"],
   ["superyupi", "Súper yupi", "trophy", "Apretar ¡Fui al gym! por primera vez.", "Tu primer súper yupi, mi vida.", "gym"],
   ["fui10", "Fui x10", "trophy", "Apretar ¡Fui al gym! en 10 días distintos.", "Diez yupis, mi dama. Te superas siempre.", "gym"],
   ["fui25", "Fui x25", "trophy", "Apretar ¡Fui al gym! en 25 días distintos.", "Veinticinco yupis, mi muñequita. ¡Qué orgullo!", "gym"],
-  ["fui50", "Fui x50", "trophy", "Apretar ¡Fui al gym! en 50 días distintos.", "Cincuenta yupis, mi mujer. Eres todo.", "gym"],
+  ["fui50", "Fui x50", "trophy", "Apretar ¡Fui al gym! en 50 días distintos.", "Cincuenta yupis, mi mujer. ¡Qué grande!", "gym"],
   ["voyfui", "Dicho y hecho", "shoe", "Apretar ¡Voy al gym! y después ¡Fui al gym! el mismo día.", "Dicho y hecho, mi princesa.", "gym"],
   ["series20", "Máquina", "dumbbell", "Hacer 20 series con el descanso de mini Diego.", "Veinte series, mi wawita. ¡Fuerte!", "gym"],
   ["series100", "Máquina total", "dumbbell", "Hacer 100 series con el descanso de mini Diego.", "Cien series, mi reina. Te amo con todo mi ser.", "gym"],
   ["uno", "Valiente", "bolt", "Terminar el cronómetro de 1 minuto.", "Un minuto también vale, mi vida.", "crono"],
-  ["uno5", "Cero excusas", "bolt", "Terminar 5 veces el de 1 minuto.", "Cinco minutitos, mi dama. Bien hecho.", "crono"],
-  ["cinco", "Cinco minutitos", "heart", "Terminar los 5 minutos.", "Cinco minutos juntos, mi muñequita.", "crono"],
+  ["uno5", "Minutito valiente", "bolt", "Terminar 5 veces el de 1 minuto.", "Cinco veces un minuto, mi dama. Bien hecho.", "crono"],
+  ["cinco", "Cinco minutitos", "heart", "Terminar los 5 minutos.", "Cinco minutos completitos, mi muñequita.", "crono"],
   ["diez", "Diez de diez", "star", "Terminar los 10 minutos.", "Diez de diez, mi mujer. Como tú.", "crono"],
   ["estirar", "Elástica", "person", "Terminar el estiramiento.", "Te estiraste enterita, mi princesa.", "crono"],
   ["estirar5", "Elástica pro", "person", "Terminar 5 veces el estiramiento.", "Cinco estiramientos, mi wawita.", "crono"],
@@ -531,18 +531,18 @@ const BADGES = [
   ["libre20", "Resistencia", "clock", "Llegar a 20 minutos en el cronómetro libre.", "Veinte minutos sin parar, mi muñequita.", "crono"],
   ["libre60", "Una hora", "clock", "Llegar a 60 minutos en el cronómetro libre.", "¡Una hora, mi mujer! Te amo.", "crono"],
   ["cien", "100 minutos", "clock", "Sumar 100 minutos con mini Diego.", "Cien minutos conmigo, mi princesa.", "crono"],
-  ["quinientos", "500 minutos", "star", "Sumar 500 minutos con mini Diego.", "Quinientos minutos, mi wawita. Mi campeona.", "crono"],
+  ["quinientos", "500 minutos", "star", "Sumar 500 minutos con mini Diego.", "Quinientos minutos, mi wawita. Eres una campeona.", "crono"],
   ["mil", "1000 minutos", "trophy", "Sumar 1000 minutos con mini Diego.", "¡Mil minutos, mi reina! Te amo con todo mi corazón.", "crono"],
   ["todos", "De todo un poco", "star", "Completar cada tipo de cronómetro al menos una vez.", "Probaste todo, mi vida. Puedes con todo.", "crono"],
-  ["musica", "Bailarina", "note", "Terminar un cronómetro con la música puesta.", "Con musiquita, mi dama. Me encanta.", "crono"],
-  ["parejaFit", "Pareja fit", "heart", "Terminar la rutina de a dos.", "Rutina de a dos, mi muñequita. Ahora juntos de verdad.", "crono"],
+  ["musica", "Bailarina", "note", "Terminar un cronómetro con la música puesta.", "Con musiquita, mi dama. Te imagino bailando.", "crono"],
+  ["parejaFit", "Pareja fit", "heart", "Terminar la rutina de a dos.", "Terminaste la de a dos, mi muñequita. Ahora juntos de verdad.", "crono"],
   ["duo5", "Inseparables fit", "heart", "Terminar 5 veces la rutina de a dos.", "Cinco rutinas de a dos, mi mujer.", "crono"],
   ["atumanera", "A tu manera", "star", "Terminar una rutina armada por ti.", "Tu propia rutina, mi princesa. Bien hecho.", "crono"],
-  ["entrenadora", "Entrenadora", "trophy", "Terminar 5 rutinas armadas por ti.", "Cinco rutinas tuyas, mi wawita. Mi coach.", "crono"],
-  ["core", "Abdomen de acero", "flame", "Hacer 20 ejercicios de abdomen.", "Veinte de abdomen, mi reina. ¡Fuerte!", "crono"],
+  ["entrenadora", "Entrenadora", "trophy", "Terminar 5 rutinas armadas por ti.", "Cinco rutinas tuyas, mi wawita. Ahora la coach eres tú.", "crono"],
+  ["core", "Abdomen fuerte", "flame", "Hacer 20 ejercicios de abdomen.", "Veinte de abdomen, mi reina. ¡Fuerte!", "crono"],
   ["piernasAcero", "Piernas de acero", "flame", "Hacer 20 ejercicios de piernas y glúteos.", "Veinte de piernas, mi vida. ¡Con todo!", "crono"],
   ["brazosFuertes", "Brazos fuertes", "dumbbell", "Hacer 20 ejercicios de brazos y espalda.", "Veinte de brazos, mi dama. Abrazos más fuertes.", "crono"],
-  ["calentadita", "Bien calentadita", "sun", "Hacer 20 ejercicios de calentamiento.", "Veinte calentamientos, mi muñequita.", "crono"],
+  ["calentadita", "Entrada en calor", "sun", "Hacer 20 ejercicios de calentamiento.", "Veinte calentamientos, mi muñequita.", "crono"],
   ["hidratada", "Hidratada", "drop", "Tomar 8 vasos de agua en un día.", "Ocho vasos, mi mujer. Así se hace.", "agua"],
   ["agua3", "Hidratada x3", "drop", "Tomar 8 vasos en 3 días distintos.", "Tres días hidratada, mi princesa.", "agua"],
   ["agua7", "Plantita feliz", "drop", "Tomar 8 vasos en 7 días distintos.", "Siete días con agüita, mi wawita.", "agua"],
@@ -555,20 +555,20 @@ const BADGES = [
   ["kame25", "Súper saiyajin", "bolt", "Lanzar 25 kamehamehas.", "Veinticinco kamehamehas, mi wawita. ¡Más fuerte que Goku!", "carino"],
   ["animo", "Pura buena onda", "heart", "Apretar Dame ánimo 20 veces.", "Veinte ánimos, mi reina. Te doy mil más.", "carino"],
   ["escenas", "Exploradora", "star", "Tocar la ventana, el cuadro, la plantita y las pesas.", "Exploraste la pieza, mi vida.", "carino"],
-  ["mensajito", "Mensajito", "chat", "Escribirle a Diego desde aquí.", "Le escribiste a Diego, mi dama. Sonrió.", "carino"],
+  ["mensajito", "Mensajito", "chat", "Escribirle a Diego desde aquí.", "Le escribiste a Diego, mi dama. Seguro sonrió.", "carino"],
   ["mensajes10", "Pololita comunicativa", "chat", "Escribirle a Diego 10 veces desde aquí.", "Diez mensajitos, mi muñequita. Me alegras.", "carino"],
   ["vale", "Cobradora", "ticket", "Cobrar tu primer vale.", "Tu primer vale, mi mujer. Diego cumple.", "carino"],
   ["vales3", "Cobradora pro", "ticket", "Cobrar 3 vales.", "Tres vales, mi princesa. Feliz de cumplir.", "carino"],
-  ["todosVales", "Me debes todo", "ticket", "Cobrar los 5 vales.", "Todos los vales, mi wawita. Te debo la vida.", "carino"],
+  ["todosVales", "Me debes todo", "ticket", "Cobrar los 5 vales.", "Todos los vales, mi wawita. Cumplí feliz.", "carino"],
   ["closet", "A la moda", "star", "Vestir a los dos con ropa nueva del clóset.", "Nos vestiste, mi reina. Qué lindos.", "carino"],
   ["temprano", "Madrugadora", "sun", "Ganar una estrella antes de las 9 de la mañana.", "Madrugaste, mi vida. Le ganaste al sol.", "especial"],
   ["madrugadora5", "Madrugadora pro", "sun", "Ganar 5 estrellas antes de las 9 de la mañana.", "Cinco madrugadas, mi dama. Increíble.", "especial"],
   ["noche", "Búho", "moon", "Ganar una estrella después de las 9 de la noche.", "Hasta de noche, mi muñequita.", "especial"],
   ["descanso", "Sabe descansar", "moon", "Elegir Descansar un día que lo necesitabas.", "Descansar también es quererte, mi mujer.", "especial"],
-  ["dia30", "Un mes con mini Coach", "calendar", "Cumplir un mes desde que abriste Mini Coach.", "Un mes conmigo aquí, mi princesa. Gracias.", "especial"],
+  ["dia30", "Un mes con Mini Coach", "calendar", "Cumplir un mes desde que abriste Mini Coach.", "Un mes conmigo aquí, mi princesa. Gracias.", "especial"],
   ["fiel", "Fiel", "heart", "Abrir Mini Coach 7 días distintos.", "Siete días viniendo a verme, mi wawita.", "especial"],
   ["visitas30", "Inseparables", "heart", "Abrir Mini Coach 30 días distintos.", "Treinta días juntos aquí, mi reina.", "especial"],
-  ["diario7", "Mi diario", "calendar", "Contarle a mini Diego cómo te sentiste 7 días distintos.", "Siete días contándome, mi vida. Me encanta.", "especial"],
+  ["diario7", "Mi diario", "calendar", "Contarle a mini Diego cómo te sentiste 7 días distintos.", "Siete días contándome cómo estás, mi vida.", "especial"],
   ["medallas20", "Coleccionista", "medal", "Ganar 20 medallas.", "Veinte medallas, mi dama. Brillas.", "especial"],
   ["medallas40", "Coleccionista pro", "medal", "Ganar 40 medallas.", "Cuarenta medallas, mi muñequita.", "especial"],
   ["todas", "¡Todas!", "trophy", "Ganar todas las demás medallas.", "¡Todas, mi mujer! Te amo, te adoro, eres la mejor.", "especial"],
@@ -579,17 +579,17 @@ const FUI = [
   "¡Fuiste, mi wawita! Te superas y me haces superarme. Te amo.",
   "¡Lo hiciste, mi reina! Te amo con todo mi corazón.",
   "¡Grande, mi vida! Te amo.",
-  "¡Fuiste, mi dama! Eres la mejor.",
-  "¡Súper yupi, mi muñequita! Te adoro.",
-  "¡Bien, mi mujer! Cada vez te superas más.",
+  "¡Fuiste, mi dama! Te superaste otra vez. Te amo.",
+  "¡Súper yupi, mi muñequita! Te superas. Te amo.",
+  "¡Bien, mi mujer! Cada vez te superas más. Te amo.",
   "¡YUPIII! Me haces superarme, mi princesa. Te amo.",
   "¡Lo lograste, mi wawita! Te amo con todo mi ser.",
-  "¡Fuiste! Eres todo, mi reina.",
+  "¡Fuiste, mi reina! Me inspiras a superarme. Te amo.",
   "¡Bravo, mi vida! Te amo, te amo, te amo.",
   "¡Lo hiciste otra vez, mi dama! Te amo.",
 ];
 // la racha: lo que dice mini Diego cuando crece
-const RACHA_LINES = { 2: "¡Dos días seguidos, mi princesa!", 3: "¡Tres días, mi wawita! Vamos bien.", 5: "¡Cinco días, mi reina! Qué constancia.", 7: "¡Una semana, mi vida! Te amo.", 10: "¡Diez días, mi dama! Increíble.", 14: "¡Dos semanas, mi muñequita!", 21: "¡Tres semanas, mi mujer! Nadie te para.", 30: "¡Un mes, mi princesa! Te amo, te adoro, eres la mejor." };
+const RACHA_LINES = { 2: "¡Dos días seguidos, mi mujer!", 3: "¡Tu llamita crece, mi princesa!", 5: "¡Qué constancia, mi muñequita!", 7: "¡Siete de siete, mi mujer! Te amo.", 10: "¡Imparable, mi wawita!", 14: "¡Sigues firme, mi reina!", 21: "¡Nadie te para, mi vida!", 30: "¡Treinta de treinta, mi dama! Te amo." };
 // el clóset: se desbloquea con estrellas
 const OUTFITS = {
   d: [
@@ -605,7 +605,7 @@ const OUTFITS = {
     { id: "normal", name: "Como siempre", stars: 0, line: "Mini Maite con su gorrito de lunares, igualita a la foto de chiquitita." },
     { id: "deporte", name: "Deportiva", stars: 2, line: "Mini Maite lista para el gym, con su cintillo. Igualita a ti." },
     { id: "pijama", name: "Pijama", stars: 5, line: "Mini Maite en pijama de nubes. Dan ganas de abrazarla, como a ti." },
-    { id: "invierno", name: "Invierno en Temuco", stars: 8, line: "Mini Maite abrigadita con gorro de pompón. Así te quiero, calentita." },
+    { id: "invierno", name: "Invierno en Temuco", stars: 8, line: "Mini Maite con gorro de pompón. Así te quiero, abrigadita." },
     { id: "heroina", name: "Superheroína", stars: 12, line: "Súper Maite: su superpoder es hacerme feliz." },
     { id: "vestido", name: "Vestido de cita", stars: 18, line: "Mini Maite con vestido rojo y una flor en el pelo. Me enamoro otra vez." },
     { id: "fiesta", name: "De fiesta", stars: 25, line: "Mini Maite de fiesta. ¡La más linda de la celebración!" },
@@ -613,7 +613,7 @@ const OUTFITS = {
 };
 // cómo me sentí: [id, nombre, color, lo que responde mini Diego]
 const MOODS = [
-  ["feliz", "Feliz", "#ffc93d", ["¡Qué lindo, mi princesa! Me haces feliz.", "Feliz tú, feliz yo, mi wawita.", "Esa sonrisa es mía, mi reina. Te amo."]],
+  ["feliz", "Feliz", "#ffc93d", ["¡Qué lindo, mi princesa! Me haces feliz.", "Feliz tú, feliz yo, mi wawita.", "Esa sonrisa me encanta, mi reina. Te amo."]],
   ["orgullosa", "Orgullosa", "#ff5c98", ["Y yo de ti, mi vida.", "Tienes que estarlo, mi dama. Te amo.", "Orgullosísimo de ti, mi muñequita."]],
   ["energia", "Con energía", "#3fd4a6", ["¡Esa es mi mujer!", "Guarda esa energía, mi princesa.", "Con esa energía puedes todo, mi wawita."]],
   ["cansada", "Cansada", "#a68cff", ["Descansa, mi reina. Lo hiciste.", "Cansadita, pero lo lograste, mi vida.", "Agüita y a descansar, mi dama."]],
@@ -637,7 +637,7 @@ const CHIPS = [
   ["¿Me llamas?", "¿Me llamas un ratito? 📞"],
 ];
 // lo que dice mini Diego si tocan a mini Maite
-const MT_TAPS = ["Esa es mi polola. La más linda.", "Mini Maite entrena contigo, mi princesa.", "Igualita a ti de linda, mi wawita.", "Mini Maite te manda un abrazo.", "Mi equipo favorito: tú y ella.", "Mini Maite dice: ¡tú puedes!"];
+const MT_TAPS = ["Esa es mi polola. La más linda.", "Mini Maite entrena contigo, mi princesa.", "Igual de linda que tú, mi wawita.", "Mini Maite te manda un abrazo.", "Mi equipo favorito: tú y ella.", "Mini Maite dice: ¡tú puedes!"];
 // vales que se desbloquean con las estrellas
 const VALES = [[3, "Un masajito de piernas después del gym"], [7, "Un heladito extra, sí, otro más"], [12, "Una cita donde tú eliges todo"], [20, "Un día entero de regaloneo"], [30, "Lo que tú quieras, sin preguntar"]];
 // catálogo de ejercicios reales: [id, grupo, nombre, cómo se hace, animación]
@@ -681,10 +681,10 @@ const EXC = {};
  ["cielo", "estirar", "Al cielo y a los lados", "Brazos arriba: estírate hacia un lado y después hacia el otro.", "stretch"],
  ["brazoCruzado", "estirar", "Brazo cruzado", "Cruza un brazo por delante del pecho y sujétalo con el otro. A la mitad, cambia de lado.", "armcross"],
  ["cuadriceps", "estirar", "Cuádriceps", "Toma un pie por detrás y llévalo hacia el poto. Si te tambaleas, apóyate en la pared.", "quad"],
- ["pies", "estirar", "Tocar los pies", "Bájate de a poquito hacia los pies, sin rebotar. Hasta donde llegues está bien.", "toes"],
+ ["pies", "estirar", "Tocar los pies", "Inclínate de a poquito hacia los pies, sin rebotar. Hasta donde llegues está bien.", "toes"],
  ["gatoVaca", "estirar", "Gato y vaca", "En cuatro apoyos, arquea la espalda hacia arriba como gatito y después hacia abajo. Lento.", "catcow"],
  ["nino", "estirar", "Postura del niño", "Siéntate sobre los talones y estira los brazos adelante con la frente al suelo. Respira.", "child"],
- ["isquios", "estirar", "Estiramiento sentada", "Piernas estiradas al frente: llega con las manos lo más lejos que puedas, sin rebotar.", "hamstring"]].forEach(([id, cat, name, tip, anim]) => { EXC[id] = { id, cat, name, tip, anim }; });
+ ["isquios", "estirar", "Estiramiento sentado", "Piernas estiradas al frente: llega con las manos lo más lejos que puedas, sin rebotar.", "hamstring"]].forEach(([id, cat, name, tip, anim]) => { EXC[id] = { id, cat, name, tip, anim }; });
 const EX_LIST = Object.values(EXC), BY = c => EX_LIST.filter(e => e.cat === c);
 const pickDay = (c, n, salt = 0, skip = []) => { const l = BY(c).filter(e => !skip.includes(e.id)), s0 = md(D * 3 + salt, l.length); return Array.from({ length: n }, (_, k) => l[(s0 + k) % l.length]); };
 const STRETCH = EXC.cielo;
@@ -1294,9 +1294,9 @@ function frame(t) {
 }
 
 /* ====================== el globo: escribe letra por letra ====================== */
-let typing = 0, queue = [];
+let typing = 0, queue = [], sayN = 0;
 function say(text, opts = {}) {
-  clearInterval(typing); const el = $("#say"); $("#greet").textContent = opts.greet || ""; $("#greet").hidden = !opts.greet;
+  clearInterval(typing); sayN++; const el = $("#say"); $("#greet").textContent = opts.greet || ""; $("#greet").hidden = !opts.greet;
   const full = text; let i = 0; el.textContent = ""; el.dataset.full = full;
   $("#more").hidden = true; if (!opts.keepWa) $("#waLink").hidden = true;
   if (reduced) { el.textContent = full; afterType(); return; }
@@ -1305,7 +1305,7 @@ function say(text, opts = {}) {
 }
 function afterType() {
   if (!queue.length) return; $("#more").hidden = false;
-  const q = queue[0]; if (q.auto) setTimeout(() => { if (!typing && queue[0] === q) { queue.shift(); q(); } }, 6500);   // las medallas aparecen solas, después de alcanzar a leer
+  const q = queue[0], n = sayN; if (q.auto) setTimeout(() => { if (!typing && queue[0] === q && sayN === n && !rt.on) { queue.shift(); q(); } }, 6500);   // las medallas aparecen solas, después de alcanzar a leer
 }
 $("#bubble").addEventListener("click", e => {
   if (e.target.closest("a")) return;
@@ -1386,7 +1386,7 @@ function markDay(kind) {   // una estrella por día como máximo; "gym" le gana 
   }
   if (nueva && plantStage() > planta0) {   // la plantita creció
     const f = () => { SND.boost(); scn.plant = performance.now() + 2500; for (let i = 0; i < 10; i++) spawn({ type: "spark", x: 9 + (Math.random() - .5) * 10, y: 50 - Math.random() * 14, vx: (Math.random() - .5) * .4, vy: -.3, max: 40 }); act("wave", 1600);
-      say(`${plantLine()} Crece contigo, mi mujer.`, { greet: "🌱 ¡Tu plantita creció!" }); };
+      say(`${plantLine()} Tú la haces florecer.`, { greet: "🌱 ¡Tu plantita creció!" }); };
     f.auto = true; queue.push(f);
   }
   const nuevaRopa = nueva ? [...OUTFITS.d, ...OUTFITS.m].filter(o => o.stars === starCount() && o.stars > 0) : [];
@@ -1401,12 +1401,12 @@ function celebrate(line, waText) {
   SND.fanfare(); buzz([40, 60, 40]); act(Math.random() < .5 ? "cheer" : "dance", 4200); confetti(70); heartPop(dg.x, 30, 10); fireworks(3);
   say(line); const w = $("#waLink"); w.href = wa(waText); w.hidden = false; checkBadges();
 }
-function goGym() {
+function goGym(sinGanas) {
   st.voy[KEY] = true;
   mtJoin(); mtLeave(7000); setTimeout(() => heartPop(44, 30, 8), 900);
   const nuevo = markDay("gym");
   celebrate(nuevo ? rot(CELEB, 5) : "Ya tienes tu estrella, mi muñequita. Anda tranquila.",
-    `¡Voy al gym! 💪 Aunque no tenía ganas, mini Diego me convenció. Llevo ${starCount()} ⭐`);
+    `¡Voy al gym! 💪 ${sinGanas === true ? "Aunque no tenía ganas, mini Diego me convenció." : "Mini Diego me dio ánimo."} Llevo ${starCount()} ⭐`);
   $("#waLink").textContent = "AVISARLE A DIEGO 💬";
   show("#pad");
 }
@@ -1423,8 +1423,8 @@ function fuiGym() {
   askMood("#pad"); checkBadges();
 }
 $("#bFui").addEventListener("click", fuiGym);
-$("#bVoy").addEventListener("click", goGym);
-$("#bVoy2").addEventListener("click", goGym);
+$("#bVoy").addEventListener("click", () => goGym(false));
+$("#bVoy2").addEventListener("click", () => goGym(true));
 function openMenu(line) { $("#bRest").hidden = false; setBase("daily"); show("#padNo"); say(line); setTimeout(() => $("#padNo").scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" }), 60); }
 let dealI = 0;
 $("#bNo").addEventListener("click", () => { SND.soft(); buzz(10); openMenu(DEAL[md(D * 3 + dealI++, DEAL.length)]); act("hug", 2600, null, { hearts: true, blush: true }); heartPop(dg.x, 32, 4); });
@@ -1458,7 +1458,7 @@ cv.addEventListener("click", e => {
   st.taps = (st.taps || 0) + 1; persist(); SND.kiss(); buzz(8);
   const an = TAP_ANIMS[st.taps % TAP_ANIMS.length];
   if (!rt.on) act(an, 1500, null, an === "kiss" || an === "heartHands" ? { hearts: true, blush: true } : { blush: true }); setTimeout(() => heartPop(dg.x + 6, 30, 3), 360);
-  if (!rt.on) say(st.taps % 10 === 0 ? "Diez cariños, mi dama. Me pongo rojito." : TAPS[st.taps % TAPS.length]);
+  if (!rt.on) say(st.taps % 10 === 0 ? "Tantos cariños, mi dama. Me pongo rojito." : TAPS[st.taps % TAPS.length]);
   checkBadges();
 });
 
@@ -1505,7 +1505,9 @@ function setBtns(list) {
   box.innerHTML = list.map(([id, label, cls]) => `<button class="key ${cls || ""}" id="${id}">${label}</button>`).join("");
   list.forEach(([id, , , fn]) => $("#" + id).addEventListener("click", fn));
 }
-function runClock() { mtJoin(); scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); rt.on = true; rt.paused = false; rt.active = 0; rt.minSaid = 0; rt.since = 0; rt.seriesT = 0; rt.credited = 0; rt.star = false; rt.gotStar = false; rt.later = []; clearInterval(rt.timer); rt.last = performance.now(); rt.timer = setInterval(rtTick, 100); show("#routine"); $("#rtBarBox").hidden = false; }
+function runClock() { mtJoin(); scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); rt.on = true; rt.paused = false; rt.active = 0; rt.minSaid = 0; rt.since = 0; rt.seriesT = 0; rt.credited = 0; rt.star = false; rt.gotStar = false; rt.later = []; clearInterval(rt.timer); rt.last = performance.now(); rt.timer = setInterval(rtTick, 100); show("#routine"); $("#rtBarBox").hidden = false; wake(true); }
+// que la pantalla no se apague sola en medio de una rutina guiada (si el celular lo permite)
+async function wake(on) { try { if (on && rt.on && rt.mode === "plan" && !rt.wl && navigator.wakeLock && document.visibilityState === "visible") { const l = await navigator.wakeLock.request("screen"); rt.wl = l; l.addEventListener("release", () => { if (rt.wl === l) rt.wl = null; }); } else if (!on && rt.wl) { const l = rt.wl; rt.wl = null; await l.release(); } } catch { rt.wl = null; } }
 // todo lo que va haciendo queda guardado al tiro: minutos, estrella y en qué parte iba
 function credit() {
   if (!rt.on || rt.mode === "series") return;
@@ -1516,11 +1518,11 @@ const exRef = e => e.id || "duo:" + DUO.indexOf(e), exGet = r => String(r).start
 function saveCur() {
   if (!rt.on) return; credit();
   st.cur = { mode: rt.mode, plan: rt.plan, i: rt.i, left: rt.left, up: rt.up, active: rt.active, credited: rt.credited, star: rt.star, gotStar: rt.gotStar, walkMin: rt.walkMin, minSaid: rt.minSaid,
-    serie: rt.serie, restSecs: rt.restSecs, seriesT: rt.seriesT, at: Date.now(), steps: rt.steps.map(x => ({ ...x, ex: x.ex && exRef(x.ex), nextEx: x.nextEx && exRef(x.nextEx) })) };
+    serie: rt.serie, restSecs: rt.restSecs, seriesT: rt.seriesT, day: KEY, paused: rt.paused, at: Date.now(), steps: rt.steps.map(x => ({ ...x, ex: x.ex && exRef(x.ex), nextEx: x.nextEx && exRef(x.nextEx) })) };
   persist();
 }
 function clearCur() { if (st.cur) { delete st.cur; persist(); } }
-function stopTimer() { rt.close = false; rt.side = false; rt.on = false; rt.running = false; clearInterval(rt.timer); setBase("daily"); SND.musicOff(); }
+function stopTimer() { rt.close = false; rt.side = false; rt.on = false; rt.running = false; clearInterval(rt.timer); setBase("daily"); SND.musicOff(); wake(false); }
 function musicFor() {
   const btn = $("#rtMus"); btn.setAttribute("aria-pressed", st.music); btn.textContent = st.music ? "♫ MÚSICA" : "♫ SIN MÚSICA";
   if (!rt.on || rt.paused || !st.music) return SND.musicOff();
@@ -1533,7 +1535,7 @@ function togglePause() {
   saveCur();
 }
 function pauseQuiet(line) {
-  if (!rt.on || rt.paused) return; rt.paused = true; const b = $("#rtPause"); if (b) b.textContent = "SEGUIR"; musicFor(); setBase("idle"); baseAnim(true);
+  if (!rt.on || rt.paused || rt.mode === "series") return; rt.paused = true; const b = $("#rtPause"); if (b) b.textContent = "SEGUIR"; musicFor(); setBase("idle"); baseAnim(true);
   say(line || "Te pausé, mi princesa. Aprieta SEGUIR cuando vuelvas."); saveCur();
 }
 function curAnim() { const s = rt.steps[rt.i]; if (rt.mode === "up") return DAILY; if (!s) return "idle"; return s.kind === "ex" ? s.ex.anim : s.kind === "rest" ? (s.secs > 5 ? "drink" : "idle") : s.kind === "walk" ? "walkslow" : "idle"; }
@@ -1565,9 +1567,9 @@ function nextStep(resume) {
   $("#rtBarBox").classList.toggle("rest", s.kind === "rest" || s.kind === "prep");
   dg.until = 0;
   if (s.kind === "prep") { $("#rtStep").textContent = "¡PREPÁRATE!"; setBase("idle"); act("wave", 1500); say(rt.mode === "walk" ? `Caminamos ${s === rt.steps[0] ? rt.steps[1].min : ""} minutos juntos, mi mujer.` : PLANS[rt.plan].intro(), { greet: "Mini Maite vino a entrenar con nosotros" }); }
-  else if (s.kind === "ex") { $("#rtStep").textContent = `EJERCICIO ${s.n + 1} DE ${s.total}`; SND.go(); buzz(30); setBase(s.ex.anim); baseAnim(true); say(`${s.ex.name}. ${s.ex.tip}`, { greet: s.ex.cat === "calentamiento" ? "Calentamiento" : s.ex.cat === "estirar" ? "Estiramiento: ya casi" : s.n === s.total - 1 ? "El último" : s.n === 0 ? "¡Partimos!" : s.n === Math.floor(s.total / 2) ? "¡Vas en la mitad!" : "" }); }
+  else if (s.kind === "ex") { $("#rtStep").textContent = `EJERCICIO ${s.n + 1} DE ${s.total}`; SND.go(); buzz(30); setBase(s.ex.anim); baseAnim(true); say(`${s.ex.name}. ${s.ex.tip}`, { greet: s.ex.cat === "calentamiento" ? "Calentamiento" : s.ex.cat === "estirar" ? (rt.plan === "estirar" ? "A estirar" : "Estiramiento: ya casi") : s.n === s.total - 1 ? "El último" : s.n === 0 ? "¡Partimos!" : s.n === Math.floor(s.total / 2) ? "¡Vas en la mitad!" : "" }); }
   else if (s.kind === "rest") { $("#rtStep").textContent = s.secs > 5 ? "DESCANSO" : "CAMBIAMOS"; SND.soft(); setBase(s.secs > 5 ? "drink" : "idle"); baseAnim(true); say(s.secs > 5 ? `Agüita. Ahora viene: ${s.nextEx.name.toLowerCase()}.` : `Ahora: ${s.nextEx.name.toLowerCase()}.`, { greet: s.secs > 5 ? REST_GREET[md(D * 7 + rt.i, REST_GREET.length)] : "" }); }
-  else if (s.kind === "walk") { SND.go(); buzz(30); setBase("walkslow"); baseAnim(true); say(`¡A caminar! ${WALK_LINES[md(D, WALK_LINES.length)]}`, { greet: `Caminata de ${s.min} minutos` }); }
+  else if (s.kind === "walk") { SND.go(); buzz(30); setBase("walkslow"); baseAnim(true); say("¡A caminar, mi dama! Yo voy contigo.", { greet: `Caminata de ${s.min} minutos` }); }
   rtRender(); if (!resume) saveCur();
 }
 // cronómetro libre (cuenta hacia arriba)
@@ -1600,7 +1602,7 @@ function rtRender() {
 }
 function rtTick() {
   const t = performance.now(), gap = t - rt.last, dt = gap / 1000 * speed(); rt.last = t; if (!rt.on || rt.paused) return;
-  if (gap > 90 * 60000) return pauseQuiet("Te pausé, mi princesa. Aquí quedamos.");   // más de hora y media fuera: no cuento ese tiempo
+  if (gap > 90 * 60000 && rt.mode === "up") return pauseQuiet("Te pausé, mi reina. Seguimos cuando quieras.");   // cronómetro olvidado más de hora y media: no cuento ese tiempo
   if (t - (rt.savedAt || 0) > 2000) { rt.savedAt = t; saveCur(); }
   if (rt.mode === "up") {
     rt.up += dt; rt.active += dt; const m = Math.floor(rt.up / 60);
@@ -1615,7 +1617,7 @@ function rtTick() {
     if (rt.left <= 0) { rt.running = false; rt.since = 0; musicFor(); SND.go(); buzz([200, 100, 200]); act("cheer", 1600); setBase("pesas"); $("#rtStep").textContent = `SERIE ${rt.serie + 1}`; say(`¡A la siguiente serie! ${SERIE_GO[md(D * 5 + rt.serie, SERIE_GO.length)]}`); seriesBtns(); }
     return rtRender();
   }
-  const s = rt.steps[rt.i]; rt.left -= dt; if (s && s.kind !== "prep") rt.active += dt;
+  const s = rt.steps[rt.i], used = Math.min(dt, Math.max(0, rt.left)); rt.left -= dt; if (s && s.kind !== "prep") rt.active += used;
   const c = Math.ceil(rt.left);
   if (c <= 3 && c >= 1 && c < rt.beeped && s?.kind !== "walk") { rt.beeped = c; SND.beep(); }
   if (s?.kind === "walk") {
@@ -1628,19 +1630,20 @@ function rtTick() {
   if (rt.left <= 0) nextStep(); else rtRender();
 }
 function endTimer(done) {
-  credit(); const secs = rt.active, mode = rt.mode, plan = rt.plan, later = rt.later || []; stopTimer(); clearCur();
+  credit(); const secs = rt.active, mode = rt.mode, plan = rt.plan, later = rt.later || [], star = rt.star; stopTimer(); clearCur();
+  if (done && mode === "plan" && secs < rt.steps.filter(x => x.kind !== "prep").reduce((a, x) => a + x.secs, 0) * .5) done = false;   // si se saltó casi todo, no cuenta como completa
   if (mode !== "series") renderStars();   // los minutos con mini Diego ya quedaron guardados mientras entrenaba
   mtLeave(secs < 59.5 || mode === "series" ? 1800 : 7000);
-  if (mode === "series") { show("#padNo"); say(`¡Bien, mi muñequita! ${rt.serie} serie${rt.serie === 1 ? "" : "s"}. Al salir, aprieta ¡Fui al gym!`); return; }
-  if (secs < 59.5) { show("#padNo"); act("hug", 2000, null, { hearts: true }); say("Está bien, mi mujer. Cuando quieras, lo intentamos de nuevo."); return; }
+  if (mode === "series") { show("#padNo"); say(rt.serie ? `¡Bien, mi muñequita! ${rt.serie} serie${rt.serie === 1 ? "" : "s"}. Al salir, aprieta ¡Fui al gym!` : "Cuando quieras volvemos, mi muñequita."); return; }
+  if (secs < 59.5 && !star) { show("#padNo"); act("hug", 2000, null, { hearts: true }); say("Está bien, mi mujer. Cuando quieras, lo intentamos de nuevo."); checkBadges(); return; }
   if (done && mode === "plan") { st.stats.done[plan] = true; st.stats.cnt[plan] = CNT(plan) + 1; }
   if (done && mode === "walk") { st.stats.done.caminata = true; st.stats.cnt.caminata = CNT("caminata") + 1; if (rt.steps[1]?.min >= 30) st.stats.done.caminata30 = true; }
   if (done && st.music) st.stats.musica = true;
   if (mode === "up") st.stats.libreMax = Math.max(st.stats.libreMax, secs);
   persist();
   const nuevo = rt.gotStar || markDay("mini"), mins = Math.round(secs / 60); askMood("#padDone"); queue.push(...later);
-  const what = mode === "walk" ? `${mins} minutos de caminata` : mode === "up" ? `${fmtUp(secs)} de ejercicio` : PLANS[plan].what;
-  const line = !done ? `Hiciste ${fmtUp(secs)}, mi dama. Igual cuenta.` : mode === "walk" ? `¡${mins} minutos caminando, mi vida! Te amo.` : mode === "up" ? `¡${fmtUp(secs)} de ejercicio, mi reina! Te amo.` : PLANS[plan].done;
+  const what = mode === "walk" ? `${mins} minuto${mins === 1 ? "" : "s"} de caminata` : mode === "up" || !done ? `${fmtUp(secs)} de ejercicio` : PLANS[plan].what;
+  const line = !done ? `Hiciste ${fmtUp(secs)}, mi dama. Igual cuenta.` : mode === "walk" ? `¡${mins} minuto${mins === 1 ? "" : "s"} caminando, mi vida! Te amo.` : mode === "up" ? `¡${fmtUp(secs)} de ejercicio, mi reina! Te amo.` : PLANS[plan].done;
   celebrate(`${line}${nuevo ? " Ganaste tu estrella." : ""}`, `¡Hice ${what} con mini Diego! 💪 Llevo ${starCount()} ⭐`);
 }
 document.querySelectorAll("[data-plan]").forEach(b => b.addEventListener("click", () => { SND.click(); startPlan(b.dataset.plan); }));
@@ -1692,7 +1695,7 @@ function renderStars() {
     if (v === "gym") paintIcon(c, "star", cs.getPropertyValue("--gold").trim() || "#e8a400"); else if (v === "mini") paintIcon(c, "star", "#2fbf94"); else if (v === "rest") paintIcon(c, "moon", "#8a70e0"); else paintIcon(c, "dot", cs.getPropertyValue("--muted").trim() || "#8a5a7f");
     c.setAttribute("aria-label", v === "gym" ? "fue al gym" : v === "mini" ? "hizo un cronómetro" : v === "rest" ? "descanso" : "sin marcar"); c.setAttribute("role", "img"); });
   const sk = streak(); paintIcon($("#flameIc"), "flame", sk ? "#ff7a3d" : (cs.getPropertyValue("--muted").trim() || "#8a5a7f"), "#ffd166");
-  $("#streakTxt").textContent = sk ? `Racha: ${sk} día${sk > 1 ? "s" : ""} seguido${sk > 1 ? "s" : ""}` : "Gana una estrella hoy para empezar tu racha.";
+  $("#streakTxt").textContent = sk ? (sk > 1 ? `Racha: ${sk} días seguidos` : "Racha: 1 día") : "Gana una estrella hoy para empezar tu racha.";
   const entrenados = Object.values(st.days).filter(isStar).length, fuis = Object.keys(st.fui).length;
   $("#rachaInfo").textContent = `Mejor racha: ${Math.max(st.best || 0, sk)} día${Math.max(st.best || 0, sk) === 1 ? "" : "s"}. Días que entrenaste: ${entrenados}. Súper yupis: ${fuis}.`;
   $("#plantInfo").textContent = plantLine();
@@ -1703,7 +1706,7 @@ function renderStars() {
   if (nx) { const prev = [...VALES].reverse().find(([t]) => n >= t)?.[0] || 0; $("#nextTxt").textContent = `Próximo vale: ${nx[1].toLowerCase()}`; $("#nextNum").textContent = `${n}/${nx[0]} ★`; $("#meter").style.width = ((n - prev) / (nx[0] - prev)) * 100 + "%"; }
   else { $("#nextTxt").textContent = "¡Desbloqueaste todos los vales!"; $("#nextNum").textContent = `${n} ★`; $("#meter").style.width = "100%"; }
   $("#vales").innerHTML = VALES.map(([t, txt]) => { const open = n >= t, got = st.claimed[t];
-    return `<li class="vale${open ? "" : " locked"}"><span class="n">${t}★</span><span class="t">Vale por ${txt[0].toLowerCase() + txt.slice(1)}</span>${open ? `<a href="${wa(`Vengo a cobrar mi vale de mini Diego 🎟️: ${txt} (${t} ⭐)`)}" target="_blank" rel="noopener" data-t="${t}">${got ? "COBRADO ✓" : "COBRAR"}</a>` : `<span class="st">FALTAN ${t - n}</span>`}</li>`; }).join("");
+    return `<li class="vale${open ? "" : " locked"}"><span class="n">${t}★</span><span class="t">Vale por ${txt[0].toLowerCase() + txt.slice(1)}</span>${open ? `<a href="${wa(`Vengo a cobrar mi vale de mini Diego 🎟️: ${txt} (${t} ⭐)`)}" target="_blank" rel="noopener" data-t="${t}">${got ? "COBRADO ✓" : "COBRAR"}</a>` : `<span class="st">FALTA${t - n === 1 ? "" : "N"} ${t - n}</span>`}</li>`; }).join("");
   $("#vales").querySelectorAll("a").forEach(a => a.addEventListener("click", () => { st.claimed[a.dataset.t] = true; persist(); setTimeout(() => { renderStars(); checkBadges(); }, 300); }));
 }
 const isStar = v => v === "gym" || v === "mini";
@@ -1790,7 +1793,7 @@ function renderCloset() {
 }
 function wear(who, id) {
   const o = OUTFITS[who].find(x => x.id === id), n = starCount();
-  if (n < o.stars) { SND.soft(); $("#clInfo").textContent = `Te faltan ${o.stars - n} estrella${o.stars - n === 1 ? "" : "s"} para "${o.name}".`; return; }
+  if (n < o.stars) { SND.soft(); $("#clInfo").textContent = `Te falta${o.stars - n === 1 ? "" : "n"} ${o.stars - n} estrella${o.stars - n === 1 ? "" : "s"} para "${o.name}".`; return; }
   st.outfit[who] = id; if (st.outfit.d !== "normal" && st.outfit.m !== "normal") st.stats.closet = true; persist(); SND.boost(); buzz(10);
   const sx = [$("#ropaD").scrollLeft, $("#ropaM").scrollLeft]; renderCloset(); $("#ropaD").scrollLeft = sx[0]; $("#ropaM").scrollLeft = sx[1];
   $("#clInfo").textContent = o.line;
@@ -1804,7 +1807,7 @@ function renderMoods() {
 function pickMood(m) {
   const [id, name, , lines] = m; st.moods[KEY] = id; persist(); renderDiary(); SND.kiss(); buzz(15);
   act({ feliz: "dance", orgullosa: "heartHands", energia: "cheer", cansada: "hug", costo: "hug" }[id], 2200, null, { blush: true, hearts: id === "orgullosa" }); heartPop(dg.x, 30, 5);
-  say(lines[md(D + Object.keys(st.moods).length, lines.length)], { greet: `Te sentiste: ${name.toLowerCase()}`, keepWa: true });
+  say(lines[md(D + Object.keys(st.moods).length, lines.length)], { greet: id === "costo" ? "Hoy te costó" : `Te sentiste ${name.toLowerCase()}`, keepWa: true });
   show(moodNext); checkBadges();
 }
 $("#bMoodSkip").addEventListener("click", () => { SND.click(); show(moodNext); });
@@ -1816,7 +1819,7 @@ function renderDiary() {
     if (m) paintIcon(c, "m_" + m[0], m[2], "#3b1838"); else paintIcon(c, "dot", muted); c.setAttribute("role", "img"); c.setAttribute("aria-label", m ? m[1] : "sin registro"); });
   const cnt = {}; days.forEach(k => { if (st.moods[k]) cnt[st.moods[k]] = (cnt[st.moods[k]] || 0) + 1; });
   const top = Object.entries(cnt).sort((a, b) => b[1] - a[1])[0];
-  $("#moodTxt").textContent = top ? `Esta semana te sentiste más: ${MOODS.find(x => x[0] === top[0])[1].toLowerCase()}.` : "Cuando termines de entrenar, cuéntale a mini Diego cómo te sentiste y aquí queda tu semana.";
+  $("#moodTxt").textContent = top ? (top[0] === "costo" ? "Esta semana lo que más marcaste: me costó." : `Esta semana te sentiste más ${MOODS.find(x => x[0] === top[0])[1].toLowerCase()}.`) : "Cuando termines de entrenar, cuéntale a mini Diego cómo te sentiste y aquí queda tu semana.";
 }
 // arma tu rutina: ella elige los ejercicios y el orden
 const pick = { sel: [], work: 40, rest: 15, warm: true, ...(st.myRoutine || {}) };
@@ -1850,7 +1853,7 @@ function syncSheet() {
   $("#segRest").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.v === pick.rest));
   $("#segWarm").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", (b.dataset.v === "1") === pick.warm));
   const n = pick.sel.length, secs = 5 + (pick.warm ? 60 + 10 + 60 + 15 : 0) + n * pick.work + Math.max(0, n - 1) * pick.rest + 10;
-  $("#shSum").textContent = n ? `${n} ejercicio${n === 1 ? "" : "s"} · unos ${Math.max(1, Math.round(secs / 60))} min` : "Elige al menos 1 ejercicio"; $("#shGo").disabled = !n;
+  $("#shSum").textContent = n ? `${n} ejercicio${n === 1 ? "" : "s"} · ${Math.round(secs / 60) > 1 ? `unos ${Math.round(secs / 60)}` : "1"} min` : "Elige al menos 1 ejercicio"; $("#shGo").disabled = !n;
 }
 function customExtras() {   // el calentamiento y el estiramiento van con lo que eligió
   const cnt = {}; pick.sel.forEach(id => { const c = EXC[id].cat; cnt[c] = (cnt[c] || 0) + 1; });
@@ -1859,7 +1862,7 @@ function customExtras() {   // el calentamiento y el estiramiento van con lo que
   const Cl = { piernas: ["cuadriceps", "isquios"], abdomen: ["gatoVaca", "nino"], brazos: ["brazoCruzado", "cielo"], cardio: ["cuadriceps", "respiracion"] }[top] || ["cielo", "isquios"];
   return { warm: [EXC.marcha, EXC[W]], cool: Cl.map(k => EXC[k]) };
 }
-PLANS.custom = { what: "tu propia rutina",
+PLANS.custom = { what: "mi propia rutina",
   steps: () => { const x = customExtras(), main = pick.sel.map(id => EXC[id]); return [prep(5), ...routine(pick.warm ? x.warm : [], main, pick.warm ? x.cool : [], 30, pick.work, pick.rest, 30)]; },
   intro: () => "Tu rutina, mi reina. La hacemos juntos.",
   done: "¡Tu rutina lista, mi mujer! Te amo." };
@@ -1881,10 +1884,15 @@ document.addEventListener("visibilitychange", () => {
   saveCur();   // solo escribe si hay algo en curso: así una pestaña vieja no pisa lo nuevo
 });
 addEventListener("pagehide", () => saveCur());
+// si la página quedó abierta de un día para otro, al volver parte el día nuevo
+function newDay() { if (ymd(now()) !== KEY && document.visibilityState === "visible" && (!rt.on || rt.paused)) { saveCur(); location.reload(); } }
+document.addEventListener("visibilitychange", () => { if (document.visibilityState !== "visible") return; newDay(); if (rt.on) wake(true); });
+addEventListener("pageshow", e => { if (e.persisted) newDay(); });
+addEventListener("storage", e => { if (e.key === "mini_diego" && !rt.on) location.reload(); });   // otra pestaña guardó algo: esta se pone al día y no pisa lo nuevo
 // si se cerró a la mitad, vuelve justo donde quedó
 function resumeCur() {
   const c = st.cur; if (!c || !c.mode) return false;
-  if (!(Date.now() - (c.at || 0) < 864e5)) { clearCur(); return false; }   // de hace más de un día: lo hecho ya quedó guardado
+  if ((c.day && c.day !== KEY) || !(Date.now() - (c.at || 0) < 864e5)) { clearCur(); return false; }   // de otro día: lo hecho ya quedó guardado ese día
   const steps = (c.steps || []).map(x => ({ ...x, ex: x.ex && exGet(x.ex), nextEx: x.nextEx && exGet(x.nextEx) }));
   if (steps.some(x => (x.kind === "ex" && !x.ex) || (x.kind === "rest" && !x.nextEx)) || (c.mode !== "up" && c.mode !== "series" && !steps[c.i])) { clearCur(); return false; }
   rt.mode = c.mode; rt.plan = c.plan || ""; rt.steps = steps;
@@ -1894,8 +1902,16 @@ function resumeCur() {
     serie: c.serie || 0, restSecs: c.restSecs || 60, seriesT: c.seriesT || 0, running: false });
   if (rt.mode === "series") rt.minSaid = Math.floor(rt.seriesT / 60);   // no repetir el minuto que ya dijo
   if (rt.mode === "series") { $("#rtDots").innerHTML = ""; $("#rtBarBox").classList.add("rest"); seriesBtns(); $("#rtStep").textContent = `SERIE ${rt.serie + 1}`; setBase("pesas"); baseAnim(true); rtRender();
-    say("Aquí quedamos, mi princesa. Seguimos con las series.", { greet: "Seguimos donde quedamos" }); return true; }
+    say("Volvimos, mi princesa. Seguimos con las series.", { greet: "Seguimos donde quedamos" }); return true; }
   if (rt.mode === "up") { $("#rtStep").textContent = "CRONÓMETRO"; rtRender(); } else nextStep(true);
+  const away = c.paused ? 1e9 : (Date.now() - (c.at || 0)) / 1000 * speed();   // la caminata y el cronómetro siguen contando aunque la app se cierre
+  if (away >= 0 && away < 5400 && (rt.mode === "up" || (rt.mode === "walk" && rt.steps[rt.i]?.kind === "walk"))) {
+    const used = rt.mode === "walk" ? Math.min(away, Math.max(0, rt.left)) : away;
+    if (rt.mode === "walk") rt.left -= used; else rt.up += used; rt.active += used; rt.walkMin = rt.mode === "walk" ? Math.floor((rt.steps[rt.i].secs - rt.left) / 60) : Math.floor(rt.up / 60);
+    rt.last = performance.now(); rtRender(); musicFor();
+    say(rt.mode === "walk" ? "Seguimos caminando, mi dama." : "Seguimos, mi reina. El cronómetro siguió contando.", { greet: "Seguimos donde quedamos" });
+    return true;
+  }
   rt.paused = true; $("#rtPause").textContent = "SEGUIR"; musicFor(); setBase("idle"); baseAnim(true);
   say("Aquí quedamos, mi princesa. Aprieta SEGUIR cuando quieras.", { greet: "Seguimos donde quedamos" });
   return true;
@@ -1907,7 +1923,7 @@ const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "
 $("#fecha").textContent = `${DIAS[TODAY.getDay()]} ${TODAY.getDate()} de ${MESES[TODAY.getMonth()]}`;
 $("#muteBtn").addEventListener("click", () => { st.mute = !st.mute; persist(); SND.muteAll(st.mute); $("#muteBtn").setAttribute("aria-pressed", st.mute); $("#muteBtn").setAttribute("aria-label", st.mute ? "Activar sonidos" : "Silenciar sonidos"); if (!st.mute) SND.click(); });
 $("#muteBtn").setAttribute("aria-pressed", st.mute);
-fit(); renderStars(); renderBadges(); renderWater(); renderChips(); renderCloset(); renderMoods(); renderDiary(); renderFoot(); setInterval(renderFoot, 30000);
+fit(); renderStars(); renderBadges(); renderWater(); renderChips(); renderCloset(); renderMoods(); renderDiary(); renderFoot(); setInterval(() => { renderFoot(); if (!rt.on) newDay(); }, 30000);
 const resumed = resumeCur();
 if (!resumed) { if (firstTime) { say(INTRO, { greet: "¡Hola!" }); queue.push(showDaily); } else showDaily(); }
 if (checkBadges() && !resumed) queue.push(showDaily);   // después de las medallas, se puede volver al mensaje del día
